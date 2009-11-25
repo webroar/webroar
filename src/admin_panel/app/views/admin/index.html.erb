@@ -1,0 +1,47 @@
+<!--
+WebROaR - Ruby Application Server - http://webroar.in/
+Copyright (C) 2009  Goonj LLC
+
+This file is part of WebROaR.
+
+WebROaR is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+WebROaR is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with WebROaR.  If not, see <http://www.gnu.org/licenses/>.
+-->
+
+<div id = 'login_window'>
+  <div id = 'login_header'>Admin Panel</div>
+  <div id = 'login_logo'></div>	
+  <div id = 'login_form'>
+    <table width = 100%>
+      <%form_for(:user, :url => {:action => 'login'})do%>
+        <tr>
+          <th colspan = 2><span id = 'error_div'><%if(flash[:notice])%><%=h(flash[:notice])%><%end%></span></th>
+        </tr>
+        <tr>
+          <td><b>&nbsp;&nbsp;&nbsp;User Name</b></td>
+          <td class = 'login_text'><%=text_field :user, :name, :size => 20, :tabindex => "1"%></td>
+        </tr>
+        <tr>
+          <td><b>&nbsp;&nbsp;&nbsp;Password</b></td>
+          <td class = 'login_text'><%=password_field :user, :password, :size => 20, :tabindex => "2"%></td>
+        </tr>
+        <tr>
+          <th  colspan = 2>&nbsp;</th>
+        </tr>
+        <tr>
+          <th  colspan = 2 class = 'login_button'><b><%=submit_tag 'Login', :tabindex => "3"%></b></th>
+        </tr>
+      <%end%>
+    </table>
+  </div>
+</div>

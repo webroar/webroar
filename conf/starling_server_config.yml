@@ -1,0 +1,13 @@
+#This is a sample starling configuration file. 
+#Refere starling --help for advance configuration.
+#Give absolute path as value
+
+starling:
+  port: 22122
+  pid_file: /var/run/starling.pid
+  queue_path: /var/spool/starling
+  timeout: 0
+  syslog_channel: starling-tampopo
+  log_level: ERROR
+  daemonize: true
+

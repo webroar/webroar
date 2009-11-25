@@ -1,0 +1,30 @@
+<!--
+WebROaR - Ruby Application Server - http://webroar.in/
+Copyright (C) 2009  Goonj LLC
+
+This file is part of WebROaR.
+
+WebROaR is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+WebROaR is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with WebROaR.  If not, see <http://www.gnu.org/licenses/>.
+-->
+<%= render :partial => 'query_date', :locals => {:graph_id => 1, :update_div => 'database_usage_graph', :submit_action => 'database_usage_graph'} %>
+
+<%app_id = @app_id || 0 %>
+<%=render :partial => 'javascript_partial', :locals=> {:count => 'first', :start_hour => @start_hour, :end_hour => @end_hour, :app_id => app_id, :type => "percentage_db_usage_graph"}%>
+
+<%# this section is for Ploting % of time spent in Data Base Layer by an application%>
+<div id = 'percentage_db_usage_graph' class = 'graph_div'>
+	<%=@percentage_db_usage_graph%>
+</div>
+<br/><br/>
+<%=render :partial=>'slider_partial',:locals=>{:count=>'first'}%>

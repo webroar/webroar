@@ -1,0 +1,50 @@
+<!--
+WebROaR - Ruby Application Server - http://webroar.in/
+Copyright (C) 2009  Goonj LLC
+
+This file is part of WebROaR.
+
+WebROaR is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+WebROaR is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with WebROaR.  If not, see <http://www.gnu.org/licenses/>.
+-->
+
+<br/>
+<%if flash[:notice]%>
+	<hr/>
+	<div style = "font-weight:bold;font-size:14;">Application Name: <%=@application_name%>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</div>
+	<hr/>
+	<div style = "width:100%;color:red"><%=flash[:notice]%></div>
+<%else%>
+	<%if @application_name != SERVER_NAME%>
+	<div id = 'reload'>Select Graph:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<%=select :graph,:name,%w{URL-Breakup URL-Calls Database-Usage Throughput Resource-Usage},:selected=>session[:graph_type]%></div>
+		<hr/>
+		<div style = "font-weight:bold;font-size:14;">Application Name : <%=@application_name%>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</div>
+		<hr/>
+		<div id = 'graphs'>
+			<%=render :partial => get_partial(session[:graph_type])%>
+		</div>
+		 <%=observe_field 'graph_name',:update => 'graphs',:url => {:action => 'get_next_graph', :id => @app_id, :time_slot => ""}, :with => 'graph_name' %>
+	<%else%>
+		<hr/>
+		<div style = "font-weight:bold;font-size:14;">Application Name : <%=@application_name%>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</div>
+		<hr/>
+		<div id = 'graphs'>
+			<%=render :partial => 'resource_usage_graph_server'%>
+		</div>
+	<%end%>
+	<br/>
+	<br/>
+<%end%>
+
+
+		

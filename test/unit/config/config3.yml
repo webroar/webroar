@@ -1,0 +1,18 @@
+---
+Item List:
+    - item: keybord
+      price: 100
+      model:
+          - company: iball
+            keys: 58
+
+          - company: sony
+            keys: 54
+
+    - item: mouse
+      price: 50
+
+Billing Address:
+    - Item: cpu
+      price: 1500
+

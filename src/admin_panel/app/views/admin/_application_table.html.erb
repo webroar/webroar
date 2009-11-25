@@ -1,0 +1,68 @@
+<!--
+WebROaR - Ruby Application Server - http://webroar.in/
+Copyright (C) 2009  Goonj LLC
+
+This file is part of WebROaR.
+
+WebROaR is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+WebROaR is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with WebROaR.  If not, see <http://www.gnu.org/licenses/>.
+-->
+
+<table width = 95% cellpadding = "4">
+  <%if @info and @info['Application Specification']%>
+    <tr>
+      <td class = 'table_header' colspan = 10>Application Specifications</td>
+    </tr>
+    <tr>
+      <td class = 'sub_header'><b>Application Name</b> </td>
+      <td class = 'sub_header'><b>Resolver</b> </td>
+      <td class = 'sub_header' width = '10px'><b>Type</b> </td>
+      <td class = 'sub_header' width = '10px'><b>Analytics</b> </td>
+      <td class = 'sub_header' width = '10px'><b>Environment</b> </td>	
+      <td class = 'sub_header' width = '10%'><b>Minimum Workers</b> </td>
+      <td class = 'sub_header' width = '10%'><b>Maximum Workers</b> </td>	
+      <td class = 'sub_header' width = '50px'>&nbsp;</td>	
+      <td class = 'sub_header' width = '50px'>&nbsp;</td>	
+      <td class = 'sub_header' width = '50px'>&nbsp;</td>
+    </tr>
+    <%=application_list(start)%>
+    <tr>
+      <td colspan = 10>
+        <%if start > 0%>
+          <%=link_to_remote 'Previous', :update => 'application_list_table', :url => {:controller => 'admin', :action => 'required_apps', :start => start - 5}%>
+        <%end%>
+        <%if start+5 < @info['Application Specification'].size  %>
+          <%=link_to_remote 'Next', :update => 'application_list_table', :url => {:controller => 'admin', :action => 'required_apps', :start => start + 5}%>
+        <%end%>
+        <%if start + 5 < @info['Application Specification'].size%>
+          (<%=start + 1%> to <%=start + 5 %> of <%=@info['Application Specification'].size %>)
+        <%else%>
+          (<%=start + 1%> to <%=@info['Application Specification'].size%> of <%=@info['Application Specification'].size %>)
+        <%end%>
+      </td>
+    </tr>
+    <tr>
+      <td colspan = 10 align = right><%=link_to 'Add Application', :controller => 'application_specification', :action => 'add_application_form'%></td>
+    </tr>
+  <%else%>
+    <tr>
+      <td colspan = 9 align = center class = 'table_header'>&nbsp;</td>
+    </tr>
+    <tr>
+      <td colspan = 9 align = center><%=NO_DEPLOYED_APPLICATION_MESSAGE%></td>
+    </tr>
+    <tr>
+      <td colspan = 9 align = right><%=link_to 'Add Application', :controller => 'application_specification', :action => 'add_application_form'%></td>
+    </tr>
+  <%end%>
+</table>	

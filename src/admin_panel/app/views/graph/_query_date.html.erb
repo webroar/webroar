@@ -1,0 +1,38 @@
+<!--
+WebROaR - Ruby Application Server - http://webroar.in/
+Copyright (C) 2009  Goonj LLC
+
+This file is part of WebROaR.
+
+WebROaR is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+WebROaR is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with WebROaR.  If not, see <http://www.gnu.org/licenses/>.
+-->
+
+<div id = 'err_msg_div'></div>
+<div id = "query_date" style = "position:relative;text-align:right;width:920px;">
+
+	<%form_remote_tag :update => {:failure => 'err_msg_div', :success => update_div}, :url=>{:controller=>'graph', :action=> submit_action , :app_id=>@app_id} do%>
+		Date: <%= calendar_date_select_tag "date",
+                                 session[:start_time].strftime("%B %d, %Y"),
+	                             :year_range => 3.years.ago..0.years.ago,
+						         :valid_date_check => "date <= (new Date()).stripTime()"
+                                 %>
+         <br/><br/>		
+
+
+		<%=submit_tag 'Get Data'%>
+	
+	<%end%>	
+	<div ID = "calender_div" STYLE = "position:absolute;visibility:hidden;background-color:white;layer-background-color:white;"></div>	
+</div>	
+<br/>

@@ -1,0 +1,176 @@
+<!--
+WebROaR - Ruby Application Server - http://webroar.in/
+Copyright (C) 2009  Goonj LLC
+
+This file is part of WebROaR.
+
+WebROaR is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+WebROaR is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with WebROaR.  If not, see <http://www.gnu.org/licenses/>.
+-->
+
+<html>
+	<head>
+		<title>WebROaR - Admin Panel</title>
+		<%= javascript_include_tag :defaults %>
+		<%= javascript_include_tag 'application' %>
+		<%= javascript_include_tag 'swfobject' %>
+                <%= stylesheet_link_tag 'ui.all.css' %>
+	        <%= javascript_include_tag 'jquery-1.3.2'%>
+	        <%= javascript_include_tag 'ui.core.js'%>
+	        <%= javascript_include_tag 'ui.slider.js'%>
+
+
+
+
+		<script>
+      $j=jQuery.noConflict();
+		<!--
+			var browserName=navigator.appName; 
+			if (browserName=="Netscape")
+			{ 
+				if(navigator.userAgent.match("Safari"))
+				{
+				 document.write('<%= stylesheet_link_tag 'safari/style.css' %>'); 
+
+				}
+				else
+				{
+				 document.write('<%= stylesheet_link_tag 'netscape/style.css' %>'); 
+				}
+			}
+			 else
+			  {
+				 document.write('<%= stylesheet_link_tag 'other/style.css' %>'); 
+			   }
+		
+		-->
+		</script>
+    <script type="text/javascript">
+    <!--
+    function MM_swap(name,classname) { 
+      Element.toggleClassName(name,classname);
+      }
+    //-->
+    </script>
+    <%= link_tag("/favicon.ico", :rel => "shortcut icon") %>
+	</head>
+	<body>
+		<div id = "body_container">
+			<div id = 'header'>
+				<div id = 'container_logo'>
+					<%#=link_to image_tag("webroar-logo.gif", :border => 0), home_path%>
+					<span id = 'version_div'>
+						<%=link_to image_tag("logout.gif", :border => 0, :size => '17x17'), logout_path%>
+						&nbsp;<%=link_to 'Logout', logout_path, :class => 'lightgray'%>
+					<div id = 'time_div'><%=Time.now.strftime("%d-%b-%Y %H:%M")%></div>
+					</span>
+				</div>
+			</div>
+				<div id = 'container_menu'>
+          <div id = 'logo_div'>
+  					<%=link_to image_tag("webroar-logo.gif", :border => 0), home_path%>
+          </div>
+					<div id = 'menu_tab_div'>
+          <%tab1, tab2, tab3, tab4, tab5, tab6 = get_tab_class_name(controller_name, action_name.to_s)%>
+          <table cellpadding = "0" cellspacing = "0">
+            <tr> 
+              <td><%=image_tag 'left_menu.gif', :border => '0'%></td>
+              <td width = "730" bgcolor = "#990b0a"><table width = "100%" border = "0" cellpadding = "0" cellspacing = "0">
+                        <tr>
+                          <td width = "20">&nbsp;</td>
+                          <td width = "20"><%str = "<div id = 'Image10' name = 'Image10' class = #{tab1[0]}></div>"%>
+                          <%str1 = "MM_swap('Image10', '#{tab1[1]}')"%>
+                          <%=link_to str,home_path,{:onmouseout => str1, :onmouseover => str1}%></td>
+                          <td width = "20">&nbsp;</td>
+                          <td width = "20"><%str = "<div id = 'Image11' name = 'Image11' class = #{tab2[0]}></div>"%>
+                          <%str1 = "MM_swap('Image11', '#{tab2[1]}')"%>
+                          <%=link_to str, configuration_path,{:onmouseout => str1, :onmouseover => str1}%></td>
+                          <td width = "20">&nbsp;</td>
+                          <td width = "29"><%str = "<div id = 'Image12' name = 'Image12' class = #{tab3[0]}></div>"%>
+                          <%str1="MM_swap('Image12', '#{tab3[1]}')"%>
+                          <%=link_to str, analytics_path, {:onmouseout => str1, :onmouseover => str1}%></td>
+                          <td width = "20">&nbsp;</td>
+                          <td width = "29"><%str = "<div id = 'Image13' name = 'Image13' class = #{tab4[0]}></div>"%>
+                          <%str1 = "MM_swap('Image13', '#{tab4[1]}')"%>
+                          <%=link_to str, exceptions_path, {:onmouseout => str1, :onmouseover => str1}%></td>
+                          <td width = "20">&nbsp;</td>
+                          <td width = "29"><%str = "<div id = 'Image14' name = 'Image14' class = #{tab5[0]}></div>"%>
+                          <%str1 = "MM_swap('Image14', '#{tab5[1]}')"%>
+                          <%=link_to str, settings_path, {:onmouseout => str1, :onmouseover => str1}%></td>
+                          <td width = "20">&nbsp;</td>
+                        </tr>
+                    </table></td>  
+              <td><%=image_tag 'right_menu.gif', :border => '0'%></td>
+            </tr>
+          </table>
+					</div>
+				</div>
+			<div id = 'container'>
+				<div id = 'sub_container'>
+						<%=yield%>
+				</div>
+			</div>	
+				<div id = 'bottom_link_div'>
+				<table border = 0 width = 100% cellpadding = 5>
+          <tr>
+						<td>&nbsp;&nbsp;&nbsp;&nbsp;Copyright © 2009 Goonj LLC</td>
+					</tr>
+				</table>
+				</div>
+			
+		</div>
+				<%if flash[:server_message] or flash[:error]%>
+	  <div id = "overlay">  			
+    </div>
+    <div id = 'message_box'>
+ 			<table width = "100%" height = "100%">
+			  <tr>
+				  <td align="center" valign="center">
+					  <div id = 'message_box_header'>  			
+						    <%=link_to image_tag('close.gif', :size => '15x15', :border => 0), '#' , :class => 'white', :onClick => '$("message_box").hide(); $("overlay").hide(); return false;' %>
+  				  </div>
+  				  <div id = 'message_box_body'>
+              <%=flash[:server_message]%><br/>
+              <%=flash[:error]%>
+              <br/>
+              <%= button_to_function 'Ok', :onClick => '$("message_box").hide(); $("overlay").hide(); return false;', :style => 'width : 40px;'%>
+  	       </div>
+     			</td>
+			  </tr>
+	  </table>
+  </div>
+		  <%end%>
+ <div id="loading_progress">  			
+ </div>
+		<div id="loading_progress1">
+  			<table width="100%" height="100%">
+			<tr>
+				<td align="center" valign="center">
+				<%= image_tag 'loading.gif', :alt => "loading", :style => "opacity: 1.0 ; filter: alpha(opacity=100);"%>
+				</td>
+			</tr>
+			</table>
+			  		
+		</div>
+		<div id = "dummy_div"></div>
+	</body> 
+	<head>
+		<META HTTP-EQUIV="PRAGMA" CONTENT="NO-CACHE">
+	</head>
+</html>
+
+
+<%= periodically_call_remote( :update => 'time_div',
+    :url => { :controller=>'admin',:action => 'get_latest_time'},
+    :frequency => 60)%>
+ 			

@@ -1,0 +1,12 @@
+# Test suite configuration
+
+---
+load_test_configuration:                   # Load testing would be done using ab
+  concurrency: 20                          # e.g. 20
+  number_of_requests: 20000                # e.g. 20000
+  expected_rps: 70                         # It would be compared with load test result to determine success or failure. e.g. 100
+  test_runs: 10                            # Number of times ab test should be run.
+test_app_configuration:
+  port: 4001                               # port number e.g. 4001
+  run_as_user: smartuser                   # run as user  
+

@@ -1,0 +1,95 @@
+<!--
+WebROaR - Ruby Application Server - http://webroar.in/
+Copyright (C) 2009  Goonj LLC
+
+This file is part of WebROaR.
+
+WebROaR is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+WebROaR is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with WebROaR.  If not, see <http://www.gnu.org/licenses/>.
+-->
+
+<div class = "text_align_center">
+  <%form_for :smtp,:url => {:controller => 'mail_specification', :action => 'save_smtp_settings'} do%>
+    <table width = 95% cellpadding = '4'>
+      <tr>
+        <td class = 'table_header_link' width = 80 colspan = 3%><b>Mail Settings</b>&nbsp;&nbsp;&nbsp;
+          <span class = 'help_link'>
+            <%=link_to_function('Help', :onclick => 'addHelp("mail");')%>
+          </span>
+          <br/> <div id = 'mail' class = 'font_size_12'></div>
+        </td>
+        <td class = 'table_header_link' width = 10%><%=link_to_remote 'Sendmail', :update => 'mail_div', :url => {:controller => 'mail_specification', :action => 'sendmail_form'}%></td>
+      </tr>
+      <tr>
+        <th colspan = 4><div id = 'error_div'><%=flash[:smtp_errors]%></div></th>
+      </tr>
+      <tr>
+        <td class = "BG_dark_gray">SMTP Server<span id = 'needed'>*</span> &nbsp;&nbsp;&nbsp;
+          <span class = 'help_link'>
+            <%=link_to_function('Help', :onclick => 'addHelp("smtp_server");')%>
+          </span>
+          <br/> <div id = 'smtp_server' class = 'font_size_12'></div>
+        </td>
+        <td class = "BG_dark_gray"><%=text_field :smtp, :address, :size => 20, :value => @smtp_old['address']%></td>
+        <td class = "BG_dark_gray">SMTP Port<span id = 'needed'>*</span> &nbsp;&nbsp;&nbsp;</td>
+        <td class = "BG_dark_gray"><%=text_field :smtp, :port, :size => 20, :value => @smtp_old['port']%></td>
+      </tr>
+      <tr>
+        <td class = "BG_white">SMTP Domain<span id = 'needed'>*</span> &nbsp;&nbsp;&nbsp;
+          <span class = 'help_link'>
+            <%=link_to_function('Help', :onclick => 'addHelp("smtp_domain");')%>
+          </span>
+          <br/> <div id = 'smtp_domain' class = 'font_size_12'></div>
+        </td>
+        <td class = "BG_white"><%=text_field :smtp, :domain, :size => 20, :value => @smtp_old['domain']%></td>
+        <td class = "BG_white">SMTP Authentication<span id = 'needed'>*</span>
+          <span class = 'help_link'>
+            <%=link_to_function('Help', :onclick => 'addHelp("smtp_authentication");')%>
+          </span>
+          <br/> <div id = 'smtp_authentication' class = 'font_size_12'></div>
+        </td>
+        <td class = "BG_white"><%=text_field :smtp, :authentication, :size => 20, :value => @smtp_old['authentication']%></td>  
+      </tr>
+      <tr>
+        <td class = "BG_dark_gray">SMTP Username<span id = 'needed'>*</span> &nbsp;&nbsp;&nbsp;
+          <span class = 'help_link'>
+            <%=link_to_function('Help', :onclick => 'addHelp("smtp_username");')%>
+          </span>
+          <br/> <div id = 'smtp_username' class = 'font_size_12'></div>
+        </td>
+        <td class = "BG_dark_gray"><%=text_field :smtp, :user_name, :size => 20, :value => @smtp_old['user_name']%></td>
+        <td class = "BG_dark_gray">SMTP Password<span id = 'needed'>*</span> &nbsp;&nbsp;&nbsp;
+          <span class = 'help_link'>
+            <%=link_to_function('Help', :onclick => 'addHelp("smtp_password");')%>
+          </span>
+          <br/> <div id = 'smtp_password' class = 'font_size_12'></div>
+        </td>
+        <td class = "BG_dark_gray"><%=password_field :smtp, :password, :size => 20, :value => @smtp_old['password']%></td>
+      </tr>
+      <tr>
+        <td class = "BG_white">Sender's Email Address<span id = 'needed'>*</span> &nbsp;&nbsp;&nbsp;</td>
+        <td class = "BG_white"><%=text_field :smtp, :from, :size => 20, :value => @smtp_old['from']%></td>
+        <td class = "BG_white">Recipient Email Addresses<span id = 'needed'>*</span> &nbsp;&nbsp;&nbsp;
+          <span class = 'help_link'>
+            <%=link_to_function('Help', :onclick => 'addHelp("smtp_recipients_id");')%>
+          </span>
+          <br/> <div id = 'smtp_recipients_id' class = 'font_size_12'></div>
+        </td>
+        <td class = "BG_white"><%=text_field :smtp, :recipients, :size => 20, :value => @smtp_old['recipients']%></td>
+      </tr>
+      <tr>
+        <th class = "BG_dark_gray" colspan = 4><%=submit_tag 'Save'%>&nbsp;&nbsp;&nbsp;&nbsp;<%=button_to_function 'Cancel', 'window.location.reload();'%></th>
+      </tr>
+    </table>
+  <%end%>
+</div>

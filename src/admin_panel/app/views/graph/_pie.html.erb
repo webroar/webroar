@@ -1,0 +1,88 @@
+<!--
+WebROaR - Ruby Application Server - http://webroar.in/
+Copyright (C) 2009  Goonj LLC
+
+This file is part of WebROaR.
+
+WebROaR is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+WebROaR is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with WebROaR.  If not, see <http://www.gnu.org/licenses/>.
+-->
+
+	<%if flash[:notice]%>
+		<%=flash[:notice]%>	
+	<%else%>	
+		<%if @url_rank%>
+			<div id = 'reload'><span style = "color:red"><%=@url_rank%><%=@suffix%> in the most time consuming urls list.</span></div>
+		<%end%>
+		<%= @url_breakup_graph%>
+		<br/>
+		<%if @data_x %>
+		  <%if @data_x.size>0%>
+			<%db_time = 0%>
+			<%db_actual_time = 0%>
+			<%for i in 0..@data_x.size - 3%>
+				<%db_time = db_time + @data_y[i].to_f%>
+				<%db_actual_time = db_actual_time + @data_actual_time[i].to_f%>
+			<%end%>
+			<br/>	
+			<div class = 'slider_div'>
+			<table width = 60%>
+					<tr>
+						<th  class = 'sub_header'>S.No</th>
+						<th  colspan = 2 class = 'sub_header'></th>
+						<th  class = 'sub_header'>Percentage</th>
+						<th  class = 'sub_header'>Actual Time Taken (in sec)</th>
+					</tr>
+					<tr>
+						<td>I</td>
+						<td colspan = 2><b>Database Layer Time</b></td>
+						<td><b><%=format("%.2f",db_time.to_f)%>%</b></td>
+						<td><b><%=format("%.2f",db_actual_time.to_f)%></b></td>
+					</tr>
+				<%for i in 0..@data_x.size - 3%>
+					<tr>
+						<td>&nbsp;</td>
+						<td><%=i + 1%></td>
+						<td><%=@data_x[i].to_s%></td>
+						<td><%=format("%.2f",@data_y[i].to_f)%>%</td>
+						<td><%=format("%.2f",@data_actual_time[i].to_f)%></td>
+					</tr>
+				<%end%>
+				<tr>
+					<td>II</td>
+					<td colspan = 2><b>Rendering Time </b></td>
+					<td><b><%=format("%.2f", @data_y[@data_x.size - 2].to_f)%>%</b></td>
+					<td><b><%=format("%.2f", @data_actual_time[@data_x.size - 2].to_f)%></b></td>
+				</tr>
+				<tr>
+					<td>III</td>
+					<td colspan = 2><b>Remaining Time</b>&nbsp;&nbsp;&nbsp;
+      			<span class = 'help_link'>
+			      	<%=link_to_function "Help", :onclick => "addHelp('remaining_time')"%>
+			      </span>
+      			<br/> <div id = 'remaining_time' class = 'font_size_12'></div></td>
+					<td><b><%=format("%.2f", @data_y[@data_x.size - 1].to_f)%>%</b></td>
+					<td><b><%=format("%.2f", @data_actual_time[@data_x.size - 1].to_f)%></b></td>
+				</tr>
+				<tr>
+					<td>&nbsp;</td>
+					<td colspan = 3><b>Total Time Taken</b></td>
+					<td><b><%=format("%.2f",db_actual_time + @data_actual_time[@data_x.size-1].to_f + @data_actual_time[@data_x.size - 2].to_f)%></b></td>					
+				</tr>
+			</table>
+			</div>
+		  <%end%>	
+		<%else%>
+			<%=NO_URL_HITS%> 
+		<%end%>
+	<%end%>

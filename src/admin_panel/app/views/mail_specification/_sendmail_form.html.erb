@@ -1,0 +1,62 @@
+<!--
+WebROaR - Ruby Application Server - http://webroar.in/
+Copyright (C) 2009  Goonj LLC
+
+This file is part of WebROaR.
+
+WebROaR is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+WebROaR is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with WebROaR.  If not, see <http://www.gnu.org/licenses/>.
+-->
+
+<div class = "text_align_center">
+  <%form_for :sendmail, :url => {:controller => 'mail_specification', :action => 'save_sendmail_settings'} do%>
+    <table width = '95%' cellpadding = '4' >
+      <tr>
+        <td class = 'table_header_link' width = 50%><b>Mail Settings</b>&nbsp;&nbsp;&nbsp;
+          <span class='help_link'>
+            <%=link_to_function('Help', :onclick => 'addHelp("mail");')%>
+          </span>
+        <br/> <div id = 'mail' class = 'font_size_12'></div></td>
+        <td class = 'table_header_link' width = 50%><%=link_to_remote 'SMTP', :update => 'mail_div', :url => {:controller => 'mail_specification', :action => 'smtp_form'}%></td>
+      </tr>
+      <tr>
+        <td colspan = 2><div id = 'error_div'><%if flash[:sendmail_errors]%><%=flash[:sendmail_errors]%><%end%></div></td>
+      </tr>  
+      <tr>
+        <td class = "BG_dark_gray">Sendmail Location<span id = 'needed'>*</span> &nbsp;&nbsp;&nbsp;
+          <span class = 'help_link'>
+            <%=link_to_function('Help', :onclick => 'addHelp("sendmail_location");')%>
+          </span>
+          <br/> <div id = 'sendmail_location' class = 'font_size_12'></div>
+        </td>
+        <td class = "BG_dark_gray"><%=text_field :sendmail, :location, :size => 40, :value => @sendmail_old[:location]%></td>
+      </tr>
+      <tr>
+        <td class = "BG_white">Sender's Email Address<span id = 'needed'>*</span> &nbsp;&nbsp;&nbsp;</td>
+        <td class = "BG_white"><%=text_field :sendmail, :from, :size => 40, :value => @sendmail_old[:from]%></td>
+      </tr>
+      <tr>  
+        <td class = "BG_dark_gray">Recipient Email Addresses<span id = 'needed'>*</span> &nbsp;&nbsp;&nbsp;
+          <span class = 'help_link'>
+            <%=link_to_function('Help', :onclick => 'addHelp("sendmail_recipients_id");')%>
+          </span>
+          <br/> <div id = 'sendmail_recipients_id' class = 'font_size_12'></div>
+        </td>
+        <td class = "BG_dark_gray"><%=text_field :sendmail, :recipients, :size => 40, :value => @sendmail_old[:recipients]%></td>
+      </tr>
+      <tr>
+        <th class = 'BG_white' colspan = 2><%=submit_tag 'Save'%>&nbsp;&nbsp;&nbsp;&nbsp;<%=button_to_function 'Cancel', 'window.location.reload();'%></th>
+      </tr>
+    </table>
+  <%end%>
+</div>

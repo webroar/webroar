@@ -1,0 +1,57 @@
+<!--
+WebROaR - Ruby Application Server - http://webroar.in/
+Copyright (C) 2009  Goonj LLC
+
+This file is part of WebROaR.
+
+WebROaR is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+WebROaR is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with WebROaR.  If not, see <http://www.gnu.org/licenses/>.
+-->
+
+
+
+<%if @exceptions.size >0 %>
+<h3><center> Ignored Exceptions</center></h3> 
+<table width = 90% cellpadding = 5px>
+    <tr>
+      <td class = 'table_header' width = 40%>Exception</td>
+      <td class = 'table_header' width = 20%>Class</td>
+      <td class = 'table_header' width = 20%>URL</td>  
+      <td class = 'table_header' width = 5%>Occurrences</td>
+      <td class = 'table_header' width = 5%>Time</td>
+      <td class = 'table_header' width = 5%>&nbsp;</td>
+    </tr>
+  <%@exceptions.each do |exception|%>
+    <tr>
+      <td><%=link_to_remote "#{h exception.exception_message}", :update => 'data_div', :url => {:controller => 'exceptions', :action => 'show', :id => exception.id, :application_name => @application_name}%></td>
+      <td><%=h exception.exception_class%></td>
+      <td><%=h exception.controller%>/<%=exception.method%></td>
+      <td><%=h exception.count%></td>
+      <td><%=h exception.wall_time.strftime("%d-%b-%Y %H:%M:%S")%></td>
+      <td><%=link_to 'Reopen', :controller => 'exceptions', :action => 'reopen_exception', :exception_name => exception.exception_message, :app_name => @application_name %></td>
+    </tr>
+  <%end%>
+<tr>
+        <td colspan = 7>
+            <%if start > 0 %>
+              <%=link_to_remote 'Previous', :update => 'data_div', :url => {:controller => 'exceptions', :action => 'required_ignored_exceptions', :start => start-5, :app_name => @application_name}%>
+            <%end%>          
+            <%if start +  5 < @size%>
+              <%=link_to_remote 'Next', :update => 'data_div', :url => {:controller => 'exceptions', :action => 'required_ignored_exceptions', :start => start + 5, :app_name => @application_name}%>
+            <%end%>
+    </td>
+    </tr>
+  </table>
+<%else%>
+  No ignored exceptions currently for this application.
+<%end%> 

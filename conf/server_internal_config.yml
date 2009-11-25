@@ -1,0 +1,16 @@
+# Server’s Internal Configuration
+
+starling:
+  host: 127.0.0.1  # host name that runs the starling message queue
+  port: 22122      # port number of the starling message queue
+  profiler_queue_name: profiler_queue  # queue name to read/write profiling data
+  exception_queue_name: exception_queue # queue name to read/write exceptions
+  pid_queue_name: pid_queue # queue to dispatch worker process id
+  max_queue_items: 30000 # Max number of unprocessed messages in queue. One message is approximately 1 Kb
+webroar_analyzer_script:
+  pid_file: /var/run/webroar_analyzer.pid   # pid file path to store pid of analyzer
+  daemonize: true # true or false
+  log_file: /var/log/webroar/analyzer.log
+  sampling_rate: 1 # sampling time (in mins)
+  environment: production # to choose the database specific to environment
+

@@ -1,0 +1,138 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html 
+     PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+     "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+  <title>Module: Analytics</title>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <meta http-equiv="Content-Script-Type" content="text/javascript" />
+  <link rel="stylesheet" href=".././rdoc-style.css" type="text/css" media="screen" />
+  <script type="text/javascript">
+  // <![CDATA[
+
+  function popupCode( url ) {
+    window.open(url, "Code", "resizable=yes,scrollbars=yes,toolbar=no,status=no,height=150,width=400")
+  }
+
+  function toggleCode( id ) {
+    if ( document.getElementById )
+      elem = document.getElementById( id );
+    else if ( document.all )
+      elem = eval( "document.all." + id );
+    else
+      return false;
+
+    elemStyle = elem.style;
+    
+    if ( elemStyle.display != "block" ) {
+      elemStyle.display = "block"
+    } else {
+      elemStyle.display = "none"
+    }
+
+    return true;
+  }
+  
+  // Make codeblocks hidden by default
+  document.writeln( "<style type=\"text/css\">div.method-source-code { display: none }</style>" )
+  
+  // ]]>
+  </script>
+
+</head>
+<body>
+
+
+
+    <div id="classHeader">
+        <table class="header-table">
+        <tr class="top-aligned-row">
+          <td><strong>Module</strong></td>
+          <td class="class-name-in-header">Analytics</td>
+        </tr>
+        <tr class="top-aligned-row">
+            <td><strong>In:</strong></td>
+            <td>
+                <a href="../files/lib/graph_controller_extensions/database_analytics_rb.html">
+                lib/graph_controller_extensions/database_analytics.rb
+                </a>
+        <br />
+                <a href="../files/lib/graph_controller_extensions/resource_usage_analytics_rb.html">
+                lib/graph_controller_extensions/resource_usage_analytics.rb
+                </a>
+        <br />
+                <a href="../files/lib/graph_controller_extensions/throughput_analytics_rb.html">
+                lib/graph_controller_extensions/throughput_analytics.rb
+                </a>
+        <br />
+                <a href="../files/lib/graph_controller_extensions/url_analytics_rb.html">
+                lib/graph_controller_extensions/url_analytics.rb
+                </a>
+        <br />
+                <a href="../files/lib/graph_controller_extensions/url_breakup_analytics_rb.html">
+                lib/graph_controller_extensions/url_breakup_analytics.rb
+                </a>
+        <br />
+            </td>
+        </tr>
+
+        </table>
+    </div>
+  <!-- banner header -->
+
+  <div id="bodyContent">
+
+
+
+  <div id="contextContent">
+
+    <div id="description">
+      <p>
+This module is used to get the data for the <a
+href="Analytics/Url.html">Url</a> breakdown pie Graphs.
+</p>
+
+    </div>
+
+
+   </div>
+
+
+  </div>
+
+
+    <!-- if includes -->
+
+    <div id="section">
+
+    <div id="class-list">
+      <h3 class="section-bar">Classes and Modules</h3>
+
+      Module <a href="Analytics/Database.html" class="link">Analytics::Database</a><br />
+Module <a href="Analytics/ResourceUsage.html" class="link">Analytics::ResourceUsage</a><br />
+Module <a href="Analytics/Throughput.html" class="link">Analytics::Throughput</a><br />
+Module <a href="Analytics/Url.html" class="link">Analytics::Url</a><br />
+Module <a href="Analytics/UrlBreakup.html" class="link">Analytics::UrlBreakup</a><br />
+
+    </div>
+
+
+
+
+      
+
+
+    <!-- if method_list -->
+
+
+  </div>
+
+
+<div id="validator-badges">
+  <p><small><a href="http://validator.w3.org/check/referer">[Validate]</a></small></p>
+</div>
+
+</body>
+</html>

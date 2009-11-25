@@ -1,0 +1,652 @@
+/*
+WebROaR - Ruby Application Server - http://webroar.in/
+
+Copyright (C) 2009  Goonj LLC
+
+This file is part of WebROaR.
+
+WebROaR is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+WebROaR is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with WebROaR.  If not, see <http://www.gnu.org/licenses/>.
+*/
+
+body
+{
+	background-color:#FFF;
+	margin : 0px;	
+	text-align:-moz-center;
+	font-family:verdana;
+}
+
+#header
+{
+	position:relative;
+	width:940px;
+	height:63px;
+	text-align:left;
+	background-color:#FFFFFF;
+}
+
+#container
+{
+	position:relative;
+	top:-2px;
+	font-family:Verdana;
+	width:940px;
+	font-size:11px;
+	min-height:82%;
+	background-color:#FFFFFF;
+	text-align:-moz-center;
+}
+
+#menu_bottom
+{
+	position:relative;
+	top:-2px;
+}
+
+#bottom_link_div
+{
+	position:relative;
+	width:940px;
+  height:30px;
+	font-weight:bold;
+	font-size:10px;
+	text-align:-moz-center;
+	border-top:1px solid #E5C2C2;
+	color:#bc5d5b;
+}
+
+.exception_link a
+{
+  color :#1085CE;
+}
+
+.exception_link a:hover
+{
+  color :#1085CE;
+  text-decoration:none;
+}
+
+
+
+#bottom_link_div table
+{
+	font-family:Verdana;
+	font-size:10px;
+	color:#bc5d5b;
+}
+
+
+#container_menu
+{
+	position: relative;
+	width:930px;
+  height:50;
+	text-align:right;		
+	background-color:#FFFFFF;
+	padding-right:10px;
+}
+
+#logo_div
+{
+  position:relative;
+  top:-22px;
+  left:20px;
+  float:left;
+  
+}
+
+#menu_tab_div
+{
+  position:relative;
+  float:right;
+  right:10px;
+}
+
+.link a
+{
+	text-decoration:underline;
+	font-family:verdana;
+	color:#1085CE;
+}
+
+.calendar_link
+{
+	text-decoration:underline;
+	font-family:verdana;
+	color:#1085CE;
+}
+
+
+#container_logo
+{
+	position:relative;
+	width:800px;
+	height:62;
+	font-size:11px;	
+	left:150px;
+}
+
+#container_logo a
+{
+	font-family:verdana;
+	font-weight:bold;
+	font-size:11px;
+	color:#878787;
+}
+
+#sub_container
+{
+	position:relative;
+	width:100%;
+	min-height:73%;
+	background-color:#FFFFFF;
+}
+#container_graphs_data
+{
+	font-family:Verdana;
+	width:940px;
+	text-align:-moz-center;
+	min-height:70%;
+}
+
+#container_graphs_data td a
+{
+	text-decoration:underline;
+	font-family:verdana;
+	color:#1085CE;
+}
+
+
+#container_graphs_data hr
+{
+	height:3px;
+	background-color:#BEBEBE;
+}
+
+#pie_graphs
+{
+	min-height:400px;
+}
+#pie_graphs_div
+{
+	min-height:400px;
+}
+
+
+#container_data
+{
+	font-family:Verdana;
+	width:940px;
+	text-align:left;
+	min-height:680px;
+}
+
+#container_data td a
+{
+	text-decoration:underline;
+	font-family:verdana;
+	color:#1085CE;
+}
+
+
+
+#container input
+{
+	font-family:Verdana;
+	font-size:11px;
+}
+
+#container select
+{
+	font-family:Verdana;
+	font-size:11px;
+}
+
+#container table
+{
+	font-family:Verdana;
+	font-size:11px;
+	background-color:#E0E0E0;
+}
+
+#container tr
+{
+	background-color:#FFFFFF;
+}
+
+#error_div
+{	
+	font-size:10px;
+	color:red;
+	text-align:left;
+}
+
+#error_div h2
+{	
+	font-size:11px;
+	color:black;
+	text-align:left;
+}
+
+
+#container_data select
+{
+	width:140px;
+}
+
+.popup_container
+{
+	position:absolute;
+	width:460px;
+	z-index:1000;
+	font-family:Verdana;
+	border: 1px solid #006699;
+	background-color:#F9F6CD;
+	text-align:justify;
+	padding:5px;
+	left:300px;
+}
+
+
+.table_header
+{
+	background-color:#DADADA;
+	font-family:verdana;
+	font-size:12px;
+	font-weight:bold;
+	color:#585555;
+}
+
+.table_header_link
+{
+	background-color:#DADADA;
+	font-family:verdana;
+	font-size:12px;
+	color:#585555;
+}
+
+
+
+.sub_header
+{
+	padding:2px;
+	height:100%;
+	background-color:#F0F0F0;
+	font-size:11px;
+	font-weight:bold;
+	text-align:-moz-center;
+	color:#585555;
+}
+
+#page_name
+{
+  padding-left:25px;  
+  padding-top:4px;
+	font-family:verdana;
+	font-weight:bold;
+	font-size:14px;
+	text-align:left;
+  width:940px;
+	color:#757575;
+}
+
+.graph_header
+{
+	width:100%;
+	background-color:#5C7AB0;
+	color:white;
+}
+
+.graph_div
+{
+	height:430px;
+}
+
+#graph_div
+{
+	text-align:-moz-center;
+}
+
+#exceptions_listing_div
+{
+	text-align:-moz-center;
+  min-height:600px;
+}
+
+#needed{
+	font-size:10px;
+	color:red;
+}
+
+
+#reload{
+	width:920px;
+	text-align:right;
+	font-size:11px;	
+	font-family:verdana;
+}
+
+#reload a{
+	text-decoration:underline;
+	font-family:verdana;
+	color:#1085CE;
+}
+
+#reload a:hover{
+	text-decoration:underline;
+	font-family:verdana;
+	color:#1085CE;
+}
+
+#reload select
+{
+	font-size:11px;	
+	width:150px;
+	font-weight:none;
+}
+
+.help_link a
+{
+	font-size:10px;
+	text-decoration:underline;	
+	color:#1085CE;
+}
+
+.help_link a:hover 
+{
+	font-size:10px;
+	text-decoration:underline;	
+	color:#1085CE;
+}
+
+.text_align_center
+{
+	text-align:-moz-center;
+}
+
+#time_div
+{
+	position:relative;
+	font-family:verdana;
+	text-align:right;
+	height:10px;
+	width:730px;
+	float:right;
+	top:5px;
+	font-size:11px;
+	font-weight:bold;
+	color:#999999;
+}
+
+#version_div
+{
+	position:absolute;
+	font-family:verdana;
+	width:765px;
+	text-align:right;
+	top:8px;
+}
+
+.font_size_12
+{
+	font-size:11px;
+}
+
+#div_add_div
+{
+	width:260px;
+	height:20px;
+}
+
+#div_add_div select
+{
+	font-family:Verdana;
+	font-size:11px;
+	width:90px;
+}
+
+.BG_dark_gray{ 
+	background-color:#FFFFFF;
+	font-family:verdana;
+	font-size:11px;
+	height:15px;
+	padding-left:5px;
+}
+
+.BG_white{ 
+	background-color:#FFFFFF;
+	font-family:verdana;
+	font-size:11px;
+	height:15px;
+	padding-left:5px;
+}
+
+#tab1
+{
+	position:relative;
+	left:18px;	
+}
+#tab2
+{
+	position:relative;
+	left:13px;	
+}
+#tab3
+{
+	position:relative;
+	left:9px;	
+}
+#tab4
+{
+	position:relative;
+	left:5px;	
+}
+
+.lightgray{
+	font-size:10px;
+	font-family:Verdana;
+	color:red;
+	text-decoration:none;
+}
+
+a.lightgray:hover{
+	font-size:10px;
+	font-family:Verdana;
+	color:blue;
+	text-decoration:underline;
+}
+
+#ssl_table td a
+  {
+    font-size:11px;
+    font-family:verdana;
+  	color:#1085CE;
+  }
+
+#ssl_table td a:hover
+  {
+    font-size:11px;
+    font-family:verdana;
+  }
+
+#mail_div td a
+  {
+    font-size:11px;
+    font-family:verdana;
+  	color:#1085CE;
+  }
+
+#mail_div td a:hover
+  {
+    font-size:11px;
+    font-family:verdana;
+  	color:#1085CE;
+  }
+
+.home
+{
+  width:54;
+  height:22;
+	background:url('../../images/home_ad.gif');
+}
+.home_ov
+{
+  width:54;
+  height:22;
+	background:url('../../images/home_ad_ov.gif');
+}
+
+.configuration
+{
+  width:103;
+  height:22;
+	background:url('../../images/configuration_ad.gif');
+}
+.configuration_ov
+{
+  width:103;
+  height:22;
+	background:url('../../images/configuration_ad_ov.gif');
+}
+.analytics
+{
+  width:76;
+  height:22;
+	background:url('../../images/analytics_ad.gif');
+}
+.analytics_ov
+{
+  width:76;
+  height:22;
+	background:url('../../images/analytics_ad_ov.gif');
+}
+.exceptions
+{
+  width:84;
+  height:22;
+	background:url('../../images/exceptions_ad.gif');
+}
+.exceptions_ov
+{
+  width:84;
+  height:22;
+	background:url('../../images/exceptions_ad_ov.gif');
+}
+.settings
+{
+  width:68;
+  height:22;
+	background:url('../../images/settings_ad.gif');
+}
+.settings_ov
+{
+  width:68;
+  height:22;
+	background:url('../../images/settings_ad_ov.gif');
+}
+
+a.external{
+  background : transparent url('../../images/external.gif') no-repeat scroll right center;
+  padding-right :20px;
+}
+
+a.white{
+  color : #ffffff;
+  text-decoration:none;
+  font-weight : bold;
+  font-family : verdana;
+}
+
+a.white:hover{
+  color : #ffffff;
+  text-decoration : underline;
+  font-weight : bold;  
+  font-family : verdana;  
+}
+
+#overlay{
+  position: absolute;
+  z-index:100;		
+  width: 100%;
+  height: 100%;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: #000;
+  opacity: .3;
+  filter: alpha(opacity=30);
+}
+
+#message_box{
+  position : absolute;
+  width : 100%;
+  height : 100%;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  color : #000000;  
+  z-index : 100;
+}
+
+#message_box_header{
+  background-color : #666;
+  width : 300px;
+  padding : 5px;
+  border-left : 1px solid #000000;
+  border-right : 1px solid #000000;
+  border-top : 1px solid #000000;
+  text-align : right;
+  font-size : 11px;
+  font-family : verdana;  
+}
+
+#message_box_body{
+  background-color : #ffffff;
+  padding : 5px;
+  border : 1px solid #000000;
+  width : 300px;
+  font-size : 11px;
+  font-family : verdana;  
+}
+
+#loading_progress{
+  display: none;
+  position: absolute;
+  z-index:100;
+  width: 100%;
+  height: 100%;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  min-height:100%;
+  background-color: #000;
+  opacity: .3;
+  filter: alpha(opacity=30);
+}
+
+#loading_progress1{
+  display: none;
+  position: absolute;
+  z-index:100;
+  width: 100%;
+  height: 100%;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  min-height:100%;
+}

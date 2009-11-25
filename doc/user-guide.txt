@@ -1,0 +1,328 @@
+WebROaR User Guide 
+==================
+
+Introduction
+-------------
+
+http://webroar.in[WebROaR] is an application server that makes deployments of ruby web 
+applications extremely simple. It provides an integrated solution to view 
+the run time performance numbers and sends email notifications in case any 
+exceptions occur in any of the deployed applications.
+
+It is 5 to 55% faster than all other comparable deployment stacks for 
+Ruby on Rails applications.
+
+Key Features
+~~~~~~~~~~~~
+
+* Maximum Performance. 
+* Simplified Deployment.
+* Runs Ruby on Rails(TM) as well as other Rack compliant applications. 
+* Run Multiple Applications Simultaneously. 
+* Implements HTTP/1.1 grammar as per RFC 2616 including support for persistent,
+ and chunked requests. 
+* Intelligent load balancing and dynamic reaping of stuck ruby processing
+ instances. 
+* Provides run time performance data for the deployed applications. 
+* Generates notifications in case any exceptions occur in any of the deployed
+ applications.
+* SSL support. 
+
+Supported Operating Systems
+---------------------------
+
+WebROaR has been tested on Ubuntu 8.1/9.04, Debian 5 (64 Bit), Mac OS X (10.5) 
+and Cent OS 5.2. Basically, it should be able to run on any *IX OS. 
+
+Currently it does not support Microsoft(R) Windows.
+
+Install
+--------
+
+Prerequisites 
+~~~~~~~~~~~~~
+
+- ruby 1.8.x or 1.9.x 
+- ruby 1.8-dev or 1.9-dev 
+- openssl ruby extension (On Ubuntu/Debian it is available as libopenssl-ruby1.X)
+- zlib ruby extension
+- rubygems
+- C build tools (gcc etc) (e.g. build-essential on Ubuntu, Xcode on MacOS)
+- libsqlite3
+- libsqlite3-dev
+- gnutls 2.4.1 or later (Only necessary in case SSL support is required) 
+- gnutls-dev 2.4.1 or later (Only necessary in case SSL support is required) 
+
+[NOTE]
+.Ruby Shared Library
+===============================
+The server needs the shared library - libruby.so to run the ruby web 
+applications.
+
+If you are building ruby from source, please ensure you pass the flag 
+*--enable-shared* while executing its ./configure script.
+
+===============================
+
+Procedure
+~~~~~~~~~
+
+WebROaR can installed using the following commands:
+
+----
+gem sources -a http://gems.github.com
+sudo gem install webroar
+sudo webroar install
+----
+
+[NOTE] 
+.SSL Support
+===============================
+In case you would like to setup SSL support for the server, use the following
+command line switch with *sudo webroar install* command mentioned above.
+----
+sudo webroar install --ssl-support
+----
+
+Configure further SSL options in the server's admin panel
+	*http://<yourservername>:<port>/admin-panel/configuration*
+
+After restarting the server, admin panel would now also be accessible over SSL.
+*https://<yourservername>:<port>/admin-panel*
+===============================
+
+Or if you like living in the fast lane, you can install the edge version giving
+the following commands:
+
+----
+git clone git://github.com/webroar/webroar.git
+cd webroar
+sudo rake install
+----
+
+[NOTE]
+.SSL Support
+===============================
+To build with SSL support, use the following additional switch with the 
+*sudo rake install* command:
+----
+sudo rake install ssl=yes
+----
+
+Configure further SSL options in the server's admin panel
+	*http://<yourservername>:<port>/admin-panel/configuration*
+
+After restarting the server, admin panel would now also be accessible over SSL.
+*https://<yourservername>:<port>/admin-panel*
+===============================
+  
+Troubleshooting
+~~~~~~~~~~~~~~~
+[IMPORTANT]
+It is suggested that rubygems software should be setup correctly 
+beforehand, and you should be successfully able to access and use the already 
+installed gems. (If you use Ubuntu, you might be able to relate to this point
+better.) 
+
+- In case auto-installation of dependent gems fails (due to some prehistoric 
+rubygems version or any other reason), you can install the following dependent
+ gems individually first:
+
+ calendar_date_select, rack, rake, rspec, sqlite3-ruby, starling-starling
+
+- After successful installation of the webroar gem, any errors that occur
+during the setup are saved to the install.log created in the installed gem's 
+directory. This can be used to troubleshoot the issues, if any.
+
+- All run time logs for the server and the deployed applications can be found 
+in */var/log/webroar*. In the unfortunate event of the server crashing, a core 
+dump file would be created in /tmp if 'gcore' is available on that machine.
+
+
+Setting up database for server admin panel
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+The server's admin panel itself is a Ruby on Rails(TM) web application, and by 
+default uses sqlite as it's database. You can edit 
+*admin_panel/config/database.yml* to setup a database of your liking and 
+follow it up by running these commands from the *admin_panel* directory.
+
+----
+rake db:create
+rake db:migrate
+----
+
+*admin_panel* directory would be present under the server's rubygem 
+directory.
+
+Usage
+------
+
+Start/Stop/Restart WebROaR:
+
+----
+sudo webroar start
+sudo webroar stop
+sudo webroar restart
+----
+
+Start/Stop/Restart a deployed application:
+
+----
+sudo webroar start <Application Name>
+sudo webroar stop <Application Name>
+sudo webroar restart <Application Name>
+----
+
+[NOTE]
+===============================
+You can stop the admin panel application of the server any time, to conserve 
+resources and ensure better security.
+
+----
+sudo webroar stop "Admin Panel"
+----
+
+To start it whenever you want, use the following command:
+
+----
+sudo webroar start "Admin Panel"
+----
+
+Please note that analytics data and exceptions are still captured by the 
+server even when the admin panel is stopped.
+===============================
+
+Deploying applications
+----------------------
+
+If the server got installed successfully, you should be able access it's admin
+panel using the link: + 
+*http://<yourservername>:<port>/admin-panel*
+
+You can log in with the administrator account username and password that you 
+had entered during server installation. Deploy the ruby web application of 
+your choice accessing the *Configuration* link of the admin panel.
+
+[TIP]
+You do *"not"* need to restart the server when you deploy a new application.
+The application starts up automatically after deployment.
+
+Rack applications (other than Rails)
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+To deploy any Rack based application (other than Rails) the following are 
+required in it's root directory:
+
+- *public* folder containing static files like images and stylesheets
+- *config.ru* - the Rackup file for starting the application. This file must 
+contain the complete logic for initializing the application.
+
+Here are some examples of the Rackup files:
+
+*Merb*
+
+----
+  require 'rubygems'
+  require 'merb-core'
+  Merb::Config.setup(:merb_root   => ENV['APP_ROOT'],
+                     :environment => ENV['APP_ENV'],
+                     :path_prefix => ENV['APP_BASE_URI'])
+  Merb.environment = Merb::Config[:environment]
+  Merb.root = Merb::Config[:merb_root]
+  Merb::BootLoader.run
+  run Merb::Rack::Application.new
+----
+
+*Sinatra*
+
+----
+  require 'rubygems'
+  require 'rack'
+  require 'sinatra'  
+  set :env, ENV['APP_ENV'] || :production  
+  set :raise_errors, true  
+  run Sinatra::Application
+----
+
+You can use following environment variables in *config.ru* to access the few
+application configuration parameters given at a time of application deployment
+in WebROaR.
+
+- ENV[\'APP_ROOT\'] - To get the application root
+- ENV[\'APP_ENV\'] - To get the application environment
+- ENV[\'APP_BASE_URI\'] - To get the baseuri
+
+Accessing run time statistics 
+-----------------------------
+
+For those applications whose Analytics are *Enabled* in their configuration,
+the following graphs are available under the *Analytics* link of the admin panel.
+
+. URL Breakdown
+. Most Time Consuming URLs
+. URL Hits
+. Slowest URLs
+. Top Database Consuming URLs
+. Percentage Time Spent in Database Layer
+. Average Response Time
+. Peak Requests in Second
+. Percentage CPU Utilization
+. Physical Memory Utilization
+
+Additionally, CPU and Physical Memory usage graphs for the entire server are
+also available. 
+
+[NOTE]
+Currently, Analytics are only supported for Ruby on Rails(TM) applications. 
+Also, after a specific request has been processed by the server, it takes 
+about a minute for it’s data to show up in the graphs.
+
+Exception Tracking and Notifications
+------------------------------------
+
+Any exceptions that occur in any of the deployed application are captured by 
+the server. An email notification is also sent out immediately with details of 
+the exception, if the mail settings have been configured in the admin panel. 
+
+All the exceptions can be seen under the *Exceptions* link of the server admin 
+panel.
+
+[NOTE]
+Currently, this feature is only supported for Ruby on Rails(TM) applications. 
+Also, it takes about a minute for an exception to show up in the Admin Panel 
+after it has occurred.
+
+Uninstall
+---------
+
+If you didn't like the server, use the following commands in sequence to uninstall it. 
+
+----
+sudo webroar uninstall
+sudo gem uninstall webroar
+----
+
+Test Suite
+----------
+
+If you are a programmer and wish to play around with the server's code, you 
+might like to use it's test suite to test the robustness of your changes.
+
+It can be run using the following command:
+
+----
+sudo webroar test	
+----
+
+We execute this suite on our nightly builds and it currently has the following 
+tests:
+
+- Unit Tests
+- Functional Tests
+- Admin-Panel Tests
+- Load Test I - Continuous run
+- Load Test II - Random sleep interval run
+- Build Tests
+
+

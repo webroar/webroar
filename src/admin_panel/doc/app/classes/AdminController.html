@@ -1,0 +1,628 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html 
+     PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+     "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+  <title>Class: AdminController</title>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <meta http-equiv="Content-Script-Type" content="text/javascript" />
+  <link rel="stylesheet" href=".././rdoc-style.css" type="text/css" media="screen" />
+  <script type="text/javascript">
+  // <![CDATA[
+
+  function popupCode( url ) {
+    window.open(url, "Code", "resizable=yes,scrollbars=yes,toolbar=no,status=no,height=150,width=400")
+  }
+
+  function toggleCode( id ) {
+    if ( document.getElementById )
+      elem = document.getElementById( id );
+    else if ( document.all )
+      elem = eval( "document.all." + id );
+    else
+      return false;
+
+    elemStyle = elem.style;
+    
+    if ( elemStyle.display != "block" ) {
+      elemStyle.display = "block"
+    } else {
+      elemStyle.display = "none"
+    }
+
+    return true;
+  }
+  
+  // Make codeblocks hidden by default
+  document.writeln( "<style type=\"text/css\">div.method-source-code { display: none }</style>" )
+  
+  // ]]>
+  </script>
+
+</head>
+<body>
+
+
+
+    <div id="classHeader">
+        <table class="header-table">
+        <tr class="top-aligned-row">
+          <td><strong>Class</strong></td>
+          <td class="class-name-in-header">AdminController</td>
+        </tr>
+        <tr class="top-aligned-row">
+            <td><strong>In:</strong></td>
+            <td>
+                <a href="../files/app/controllers/admin_controller_rb.html">
+                app/controllers/admin_controller.rb
+                </a>
+        <br />
+            </td>
+        </tr>
+
+        <tr class="top-aligned-row">
+            <td><strong>Parent:</strong></td>
+            <td>
+                <a href="ApplicationController.html">
+                ApplicationController
+               </a>
+            </td>
+        </tr>
+        </table>
+    </div>
+  <!-- banner header -->
+
+  <div id="bodyContent">
+
+
+
+  <div id="contextContent">
+
+    <div id="description">
+      <p>
+This controller deals with all the actions related to the user handling and
+application <a href="AdminController.html#M000011">configuration</a>.
+</p>
+
+    </div>
+
+
+   </div>
+
+    <div id="method-list">
+      <h3 class="section-bar">Methods</h3>
+
+      <div class="name-list">
+      <a href="#M000016">add_text_box</a>&nbsp;&nbsp;
+      <a href="#M000017">cancel_edit</a>&nbsp;&nbsp;
+      <a href="#M000014">change_password</a>&nbsp;&nbsp;
+      <a href="#M000015">change_password_form</a>&nbsp;&nbsp;
+      <a href="#M000011">configuration</a>&nbsp;&nbsp;
+      <a href="#M000009">get_latest_app_cpu_usage</a>&nbsp;&nbsp;
+      <a href="#M000010">get_latest_app_memory_usage</a>&nbsp;&nbsp;
+      <a href="#M000007">get_latest_server_cpu_usage</a>&nbsp;&nbsp;
+      <a href="#M000008">get_latest_server_memory_usage</a>&nbsp;&nbsp;
+      <a href="#M000018">get_latest_time</a>&nbsp;&nbsp;
+      <a href="#M000006">home</a>&nbsp;&nbsp;
+      <a href="#M000005">index</a>&nbsp;&nbsp;
+      <a href="#M000012">login</a>&nbsp;&nbsp;
+      <a href="#M000013">logout</a>&nbsp;&nbsp;
+      <a href="#M000019">required_apps</a>&nbsp;&nbsp;
+      </div>
+    </div>
+
+  </div>
+
+
+    <!-- if includes -->
+
+    <div id="section">
+
+
+
+
+
+      
+
+
+    <!-- if method_list -->
+    <div id="methods">
+      <h3 class="section-bar">Public Instance methods</h3>
+
+      <div id="method-M000016" class="method-detail">
+        <a name="M000016"></a>
+
+        <div class="method-heading">
+          <a href="#M000016" class="method-signature">
+          <span class="method-name">add_text_box</span><span class="method-args">()</span>
+          </a>
+        </div>
+      
+        <div class="method-description">
+          <p>
+This method is to add div for changing the server specifications. This
+action is called as a ajax call when user click on the edit button of the
+server specification block in the <a
+href="AdminController.html#M000011">configuration</a> page.
+</p>
+          <p><a class="source-toggle" href="#"
+            onclick="toggleCode('M000016-source');return false;">[Source]</a></p>
+          <div class="method-source-code" id="M000016-source">
+<pre>
+     <span class="ruby-comment cmt"># File app/controllers/admin_controller.rb, line 160</span>
+160:   <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">add_text_box</span>
+161:     <span class="ruby-ivar">@path</span>=<span class="ruby-constant">CONFIG_FILE_PATH</span>
+162:     <span class="ruby-identifier">render</span> <span class="ruby-identifier">:partial=</span><span class="ruby-operator">&gt;</span><span class="ruby-value str">'add_div'</span>
+163:   <span class="ruby-keyword kw">end</span>
+</pre>
+          </div>
+        </div>
+      </div>
+
+      <div id="method-M000017" class="method-detail">
+        <a name="M000017"></a>
+
+        <div class="method-heading">
+          <a href="#M000017" class="method-signature">
+          <span class="method-name">cancel_edit</span><span class="method-args">()</span>
+          </a>
+        </div>
+      
+        <div class="method-description">
+          <p>
+This method is to close the edit box for the server specification. This is
+called if user doesnot wants to made the changes in the server
+specification.
+</p>
+          <p><a class="source-toggle" href="#"
+            onclick="toggleCode('M000017-source');return false;">[Source]</a></p>
+          <div class="method-source-code" id="M000017-source">
+<pre>
+     <span class="ruby-comment cmt"># File app/controllers/admin_controller.rb, line 167</span>
+167:   <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">cancel_edit</span>
+168:     <span class="ruby-identifier">text</span>=<span class="ruby-identifier">params</span>[<span class="ruby-identifier">:old_value</span>].<span class="ruby-identifier">to_s</span>                
+169:     <span class="ruby-identifier">render</span> <span class="ruby-identifier">:text</span> =<span class="ruby-operator">&gt;</span>     <span class="ruby-identifier">text</span>
+170:   <span class="ruby-keyword kw">end</span>
+</pre>
+          </div>
+        </div>
+      </div>
+
+      <div id="method-M000014" class="method-detail">
+        <a name="M000014"></a>
+
+        <div class="method-heading">
+          <a href="#M000014" class="method-signature">
+          <span class="method-name">change_password</span><span class="method-args">()</span>
+          </a>
+        </div>
+      
+        <div class="method-description">
+          <p>
+The action is to change the password of the admin panel user.
+</p>
+          <p><a class="source-toggle" href="#"
+            onclick="toggleCode('M000014-source');return false;">[Source]</a></p>
+          <div class="method-source-code" id="M000014-source">
+<pre>
+     <span class="ruby-comment cmt"># File app/controllers/admin_controller.rb, line 128</span>
+128:   <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">change_password</span>
+129:     <span class="ruby-identifier">set_application_name</span>
+130:     <span class="ruby-identifier">password_changed</span>=<span class="ruby-keyword kw">false</span>
+131:     <span class="ruby-identifier">users</span>=<span class="ruby-constant">YAML</span><span class="ruby-operator">::</span><span class="ruby-identifier">load_file</span>(<span class="ruby-constant">USERS_FILE_PATH</span>) <span class="ruby-keyword kw">rescue</span> <span class="ruby-keyword kw">nil</span>
+132:     <span class="ruby-identifier">users</span>.<span class="ruby-identifier">each</span> <span class="ruby-keyword kw">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">user</span><span class="ruby-operator">|</span>
+133:       <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">user</span>[<span class="ruby-value str">'user_name'</span>]<span class="ruby-operator">==</span><span class="ruby-identifier">session</span>[<span class="ruby-identifier">:user</span>] <span class="ruby-operator">&amp;&amp;</span>  <span class="ruby-identifier">user</span>[<span class="ruby-value str">'password'</span>] <span class="ruby-operator">==</span> <span class="ruby-constant">Digest</span><span class="ruby-operator">::</span><span class="ruby-constant">MD5</span>.<span class="ruby-identifier">hexdigest</span>(<span class="ruby-identifier">params</span>[<span class="ruby-identifier">:password</span>][<span class="ruby-identifier">:old</span>]) <span class="ruby-operator">&amp;&amp;</span> <span class="ruby-identifier">params</span>[<span class="ruby-identifier">:password</span>][<span class="ruby-identifier">:new</span>]<span class="ruby-operator">==</span><span class="ruby-identifier">params</span>[<span class="ruby-identifier">:password</span>][<span class="ruby-identifier">:confirm</span>] <span class="ruby-operator">&amp;&amp;</span> <span class="ruby-identifier">params</span>[<span class="ruby-identifier">:password</span>][<span class="ruby-identifier">:new</span>].<span class="ruby-identifier">length</span> <span class="ruby-operator">&gt;</span> <span class="ruby-value">5</span> 
+134:         <span class="ruby-identifier">user</span>[<span class="ruby-value str">'password'</span>]=<span class="ruby-constant">Digest</span><span class="ruby-operator">::</span><span class="ruby-constant">MD5</span>.<span class="ruby-identifier">hexdigest</span>(<span class="ruby-identifier">params</span>[<span class="ruby-identifier">:password</span>][<span class="ruby-identifier">:new</span>])
+135:         <span class="ruby-identifier">password_changed</span>=<span class="ruby-keyword kw">true</span>
+136:         <span class="ruby-keyword kw">break</span>
+137:       <span class="ruby-keyword kw">end</span>
+138:     <span class="ruby-keyword kw">end</span>
+139:     <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">password_changed</span>
+140:       <span class="ruby-identifier">flash</span>[<span class="ruby-identifier">:notice</span>]=<span class="ruby-constant">PASSWORD_CHANGED</span>
+141:       <span class="ruby-constant">YAMLWriter</span>.<span class="ruby-identifier">write</span>(<span class="ruby-identifier">users</span>,<span class="ruby-constant">USERS_FILE_PATH</span>,<span class="ruby-value str">&quot;user&quot;</span>)
+142:     <span class="ruby-keyword kw">else</span>
+143:       <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">params</span>[<span class="ruby-identifier">:password</span>][<span class="ruby-identifier">:new</span>].<span class="ruby-identifier">length</span> <span class="ruby-operator">&lt;</span> <span class="ruby-value">6</span>
+144:         <span class="ruby-identifier">flash</span>[<span class="ruby-identifier">:notice</span>]=<span class="ruby-constant">WRONG_PASSWORD2</span>
+145:       <span class="ruby-keyword kw">else</span> 
+146:         <span class="ruby-identifier">flash</span>[<span class="ruby-identifier">:notice</span>]=<span class="ruby-constant">WRONG_PASSWORD1</span>
+147:       <span class="ruby-keyword kw">end</span>
+148:       <span class="ruby-comment cmt">#TODO : This message is to be made more specific for old password and confirm password.</span>
+149:     <span class="ruby-keyword kw">end</span>
+150:     <span class="ruby-identifier">render</span> <span class="ruby-identifier">:action</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-value str">'change_password_form'</span>
+151:   <span class="ruby-keyword kw">end</span>
+</pre>
+          </div>
+        </div>
+      </div>
+
+      <div id="method-M000015" class="method-detail">
+        <a name="M000015"></a>
+
+        <div class="method-heading">
+          <a href="#M000015" class="method-signature">
+          <span class="method-name">change_password_form</span><span class="method-args">()</span>
+          </a>
+        </div>
+      
+        <div class="method-description">
+          <p>
+This method is used to render the Admin Panel Settings Page.
+</p>
+          <p><a class="source-toggle" href="#"
+            onclick="toggleCode('M000015-source');return false;">[Source]</a></p>
+          <div class="method-source-code" id="M000015-source">
+<pre>
+     <span class="ruby-comment cmt"># File app/controllers/admin_controller.rb, line 154</span>
+154:   <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">change_password_form</span>
+155:     <span class="ruby-identifier">set_application_name</span>
+156:   <span class="ruby-keyword kw">end</span>
+</pre>
+          </div>
+        </div>
+      </div>
+
+      <div id="method-M000011" class="method-detail">
+        <a name="M000011"></a>
+
+        <div class="method-heading">
+          <a href="#M000011" class="method-signature">
+          <span class="method-name">configuration</span><span class="method-args">()</span>
+          </a>
+        </div>
+      
+        <div class="method-description">
+          <p>
+This function is to get the details of config file for <a
+href="AdminController.html#M000011">configuration</a> page. This page
+contains the server settings and the application settings.
+</p>
+          <p><a class="source-toggle" href="#"
+            onclick="toggleCode('M000011-source');return false;">[Source]</a></p>
+          <div class="method-source-code" id="M000011-source">
+<pre>
+    <span class="ruby-comment cmt"># File app/controllers/admin_controller.rb, line 86</span>
+86:   <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">configuration</span>                     
+87:     <span class="ruby-ivar">@info</span>= <span class="ruby-constant">YAML</span><span class="ruby-operator">::</span><span class="ruby-identifier">load_file</span>(<span class="ruby-constant">CONFIG_FILE_PATH</span>)    <span class="ruby-keyword kw">rescue</span> <span class="ruby-keyword kw">nil</span>
+88:     <span class="ruby-ivar">@ssl_spec</span> = <span class="ruby-constant">Hash</span>[<span class="ruby-identifier">:certificate_path</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">params</span>[<span class="ruby-identifier">:ssl</span>][<span class="ruby-identifier">:certificate_path</span>],
+89:       <span class="ruby-identifier">:key_path</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">params</span>[<span class="ruby-identifier">:ssl</span>][<span class="ruby-identifier">:key_path</span>],
+90:       <span class="ruby-identifier">:port</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">params</span>[<span class="ruby-identifier">:ssl</span>][<span class="ruby-identifier">:port</span>]] <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">params</span>[<span class="ruby-identifier">:ssl</span>]
+91:     <span class="ruby-ivar">@sendmail_old</span> = <span class="ruby-identifier">params</span>[<span class="ruby-identifier">:sendmail</span>] <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">params</span>[<span class="ruby-identifier">:sendmail</span>]
+92:     <span class="ruby-ivar">@smtp_old</span> = <span class="ruby-identifier">params</span>[<span class="ruby-identifier">:smtp</span>] <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">params</span>[<span class="ruby-identifier">:smtp</span>]
+93:     <span class="ruby-identifier">set_application_name</span>
+94:   <span class="ruby-keyword kw">end</span>
+</pre>
+          </div>
+        </div>
+      </div>
+
+      <div id="method-M000009" class="method-detail">
+        <a name="M000009"></a>
+
+        <div class="method-heading">
+          <a href="#M000009" class="method-signature">
+          <span class="method-name">get_latest_app_cpu_usage</span><span class="method-args">()</span>
+          </a>
+        </div>
+      
+        <div class="method-description">
+          <p>
+This function is to dynamically update the application&#8216;s CPU usage
+After a minute it refreshes the cpu usage for a particalar application.
+</p>
+          <p><a class="source-toggle" href="#"
+            onclick="toggleCode('M000009-source');return false;">[Source]</a></p>
+          <div class="method-source-code" id="M000009-source">
+<pre>
+    <span class="ruby-comment cmt"># File app/controllers/admin_controller.rb, line 64</span>
+64:   <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">get_latest_app_cpu_usage</span>
+65:     <span class="ruby-identifier">apps_resource_usage</span>=<span class="ruby-constant">ResourceUsage</span>.<span class="ruby-identifier">get_latest_for_apps</span>
+66:     <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">params</span>[<span class="ruby-identifier">:app_name</span>] <span class="ruby-keyword kw">and</span> <span class="ruby-identifier">apps_resource_usage</span>[<span class="ruby-identifier">params</span>[<span class="ruby-identifier">:app_name</span>]]
+67:       <span class="ruby-identifier">render</span> <span class="ruby-identifier">:text</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">apps_resource_usage</span>[<span class="ruby-identifier">params</span>[<span class="ruby-identifier">:app_name</span>]][<span class="ruby-value">0</span>].<span class="ruby-identifier">to_s</span>
+68:     <span class="ruby-keyword kw">else</span>
+69:       <span class="ruby-identifier">render</span> <span class="ruby-identifier">:text</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-value str">&quot;0.0&quot;</span>
+70:     <span class="ruby-keyword kw">end</span>
+71:   <span class="ruby-keyword kw">end</span>
+</pre>
+          </div>
+        </div>
+      </div>
+
+      <div id="method-M000010" class="method-detail">
+        <a name="M000010"></a>
+
+        <div class="method-heading">
+          <a href="#M000010" class="method-signature">
+          <span class="method-name">get_latest_app_memory_usage</span><span class="method-args">()</span>
+          </a>
+        </div>
+      
+        <div class="method-description">
+          <p>
+This function is to dynamically update the application&#8216;s Memory
+usage. After a minute it refreshes the memory usage for a particalar
+application.
+</p>
+          <p><a class="source-toggle" href="#"
+            onclick="toggleCode('M000010-source');return false;">[Source]</a></p>
+          <div class="method-source-code" id="M000010-source">
+<pre>
+    <span class="ruby-comment cmt"># File app/controllers/admin_controller.rb, line 75</span>
+75:   <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">get_latest_app_memory_usage</span>
+76:     <span class="ruby-identifier">apps_resource_usage</span>=<span class="ruby-constant">ResourceUsage</span>.<span class="ruby-identifier">get_latest_for_apps</span>
+77:     <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">params</span>[<span class="ruby-identifier">:app_name</span>] <span class="ruby-keyword kw">and</span> <span class="ruby-identifier">apps_resource_usage</span>[<span class="ruby-identifier">params</span>[<span class="ruby-identifier">:app_name</span>]]
+78:       <span class="ruby-identifier">render</span> <span class="ruby-identifier">:text</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">format</span>(<span class="ruby-value str">&quot;%.2f&quot;</span>,<span class="ruby-identifier">apps_resource_usage</span>[<span class="ruby-identifier">params</span>[<span class="ruby-identifier">:app_name</span>]][<span class="ruby-value">1</span>]<span class="ruby-operator">/</span><span class="ruby-value">1024</span>.<span class="ruby-identifier">to_f</span>)        
+79:     <span class="ruby-keyword kw">else</span>
+80:       <span class="ruby-identifier">render</span> <span class="ruby-identifier">:text</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-value str">&quot;0.0&quot;</span>
+81:     <span class="ruby-keyword kw">end</span>
+82:   <span class="ruby-keyword kw">end</span>
+</pre>
+          </div>
+        </div>
+      </div>
+
+      <div id="method-M000007" class="method-detail">
+        <a name="M000007"></a>
+
+        <div class="method-heading">
+          <a href="#M000007" class="method-signature">
+          <span class="method-name">get_latest_server_cpu_usage</span><span class="method-args">()</span>
+          </a>
+        </div>
+      
+        <div class="method-description">
+          <p>
+This function is to dynamically update the server&#8216;s CPU usage. After
+a minute it refreshes the cpu usage.
+</p>
+          <p><a class="source-toggle" href="#"
+            onclick="toggleCode('M000007-source');return false;">[Source]</a></p>
+          <div class="method-source-code" id="M000007-source">
+<pre>
+    <span class="ruby-comment cmt"># File app/controllers/admin_controller.rb, line 52</span>
+52:   <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">get_latest_server_cpu_usage</span>
+53:     <span class="ruby-identifier">render</span> <span class="ruby-identifier">:text</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-constant">ResourceUsage</span>.<span class="ruby-identifier">get_latest_for_server</span>[<span class="ruby-value">0</span>] 
+54:   <span class="ruby-keyword kw">end</span>
+</pre>
+          </div>
+        </div>
+      </div>
+
+      <div id="method-M000008" class="method-detail">
+        <a name="M000008"></a>
+
+        <div class="method-heading">
+          <a href="#M000008" class="method-signature">
+          <span class="method-name">get_latest_server_memory_usage</span><span class="method-args">()</span>
+          </a>
+        </div>
+      
+        <div class="method-description">
+          <p>
+This function is to dynamically update the server&#8216;s memory usage.
+After a minute it refreshes the memory usage of the server.
+</p>
+          <p><a class="source-toggle" href="#"
+            onclick="toggleCode('M000008-source');return false;">[Source]</a></p>
+          <div class="method-source-code" id="M000008-source">
+<pre>
+    <span class="ruby-comment cmt"># File app/controllers/admin_controller.rb, line 58</span>
+58:   <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">get_latest_server_memory_usage</span>
+59:     <span class="ruby-identifier">render</span> <span class="ruby-identifier">:text</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">format</span>(<span class="ruby-value str">&quot;%.2f&quot;</span>,<span class="ruby-constant">ResourceUsage</span>.<span class="ruby-identifier">get_latest_for_server</span>[<span class="ruby-value">1</span>]<span class="ruby-operator">/</span><span class="ruby-value">1024</span>.<span class="ruby-identifier">to_f</span>)
+60:   <span class="ruby-keyword kw">end</span>
+</pre>
+          </div>
+        </div>
+      </div>
+
+      <div id="method-M000018" class="method-detail">
+        <a name="M000018"></a>
+
+        <div class="method-heading">
+          <a href="#M000018" class="method-signature">
+          <span class="method-name">get_latest_time</span><span class="method-args">()</span>
+          </a>
+        </div>
+      
+        <div class="method-description">
+          <p>
+This method is to return the server time. The method refreshes the time
+after every minute.
+</p>
+          <p><a class="source-toggle" href="#"
+            onclick="toggleCode('M000018-source');return false;">[Source]</a></p>
+          <div class="method-source-code" id="M000018-source">
+<pre>
+     <span class="ruby-comment cmt"># File app/controllers/admin_controller.rb, line 174</span>
+174:   <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">get_latest_time</span>
+175:     <span class="ruby-identifier">render</span> <span class="ruby-identifier">:text</span> =<span class="ruby-operator">&gt;</span>  <span class="ruby-constant">Time</span>.<span class="ruby-identifier">now</span>.<span class="ruby-identifier">strftime</span>(<span class="ruby-value str">&quot;%d %b %Y %H:%M&quot;</span>)
+176:   <span class="ruby-keyword kw">end</span>
+</pre>
+          </div>
+        </div>
+      </div>
+
+      <div id="method-M000006" class="method-detail">
+        <a name="M000006"></a>
+
+        <div class="method-heading">
+          <a href="#M000006" class="method-signature">
+          <span class="method-name">home</span><span class="method-args">()</span>
+          </a>
+        </div>
+      
+        <div class="method-description">
+          <p>
+This action is for displaying the first page i.e Home page of the Admin
+Panel. This page contains the server snapshot(i.e. its cpu and memory
+usgae) and the list of application deployed on the server with its cpu and
+memory usgae.
+</p>
+          <p><a class="source-toggle" href="#"
+            onclick="toggleCode('M000006-source');return false;">[Source]</a></p>
+          <div class="method-source-code" id="M000006-source">
+<pre>
+    <span class="ruby-comment cmt"># File app/controllers/admin_controller.rb, line 43</span>
+43:   <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">home</span>
+44:     <span class="ruby-ivar">@info</span> = <span class="ruby-constant">YAML</span><span class="ruby-operator">::</span><span class="ruby-identifier">load_file</span>(<span class="ruby-constant">CONFIG_FILE_PATH</span>) <span class="ruby-keyword kw">rescue</span> <span class="ruby-keyword kw">nil</span> <span class="ruby-comment cmt">#To get the data of yaml file into yaml object</span>
+45:     <span class="ruby-ivar">@server_resource_usage</span> = <span class="ruby-constant">ResourceUsage</span>.<span class="ruby-identifier">get_latest_for_server</span> <span class="ruby-comment cmt">#To get the resource usage by the server </span>
+46:     <span class="ruby-ivar">@apps_resource_usage</span> = <span class="ruby-constant">ResourceUsage</span>.<span class="ruby-identifier">get_latest_for_apps</span> <span class="ruby-comment cmt"># to get the resource usage by the application</span>
+47:     <span class="ruby-identifier">set_application_name</span>
+48:   <span class="ruby-keyword kw">end</span>
+</pre>
+          </div>
+        </div>
+      </div>
+
+      <div id="method-M000005" class="method-detail">
+        <a name="M000005"></a>
+
+        <div class="method-heading">
+          <a href="#M000005" class="method-signature">
+          <span class="method-name">index</span><span class="method-args">()</span>
+          </a>
+        </div>
+      
+        <div class="method-description">
+          <p>
+This action is to render the <a
+href="AdminController.html#M000012">login</a> page with the layout
+index.html.erb. If the user session is already created the it redirects the
+control to the <a href="AdminController.html#M000006">home</a> page of the
+admin panel.
+</p>
+          <p><a class="source-toggle" href="#"
+            onclick="toggleCode('M000005-source');return false;">[Source]</a></p>
+          <div class="method-source-code" id="M000005-source">
+<pre>
+    <span class="ruby-comment cmt"># File app/controllers/admin_controller.rb, line 31</span>
+31:   <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">index</span>
+32:     <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">session</span>[<span class="ruby-identifier">:user</span>]
+33:       <span class="ruby-identifier">redirect_to</span> <span class="ruby-identifier">home_path</span>
+34:     <span class="ruby-keyword kw">else</span>
+35:       <span class="ruby-ivar">@user</span> = <span class="ruby-constant">User</span>.<span class="ruby-identifier">new</span>
+36:       <span class="ruby-identifier">render</span> <span class="ruby-identifier">:action</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-value str">'index'</span>, <span class="ruby-identifier">:layout=</span><span class="ruby-operator">&gt;</span><span class="ruby-value str">'index'</span>
+37:     <span class="ruby-keyword kw">end</span>
+38:   <span class="ruby-keyword kw">end</span>
+</pre>
+          </div>
+        </div>
+      </div>
+
+      <div id="method-M000012" class="method-detail">
+        <a name="M000012"></a>
+
+        <div class="method-heading">
+          <a href="#M000012" class="method-signature">
+          <span class="method-name">login</span><span class="method-args">()</span>
+          </a>
+        </div>
+      
+        <div class="method-description">
+          <p>
+This action is called for <a href="AdminController.html#M000012">login</a>
+authentication. For user authentication it used a method
+&quot;user_authentication&quot; present in the application.rb. It takes
+user hash as a input from the <a
+href="AdminController.html#M000012">login</a> page.
+</p>
+          <p><a class="source-toggle" href="#"
+            onclick="toggleCode('M000012-source');return false;">[Source]</a></p>
+          <div class="method-source-code" id="M000012-source">
+<pre>
+     <span class="ruby-comment cmt"># File app/controllers/admin_controller.rb, line 98</span>
+ 98:   <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">login</span>
+ 99:     <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">request</span>.<span class="ruby-identifier">post?</span>      
+100:       <span class="ruby-identifier">rv</span> = <span class="ruby-constant">User</span>.<span class="ruby-identifier">authenticate</span>(<span class="ruby-identifier">params</span>[<span class="ruby-identifier">:user</span>][<span class="ruby-identifier">:name</span>], <span class="ruby-identifier">params</span>[<span class="ruby-identifier">:user</span>][<span class="ruby-identifier">:password</span>]) <span class="ruby-keyword kw">rescue</span> <span class="ruby-keyword kw">nil</span>      
+101:       <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">rv</span> <span class="ruby-operator">==</span> <span class="ruby-keyword kw">true</span>
+102:         <span class="ruby-identifier">session</span>[<span class="ruby-identifier">:session_time</span>] = <span class="ruby-constant">Time</span>.<span class="ruby-identifier">now</span>
+103:         <span class="ruby-identifier">session</span>[<span class="ruby-identifier">:user</span>] = <span class="ruby-identifier">params</span>[<span class="ruby-identifier">:user</span>][<span class="ruby-identifier">:name</span>]
+104:         <span class="ruby-identifier">flash</span>[<span class="ruby-identifier">:notice</span>] = <span class="ruby-keyword kw">nil</span>
+105:         <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">session</span>[<span class="ruby-identifier">:referer</span>]
+106:           <span class="ruby-identifier">referer_path</span> = <span class="ruby-identifier">session</span>[<span class="ruby-identifier">:referer</span>]
+107:           <span class="ruby-identifier">session</span>[<span class="ruby-identifier">:referer</span>] = <span class="ruby-keyword kw">nil</span>
+108:           <span class="ruby-identifier">redirect_to</span> <span class="ruby-identifier">referer_path</span>
+109:         <span class="ruby-keyword kw">else</span>
+110:           <span class="ruby-identifier">redirect_to</span> <span class="ruby-identifier">root_path</span>      
+111:         <span class="ruby-keyword kw">end</span>            
+112:       <span class="ruby-keyword kw">else</span>
+113:         <span class="ruby-identifier">flash</span>[<span class="ruby-identifier">:notice</span>] = <span class="ruby-identifier">rv</span>
+114:         <span class="ruby-identifier">render</span> <span class="ruby-identifier">:action</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-value str">'index'</span>, <span class="ruby-identifier">:layout</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-value str">'index'</span>
+115:       <span class="ruby-keyword kw">end</span>      
+116:     <span class="ruby-keyword kw">end</span>
+117:   <span class="ruby-keyword kw">end</span>
+</pre>
+          </div>
+        </div>
+      </div>
+
+      <div id="method-M000013" class="method-detail">
+        <a name="M000013"></a>
+
+        <div class="method-heading">
+          <a href="#M000013" class="method-signature">
+          <span class="method-name">logout</span><span class="method-args">()</span>
+          </a>
+        </div>
+      
+        <div class="method-description">
+          <p>
+This function is for deleting the session of a user. By clearing the
+session data for a specific user it delete the sesion of a user.
+</p>
+          <p><a class="source-toggle" href="#"
+            onclick="toggleCode('M000013-source');return false;">[Source]</a></p>
+          <div class="method-source-code" id="M000013-source">
+<pre>
+     <span class="ruby-comment cmt"># File app/controllers/admin_controller.rb, line 121</span>
+121:   <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">logout</span>
+122:     <span class="ruby-identifier">reset_session</span>
+123:     <span class="ruby-identifier">flash</span>[<span class="ruby-identifier">:notice</span>] = <span class="ruby-constant">SUCCESSFUL_LOGOUT</span>
+124:     <span class="ruby-identifier">redirect_to</span> <span class="ruby-identifier">root_path</span>
+125:   <span class="ruby-keyword kw">end</span>
+</pre>
+          </div>
+        </div>
+      </div>
+
+      <div id="method-M000019" class="method-detail">
+        <a name="M000019"></a>
+
+        <div class="method-heading">
+          <a href="#M000019" class="method-signature">
+          <span class="method-name">required_apps</span><span class="method-args">()</span>
+          </a>
+        </div>
+      
+        <div class="method-description">
+          <p>
+Used to paginate the list of deployed applications.
+</p>
+          <p><a class="source-toggle" href="#"
+            onclick="toggleCode('M000019-source');return false;">[Source]</a></p>
+          <div class="method-source-code" id="M000019-source">
+<pre>
+     <span class="ruby-comment cmt"># File app/controllers/admin_controller.rb, line 179</span>
+179:   <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">required_apps</span>
+180:     <span class="ruby-ivar">@info</span>= <span class="ruby-constant">YAML</span><span class="ruby-operator">::</span><span class="ruby-identifier">load_file</span>(<span class="ruby-constant">CONFIG_FILE_PATH</span>)    <span class="ruby-keyword kw">rescue</span> <span class="ruby-keyword kw">nil</span>
+181:     <span class="ruby-identifier">render</span> <span class="ruby-identifier">:partial=</span><span class="ruby-operator">&gt;</span><span class="ruby-value str">'application_table'</span>,<span class="ruby-identifier">:locals=</span><span class="ruby-operator">&gt;</span>{<span class="ruby-identifier">:start=</span><span class="ruby-operator">&gt;</span><span class="ruby-identifier">params</span>[<span class="ruby-identifier">:start</span>].<span class="ruby-identifier">to_i</span>}
+182:   <span class="ruby-keyword kw">end</span>
+</pre>
+          </div>
+        </div>
+      </div>
+
+
+    </div>
+
+
+  </div>
+
+
+<div id="validator-badges">
+  <p><small><a href="http://validator.w3.org/check/referer">[Validate]</a></small></p>
+</div>
+
+</body>
+</html>

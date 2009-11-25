@@ -1,0 +1,59 @@
+<!--
+WebROaR - Ruby Application Server - http://webroar.in/
+Copyright (C) 2009  Goonj LLC
+
+This file is part of WebROaR.
+
+WebROaR is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+WebROaR is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with WebROaR.  If not, see <http://www.gnu.org/licenses/>.
+-->
+
+<div class = "text_align_center">
+  <%form_for :ssl, :url => {:controller => 'server_specification', :action => 'enable_ssl_support'} do%>
+    <table width = 95% cellpadding = '4'>
+      <tr>
+        <th colspan = 2><div id = 'error_div'><%=flash[:ssl_errors]%></div></th>
+      </tr>
+      <tr>
+        <td class = "BG_dark_gray">SSl Port<span id = 'needed'>*</span> &nbsp;&nbsp;&nbsp;
+          <span class = 'help_link'>
+            <%=link_to_function "Help", :onclick => "addHelp('ssl_port')"%>
+          </span>
+          <br/> <div id = 'ssl_port' class = 'font_size_12'></div>
+        </td>
+        <td class = "BG_dark_gray"><%=text_field :ssl, :port, :size => 20, :value => @ssl_spec[:port]%></td>
+      </tr>
+      <tr>
+        <td class = 'BG_white'>SSL Certificate path <span id = 'needed'>*</span> &nbsp;&nbsp;&nbsp;
+          <span class = 'help_link'>
+            <%=link_to_function "Help", :onclick => "addHelp('ssl_certificate')"%>
+          </span>
+          <br/> <div id = 'ssl_certificate' class = 'font_size_12'></div>
+        </td>
+        <td class = 'BG_white'><%=text_field :ssl, :certificate_path, :size => 20, :value => @ssl_spec[:certificate_path]%></td>
+      </tr>
+      <tr>
+        <td class = "BG_dark_gray">SSl Key Path <span id = 'needed'>*</span>  &nbsp;&nbsp;&nbsp;
+          <span class = 'help_link'>
+            <%=link_to_function "Help", :onclick => "addHelp('ssl_key')"%>
+          </span>
+          <br/> <div id = 'ssl_key' class = 'font_size_12'></div>
+        </td>
+        <td class = "BG_dark_gray"><%=text_field :ssl, :key_path, :size => 20,:value => @ssl_spec[:key_path]%></td>
+      </tr>
+      <tr>
+        <th class = 'BG_white' colspan = 2><%=submit_tag 'Save'%>&nbsp;&nbsp;&nbsp;&nbsp;<%=button_to_function 'Cancel', 'window.location.reload();'%></th>
+      </tr>
+    </table>
+  <%end%>
+</div>

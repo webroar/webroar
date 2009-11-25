@@ -1,0 +1,62 @@
+<!--
+WebROaR - Ruby Application Server - http://webroar.in/
+Copyright (C) 2009  Goonj LLC
+
+This file is part of WebROaR.
+
+WebROaR is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+WebROaR is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with WebROaR.  If not, see <http://www.gnu.org/licenses/>.
+-->
+<%= render :partial => 'query_period', :locals => {:update_div => 'url_calls_graph', :submit_action => 'url_calls_graph'} %>
+
+<%# this section is for Ploting Most Time Consuming url bar Graph for an application%>
+<div id = 'time_consuming_url_graph' class = 'graph_div'>
+  <%=@time_consuming_url_graph%>
+</div>
+<div style="width:80%;text-align:right;"><%=link_to_function "Help",:class=>"calendar_link",:onclick=>"addHelp('most')"%></div>
+<div id='most' class='font_size_12'></div>
+<br/>
+<br/>
+<hr>	
+<br/>
+<br/>
+<%# this section is for Ploting Url Hits bar Graph for an application%>
+<div id = 'url_hits_graph' class = 'graph_div'>
+  <%=@url_hits_graph%>
+</div>
+<div style="width:80%;text-align:right;"><%=link_to_function "Help",:class=>"calendar_link",:onclick=>"addHelp('hits')"%></div>
+<div id='hits' class='font_size_12'></div>
+<br/>
+<br/>
+<hr>
+<br/>
+<br/>
+<%# this section is for Ploting Slowest Url bar Graph for an application%>
+<div id = 'slowest_url_graph' class = 'graph_div'>
+  <%=@slowest_url_graph%>
+</div>
+<div style="width:80%;text-align:right;"><%=link_to_function "Help",:class=>"calendar_link",:onclick=>"addHelp('slowest')"%></div>
+<div id='slowest' class='font_size_12'></div>
+<br/>
+<br/>
+<hr>
+<br/>
+<br/>
+<%# this section is for Ploting Top DataBase Using Urls Usage for an application%>
+<div id = 'db_consuming_url_graph' class = 'graph_div'>
+  <%=@db_consuming_url_graph%>
+</div>
+<div style="width:80%;text-align:right;"><%=link_to_function "Help",:class=>"calendar_link",:onclick=>"addHelp('db')"%></div>
+<div id='db' class='font_size_12'></div>
+<br/>
+<br/>
