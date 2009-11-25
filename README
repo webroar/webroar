@@ -1,0 +1,85 @@
+Introduction
+-------------
+
+WebROaR is an application server that makes deployments of ruby web 
+applications extremely simple. It provides an integrated solution to view 
+the run time performance numbers and email notifications in case any 
+exceptions occur in any of the deployed applications.
+
+It is 5 to 55% faster than all other comparable deployment stacks for 
+Ruby on Rails applications.
+
+Check out http://webroar.in and doc/user-guide.html for more details.
+
+Key Features
+~~~~~~~~~~~~
+
+* Maximum Performance. 
+* Simplified Deployment.
+* Runs Ruby on Rails(TM) as well as other Rack compliant applications. 
+* Run Multiple Applications Simultaneously. 
+* Implements HTTP/1.1 grammar as per RFC 2616 including support for persistent,
+ and chunked requests. 
+* Intelligent load balancing and dynamic reaping of stuck ruby processing
+ instances. 
+* Provides run time performance data for the deployed applications. 
+* Generates notifications in case any exceptions occur in any of the deployed
+ applications.
+* SSL support. 
+
+Supported Operating Systems
+---------------------------
+
+WebROaR has been tested on Ubuntu 8.1/9.04, Debian 5 (64 Bit), Mac OS X (10.5) 
+and Cent OS 5.2. Basically, it should be able to run on any *IX OS. 
+
+Currently it does not support Microsoft(R) Windows.
+
+Install
+--------
+
+Prerequisites 
+~~~~~~~~~~~~~
+
+- ruby 1.8.x or 1.9.x 
+- ruby 1.8-dev or 1.9-dev 
+- openssl ruby extension (On Ubuntu/Debian it is available as libopenssl-ruby1.X)
+- zlib ruby extension
+- rubygems
+- C build tools (gcc etc) (e.g. build-essential on Ubuntu, Xcode on MacOS)
+- libsqlite3
+- libsqlite3-dev
+- gnutls 2.4.1 or later (Only necessary in case SSL support is required) 
+- gnutls-dev 2.4.1 or later (Only necessary in case SSL support is required) 
+
+[NOTE]
+.Ruby Shared Library
+===============================
+The server needs the shared library - libruby.so to run the ruby web 
+applications.
+
+If you are building ruby from source, please ensure you pass the flag 
+*--enable-shared* while executing its ./configure script.
+
+===============================
+
+Procedure
+~~~~~~~~~
+
+WebROaR can installed using the following commands:
+
+----
+gem sources -a http://gems.github.com
+sudo gem install webroar
+sudo webroar install
+----
+
+Or if you like living in the fast lane, you can install the edge version giving
+the following commands:
+
+----
+git clone git://github.com/webroar/webroar.git
+cd webroar
+sudo rake install
+----
+
