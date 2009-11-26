@@ -587,6 +587,7 @@ void wr_req_free(wr_req_t* req) {
 
       if(req->conn->is_closed && req->conn->resp_to_write == 0) {
         wr_conn_free(req->conn);
+        req->conn = NULL;
       }
     }
 
