@@ -24,18 +24,17 @@ module Webroar
       @client = client
     end
     
-    def read(len = nil)
+    def read(len = nil, s = '')
       if @io
         @io.read(len)
       else
-        if len.nil?
-          s = ''
+        if len.nil?          
           while(chunk = read(10*1024))
             s << chunk
           end
           s
         else
-          Webroar::read_request(@client, len)
+          s = Webroar::read_request(@client, len)
         end
       end
     end
