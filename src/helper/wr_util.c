@@ -158,6 +158,6 @@ int get_timestamp(char *str) {
     LOG_ERROR(SEVERE, "Error detected in localtime()");
     return -1; 
   }  
-  sprintf(str, "%d-%d-%d-%d-%d-%d", tm_struct->tm_year + 1900, tm_struct->tm_mon, tm_struct->tm_mday, tm_struct->tm_hour, tm_struct->tm_min, tm_struct->tm_sec);  
+  sprintf(str, "%d-%d-%d-%d-%d-%d", tm_struct->tm_year + 1900, tm_struct->tm_mon + 1, tm_struct->tm_mday, tm_struct->tm_hour, tm_struct->tm_min, tm_struct->tm_sec);
   return 0;
 }
