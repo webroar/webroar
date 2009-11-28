@@ -137,6 +137,18 @@ void a_error(LOG_SEVERITY level, const char *file_name, int line_no, const char 
   }
 }
 
+/** Get log level string */
+char* get_log_level_string(LOG_SEVERITY level){
+  switch(level){
+  case DEBUG: return "DEBUG";
+  case INFO: return "INFO";
+  case WARN: return "WARN";
+  case SEVERE: return "SEVERE";
+  case FATAL: return "FATAL";
+  default: "Unknown";
+  }
+}
+
 /** Get logging severity */
 LOG_SEVERITY get_log_severity(const char*str) {
   if(strcmp(str,"DEBUG") == 0) {
@@ -163,6 +175,6 @@ int change_log_file_owner(int user_id, int group_id) {
 
 /** Set logging level */
 int set_log_severity(int severity) {
-  LOG_INFO("setting log level to %d",severity);
+  LOG_INFO("setting log level to %s", get_log_level_string(severity));
   logging_level = severity;
 }
