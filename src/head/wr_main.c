@@ -222,7 +222,6 @@ int main(int argc, char *argv[]) {
 #ifdef L_DEBUG
   set_log_severity(DEBUG);
 #else
-
   set_log_severity(conf->server->log_level);
 #endif
   // Add Admin Panel

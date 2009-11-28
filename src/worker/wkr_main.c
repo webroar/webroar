@@ -148,7 +148,7 @@ static inline wkr_tmp_t* parse_args(int argc, char **argv) {
   extern char *optarg;
   size_t len;
   char *str;
-  int invalid_arg_flag = 0, app_path_flag = 0;
+  int invalid_arg_flag = 0, app_path_flag = 0, log_level = INFO;
   wkr_tmp_t *tmp = wkr_tmp_new();
 
   if(tmp == NULL)
@@ -171,14 +171,7 @@ static inline wkr_tmp_t* parse_args(int argc, char **argv) {
       wr_string_new(tmp->env, str, len);
       break;
     case 'l':  // Logging level
-#ifdef L_DEBUG
-
-      set_log_severity(DEBUG);
-#else
-
-      set_log_severity(atoi(optarg));
-#endif
-
+      log_level = atoi(optarg);
       break;
     case 'f':  // Log file name
       wr_string_free(tmp->log_file);
@@ -227,8 +220,21 @@ static inline wkr_tmp_t* parse_args(int argc, char **argv) {
       invalid_arg_flag++;
     }
   }
-  if (invalid_arg_flag>0 || app_path_flag == 0) {
+
+  if(tmp->log_file.str){
+    initialize_logger(tmp->log_file.str);
+#ifdef L_DEBUG
+      set_log_severity(DEBUG);
+#else
+      set_log_severity(log_level);
+#endif
+  }else{
+    perror("Log file is not specified.");
+  }
+
+  if (invalid_arg_flag > 0 || app_path_flag == 0) {
     print_usage(argv[0]);
+    LOG_ERROR(SEVERE, "Either argument is invalid or application path is not passed.");
     wkr_tmp_free(&tmp);
     return NULL;
   }
@@ -277,7 +283,7 @@ int main(int argc, char **argv) {
   int port, retval = 0;
   wkr_t* w = NULL;
 
-  if(argc==1) {
+  if(argc == 1) {
     print_usage(argv[0]);
     return -1;
   }
@@ -289,18 +295,15 @@ int main(int argc, char **argv) {
 //  signal(SIGFPE, crash_handler);
   
   wkr_tmp_t *tmp = parse_args(argc, argv);
-
   if(tmp == NULL)
     return -1;
-
+  
   loop = ev_default_loop (0);
+
   w = worker_new(loop, tmp);
   if(w==NULL)
     goto err;
   worker = w;
-  //  assert(w!=NULL);
-
-  initialize_logger(w->tmp->log_file.str);
   redirect_standard_io();
   
   LOG_DEBUG(DEBUG,"control path = %s, Application baseuri = %s",
