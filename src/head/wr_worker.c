@@ -561,7 +561,6 @@ int wr_wkr_create(wr_svr_t *server, wr_app_conf_t *app_conf) {
   pid = fork();
   LOG_DEBUG(DEBUG,"Forked PID is  %i, uid = %s, gid =%s, app = %s",pid, cuid_s, cgid_s, app_conf->name.str) ;
   if (pid == 0) {
-    if (pid == 0) {
       LOG_DEBUG(3,"Child is continuing %i",pid);
       setsid();
       int i = 0;
@@ -605,17 +604,6 @@ int wr_wkr_create(wr_svr_t *server, wr_app_conf_t *app_conf) {
         fflush(stderr);
         _exit(1);
       }
-
-    } else if (pid == -1) {
-      wr_string_free(baseuri);
-      perror("Cannot fork a new process");
-      LOG_ERROR(5,"Cannot fork a new process");
-      fflush(stderr);
-      _exit(1);
-    } else {
-      wr_string_free(baseuri);
-      _exit(0);
-    }
   } else if (pid == -1) {
     wr_string_free(baseuri);
     LOG_ERROR(5,"Cannot fork a new process %i", errno);
@@ -624,7 +612,7 @@ int wr_wkr_create(wr_svr_t *server, wr_app_conf_t *app_conf) {
     //Temporary Hack
     return pid;
   }
-  return 0;
+  return -1;
 }
 
 /** Request callback called by ebb Request*/

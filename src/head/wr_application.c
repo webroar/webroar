@@ -260,13 +260,18 @@ void wr_app_print(wr_app_t*app) {
 /** Create worker for application */
 int wr_app_wkr_add(wr_app_t *app) {
   if(app->pending_wkr < WR_MAX_PENDING_WKR) {
-    app->pending_wkr++;
-    app->high_ratio = TOTAL_WORKER_COUNT(app) * WR_MAX_REQ_RATIO;
-    app->last_wkr_pid[app->pending_wkr-1] = wr_wkr_create(app->svr, app->conf);
-    ev_timer_again(app->svr->ebb_svr.loop, &app->t_add_timeout);
-    LOG_INFO("PID of created worker = %d, Rails application=%s, ",
+    int retval = wr_wkr_create(app->svr, app->conf);
+    if(retval > 0){
+      app->pending_wkr++;
+      app->high_ratio = TOTAL_WORKER_COUNT(app) * WR_MAX_REQ_RATIO;
+      app->last_wkr_pid[app->pending_wkr-1] = retval;
+      ev_timer_again(app->svr->ebb_svr.loop, &app->t_add_timeout);
+      LOG_INFO("PID of created worker = %d, Rails application=%s, ",
              app->last_wkr_pid[app->pending_wkr-1],app->conf->path.str);
-    return 0;
+      return 0;
+    }else{
+      LOG_ERROR(SEVERE,"Could not fork process to start new worker.");
+    }
   }
   return -1;
 }
