@@ -244,7 +244,7 @@ int wr_req_resolve_http_req(wr_svr_t *server, wr_req_t *req) {
     }
   }
   /* resolve host name */
-  if(app == NULL) {
+  if(app == NULL && server->resolver->hosts) {
     scgi_header_t *http_host = scgi_header_get(req->scgi, "HTTP_HOST");
     if(http_host) {
       wr_str_t host_str;
@@ -252,7 +252,7 @@ int wr_req_resolve_http_req(wr_svr_t *server, wr_req_t *req) {
       char *value = req->scgi->header + http_host->value_offset;
 
       //removing port
-      char *ptr = memchr(http_host, ':', http_host->value_length);
+      char *ptr = memchr(value, ':', http_host->value_length);
       if(ptr) {
         wr_string_new(host_str, value, ptr - value);
       } else {
