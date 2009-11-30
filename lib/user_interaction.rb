@@ -46,7 +46,7 @@ module Webroar
       puts "found."
       gem_name = "WebROaR-" + gem_list[gem_list.length - 1].to_s
       require File.join(WEBROAR_ROOT, 'src', 'ruby_lib', 'ruby_interface','version.rb')
-      choice_list = [ "Import configuration, logs and admin panel data from the previous installation – #{gem_name}.",
+      choice_list = ["Import configuration, logs and admin panel data from the previous installation - #{gem_name}.",
         "No import required, install #{Webroar::SERVER} afresh."]
 
       puts ""
