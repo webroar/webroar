@@ -77,7 +77,10 @@ void wr_conn_after_write_cb(ebb_connection *connection) {
   LOG_DEBUG(DEBUG,"Connection = %d, Response = %d, closed = %d",
             conn->id, conn->resp_to_write, conn->is_closed);
 
-  wr_string_list_remove(conn->resp);
+  wr_str_arr_t *str_arr = wr_string_list_remove(conn->resp);
+  if(str_arr) {
+    wr_string_arr_free(str_arr);
+  }
 
   // Check for response chunk
   if(conn->resp->front && !conn->is_closed) {
@@ -129,21 +132,18 @@ int wr_conn_timeout_cb(ebb_connection* connection) {
 /** The connection was closed */
 void wr_conn_close_cb(ebb_connection* connection) {
   LOG_FUNCTION
-  if(connection && connection->data){
-    wr_conn_t* conn = (wr_conn_t*) connection->data;
-    LOG_DEBUG(DEBUG,"connection %d, response %d ", conn->id, conn->resp_to_write);
+  wr_conn_t* conn = (wr_conn_t*) connection->data;
+  LOG_DEBUG(DEBUG,"connection %d, response %d ", conn->id, conn->resp_to_write);
 
-    // Check for pending requests
-    if(conn->resp_to_write <= 0) {
-      // Destroy wr_connection
-      wr_conn_free(conn);
-      connection->data = NULL;
-    } else {
-      // Set altas_connection to closed
-      LOG_DEBUG(DEBUG,"closed flag set %d", conn->id);
-      conn->is_closed = 1;
-      conn->keep_alive = 0;
-    }
+  // Check for pending requests
+  if(conn->resp_to_write <= 0) {
+    // Destroy wr_connection
+    wr_conn_free(conn);
+  } else {
+    // Set altas_connection to closed
+    LOG_DEBUG(DEBUG,"closed flag set %d", conn->id);
+    conn->is_closed = 1;
+    conn->keep_alive = 0;
   }
 }
 
@@ -194,7 +194,6 @@ void wr_conn_free(wr_conn_t *conn) {
   LOG_DEBUG(DEBUG,"Connnection id %d", conn->id);
   if(conn) {
     if(conn->ebb_conn) {
-      conn->ebb_conn->data = NULL;
       free(conn->ebb_conn);
     } else {
       LOG_DEBUG(SEVERE, "Error conn->ebb_conn is null.");
@@ -203,7 +202,6 @@ void wr_conn_free(wr_conn_t *conn) {
     //if(conn->req && !conn->req->conn_err) wr_req_free(conn->req);
     conn->ebb_conn = NULL;
     wr_string_list_free(conn->resp);
-    conn->resp = NULL;
     free(conn);
   }
 }
@@ -229,7 +227,6 @@ int wr_conn_resp_body_add(wr_conn_t* conn, const char* str, size_t len) {
     LOG_DEBUG(DEBUG,"Check response %d", conn->resp_to_write);
     if(conn->resp_to_write == 0) {
       wr_conn_free(conn);
-      conn = NULL;
     }
   }
   return 0;

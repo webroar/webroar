@@ -64,7 +64,7 @@ typedef struct {
 
 wr_str_list_t* wr_string_list_new();
 int wr_string_list_add(wr_str_list_t*,const char*, size_t);
-void wr_string_list_remove(wr_str_list_t*);
+wr_str_arr_t* wr_string_list_remove(wr_str_list_t*);
 void wr_string_list_free(wr_str_list_t*);
 
 typedef struct wr_buffer_s wr_buffer_t;

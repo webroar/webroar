@@ -50,7 +50,7 @@ int wr_string_list_add(wr_str_list_t* list,const char* str, size_t len) {
 }
 
 /** Fetch string from String list */
-void wr_string_list_remove(wr_str_list_t *list) {
+wr_str_arr_t* wr_string_list_remove(wr_str_list_t *list) {
   if(list && list->front) {
     wr_str_arr_t* arr = list->front;
     list->front = list->front->next;
@@ -58,9 +58,9 @@ void wr_string_list_remove(wr_str_list_t *list) {
     if(list->front == NULL) {
       list->rear = NULL;
     }
-    wr_string_arr_free(arr);
-    arr = NULL;
+    return arr;
   }
+  return NULL;
 }
 
 void wr_string_list_free(wr_str_list_t *list) {
