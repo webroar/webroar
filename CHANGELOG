@@ -1,0 +1,25 @@
+v0.2.4 - 01-Dec-2009
+--------------------
+
+* Fixed intermittent crash issue in head while closing client connections 
+by calling close_connection() directly rather than running it through
+goodbye_watcher in libebb.
+* Renamed on_error callback (introduced by us in libebb) to the more 
+appropriate on_request_parse_error.
+* Fixed install issue on ruby 1.9 caused due to invalid multibyte char.
+* Fixed the incorrect month value in the file name format for gcore dumps.
+* Initialized logging for the worker right as it is instantiated before 
+it connects to head process.
+* Cleaned up wr_wkr_create() method in head/wr_worker.c.
+* Print logging level as a string in the log files.
+* Fixed invalid pointer being used in 'wr_req_resolve_http_req' function.
+* Fixed creation of rack.input stream object. Resolves Ticket #2 related to 
+error seen on posting form with enctype="multipart/form-data".
+* Ensured 'starling-starling' gem is used by WebROaR even is 'starling' is 
+present on the system.
+
+v0.2.3 - 25-Nov-2009
+---------------------
+
+* First cut for public.
+

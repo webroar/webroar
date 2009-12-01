@@ -54,7 +54,7 @@ spec = Gem::Specification.new do |s|
   s.add_dependency 'starling-starling', '>=0.10.0'
   
   s.files = FileList['Rakefile',    
-#    'CHANGELOG',
+    'CHANGELOG',
     'COPYING',
     File.join('bin', 'webroar'),
     File.join('bin', 'webroar-analyzer'),
