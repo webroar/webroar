@@ -98,7 +98,7 @@ void wr_conn_after_write_cb(ebb_connection *connection) {
 }
 
 /** The connection got parser error */
-void wr_conn_err_cb(ebb_connection* connection) {
+void wr_req_parse_err_cb(ebb_connection* connection) {
   LOG_FUNCTION
 
   wr_conn_t* conn = (wr_conn_t*)connection->data;
@@ -183,7 +183,7 @@ wr_conn_t* wr_conn_new(wr_svr_t *server) {
   connection->new_request = wr_new_req_cb;
   connection->on_close = wr_conn_close_cb;
   connection->on_timeout = wr_conn_timeout_cb;
-  connection->on_error = wr_conn_err_cb;
+  connection->on_request_parse_error = wr_req_parse_err_cb;
 
   return a_connection;
 }

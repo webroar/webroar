@@ -100,7 +100,7 @@ struct ebb_connection {
 
   void (*on_close) (ebb_connection*);
   
-  void (*on_error) (ebb_connection*);
+  void (*on_request_parse_error) (ebb_connection*);
 
   void *data;
 };

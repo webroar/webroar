@@ -322,8 +322,8 @@ on_readable(struct ev_loop *loop, ev_io *watcher, int revents)
   /* parse error? just drop the client. screw the 400 response */
 //  if(ebb_request_parser_has_error(&connection->parser)) goto error;
   if(ebb_request_parser_has_error(&connection->parser)){
-  	if(connection->on_error){
-	  	connection->on_error(connection);
+  	if(connection->on_request_parse_error){
+	  	connection->on_request_parse_error(connection);
   	}else{
   		ebb_connection_schedule_close(connection);
   	}
@@ -756,7 +756,7 @@ ebb_connection_init(ebb_connection *connection)
   connection->new_request = NULL;
   connection->on_timeout = NULL;
   connection->on_close = NULL;
-  connection->on_error = NULL;
+  connection->on_request_parse_error = NULL;
   connection->data = NULL;
 }
 
