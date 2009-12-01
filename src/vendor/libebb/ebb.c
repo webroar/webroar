@@ -770,7 +770,11 @@ ebb_connection_schedule_close (ebb_connection *connection)
     return;
   }
 #endif
-  ev_timer_start(connection->server->loop, &connection->goodbye_watcher);
+  //ev_timer_start(connection->server->loop, &connection->goodbye_watcher);
+  // Why do we need to start a timer which would to execute after 0. second?
+  // Looks timer is creating problem(not able to reproduce it on development machine) like
+  // few time its giving on_goodbye callback twice and causing server crash
+  close_connection(connection);
 }
 
 /* 
