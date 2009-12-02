@@ -71,7 +71,7 @@ module Webroar
     
     def find_command(name)
       ENV['PATH'].split(File::PATH_SEPARATOR).detect do |directory|
-        path = File.join(directory, name)
+        path = File.join(directory, File.basename(name))
         if File.executable?(path)
           flag="\e[32mfound\e[0m   at #{path}."
           return flag
