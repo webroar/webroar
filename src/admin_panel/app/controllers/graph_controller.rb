@@ -369,7 +369,7 @@ class GraphController < ApplicationController
     date_str = date_arr[0].split("/")
     start_hour = date_str[3]
     date_str1 = date_arr[1].split("/")
-    end_hour = date_str1[3]
+    end_hour = (date_str1[3] == "0" ? "24" : date_str1[3])
     if start_hour.to_i != end_hour.to_i	
 	    end_hour = end_hour.to_i-1
 	    start_time = Time.local(date_str[0], date_str[1], date_str[2], start_hour, "00", "00")
@@ -588,7 +588,7 @@ class GraphController < ApplicationController
       if session[:start_time] < Time.local(Time.now.year, Time.now.month, Time.now.day, "0","0","0")
 	      end_hour = 24
       else
-	      end_hour = (Time.now.advance(:hours => 1)).hour	
+        end_hour = (Time.now.advance(:hours => 1)).hour
       end	
       start_time = "#{session[:start_time].year}/#{session[:start_time].month}/#{session[:start_time].day}/#{start_hour}"
       end_time = "#{session[:start_time].year}/#{session[:start_time].month}/#{session[:start_time].day}/#{end_hour}"

@@ -21,6 +21,7 @@ along with WebROaR.  If not, see <http://www.gnu.org/licenses/>.
 
 <script type = "text/javascript">
     $j(document).ready(function(){
+      <% end_hour = 24 if end_hour == 0 %>
       $j("#slider_new_<%=count%>").slider({
           range: true,
           animate:true,
