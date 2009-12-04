@@ -53,7 +53,8 @@ spec = Gem::Specification.new do |s|
   s.add_dependency 'sqlite3-ruby', '>=1.2.3'
   s.add_dependency 'starling-starling', '>=0.10.0'
   
-  s.files = FileList['Rakefile',    
+  s.files = FileList['Rakefile',
+    'README',
     'CHANGELOG',
     'COPYING',
     File.join('bin', 'webroar'),
