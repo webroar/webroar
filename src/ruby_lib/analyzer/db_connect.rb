@@ -20,9 +20,9 @@ ADMIN_PANEL_ROOT = File.join(WEBROAR_ROOT, 'src', 'admin_panel').freeze
 #$LOAD_PATH.unshift("#{File.join(ADMIN_PANEL_ROOT,'vendor', 'rails', 'activerecord', 'lib')}")
 #$LOAD_PATH.unshift("#{File.join(ADMIN_PANEL_ROOT,'vendor', 'rails', 'activesupport', 'lib')}")
 #require File.join(ADMIN_PANEL_ROOT,'vendor', 'rails', 'activerecord', 'lib', 'active_record')
-gem 'activesupport', '=2.3.2'
-gem 'activerecord', '=2.3.2'
-require 'activerecord'
+gem 'activesupport', '=2.3.5'
+gem 'activerecord', '=2.3.5'
+require 'active_record'
 
 module Webroar
   module Analyzer
