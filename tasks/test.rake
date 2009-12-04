@@ -28,6 +28,7 @@ REPORT_DIR = File.join(WEBROAR_ROOT,'report')
 TEST_DIR = File.join(WEBROAR_ROOT, 'test')
 DEBUG_LOG_DIR = File.join(TEST_DIR,'debug_log')
 ALL_SPECS = FileList[File.join(SPEC_DIR,'*_spec.rb')].exclude("conditional_spec.rb")
+#ALL_SPECS = FileList[File.join(SPEC_DIR,'access_log_spec.rb')]
 #ALL_SPECS = FileList[File.join(SPEC_DIR,'*_spec.rb')].exclude(
 #File.join(SPEC_DIR,'host_name_spec.rb'),
 #File.join(SPEC_DIR,'connection_keep_alive_spec.rb'),
@@ -130,7 +131,7 @@ desc "Executes functional test"
 task :spec => :test_setup
 Spec::Rake::SpecTask.new(:spec) do |t|
   t.spec_files = ALL_SPECS
-  t.spec_opts << "--format specdoc:#{TEST_RESULT}"
+  #t.spec_opts << "--format specdoc:#{TEST_RESULT}"
 end
 
 
@@ -397,7 +398,8 @@ task :all_test do
   if(test_flag==1)
     t = Rake::Task[:spec]
     puts "Executing functional tests ..."
-    begin
+    begin      
+      ENV["SPEC_OPTS"] = "--format specdoc:#{TEST_RESULT}"
       t.invoke()
     rescue Exception => e
       File.open(exception_log,"a") do |f|
