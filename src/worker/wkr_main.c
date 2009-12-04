@@ -223,6 +223,7 @@ static inline wkr_tmp_t* parse_args(int argc, char **argv) {
 
   if(tmp->log_file.str){
     initialize_logger(tmp->log_file.str);
+    redirect_standard_io();
 #ifdef L_DEBUG
       set_log_severity(DEBUG);
 #else
@@ -303,8 +304,7 @@ int main(int argc, char **argv) {
   w = worker_new(loop, tmp);
   if(w==NULL)
     goto err;
-  worker = w;
-  redirect_standard_io();
+  worker = w;  
   
   LOG_DEBUG(DEBUG,"control path = %s, Application baseuri = %s",
             w->tmp->ctl_path.str,  w->tmp->resolver.str);
