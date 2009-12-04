@@ -45,7 +45,7 @@ spec = Gem::Specification.new do |s|
   
   s.required_ruby_version = '>= 1.8.5'
 
-  s.add_dependency 'rails', '= 2.3.5'
+  s.add_dependency 'rails', '>= 2.3.5'
   s.add_dependency 'calendar_date_select', '>= 1.15'  
   s.add_dependency 'rack', '>= 1.0.1'
   s.add_dependency 'rake', '>= 0.8.1'  
