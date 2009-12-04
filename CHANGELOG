@@ -1,3 +1,17 @@
+v0.2.5 - 04-Dec-2009
+--------------------
+
+* Tested on Ruby Enterprise Edition 1.8.7-2009.10.
+* Upgraded rails dependency version to >=2.3.5. Resolves Ticket #6.
+* Redirected 'rake spec' output to STDOUT by default to indicate progress 
+of test execution.
+* Implemented exception handling (that works both on ruby 1.8 & 1.9) for 
+handling errors raised in scripts being run by the embedded interpreter in 
+the worker.
+* Redirected standard IO right after logger is initialized in worker.
+* Handled absolute path for install dependencies.
+
+
 v0.2.4 - 01-Dec-2009
 --------------------
 
@@ -15,7 +29,7 @@ it connects to head process.
 * Fixed invalid pointer being used in 'wr_req_resolve_http_req' function.
 * Fixed creation of rack.input stream object. Resolves Ticket #2 related to 
 error seen on posting form with enctype="multipart/form-data".
-* Ensured 'starling-starling' gem is used by WebROaR even is 'starling' is 
+* Ensured 'starling-starling' gem is used by WebROaR even if 'starling' is 
 present on the system.
 
 v0.2.3 - 25-Nov-2009
