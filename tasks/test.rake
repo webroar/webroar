@@ -131,7 +131,7 @@ desc "Executes functional test"
 task :spec => :test_setup
 Spec::Rake::SpecTask.new(:spec) do |t|
   t.spec_files = ALL_SPECS
-  #t.spec_opts << "--format specdoc:#{TEST_RESULT}"
+  t.spec_opts << "--format specdoc"
 end
 
 
