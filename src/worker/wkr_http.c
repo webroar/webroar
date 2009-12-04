@@ -230,102 +230,6 @@ err:
   return retval;
 }
 
-#if RUBY_VERSION < 190
-/* Exception handling code for Ruby script, loaded from embedded interpreter is
-   based on code given at http://zzz.zggg.com/perl_ruby_multithreading_embedding.html
-*/
-static inline void show_error_pos() {
-  LOG_FUNCTION
-  ID this_func = rb_frame_last_func();
-  if (ruby_sourcefile) {
-    if (this_func) {
-      LOG_INFO("show_error_pos() %s:%s:in %s", ruby_sourcefile,ruby_sourceline,rb_id2name(this_func));
-    } else {
-      LOG_INFO("show_error_pos() %s:%s", ruby_sourcefile,ruby_sourceline);
-    }
-  }
-}
-
-static inline void show_exception_info() {
-  LOG_FUNCTION
-  if (NIL_P(ruby_errinfo))
-    return;
-
-  VALUE errat = rb_funcall(ruby_errinfo, rb_intern("backtrace"), 0);
-  if (!NIL_P(errat)) {
-    VALUE mesg = RARRAY_PTR(errat)[0];
-
-    if (NIL_P(mesg)) {
-      show_error_pos();
-    } else {
-      LOG_INFO("%s",RSTRING_PTR(mesg));
-    }
-  }
-
-  VALUE eclass = CLASS_OF(ruby_errinfo);
-
-  char* einfo;
-  int elen;
-  int state;
-  VALUE estr = rb_protect(rb_obj_as_string, ruby_errinfo, &state);
-  if (state) {
-    einfo = "";
-    elen = 0;
-  } else {
-    einfo = RSTRING_PTR(estr);
-    elen = RSTRING_LEN(estr);
-  }
-
-  if (eclass == rb_eRuntimeError && elen == 0) {
-    LOG_INFO(": unhandled exception");
-  } else {
-    VALUE epath;
-    epath = rb_class_path(eclass);
-    if (elen == 0) {
-      LOG_INFO("%s: ",RSTRING_PTR(epath));
-    } else {
-      char* tail  = 0;
-      int len = elen;
-
-      if ((RSTRING_PTR(epath))[0] == '#')
-        epath = 0;
-
-      if (tail = strchr(einfo, '\n')) {
-        len = tail - einfo;
-        tail++;
-      }
-      LOG_INFO("%s: ", einfo);
-      if (epath) {
-        LOG_INFO(" (%s",RSTRING_PTR(epath));
-      }
-
-      if (tail) {
-        LOG_INFO("%s",tail);
-      }
-    }
-  }
-
-  if (!NIL_P(errat)) {
-    const int TRACE_HEAD = 8;
-    const int TRACE_TAIL = 5;
-    const int TRACE_MAX = TRACE_HEAD + TRACE_TAIL + 5;
-
-    long len =  RARRAY_LEN(errat);
-    int i = 1;
-    for (i = 1; i < len; ++i) {
-      if (TYPE(RARRAY_PTR(errat)[i]) == T_STRING) {
-        LOG_INFO("  from %s ",RSTRING_PTR(RARRAY_PTR(errat)[i]));
-      }
-
-      if (i == TRACE_HEAD && len > TRACE_MAX) {
-        LOG_INFO("   ... %d ld levels... ",len - TRACE_HEAD - TRACE_TAIL);
-        i = len - TRACE_TAIL;
-      }
-    }
-  }
-}
-#endif
-
 /** Load rack adapter */
 int load_rack_adapter(wkr_tmp_t *tmp) {
   LOG_FUNCTION
@@ -364,54 +268,18 @@ int load_rack_adapter(wkr_tmp_t *tmp) {
   LOG_DEBUG(DEBUG,"setting debug true");
   rb_hash_aset(g_options,rb_str_new("debug",5),Qtrue);
 #else
-
   LOG_DEBUG(DEBUG,"setting debug false");
   rb_hash_aset(g_options,rb_str_new("debug",5),Qfalse);
 #endif
 
   rb_gv_set("g_options",g_options);
 
-#if RUBY_VERSION < 190
-
-  rb_load_protect(rb_str_new2(tmp->script_path.str), 0, &state);
-  //free(path);
-  LOG_DEBUG(DEBUG,"state=%d",state);
-  if (state) {
-    switch (state) {
-    case 0x1: // TAG_RETURN
-      LOG_INFO("unexpected return");
-      show_error_pos();
-      break;
-    case 0x2: // TAG_BREAK
-      LOG_INFO("unexpected break");
-      show_error_pos();
-      break;
-    case 0x3: // TAG_NEXT
-      LOG_INFO("unexpected next");
-      show_error_pos();
-      break;
-    case 0x4: // TAG_RETRY
-      LOG_INFO("retry outside of rescue clause");
-      show_error_pos();
-      break;
-    case 0x5: // TAG_REDO
-      LOG_INFO("unexpected redo");
-      show_error_pos();
-      break;
-    case 0x6: // TAG_RAISE
-    case 0x8: // TAG_FATAL
-      show_exception_info();
-      break;
-    default:
-      LOG_INFO("unknown long jump status ");
-    }
-    // TODO: No magic numbers please
-    return -1;
+  rb_protect(RUBY_METHOD_FUNC(rb_require), (VALUE)tmp->script_path.str, &state);
+  LOG_DEBUG(DEBUG, "state=%d", state);
+  if ( state != 0 ) {
+    LOG_ERROR(FATAL, "Some problem occurred while loading application.");
+    return -1; 
   }
-#else
-  rb_require(tmp->script_path.str);
-#endif
-
   return 0;
 }
 
