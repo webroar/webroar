@@ -31,8 +31,9 @@ Key Features
 Supported Operating Systems
 ---------------------------
 
-WebROaR has been tested on Ubuntu 8.1/9.04, Debian 5 (64 Bit), Mac OS X (10.5) 
-and Cent OS 5.2. Basically, it should be able to run on any *IX OS. 
+WebROaR has been tested on Ubuntu 8.10/9.04/9.10, Debian 5 (64 Bit), Mac OS X 
+(v10.5 & v10.6) and Cent OS 5.2. Basically, it should be able to run on any 
+*IX OS.  
 
 Currently it does not support Microsoft(R) Windows.
 

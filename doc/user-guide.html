@@ -3,7 +3,8 @@
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-<meta name="generator" content="AsciiDoc 8.2.7" />
+<meta name="generator" content="AsciiDoc 8.4.4" />
+<title>WebROaR User Guide</title>
 <style type="text/css">
 /* Debug borders */
 p, li, dt, dd, div, pre, h1, h2, h3, h4, h5, h6 {
@@ -110,11 +111,13 @@ div#footer-badges {
   padding-bottom: 0.5em;
 }
 
-div#preamble,
+div#preamble {
+  margin-top: 1.5em;
+  margin-bottom: 1.5em;
+}
 div.tableblock, div.imageblock, div.exampleblock, div.verseblock,
 div.quoteblock, div.literalblock, div.listingblock, div.sidebarblock,
 div.admonitionblock {
-  margin-right: 10%;
   margin-top: 1.5em;
   margin-bottom: 1.5em;
 }
@@ -156,9 +159,6 @@ div.sidebarblock > div.content {
   padding: 0.5em;
 }
 
-div.listingblock {
-  margin-right: 0%;
-}
 div.listingblock > div.content {
   border: 1px solid silver;
   background: #f4f4f4;
@@ -167,6 +167,7 @@ div.listingblock > div.content {
 
 div.quoteblock {
   padding-left: 2.0em;
+  margin-right: 10%;
 }
 div.quoteblock > div.attribution {
   padding-top: 0.5em;
@@ -175,6 +176,7 @@ div.quoteblock > div.attribution {
 
 div.verseblock {
   padding-left: 2.0em;
+  margin-right: 10%;
 }
 div.verseblock > div.content {
   white-space: pre;
@@ -218,6 +220,7 @@ dt {
   margin-top: 0.5em;
   margin-bottom: 0;
   font-style: normal;
+  color: navy;
 }
 dd > *:first-child {
   margin-top: 0.1em;
@@ -226,11 +229,27 @@ dd > *:first-child {
 ul, ol {
     list-style-position: outside;
 }
-div.olist > ol {
+ol.arabic {
   list-style-type: decimal;
 }
-div.olist2 > ol {
+ol.loweralpha {
   list-style-type: lower-alpha;
+}
+ol.upperalpha {
+  list-style-type: upper-alpha;
+}
+ol.lowerroman {
+  list-style-type: lower-roman;
+}
+ol.upperroman {
+  list-style-type: upper-roman;
+}
+
+div.compact ul, div.compact ol,
+div.compact p, div.compact p,
+div.compact div, div.compact div {
+  margin-top: 0.1em;
+  margin-bottom: 0.1em;
 }
 
 div.tableblock > table {
@@ -243,21 +262,52 @@ thead {
 tfoot {
   font-weight: bold;
 }
+td > div.verse {
+  white-space: pre;
+}
+p.table {
+  margin-top: 0;
+}
+/* Because the table frame attribute is overriden by CSS in most browsers. */
+div.tableblock > table[frame="void"] {
+  border-style: none;
+}
+div.tableblock > table[frame="hsides"] {
+  border-left-style: none;
+  border-right-style: none;
+}
+div.tableblock > table[frame="vsides"] {
+  border-top-style: none;
+  border-bottom-style: none;
+}
 
-div.hlist {
+
+div.hdlist {
   margin-top: 0.8em;
   margin-bottom: 0.8em;
 }
-div.hlist td {
+div.hdlist tr {
   padding-bottom: 15px;
 }
-td.hlist1 {
+dt.hdlist1.strong, td.hdlist1.strong {
+  font-weight: bold;
+}
+td.hdlist1 {
   vertical-align: top;
   font-style: normal;
   padding-right: 0.8em;
+  color: navy;
 }
-td.hlist2 {
+td.hdlist2 {
   vertical-align: top;
+}
+div.hdlist.compact tr {
+  margin: 0;
+  padding-bottom: 0;
+}
+
+.comment {
+  background: yellow;
 }
 
 @media print {
@@ -330,14 +380,6 @@ div.exampleblock-content {
 
 /* IE6 sets dynamically generated links as visited. */
 div#toc a:visited { color: blue; }
-
-/* Because IE6 child selector is broken. */
-div.olist2 ol {
-  list-style-type: lower-alpha;
-}
-div.olist2 div.olist ol {
-  list-style-type: decimal;
-}
 </style>
 <script type="text/javascript">
 /*<![CDATA[*/
@@ -413,7 +455,6 @@ function generateToc(toclevels) {
 }
 /*]]>*/
 </script>
-<title>WebROaR User Guide</title>
 </head>
 <body>
 <div id="header">
@@ -425,14 +466,14 @@ function generateToc(toclevels) {
 </div>
 <h2 id="_introduction">1. Introduction</h2>
 <div class="sectionbody">
-<div class="para"><p><a href="http://webroar.in">WebROaR</a> is an application server that makes deployments of ruby web
+<div class="paragraph"><p><a href="http://webroar.in">WebROaR</a> is an application server that makes deployments of ruby web
 applications extremely simple. It provides an integrated solution to view
 the run time performance numbers and sends email notifications in case any
 exceptions occur in any of the deployed applications.</p></div>
-<div class="para"><p>It is 5 to 55% faster than all other comparable deployment stacks for
+<div class="paragraph"><p>It is 5 to 55% faster than all other comparable deployment stacks for
 Ruby on Rails applications.</p></div>
 <h3 id="_key_features">1.1. Key Features</h3><div style="clear:left"></div>
-<div class="ilist"><ul>
+<div class="ulist"><ul>
 <li>
 <p>
 Maximum Performance.
@@ -485,14 +526,15 @@ SSL support.
 </div>
 <h2 id="_supported_operating_systems">2. Supported Operating Systems</h2>
 <div class="sectionbody">
-<div class="para"><p>WebROaR has been tested on Ubuntu 8.1/9.04, Debian 5 (64 Bit), Mac OS X (10.5)
-and Cent OS 5.2. Basically, it should be able to run on any *IX OS.</p></div>
-<div class="para"><p>Currently it does not support Microsoft&#174; Windows.</p></div>
+<div class="paragraph"><p>WebROaR has been tested on Ubuntu 8.10/9.04/9.10, Debian 5 (64 Bit), Mac OS X
+(v10.5 &amp; v10.6) and Cent OS 5.2. Basically, it should be able to run on any
+*IX OS.</p></div>
+<div class="paragraph"><p>Currently it does not support Microsoft&#174; Windows.</p></div>
 </div>
 <h2 id="_install">3. Install</h2>
 <div class="sectionbody">
 <h3 id="_prerequisites">3.1. Prerequisites</h3><div style="clear:left"></div>
-<div class="ilist"><ul>
+<div class="ulist"><ul>
 <li>
 <p>
 ruby 1.8.x or 1.9.x
@@ -551,15 +593,15 @@ gnutls-dev 2.4.1 or later (Only necessary in case SSL support is required)
 </td>
 <td class="content">
 <div class="title">Ruby Shared Library</div>
-<div class="para"><p>The server needs the shared library - libruby.so to run the ruby web
+<div class="paragraph"><p>The server needs the shared library - libruby.so to run the ruby web
 applications.</p></div>
-<div class="para"><p>If you are building ruby from source, please ensure you pass the flag
-<strong>&#8212;enable-shared</strong> while executing its ./configure script.</p></div>
+<div class="paragraph"><p>If you are building ruby from source, please ensure you pass the flag
+<strong>--enable-shared</strong> while executing its ./configure script.</p></div>
 </td>
 </tr></table>
 </div>
 <h3 id="_procedure">3.2. Procedure</h3><div style="clear:left"></div>
-<div class="para"><p>WebROaR can installed using the following commands:</p></div>
+<div class="paragraph"><p>WebROaR can installed using the following commands:</p></div>
 <div class="listingblock">
 <div class="content">
 <pre><tt>gem sources -a http://gems.github.com
@@ -573,20 +615,20 @@ sudo webroar install</tt></pre>
 </td>
 <td class="content">
 <div class="title">SSL Support</div>
-<div class="para"><p>In case you would like to setup SSL support for the server, use the following
+<div class="paragraph"><p>In case you would like to setup SSL support for the server, use the following
 command line switch with <strong>sudo webroar install</strong> command mentioned above.</p></div>
 <div class="listingblock">
 <div class="content">
 <pre><tt>sudo webroar install --ssl-support</tt></pre>
 </div></div>
-<div class="para"><p>Configure further SSL options in the server's admin panel
+<div class="paragraph"><p>Configure further SSL options in the server&#8217;s admin panel
         <strong>http://&lt;yourservername&gt;:&lt;port&gt;/admin-panel/configuration</strong></p></div>
-<div class="para"><p>After restarting the server, admin panel would now also be accessible over SSL.
+<div class="paragraph"><p>After restarting the server, admin panel would now also be accessible over SSL.
 <strong>https://&lt;yourservername&gt;:&lt;port&gt;/admin-panel</strong></p></div>
 </td>
 </tr></table>
 </div>
-<div class="para"><p>Or if you like living in the fast lane, you can install the edge version giving
+<div class="paragraph"><p>Or if you like living in the fast lane, you can install the edge version giving
 the following commands:</p></div>
 <div class="listingblock">
 <div class="content">
@@ -601,15 +643,15 @@ sudo rake install</tt></pre>
 </td>
 <td class="content">
 <div class="title">SSL Support</div>
-<div class="para"><p>To build with SSL support, use the following additional switch with the
+<div class="paragraph"><p>To build with SSL support, use the following additional switch with the
 <strong>sudo rake install</strong> command:</p></div>
 <div class="listingblock">
 <div class="content">
 <pre><tt>sudo rake install ssl=yes</tt></pre>
 </div></div>
-<div class="para"><p>Configure further SSL options in the server's admin panel
+<div class="paragraph"><p>Configure further SSL options in the server&#8217;s admin panel
         <strong>http://&lt;yourservername&gt;:&lt;port&gt;/admin-panel/configuration</strong></p></div>
-<div class="para"><p>After restarting the server, admin panel would now also be accessible over SSL.
+<div class="paragraph"><p>After restarting the server, admin panel would now also be accessible over SSL.
 <strong>https://&lt;yourservername&gt;:&lt;port&gt;/admin-panel</strong></p></div>
 </td>
 </tr></table>
@@ -626,7 +668,7 @@ installed gems. (If you use Ubuntu, you might be able to relate to this point
 better.)</td>
 </tr></table>
 </div>
-<div class="ilist"><ul>
+<div class="ulist"><ul>
 <li>
 <p>
 In case auto-installation of dependent gems fails (due to some prehistoric
@@ -641,7 +683,7 @@ rubygems version or any other reason), you can install the following dependent
 <li>
 <p>
 After successful installation of the webroar gem, any errors that occur
-during the setup are saved to the install.log created in the installed gem's
+during the setup are saved to the install.log created in the installed gem&#8217;s
 directory. This can be used to troubleshoot the issues, if any.
 </p>
 </li>
@@ -654,8 +696,8 @@ dump file would be created in /tmp if <em>gcore</em> is available on that machin
 </li>
 </ul></div>
 <h3 id="_setting_up_database_for_server_admin_panel">3.4. Setting up database for server admin panel</h3><div style="clear:left"></div>
-<div class="para"><p>The server's admin panel itself is a Ruby on Rails&#8482; web application, and by
-default uses sqlite as it's database. You can edit
+<div class="paragraph"><p>The server&#8217;s admin panel itself is a Ruby on Rails&#8482; web application, and by
+default uses sqlite as it&#8217;s database. You can edit
 <strong>admin_panel/config/database.yml</strong> to setup a database of your liking and
 follow it up by running these commands from the <strong>admin_panel</strong> directory.</p></div>
 <div class="listingblock">
@@ -663,19 +705,19 @@ follow it up by running these commands from the <strong>admin_panel</strong> dir
 <pre><tt>rake db:create
 rake db:migrate</tt></pre>
 </div></div>
-<div class="para"><p><strong>admin_panel</strong> directory would be present under the server's rubygem
+<div class="paragraph"><p><strong>admin_panel</strong> directory would be present under the server&#8217;s rubygem
 directory.</p></div>
 </div>
 <h2 id="_usage">4. Usage</h2>
 <div class="sectionbody">
-<div class="para"><p>Start/Stop/Restart WebROaR:</p></div>
+<div class="paragraph"><p>Start/Stop/Restart WebROaR:</p></div>
 <div class="listingblock">
 <div class="content">
 <pre><tt>sudo webroar start
 sudo webroar stop
 sudo webroar restart</tt></pre>
 </div></div>
-<div class="para"><p>Start/Stop/Restart a deployed application:</p></div>
+<div class="paragraph"><p>Start/Stop/Restart a deployed application:</p></div>
 <div class="listingblock">
 <div class="content">
 <pre><tt>sudo webroar start &lt;Application Name&gt;
@@ -688,18 +730,18 @@ sudo webroar restart &lt;Application Name&gt;</tt></pre>
 <img src="./images/icons/note.png" alt="Note" />
 </td>
 <td class="content">
-<div class="para"><p>You can stop the admin panel application of the server any time, to conserve
+<div class="paragraph"><p>You can stop the admin panel application of the server any time, to conserve
 resources and ensure better security.</p></div>
 <div class="listingblock">
 <div class="content">
 <pre><tt>sudo webroar stop "Admin Panel"</tt></pre>
 </div></div>
-<div class="para"><p>To start it whenever you want, use the following command:</p></div>
+<div class="paragraph"><p>To start it whenever you want, use the following command:</p></div>
 <div class="listingblock">
 <div class="content">
 <pre><tt>sudo webroar start "Admin Panel"</tt></pre>
 </div></div>
-<div class="para"><p>Please note that analytics data and exceptions are still captured by the
+<div class="paragraph"><p>Please note that analytics data and exceptions are still captured by the
 server even when the admin panel is stopped.</p></div>
 </td>
 </tr></table>
@@ -707,10 +749,10 @@ server even when the admin panel is stopped.</p></div>
 </div>
 <h2 id="_deploying_applications">5. Deploying applications</h2>
 <div class="sectionbody">
-<div class="para"><p>If the server got installed successfully, you should be able access it's admin
+<div class="paragraph"><p>If the server got installed successfully, you should be able access it&#8217;s admin
 panel using the link:<br />
 <strong>http://&lt;yourservername&gt;:&lt;port&gt;/admin-panel</strong></p></div>
-<div class="para"><p>You can log in with the administrator account username and password that you
+<div class="paragraph"><p>You can log in with the administrator account username and password that you
 had entered during server installation. Deploy the ruby web application of
 your choice accessing the <strong>Configuration</strong> link of the admin panel.</p></div>
 <div class="admonitionblock">
@@ -723,9 +765,9 @@ The application starts up automatically after deployment.</td>
 </tr></table>
 </div>
 <h3 id="_rack_applications_other_than_rails">5.1. Rack applications (other than Rails)</h3><div style="clear:left"></div>
-<div class="para"><p>To deploy any Rack based application (other than Rails) the following are
-required in it's root directory:</p></div>
-<div class="ilist"><ul>
+<div class="paragraph"><p>To deploy any Rack based application (other than Rails) the following are
+required in it&#8217;s root directory:</p></div>
+<div class="ulist"><ul>
 <li>
 <p>
 <strong>public</strong> folder containing static files like images and stylesheets
@@ -738,8 +780,8 @@ contain the complete logic for initializing the application.
 </p>
 </li>
 </ul></div>
-<div class="para"><p>Here are some examples of the Rackup files:</p></div>
-<div class="para"><p><strong>Merb</strong></p></div>
+<div class="paragraph"><p>Here are some examples of the Rackup files:</p></div>
+<div class="paragraph"><p><strong>Merb</strong></p></div>
 <div class="listingblock">
 <div class="content">
 <pre><tt>  require 'rubygems'
@@ -752,7 +794,7 @@ contain the complete logic for initializing the application.
   Merb::BootLoader.run
   run Merb::Rack::Application.new</tt></pre>
 </div></div>
-<div class="para"><p><strong>Sinatra</strong></p></div>
+<div class="paragraph"><p><strong>Sinatra</strong></p></div>
 <div class="listingblock">
 <div class="content">
 <pre><tt>  require 'rubygems'
@@ -762,32 +804,32 @@ contain the complete logic for initializing the application.
   set :raise_errors, true
   run Sinatra::Application</tt></pre>
 </div></div>
-<div class="para"><p>You can use following environment variables in <strong>config.ru</strong> to access the few
+<div class="paragraph"><p>You can use following environment variables in <strong>config.ru</strong> to access the few
 application configuration parameters given at a time of application deployment
 in WebROaR.</p></div>
-<div class="ilist"><ul>
+<div class="ulist"><ul>
 <li>
 <p>
-ENV['APP_ROOT'] - To get the application root
+ENV['APP_ROOT\'] - To get the application root
 </p>
 </li>
 <li>
 <p>
-ENV['APP_ENV'] - To get the application environment
+ENV['APP_ENV\'] - To get the application environment
 </p>
 </li>
 <li>
 <p>
-ENV['APP_BASE_URI'] - To get the baseuri
+ENV['APP_BASE_URI\'] - To get the baseuri
 </p>
 </li>
 </ul></div>
 </div>
 <h2 id="_accessing_run_time_statistics">6. Accessing run time statistics</h2>
 <div class="sectionbody">
-<div class="para"><p>For those applications whose Analytics are <strong>Enabled</strong> in their configuration,
+<div class="paragraph"><p>For those applications whose Analytics are <strong>Enabled</strong> in their configuration,
 the following graphs are available under the <strong>Analytics</strong> link of the admin panel.</p></div>
-<div class="olist"><ol>
+<div class="olist arabic"><ol class="arabic">
 <li>
 <p>
 URL Breakdown
@@ -839,7 +881,7 @@ Physical Memory Utilization
 </p>
 </li>
 </ol></div>
-<div class="para"><p>Additionally, CPU and Physical Memory usage graphs for the entire server are
+<div class="paragraph"><p>Additionally, CPU and Physical Memory usage graphs for the entire server are
 also available.</p></div>
 <div class="admonitionblock">
 <table><tr>
@@ -854,10 +896,10 @@ about a minute for it’s data to show up in the graphs.</td>
 </div>
 <h2 id="_exception_tracking_and_notifications">7. Exception Tracking and Notifications</h2>
 <div class="sectionbody">
-<div class="para"><p>Any exceptions that occur in any of the deployed application are captured by
+<div class="paragraph"><p>Any exceptions that occur in any of the deployed application are captured by
 the server. An email notification is also sent out immediately with details of
 the exception, if the mail settings have been configured in the admin panel.</p></div>
-<div class="para"><p>All the exceptions can be seen under the <strong>Exceptions</strong> link of the server admin
+<div class="paragraph"><p>All the exceptions can be seen under the <strong>Exceptions</strong> link of the server admin
 panel.</p></div>
 <div class="admonitionblock">
 <table><tr>
@@ -872,7 +914,7 @@ after it has occurred.</td>
 </div>
 <h2 id="_uninstall">8. Uninstall</h2>
 <div class="sectionbody">
-<div class="para"><p>If you didn't like the server, use the following commands in sequence to uninstall it.</p></div>
+<div class="paragraph"><p>If you didn&#8217;t like the server, use the following commands in sequence to uninstall it.</p></div>
 <div class="listingblock">
 <div class="content">
 <pre><tt>sudo webroar uninstall
@@ -881,16 +923,16 @@ sudo gem uninstall webroar</tt></pre>
 </div>
 <h2 id="_test_suite">9. Test Suite</h2>
 <div class="sectionbody">
-<div class="para"><p>If you are a programmer and wish to play around with the server's code, you
-might like to use it's test suite to test the robustness of your changes.</p></div>
-<div class="para"><p>It can be run using the following command:</p></div>
+<div class="paragraph"><p>If you are a programmer and wish to play around with the server&#8217;s code, you
+might like to use it&#8217;s test suite to test the robustness of your changes.</p></div>
+<div class="paragraph"><p>It can be run using the following command:</p></div>
 <div class="listingblock">
 <div class="content">
 <pre><tt>sudo webroar test</tt></pre>
 </div></div>
-<div class="para"><p>We execute this suite on our nightly builds and it currently has the following
+<div class="paragraph"><p>We execute this suite on our nightly builds and it currently has the following
 tests:</p></div>
-<div class="ilist"><ul>
+<div class="ulist"><ul>
 <li>
 <p>
 Unit Tests
@@ -925,7 +967,7 @@ Build Tests
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2009-11-20 22:16:52 IST
+Last updated 2009-12-07 17:56:58 IST
 </div>
 </div>
 </body>
