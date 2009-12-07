@@ -1,6 +1,7 @@
-v0.2.5 - ??-Dec-2009
+v0.2.5 - 07-Dec-2009
 --------------------
 
+* Tested on Mac OS X v10.6 Snow Leopard & Ubuntu 9.10 (64-bit). 
 * Tested on Ruby Enterprise Edition 1.8.7-2009.10.
 * Upgraded rails dependency version to >=2.3.5. Resolves Ticket #6.
 * Redirected 'rake spec' output to STDOUT by default to indicate progress 
@@ -9,7 +10,8 @@ of test execution.
 handling errors raised in scripts being run by the embedded interpreter in 
 the worker.
 * Redirected standard IO right after logger is initialized in worker.
-* Handled absolute path for install dependencies.
+* Handled absolute path for install dependencies. Resolves Ticket #3 - 
+'Unable to locate gcc on Snow Leopard during installation'.
 
 
 v0.2.4 - 01-Dec-2009
