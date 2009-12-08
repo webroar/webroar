@@ -35,12 +35,20 @@ module Webroar
       begin
         app = $app
         status, headers, body = app.call(client.env)
-      rescue
-        raise if $DEBUG
+      rescue Exception => e
+        error = e.class.to_s + '-' + e.to_s + "\n" + e.backtrace.join("\n").to_s
+        Webroar.log_error(error)
         status = 500
-        headers = {Content_Type => TEXT_PLAIN}
-        body = InternalServerError
-        Webroar.log_debug("Webroar:ProcessClient:Process() inside 500 error")
+        headers = {Content_Type => 'text/html'}
+        body = "<!DOCTYPE HTML PUBLIC \"-//IETF//DTD HTML 2.0//EN\">\r\n\
+      <html><head>\r\n\
+      <title>Internal Server Error</title>\r\n\
+      </head><body>\r\n\
+      <h1>Internal Server Error</h1>\r\n\
+      <p>The server is facing some problem while processing the request.</p>\r\n\
+      <br><br><hr>#{SERVER}\
+      </body></html>"
+                
       end # begin
       
       status = status.to_i
