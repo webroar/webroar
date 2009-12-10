@@ -19,15 +19,15 @@
 module Webroar
 
   def self.log_info(message)
-    Webroar::log( "Info", 5, message)
+    Webroar::log_message( "Info", 5, message)
   end
 
   def self.log_error(message, level = 4)
-    Webroar::log( "Error", level, message)
+    Webroar::log_message( "Error", level, message)
   end
   
   def self.log_debug(message)
-    Webroar::log( "Debug", 1, message)
+    Webroar::log_message( "Debug", 1, message)
   end
 
 end

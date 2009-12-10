@@ -146,9 +146,9 @@ VALUE req_env(VALUE _, VALUE rb_req) {
   return hash;
 }
 
-/** Logging 'Ruby' messsage */
-VALUE log(VALUE _, VALUE message_type, VALUE severity, VALUE log_message) {
-  a_log(StringValuePtr(message_type), FIX2INT(severity), StringValuePtr(log_message));
+/** Logging 'Ruby' message */
+VALUE log_message(VALUE _, VALUE message_type, VALUE severity, VALUE message) {
+  a_log(StringValuePtr(message_type), FIX2INT(severity), StringValuePtr(message));
   return Qnil;
 }
 
@@ -168,7 +168,7 @@ void init_ruby_interface(http_t *h) {
   mObj = rb_define_module("Webroar");
   cReq = rb_define_class_under(mObj, "Client", rb_cObject);
   cRequestHandler = rb_define_class_under(mObj, "RequestHandler", rb_cObject);
-  rb_define_singleton_method(mObj, "log", log, 3);
+  rb_define_singleton_method(mObj, "log_message", log_message, 3);
   rb_define_singleton_method(mObj, "read_request", read_request, 2);
   rb_define_singleton_method(mObj, "client_env", req_env, 1);
   rb_define_singleton_method(mObj, "client_write_headers", req_write_headers, 4);
