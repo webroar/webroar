@@ -80,6 +80,6 @@ begin
   Webroar.log_info("Application loaded successfully")
 rescue Exception => e
   error = e.class.to_s + '-' + e.to_s + "\n" + e.backtrace.join("\n").to_s
-  Webroar.log_error(error)
+  Webroar::log_message( "Error", 5, error)
   raise
 end
