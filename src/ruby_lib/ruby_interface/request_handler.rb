@@ -57,7 +57,8 @@ module Webroar
         headers[Content_Length] = "0"
       else
         # Content-Length header checking and calculation according to Thin 
-        headers[Content_Length] = Webroar::Utils.calculate_content_length(body) if need_content_length?([status,headers,body])
+        # if body responding to 'each', accumulating body content into an Array
+        headers[Content_Length], actual_content = Webroar::Utils.calculate_content_length(body) if need_content_length?([status,headers,body])
       end
       
       if !client.keep_alive?          
@@ -73,7 +74,11 @@ module Webroar
       client.write_headers(headers, status, content_length)
       
       if(content_length > 0) 
-        client.write_body(body)
+        if actual_content
+          client.write_body(actual_content)
+        else
+          client.write_body(body)  
+        end        
       end
     rescue => e
       Webroar.log_error("WebROaR Error! #{e.class}  #{e.message}\n #{e.backtrace.join("\n")}")

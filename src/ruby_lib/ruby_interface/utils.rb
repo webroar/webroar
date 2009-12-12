@@ -32,11 +32,15 @@ module Webroar
           # See http://redmine.ruby-lang.org/issues/show/203
           (body.respond_to?(:bytesize) ? body.bytesize : body.size).to_s
         else
-          bytes = 0          
+          # TODO: Yup, this is a ugly hack, accumulating body content at wrong place - only for little performance
+          # and DRYing up the things. 
+          bytes = 0 
+          body_content = []
           body.each do |p|
             bytes += p.respond_to?(:bytesize) ? p.bytesize : p.size
+            body_content << p
           end
-          bytes.to_s
+          [bytes.to_s, body_content]
         end
       end
     end
