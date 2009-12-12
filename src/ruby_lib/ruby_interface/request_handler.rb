@@ -41,13 +41,13 @@ module Webroar
         status = 500
         headers = {Content_Type => 'text/html'}
         body = "<!DOCTYPE HTML PUBLIC \"-//IETF//DTD HTML 2.0//EN\">\r\n\
-      <html><head>\r\n\
-      <title>Internal Server Error</title>\r\n\
-      </head><body>\r\n\
-      <h1>Internal Server Error</h1>\r\n\
-      <p>The server is facing some problem while processing the request.</p>\r\n\
-      <br><br><hr>#{SERVER}\
-      </body></html>"
+                <html><head>\r\n\
+                <title>Internal Server Error</title>\r\n\
+                </head><body>\r\n\
+                <h1>Internal Server Error</h1>\r\n\
+                <p>The server is facing some problem while processing the request.</p>\r\n\
+                <br><br><hr>#{SERVER}\
+                </body></html>"
                 
       end # begin
       
