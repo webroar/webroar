@@ -20,7 +20,15 @@ module Webroar
   class Utils
     class << self
       def calculate_content_length(body)
-        if body.kind_of?(String)
+        if body.respond_to?(:to_path)
+          #TODO: Some files(e.g. /proc) doesn't provide size info. We may have to figure out
+          # by reading entire content.  
+          if filesize = File.size?(body.to_path)  
+            filesize.to_s
+          else
+            "0"
+          end
+        elsif body.kind_of?(String)
           # See http://redmine.ruby-lang.org/issues/show/203
           (body.respond_to?(:bytesize) ? body.bytesize : body.size).to_s
         else

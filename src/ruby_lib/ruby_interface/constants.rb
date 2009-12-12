@@ -84,6 +84,7 @@ module Webroar
   Set_Cookie = 'Set-Cookie'.freeze
   LF = "\n".freeze
   
+  READ_CHUNK_SIZE = 4096
   HTTP_STATUS_CODES = {
     100  => 'Continue',
     101  => 'Switching Protocols',

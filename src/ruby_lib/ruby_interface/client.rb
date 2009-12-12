@@ -62,8 +62,15 @@ module Webroar
       false
     end
     
-    def write_body(body)   
-      if body.kind_of?(String)
+    def write_body(body)
+      if body.respond_to?(:to_path) and File.exists?(body.to_path)    
+        #TODO: Implement 'sendfile' call for kernel-to-kernel transfer.
+        file = File.open(body.to_path, 'rb')
+        while content = file.read(Webroar::READ_CHUNK_SIZE)
+          Webroar::client_write_body(self, content)
+        end
+        file.close
+      elsif body.kind_of?(String)
         Webroar::client_write_body(self, body)
       else        
         body.each {|p|
