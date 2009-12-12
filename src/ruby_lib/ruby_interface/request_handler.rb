@@ -80,8 +80,10 @@ module Webroar
           client.write_body(body)  
         end        
       end
+      body.close if body.respond_to?(:close)
     rescue => e
       Webroar.log_error("WebROaR Error! #{e.class}  #{e.message}\n #{e.backtrace.join("\n")}")
+      body.close if body.respond_to?(:close)
       return
     ensure
     end # self.process
