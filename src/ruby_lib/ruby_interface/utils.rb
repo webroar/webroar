@@ -20,12 +20,11 @@ module Webroar
   class Utils
     class << self
       def calculate_content_length(body)
-        case body
-        when String
+        if body.kind_of?(String)
           # See http://redmine.ruby-lang.org/issues/show/203
-           (body.respond_to?(:bytesize) ? body.bytesize : body.size).to_s
-        when Array
-          bytes = 0
+          (body.respond_to?(:bytesize) ? body.bytesize : body.size).to_s
+        else
+          bytes = 0          
           body.each do |p|
             bytes += p.respond_to?(:bytesize) ? p.bytesize : p.size
           end

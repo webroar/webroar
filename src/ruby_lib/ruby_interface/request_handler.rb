@@ -27,7 +27,7 @@ module Webroar
       return false if headers.has_key?(Content_Length)
       return false if (100..199).include?(status) || status == 204 || status == 304
       return false if headers.has_key?(Transfer_Encoding) && headers[Transfer_Encoding] =~ /\bchunked\b/i
-      return false unless body.kind_of?(String) || body.kind_of?(Array)
+      return false unless body.kind_of?(String) || body.respond_to?(:each)
       true
     end
     
