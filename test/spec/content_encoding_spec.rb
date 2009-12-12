@@ -49,4 +49,18 @@ describe 'Content-Encoding' do
     body.should =~ /ok/
   end
   
+  it "should return plain text when asked for deflate encoded content and User-Agent is MSIE 6.0" do
+    request = "GET /test_app/test/content_encoding HTTP/1.1\r\nHost: localhost\r\nAccept-Encoding: deflate\r\nUser-Agent: MSIE 6.0\r\n\r\n"
+    @conn.write request
+    status, headers, body = parse_response @conn.read
+    body.should =~ /ok/
+  end
+  
+  it "should return plain text when asked for gzip encoded content and User-Agent is MSIE 6.0" do
+    request = "GET /test_app/test/content_encoding HTTP/1.1\r\nHost: localhost\r\nAccept-Encoding: gzip\r\nUser-Agent: MSIE 6.0\r\n\r\n"
+    @conn.write request
+    status, headers, body = parse_response @conn.read
+    body.should =~ /ok/
+  end
+  
 end
