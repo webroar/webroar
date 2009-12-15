@@ -34,7 +34,11 @@ http_resp_t* http_resp_new() {
   rsp->bytes_write = 0;
   rsp->resp_code = 0;
   rsp->scgi = NULL;
+#ifdef _POSIX_C_SOURCE
+  rsp->file = 0;
+#else
   rsp->file = NULL;
+#endif
 
   return rsp;
 }
@@ -120,7 +124,7 @@ void http_resp_file_write_cb(struct ev_loop* loop, struct ev_io* watcher, int re
           w->http->conn_id, w->http->req_id);
 
   if (revent & EV_WRITE) {
-
+#ifndef _POSIX_C_SOURCE
     if (rsp->file) {
       char buffer[WR_REQ_BODY_MAX_SIZE];
       ssize_t read;
@@ -153,6 +157,7 @@ void http_resp_file_write_cb(struct ev_loop* loop, struct ev_io* watcher, int re
       ev_io_init(watcher, http_req_header_cb, w->req_fd, EV_READ);
       ev_io_start(loop, watcher);
     }
+#endif    
   }
 }
 

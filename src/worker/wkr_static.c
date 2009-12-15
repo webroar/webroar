@@ -395,7 +395,7 @@ void send_static_worker_pid(char *root_path) {
   root = yaml_parse(file_name);
   if(root == NULL) {
     LOG_ERROR(SEVERE, "Could not parse server_internal_config.yml file. PID can not be sent to analyzer");
-    return 0;  
+    return;  
   } else {
     char *host = NULL, *port = NULL, *queue_name = NULL;
     wr_msg_queue_server_t *msg_queue_server = NULL;

@@ -257,13 +257,16 @@ void wr_conn_err_resp(wr_conn_t *conn, wr_resp_status_t resp_code) {
 
   LOG_DEBUG(DEBUG, "response code = %s",http_status[resp_code].phrase);
   conn->keep_alive = 0;
+  
+  char current_date[WR_STR_LEN];
+  get_time(current_date, WR_STR_LEN);
 
   switch(resp_code) {
   case WR_HTTP_STATUS_100:
     body_len = 0;
     buff_len = sprintf(response_buff, WR_RESP_HEADERS,
-                       http_status[resp_code].phrase, WR_SERVER, WR_VERSION,
-                       body_len, http_status[resp_code].message);
+                       http_status[resp_code].phrase, current_date, WR_SERVER, 
+                       WR_VERSION, body_len, http_status[resp_code].message);
     break;
   case WR_HTTP_STATUS_400:
   case WR_HTTP_STATUS_403:
@@ -285,9 +288,7 @@ void wr_conn_err_resp(wr_conn_t *conn, wr_resp_status_t resp_code) {
                          http_status[resp_code].phrase,http_status[resp_code].phrase+4,
                          http_status[resp_code].message,WR_SERVER, WR_VERSION);
     }
-    
-    char current_date[WR_STR_LEN];
-    get_time(current_date, WR_STR_LEN);
+        
     buff_len = sprintf(response_buff, WR_RESP_HEADERS,
                        http_status[resp_code].phrase, current_date,
                        WR_SERVER, WR_VERSION, body_len, response_body);
