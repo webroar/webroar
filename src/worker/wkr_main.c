@@ -340,7 +340,7 @@ int main(int argc, char **argv) {
   signal(SIGHUP, sigproc); /* catch hangup signal */
   signal(SIGINT, sigproc);
   signal(SIGTERM, sigproc);
-  signal(SIGCHLD, SIG_IGN);
+//  signal(SIGCHLD, SIG_IGN);
   signal(SIGTSTP, SIG_IGN);
   signal(SIGTTOU, SIG_IGN);
   signal(SIGTTIN, SIG_IGN);  
