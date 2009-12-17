@@ -125,7 +125,7 @@ class YAMLWriter
 #                II) Expires value(mandatory) (No of seconds)
 #         Possible value for expires is off or no. of seconds. 
 #         Example:
-#           Header:
+#           Headers:
 #             expires: 3600
 #             expires_by_type:
 #             - ext: png, jpg, gif
