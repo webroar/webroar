@@ -91,19 +91,28 @@ class Installer
   
   def create_service_link(level, link_name, script_file)
     system("find /etc/ -name rc#{level}.d > /tmp/search_result 2>>#{WEBROAR_ROOT}/install.log")
+
+    return false if !File.size?("/tmp/search_result")
+
     file = File.open("/tmp/search_result")
     line = file.readline.chomp
     file.close()
+    
+    return false if line == nil
+    
     link_file = File.join(line,link_name)
     
-    if line != nil and script_file != nil and !File.symlink?(link_file)
+    if script_file != nil and !File.symlink?(link_file)
       system("ln -s #{script_file} #{link_file} >>#{WEBROAR_ROOT}/install.log 2>>#{WEBROAR_ROOT}/install.log")
     end
+    
+    return true
   end
 
   def create_service
     script = nil
     script_file = nil
+
     if(check_exe_file("chkconfig"))
       script = get_service_script("# chkconfig: 2345 85 15")
     else 
@@ -111,24 +120,32 @@ class Installer
     end
     
     system("find /etc/ -name init.d > /tmp/search_result 2>>#{WEBROAR_ROOT}/install.log")
+    
+    return false if !File.size?("/tmp/search_result")
+    
     file = File.open("/tmp/search_result")
     line = file.readline.chomp
     file.close()
-    if line != nil
-      script_file = File.join("#{line}",'webroar')
-      file = File.open(script_file,"w")
-      file.puts(script)
-      file.close
-      system("chmod +x #{script_file} 2>>#{WEBROAR_ROOT}/install.log")
-    end
     
-    create_service_link("0", 'K15webroar', script_file)
-    create_service_link("1", 'K15webroar', script_file)
-    create_service_link("6", 'K15webroar', script_file)
-    create_service_link("2", 'S85webroar', script_file)
-    create_service_link("3", 'S85webroar', script_file)
-    create_service_link("4", 'S85webroar', script_file)
-    create_service_link("5", 'S85webroar', script_file)
+    return false if line == nil    
+
+    script_file = File.join("#{line}",'webroar')
+
+    file = File.open(script_file,"w")
+    file.puts(script)
+    file.close
+
+    system("chmod +x #{script_file} 2>>#{WEBROAR_ROOT}/install.log")
+    
+    return false if !create_service_link("0", 'K15webroar', script_file)
+    return false if !create_service_link("1", 'K15webroar', script_file)
+    return false if !create_service_link("6", 'K15webroar', script_file)
+    return false if !create_service_link("2", 'S85webroar', script_file)
+    return false if !create_service_link("3", 'S85webroar', script_file)
+    return false if !create_service_link("4", 'S85webroar', script_file)
+    return false if !create_service_link("5", 'S85webroar', script_file)
+    
+    return true
     
   end
 
@@ -142,6 +159,7 @@ class Installer
   def install(options, args)
     ssl = false
     str = ""
+    err_msg = nil
     
     if options[:ssl]
       ssl = true
@@ -225,8 +243,16 @@ class Installer
               if RUBY_PLATFORM =~ /linux/ and !import
                 print "Generating service script ..."
                 # Add service script in '/etc/init.d/' folder
-                create_service()
-                puts " done."
+                if create_service()
+                  puts " done."
+                else
+                  puts " failed."
+                  if err_msg
+                    err_msg += "The server would not start as a service."
+                  else
+                    err_msg = "The server would not start as a service."
+                  end
+                end
               end
               
               puts"WebROaR installed successfully."
@@ -239,6 +265,7 @@ class Installer
               system("webroar start")
               
               install_msg(port, false)
+              puts "Warning: " + err_msg if err_msg
             else
               puts " failed."
               puts "Error while migrating sqlite database. Please refer 'install.log' for details"
