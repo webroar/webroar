@@ -31,8 +31,8 @@
 #include "wkr_static.h"
 
 #define MAP_SIZE 36
-#define DEFAULT_EXPIRES "Headers/expires"
-#define EXPIRES_BY_TYPE "Headers/expires_by_type"
+#define DEFAULT_EXPIRES "Header/expires"
+#define EXPIRES_BY_TYPE "Header/expires_by_type"
 #define EXPIRES_BY_TYPE_EXT "expires_by_type/ext"
 #define EXPIRES_BY_TYPE_EXPIRES "expires_by_type/expires"
 #define HTTP_HEADER_IF_MODIFIED_SINCE "HTTP_IF_MODIFIED_SINCE"
