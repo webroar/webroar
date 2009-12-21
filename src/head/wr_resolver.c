@@ -43,7 +43,7 @@ void wr_req_resolver_print(wr_req_resolver_t* resolver) {
 /** Resolve static content */
 int wr_req_resolve_static_content(wr_req_t *req){
   LOG_FUNCTION
-  char path[WR_LONG_STR_LEN];
+  char path[WR_FILE_PATH_LEN + WR_MAX_REQ_PATH_LEN];
   char *req_path;
   struct stat buf;
   int len;

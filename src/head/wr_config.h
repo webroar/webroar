@@ -124,6 +124,7 @@
 #define WR_STR_LEN                64
 #define WR_LONG_STR_LEN            128
 #define WR_LONG_LONG_STR_LEN      512
+#define WR_FILE_PATH_LEN          1024
 
 #define WR_DEFAULT_PREFIX_HASH    5381
 #define WR_MSG_SIZE              1024
