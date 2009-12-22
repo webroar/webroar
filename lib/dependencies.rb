@@ -52,11 +52,11 @@ module Webroar
     
     def find_shared_lib()
       if File.exist?(File.join(Config::CONFIG['libdir'],Config::CONFIG['LIBRUBY_SO']))
-        flag = "\e[32mfound\e[0m."
+        flag = "\e[32mfound\e[0m  at #{Config::CONFIG['libdir']}."
       elsif Config::CONFIG['ENABLE_SHARED'] == 'yes'
         flag = "\e[32mfound\e[0m."
       else
-        flag="\e[31mnot found\e[0m."        
+        flag="\e[31mnot found\e[0m.\nUnable to find #{Config::CONFIG['LIBRUBY_SO']} at #{Config::CONFIG['libdir']}."        
       end
       return flag
     end
