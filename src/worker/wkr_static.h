@@ -35,6 +35,6 @@ int static_module_init(char *root_path);
 void static_module_free();
 
 /* Serve the static file content */
-int static_file_process(http_t *h);
+void static_file_process(http_t *h);
 
 #endif /*WKR_STATIC_H_*/

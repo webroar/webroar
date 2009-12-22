@@ -66,7 +66,7 @@ static inline int wr_req_path_set(wr_req_t *req) {
       LOG_DEBUG(DEBUG,"query str len = %d", req->req_query_str.len);
       req->resp_buf_len = sprintf(req->resp_buf,"%s","The request query string is too large.");
       wr_req_invalid(req->conn, WR_HTTP_STATUS_413);
-      return;
+      return -1;
     }
 
     // Set host and request path
@@ -91,7 +91,7 @@ static inline int wr_req_path_set(wr_req_t *req) {
           LOG_DEBUG(DEBUG,"req path len = %d", req->req_path.len);
           req->resp_buf_len = sprintf(req->resp_buf,"%s","The request path is too large.");
           wr_req_invalid(req->conn, WR_HTTP_STATUS_413);
-          return;
+          return -1;
         }
       } else {
         host_len = req->req_uri.len - (ptr - req->req_uri.str);

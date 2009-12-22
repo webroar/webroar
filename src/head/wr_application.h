@@ -61,9 +61,9 @@ int wr_app_wkr_add(wr_app_t*);
 /** Add request message in pending queue */
 int wr_app_message_insert(wr_svr_t*, wr_req_t*);
 /** Check load balance to add the worker */
-int wr_app_chk_load_to_add_wkr(wr_app_t*);
+void wr_app_chk_load_to_add_wkr(wr_app_t*);
 /** Check load balance to remove the worker */
-int wr_app_chk_load_to_remove_wkr(wr_app_t*);
+void wr_app_chk_load_to_remove_wkr(wr_app_t*);
 /** Add newly created worker to application */
 int wr_app_wrk_insert(wr_svr_t *, wr_wkr_t*, const wr_ctl_msg_t*);
 /** Remove application from application list */

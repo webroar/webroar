@@ -488,7 +488,7 @@ void static_module_free() {
 }
 
 /* Serve static file content */
-int static_file_process(http_t *h) {
+void static_file_process(http_t *h) {
   LOG_FUNCTION
   wkr_t *w = h->wkr;
   short resp_code;

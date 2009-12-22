@@ -70,6 +70,6 @@ void   a_log(const char* type,LOG_SEVERITY level,const char* format,...);
 void   a_error(LOG_SEVERITY level, const char *file_name, int line_no, const char *function_name, const char *format, ...);
 int change_log_file_owner(int user_id, int group_id);
 LOG_SEVERITY get_log_severity(const char*str);
-int   set_log_severity(int);
+void   set_log_severity(int);
 void redirect_standard_io();
 #endif //end of wr_logger.h

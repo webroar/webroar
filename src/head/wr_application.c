@@ -438,7 +438,7 @@ int wr_app_remove(wr_svr_t* server, const char* app_name) {
 }
 
 /** Check load balance to add the worker */
-int wr_app_chk_load_to_add_wkr(wr_app_t *app) {
+void wr_app_chk_load_to_add_wkr(wr_app_t *app) {
   if(TOTAL_WORKER_COUNT(app) < app->conf->max_worker) {
     if(app->msg_que->q_count > app->high_ratio) {
       if(!ev_is_active(&app->t_add)) {
@@ -453,7 +453,7 @@ int wr_app_chk_load_to_add_wkr(wr_app_t *app) {
 }
 
 /** Check load balance to remove the worker */
-int wr_app_chk_load_to_remove_wkr(wr_app_t *app) {
+void wr_app_chk_load_to_remove_wkr(wr_app_t *app) {
   //Check load
   if(WR_QUEUE_SIZE(app->wkr_que) > app->conf->min_worker) {
     if(app->msg_que->q_count < app->low_ratio) {

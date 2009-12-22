@@ -29,7 +29,6 @@
 #include<errno.h>
 
 static inline char* get_date_time();
-static inline char* get_executable_path();
 static inline char* get_log_file_path();
 
 //this macro should included in common utility
@@ -142,7 +141,7 @@ char* get_log_level_string(LOG_SEVERITY level){
   case WARN: return "WARN";
   case SEVERE: return "SEVERE";
   case FATAL: return "FATAL";
-  default: "Unknown";
+  default: return "Unknown";
   }
 }
 
@@ -163,6 +162,7 @@ LOG_SEVERITY get_log_severity(const char*str) {
   if(strcmp(str,"FATAL") == 0) {
     return FATAL;
   }
+  return DEBUG;
 }
 
 /** Change log file group-owner to given group and user id */
@@ -171,7 +171,7 @@ int change_log_file_owner(int user_id, int group_id) {
 }
 
 /** Set logging level */
-int set_log_severity(int severity) {
+void set_log_severity(int severity) {
   LOG_INFO("setting log level to %s", get_log_level_string(severity));
   logging_level = severity;
 }
