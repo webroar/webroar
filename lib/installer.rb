@@ -247,10 +247,11 @@ class Installer
                   puts " done."
                 else
                   puts " failed."
+                  tmp_msg = "The server could not be installed as a service on this system. Unfortunatly, you would have to set it up as a service yourself."
                   if err_msg
-                    err_msg += "The server would not start as a service."
+                    err_msg += tmp_msg
                   else
-                    err_msg = "The server would not start as a service."
+                    err_msg = tmp_msg
                   end
                 end
               end
