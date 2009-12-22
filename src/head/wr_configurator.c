@@ -83,9 +83,6 @@ static inline wr_app_conf_t* wr_app_conf_new(wr_svr_conf_t *server) {
 /** Create new configuration with default values */
 static inline wr_conf_t* wr_conf_new() {
   LOG_FUNCTION
-  int i;
-  wr_svr_conf_t  *server;
-  wr_app_conf_t    *app;
   wr_conf_t         *conf;
 
   conf = wr_malloc(wr_conf_t);
@@ -205,7 +202,6 @@ static inline int wr_conf_server_set(wr_conf_t * conf, node_t *root) {
   LOG_FUNCTION
   wr_svr_conf_t  *server = conf->server;
   char *str;
-  size_t len;
 
   // Set server listening port
   str = wr_validate_string(get_node_value(root, WR_CONF_SVR_PORT));
@@ -255,6 +251,7 @@ static inline int wr_conf_server_set(wr_conf_t * conf, node_t *root) {
 #ifdef HAVE_GNUTLS
 
   if(server->flag&WR_SVR_SSL_SUPPORT) {
+  	size_t len;
     struct stat buff;
     // Set certificate path
     str = wr_validate_string(get_node_value(root, WR_CONF_SVR_SSL_CERTIFICATE));
@@ -311,7 +308,7 @@ static inline int wr_conf_server_set(wr_conf_t * conf, node_t *root) {
 
 static int wr_validate_app_host_name(const char *host_name, char *err_msg) {
   LOG_FUNCTION
-  int down_level = 1, label_len, host_name_len, i;
+  int down_level = 1, label_len, i;
   char *label = NULL;
   char tmp_host[256];
   size_t len;
@@ -754,8 +751,7 @@ static inline int wr_chk_host_lists(wr_host_name_t *list1, wr_host_name_t *list2
 /** Removes Application object on repeated host_name. */
 static inline int wr_remove_app_with_dup_host(wr_conf_t *conf) {
   LOG_FUNCTION
-  wr_app_conf_t *app=conf->apps, *tmp_app = NULL, *next_app;
-  wr_host_name_t *host, *tmp_host, *next_host;
+  wr_app_conf_t *app=conf->apps, *tmp_app = NULL;
   short rv = 0;
 
   if(app == NULL) {
@@ -1040,10 +1036,7 @@ void wr_conf_free(wr_conf_t* conf) {
 wr_conf_t* wr_conf_read(const char* root_path) {
   LOG_FUNCTION
   node_t *root;
-  char *str;
   wr_conf_t* conf = NULL;
-  int can_start = 1;
-  struct stat buff;
 
   //Create configuration structure
   conf =  wr_conf_new();

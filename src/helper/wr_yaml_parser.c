@@ -147,7 +147,7 @@ node_t* yaml_parse(const char*file_name) {
   yaml_event_t event;
   node_t *node, *config = NULL, *prev;
   int done = 0, is_key = 0, seq_count = -1, is_seq = 0;
-  char key[100], value[100], seq[10][100];
+  char seq[10][100];
   node_t* stack[100];
   int head = -1;
 

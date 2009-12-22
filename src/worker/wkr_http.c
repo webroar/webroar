@@ -234,8 +234,8 @@ err:
 int load_rack_adapter(wkr_tmp_t *tmp) {
   LOG_FUNCTION
 
-  int state = 0, path_length=0;
-  char *path;
+  int state = 0;
+  
   LOG_DEBUG(DEBUG,"load_rack_adapter() Application path is = %s",tmp->path.str);
   // TODO: Keys are being setup as strings. Doesn't allow standard symbol based access in ruby script.
   VALUE g_options=rb_hash_new();

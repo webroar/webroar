@@ -281,7 +281,7 @@ void idle_cb (struct ev_loop *loop, struct ev_idle *w, int revents) {
 }
 
 int main(int argc, char **argv) {
-  int port, retval = 0;
+  int retval = 0;
   wkr_t* w = NULL;
 
   if(argc == 1) {

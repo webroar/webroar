@@ -25,7 +25,6 @@ struct ev_idle idle_watcher;  //Ideal watcher
 /** Create Server */
 wr_svr_t* wr_svr_new(struct ev_loop* loop, wr_conf_t* conf) {
   LOG_FUNCTION
-  int i;
   wr_svr_t* server = wr_malloc(wr_svr_t);
 
   if(!server) {
@@ -163,7 +162,6 @@ int wr_svr_init(wr_svr_t** server, wr_conf_t *conf) {
 /** Destroy Server */
 void wr_svr_free(wr_svr_t* server) {
   LOG_FUNCTION
-  int i;
   //Destroy ebb server object
   ebb_server_unlisten(&(server->ebb_svr));
 

@@ -92,7 +92,6 @@ void wr_app_wrk_add_timeout_cb(struct ev_loop *loop, ev_timer *w, int revents) {
 void wr_app_wrk_remove_cb(struct ev_loop *loop, ev_timer *w, int revents) {
   LOG_FUNCTION
   wr_app_t* app = (wr_app_t*) w->data;
-  wr_wkr_t* worker;
 
   ev_timer_stop(loop, &app->t_remove);
 

@@ -297,7 +297,7 @@ int wr_req_resolve_http_req(wr_svr_t *server, wr_req_t *req) {
   }
 
   if(app && app->wkr_que->q_count > 0) {
-    int rv = 0;
+//    int rv = 0;
     req->app = app;
     wr_req_resolve_static_content(req);
     LOG_DEBUG(DEBUG,"Application resolved with %s.", req->app->conf->name.str);

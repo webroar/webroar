@@ -218,11 +218,11 @@ static long int get_default_expires(node_t *root) {
 static int create_dictionary(const char *mapping_file, long int expires) {
   node_t *root = yaml_parse(mapping_file), *node;
   static_file_t *ext;
-  int index, i;
+  int index;
 
   // Initialize map with NULL value
-  for (i = 0; i < MAP_SIZE; i++) {
-    map[i] = NULL;
+  for (index = 0; index < MAP_SIZE; index++) {
+    map[index] = NULL;
   }
 
   if (root == NULL) {
@@ -345,7 +345,6 @@ void http_resp_304(http_t *h, const char *path, struct stat *buf) {
 void http_resp_403(http_t *h, const char *path, struct stat *buf) {
   LOG_FUNCTION
   char str[WR_LONG_LONG_STR_LEN], current_date[WR_STR_LEN];
-  time_t t;
   const char *conn_header = scgi_header_value_get(h->req->scgi, HTTP_HEADER_CONNECTION);
   int len;
 
@@ -367,7 +366,6 @@ void http_resp_403(http_t *h, const char *path, struct stat *buf) {
 void http_resp_404(http_t *h, const char *path, struct stat *buf) {
   LOG_FUNCTION
   char str[WR_LONG_LONG_STR_LEN], current_date[WR_STR_LEN];
-  time_t t;
   const char *conn_header = scgi_header_value_get(h->req->scgi, HTTP_HEADER_CONNECTION);
   int len;
   
@@ -448,7 +446,6 @@ err:
 int static_module_init(char *root_path) {
   LOG_FUNCTION
   node_t *root;
-  char *node_value;
   char file_name[100];
   long int expires;
 

@@ -53,7 +53,7 @@
 static inline wr_ctl_msg_t* wr_ctl_msg_validate(scgi_t* request, wr_ctl_t* ctl) {
   LOG_FUNCTION
   wr_ctl_msg_t* ctl_msg = wr_malloc(wr_ctl_msg_t);
-  char *val, *val1, *val2;
+  char *val;
   char error[WR_STR_LEN];
 
   ctl->type = WR_CTL_MSG_NONE;
@@ -346,11 +346,8 @@ static void wr_ctl_accept_cb(struct ev_loop *loop, struct ev_io *w, int revents)
 /** Start listening for Workers connect request on Internet socket */
 static inline int wr_ctl_init_on_inet_sock(wr_svr_t *server) {
   LOG_FUNCTION
-  struct linger ling = {
-                         0, 0
-                       };
   struct sockaddr_in addr;
-  int flags = 1, len;
+  int len;
 
   if ((server->ctl->fd = socket(AF_INET, SOCK_STREAM, 0)) == -1) {
     perror("socket()");
@@ -422,7 +419,6 @@ static inline int wr_ctl_init_on_uds(wr_svr_t *server) {
 
   /* Preparing unique controller socket path*/
   pid_t pid=getpid();
-  char pid_str[WR_SHORT_STR_LEN];
   sprintf(sock_path,"%s_%d",WR_CTL_SOCK_PATH,pid);
   size_t len = strlen(sock_path);
 

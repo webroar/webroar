@@ -179,7 +179,6 @@ static int wr_req_header_length_check(wr_req_t *req, size_t length, int index){
 void wr_req_header_field_cb(ebb_request* request, const char *at, size_t length, int header_index) {
   wr_req_t* req = (wr_req_t*) request->data;
   short status = wr_req_header_length_check(req, length, header_index);
-  size_t i;
 
   if(status != 0){
     wr_req_invalid(req->conn, status);
@@ -264,7 +263,6 @@ void wr_query_string_cb(ebb_request* request, const char *at, size_t length) {
 void wr_req_uri_cb(ebb_request* request, const char *at, size_t length) {
   LOG_FUNCTION
   wr_req_t* req =(wr_req_t*) request->data;
-  char *value=NULL;
 
   if(req->req_uri.len + length > WR_MAX_REQ_URI_LEN) {
     LOG_DEBUG(DEBUG,"req uri len = %d",__FUNCTION__, req->req_uri.len);
@@ -457,7 +455,6 @@ void wr_headers_complete_cb(ebb_request * request) {
 void wr_req_complete_cb(ebb_request * request) {
   LOG_FUNCTION
   wr_req_t* req = (wr_req_t*) request->data;
-  short retval;
   LOG_DEBUG(DEBUG,"req = %d",req->id);
   // Rewind file pointer if request body is written into file
   if(req->upload_file) {

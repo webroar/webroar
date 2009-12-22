@@ -77,9 +77,6 @@ void redirect_standard_io() {
 
 /** Initialize logger */
 int initialize_logger(const char*file_name, const char *server, const char *version) {
-  char *path=NULL;
-
-  int retval;
   const char *PATH_SEPARATOR = "/";//in windows we'll need forward slash
   log_file_path=(char*)malloc(sizeof(char)*512);
   null_check(log_file_path);

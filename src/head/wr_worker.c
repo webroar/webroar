@@ -308,7 +308,6 @@ static void wr_req_body_write_cb(struct ev_loop *loop, struct ev_io *w, int reve
 //whenever there is a pending request for processing and worker's fd is ready for write, it will dump serialized data to worker by this function
 static void wr_req_hearer_write_cb(struct ev_loop *loop, struct ev_io *w, int revents) {
   LOG_FUNCTION
-  int error_flag=0;
   wr_req_t* req = (wr_req_t*) w->data;
   wr_wkr_t *worker = req->wkr;
   LOG_DEBUG(DEBUG,"Request %d",req->id);
@@ -500,7 +499,6 @@ void wr_wkr_free(wr_wkr_t *worker) {
 int wr_wkr_remove(wr_wkr_t *worker, int flag) {
   LOG_FUNCTION
   wr_app_t* app = worker->app;
-  int i, index;
 
   if(worker->state & WR_WKR_ACTIVE)
     worker->state -= WR_WKR_ACTIVE;
@@ -537,7 +535,6 @@ int wr_wkr_create(wr_svr_t *server, wr_app_conf_t *app_conf) {
   char   cuid_s[WR_SHORT_STR_LEN],
   cgid_s[WR_SHORT_STR_LEN],
   controller_path[WR_LONG_STR_LEN],
-  analytics [WR_SHORT_STR_LEN],
   log_level[WR_SHORT_STR_LEN];
 
   wr_str_t baseuri;
@@ -648,7 +645,6 @@ void wr_wkr_dispatch_req(wr_req_t* req) {
 /** Handle connect request from Worker */
 int wr_wkr_connect(wr_ctl_t *ctl, const wr_ctl_msg_t *ctl_msg) {
   LOG_FUNCTION
-  int retval;
   wr_svr_t* server = ctl->svr;
   wr_wkr_t* worker = NULL;
 

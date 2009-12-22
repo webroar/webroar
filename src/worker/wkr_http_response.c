@@ -116,15 +116,15 @@ int http_resp_process(http_resp_t *rsp) {
 void http_resp_file_write_cb(struct ev_loop* loop, struct ev_io* watcher, int revent) {
   LOG_FUNCTION
   wkr_t *w = (wkr_t*) watcher->data;
-  http_resp_t *rsp = w->http->resp;
-
-  ssize_t sent;
 
   LOG_DEBUG(DEBUG, "http_resp_file_write_cb() conn id=%d, Request id=%d",
           w->http->conn_id, w->http->req_id);
 
   if (revent & EV_WRITE) {
 #ifndef _POSIX_C_SOURCE
+  http_resp_t *rsp = w->http->resp;
+  ssize_t sent;
+
     if (rsp->file) {
       char buffer[WR_REQ_BODY_MAX_SIZE];
       ssize_t read;
@@ -296,8 +296,6 @@ void http_resp_scgi_write_cb(struct ev_loop* loop, struct ev_io* watcher, int re
   LOG_FUNCTION
   wkr_t *w = (wkr_t*) watcher->data;
   http_resp_t *rsp = w->http->resp;
-
-  ssize_t sent;
 
   LOG_DEBUG(DEBUG, "http_resp_scgi_write_cb() conn id=%d, Request id=%d",
           w->http->conn_id, w->http->req_id);

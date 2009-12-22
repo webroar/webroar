@@ -110,7 +110,7 @@ static inline void daemonize() {
   /* first instance continues */
   sprintf(str,"%d\n",getpid());
 
-  int x = write(pid_FD,str,strlen(str)); /* record pid to lockfile */
+  write(pid_FD,str,strlen(str)); /* record pid to lockfile */
   close(pid_FD);
 
   signal(SIGCHLD, SIG_IGN);
