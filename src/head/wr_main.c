@@ -206,7 +206,7 @@ int main(int argc, char *argv[]) {
   char *WR_ROOT = argv[1];
 
   //Initialize logger
-  if(initialize_logger(WR_LOG_FILE) == 0) {
+  if(initialize_logger(WR_LOG_FILE, WR_SERVER, WR_VERSION) == 0) {
     LOG_DEBUG(DEBUG,"Logging started in %s file",WR_LOG_FILE);
   } else {
     printf("Logger initialization failed. Please make sure you have write permission on '/var/log/webroar' directory.");

@@ -76,7 +76,7 @@ void redirect_standard_io() {
 }
 
 /** Initialize logger */
-int initialize_logger(const char*file_name) {
+int initialize_logger(const char*file_name, const char *server, const char *version) {
   char *path=NULL;
 
   int retval;
@@ -105,7 +105,7 @@ int initialize_logger(const char*file_name) {
     }
   }
 
-  fprintf(log_fp,"\nLog file opened at %s",get_date_time());
+  fprintf(log_fp,"\n%s-%s: Log file opened at %s",server, version, get_date_time());
   fclose(log_fp);
   return 0;
 }

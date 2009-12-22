@@ -65,7 +65,7 @@ typedef enum
 #define LOG_FUNCTION LOG_DEBUG(DEBUG,"%s()", __FUNCTION__);
 
 void   close_logger();
-int     initialize_logger(const char*file_name); //prerequisite to use logger
+int     initialize_logger(const char*file_name, const char *server, const char *version); //prerequisite to use logger
 void   a_log(const char* type,LOG_SEVERITY level,const char* format,...);
 void   a_error(LOG_SEVERITY level, const char *file_name, int line_no, const char *function_name, const char *format, ...);
 int change_log_file_owner(int user_id, int group_id);

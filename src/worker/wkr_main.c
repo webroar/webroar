@@ -222,7 +222,7 @@ static inline wkr_tmp_t* parse_args(int argc, char **argv) {
   }
 
   if(tmp->log_file.str){
-    initialize_logger(tmp->log_file.str);
+    initialize_logger(tmp->log_file.str, WR_SERVER, WR_VERSION);
     redirect_standard_io();
 #ifdef L_DEBUG
       set_log_severity(DEBUG);
