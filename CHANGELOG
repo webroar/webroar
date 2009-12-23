@@ -1,3 +1,37 @@
+v0.2.6 - 23-Dec-2009
+--------------------
+
+* Updated messages for HTTP status codes 400, 404, 405, 500 and 501.
+* Fixed buffer overflow by allocating enough memory to hold REQUEST_PATH + 
+Application-Path in the request resolver for static assets.
+* Improved the logic for detection of ruby shared library prerequisite.
+* Started using RUBY_INSTALL_NAME for detecting ruby during installation.
+* Added validation for search results file created while generating service 
+script. Installation would continue even if server cannot be installed as a 
+service.
+* Corrected example for 'Headers' section in the config file.
+* Removed 'SIGCHLD' handler from the worker process - Fixes the incorrect exit 
+status issue for a shell command executed using backquote method of ruby.
+* Added HTTP Date header when the HTTP response status is 100.
+* Used _POSIX_C_SOURCE macro to identify whether the file variable is a 
+pointer to a file or a socket fd.
+* Corrected return type of 'send_static_worker_pid' method, if YAML parser 
+returns NULL value.
+* Corrected time slider based analytics graphs issue when they were being seen 
+after 2300 hrs.
+* Correctly implemented Rack specification for the Response Body. This fixes 
+worker crash seen after serving first request in Development Environment mode 
+for Rails 2.3.4+ applications.
+* Overriding Rack::Deflater to skip response body compression for user-agent 
+Internet Explorer 6.0.
+* Renamed 'log' message defined by rb_define_singleton_method() to 
+'log_message'. This fixes the issue seen when Math.log is called by
+number_to_human_size() in a Rails Application. It also fixes the worker crash 
+on REE installed with tcmalloc library. (Typically used to result in 404 error 
+for a user trying to access the Admin Panel.) Resolves Tickets #9 and #10.
+* Code cleanup in Head, Worker and Helper modules.
+
+
 v0.2.5 - 07-Dec-2009
 --------------------
 
