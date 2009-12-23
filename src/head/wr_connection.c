@@ -31,15 +31,15 @@ wr_http_status_t;
 
 static wr_http_status_t http_status [] ={
   {100, "100 Continue", ""},
-  {400, "400 Bad Request", "The request could not be understood by the server."},
+  {400, "400 Bad Request", "The request could not be understood by the server due to malformed syntax."},
   {403, "403 Forbidden", "The requested page is forbidden."},
-  {404, "404 Not Found", "The requested page could not be found."},
-  {405, "405 Method Not Allowed", "The request method is not allowed."},
+  {404, "404 Not Found", "The server has not found anything matching the Request-URI."},
+  {405, "405 Method Not Allowed", "The method specified in the Request-Line is not allowed for the resource identified by the Request-URI."},
   {411, "411 Length Required", "The request requires 'Content-Length'."},
   {413, "413 Request Entity Too Large", "The request entity is too large"},
   {414, "414 Request-URI Too Large", "The request URI is too large"},
-  {500, "500 Internal Server Error", "The server is facing some error while processing the request. "},
-  {501, "501 Not Implemented", "The requested method is not implemented"}
+  {500, "500 Internal Server Error", "The server encountered an unexpected condition which prevented it from fulfilling the request."},
+  {501, "501 Not Implemented", "The server does not support the functionality required to fulfill the request."}
 };
 
 #define WR_RESP_BODY "<!DOCTYPE HTML PUBLIC \"-//IETF//DTD HTML 2.0//EN\">\r\n\

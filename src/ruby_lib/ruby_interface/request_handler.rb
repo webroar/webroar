@@ -45,7 +45,7 @@ module Webroar
                 <title>Internal Server Error</title>\r\n\
                 </head><body>\r\n\
                 <h1>Internal Server Error</h1>\r\n\
-                <p>The server is facing some problem while processing the request.</p>\r\n\
+                <p>The server encountered an unexpected condition which prevented it from fulfilling the request.</p>\r\n\
                 <br><br><hr>#{SERVER}\
                 </body></html>"
                 
