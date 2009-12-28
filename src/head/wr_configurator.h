@@ -117,6 +117,8 @@ typedef struct wr_conf_s  wr_conf_t;
 int wr_app_conf_remove(wr_conf_t*, const char *app_name);
 /** Read application configuration of specified application name */
 wr_app_conf_t* wr_conf_app_read(wr_conf_t*, const char *app_name, char* err_msg);
+/** Read and update specified application */
+wr_app_conf_t* wr_conf_app_update(wr_conf_t* conf, const char *app_name, char* err_msg);
 
 /** configuration structure */
 struct wr_conf_s {

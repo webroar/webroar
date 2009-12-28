@@ -43,6 +43,7 @@ struct wr_app_s {
   short          low_ratio;
   short          high_ratio;
   short          in_use;
+  short          restarted;
   wr_u_short     last_wkr_pid[WR_MAX_PENDING_WKR];    /**< PID of the last worker */
 
   ev_timer       t_add;          /**< Timer to add worker */

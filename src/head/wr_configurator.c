@@ -916,6 +916,35 @@ int wr_app_conf_remove(wr_conf_t* conf, const char *app_name) {
     return -1;
 }
 
+/** Remove the existing application specification if exists.
+ *  And add the new application configuration. */
+wr_app_conf_t* wr_conf_app_update(wr_conf_t* conf, const char *app_name, char* err_msg) {
+  LOG_FUNCTION
+  wr_app_conf_t *app = conf->apps, *tmp_app = NULL;
+
+  while(app) {
+    if(strcmp(app_name, app->name.str)==0)
+      break;
+    tmp_app = app;
+    app = app->next;
+  }
+
+  if(app){
+    if(tmp_app){
+      tmp_app->next = app->next;
+    }else{
+      conf->apps = app->next;
+    }
+    app->next = NULL;
+    wr_app_conf_free(app);
+  }else{
+    if(err_msg)
+      sprintf(err_msg, "Appliation '%s' is not found", app_name);
+  }
+
+  return wr_conf_app_read(conf, app_name, err_msg);
+}
+
 /** Read specified application and construct application configuration */
 wr_app_conf_t* wr_conf_app_read(wr_conf_t* conf, const char *app_name, char* err_msg) {
   LOG_FUNCTION
