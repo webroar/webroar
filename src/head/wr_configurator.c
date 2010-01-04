@@ -42,7 +42,7 @@ static void wr_host_name_free(wr_host_name_t *host) {
 }
 
 /** Destroy application configuration */
-static inline void wr_app_conf_free(wr_app_conf_t* app) {
+void wr_conf_app_free(wr_app_conf_t* app) {
   LOG_FUNCTION
   wr_app_conf_t* next;
 
@@ -475,14 +475,14 @@ static inline wr_app_conf_t* wr_app_conf_set (wr_conf_t* conf, node_t* app_node,
     printf("Application name is too long. Maximum is %d characters\n", WR_CONF_MAX_LEN_APP_NAME);
     if(err_msg)
       sprintf(err_msg,"\n Application name is too long. Maximum is %d characters", WR_CONF_MAX_LEN_APP_NAME);
-    wr_app_conf_free(app);
+    wr_conf_app_free(app);
     return NULL;
   } else {
     LOG_ERROR(SEVERE,"Application name is missing");
     printf("Application name is missing.\n");
     if(err_msg)
       sprintf(err_msg+strlen(err_msg),"\nApplication name is missing.");
-    wr_app_conf_free(app);
+    wr_conf_app_free(app);
     return NULL;
   }
 
@@ -495,7 +495,7 @@ static inline wr_app_conf_t* wr_app_conf_set (wr_conf_t* conf, node_t* app_node,
       printf("Application path: %s does not exists. Application %s not started.\n",str,app_name);
       if(err_msg)
         sprintf(err_msg+strlen(err_msg),"\nApplication path: %s does not exists. Application %s not started.",str,app_name);
-      //wr_app_conf_free(app); return NULL;
+      //wr_conf_app_free(app); return NULL;
       free_app_obj = 1;
     }
     len = strlen(str);
@@ -506,7 +506,7 @@ static inline wr_app_conf_t* wr_app_conf_set (wr_conf_t* conf, node_t* app_node,
     printf("Application path for %s is missing. Application not started\n", app_name);
     if(err_msg)
       sprintf(err_msg+strlen(err_msg),"\nApplication path for %s is missing. Application not started", app_name);
-    //wr_app_conf_free(app); return NULL;
+    //wr_conf_app_free(app); return NULL;
     free_app_obj = 1;
   }
 
@@ -521,7 +521,7 @@ static inline wr_app_conf_t* wr_app_conf_set (wr_conf_t* conf, node_t* app_node,
     printf("Application type for %s is missing\n", app_name);
     if(err_msg)
       sprintf(err_msg+strlen(err_msg),"Application type is missing.");
-    //wr_app_conf_free(app); return NULL;
+    //wr_conf_app_free(app); return NULL;
     free_app_obj = 1;
   }
 
@@ -537,7 +537,7 @@ static inline wr_app_conf_t* wr_app_conf_set (wr_conf_t* conf, node_t* app_node,
     printf("Application analytics for %s is missing. Application not started.\n",app_name);
     if(err_msg)
       sprintf(err_msg+strlen(err_msg),"\nApplication analytics for %s is missing. Application not started.",app_name);
-    //wr_app_conf_free(app); return NULL;
+    //wr_conf_app_free(app); return NULL;
     free_app_obj = 1;
   }
 
@@ -569,7 +569,7 @@ static inline wr_app_conf_t* wr_app_conf_set (wr_conf_t* conf, node_t* app_node,
       printf("Application run_as_user for %s is invalid. Application not started.\n",app_name);
       if(err_msg)
         sprintf(err_msg+strlen(err_msg),"\nApplication run_as_user for %s is invalid. Application not started.",app_name);
-      //wr_app_conf_free(app); return NULL;
+      //wr_conf_app_free(app); return NULL;
       free_app_obj = 1;
     }
   } else {
@@ -577,7 +577,7 @@ static inline wr_app_conf_t* wr_app_conf_set (wr_conf_t* conf, node_t* app_node,
     printf("Application run_as_user for %s is missing. Application not started.\n",app_name);
     if(err_msg)
       sprintf(err_msg+strlen(err_msg),"\nApplication run_as_user for %s is missing. Application not started.",app_name);
-    //wr_app_conf_free(app); return NULL;
+    //wr_conf_app_free(app); return NULL;
     free_app_obj = 1;
   }
 
@@ -598,7 +598,7 @@ static inline wr_app_conf_t* wr_app_conf_set (wr_conf_t* conf, node_t* app_node,
   }
 
   if(free_app_obj & 1) {
-    wr_app_conf_free(app);
+    wr_conf_app_free(app);
     return NULL;
   }
 
@@ -629,7 +629,7 @@ static inline wr_app_conf_t* wr_app_conf_set (wr_conf_t* conf, node_t* app_node,
     printf("Application(%s) no. of min workers(%d) should not be greater than no. of max workers(%d). Application not started.\n",app_name, app->min_worker, app->max_worker);
     if(err_msg)
       sprintf(err_msg+strlen(err_msg),"\nApplication(%s) no. of min workers(%d) should not be greater than no. of max workers(%d). Application not started.",app_name, app->min_worker, app->max_worker);
-    wr_app_conf_free(app);
+    wr_conf_app_free(app);
     return NULL;
   }
 
@@ -910,10 +910,39 @@ int wr_app_conf_remove(wr_conf_t* conf, const char *app_name) {
     app->next = NULL;
     //Destroy application configuration
     LOG_DEBUG(DEBUG, "Removed application %s", app->name.str);
-    wr_app_conf_free(app);
+    wr_conf_app_free(app);
     return 0;
   } else
     return -1;
+}
+
+/** Replace the application configuration */
+int wr_conf_app_replace(wr_conf_t *conf, wr_app_conf_t *app_conf){
+  LOG_FUNCTION
+  wr_app_conf_t *app = conf->apps, *tmp_app = NULL;
+
+  while(app) {
+    if(strcmp(app_conf->name.str, app->name.str)==0)
+      break;
+    tmp_app = app;
+    app = app->next;
+  }
+
+  if(app){
+    app_conf->next = app->next;
+    if(tmp_app){
+      tmp_app->next = app_conf;
+    }else{
+      conf->apps = app_conf;
+    }
+    app->next = NULL;
+    wr_conf_app_free(app);
+  }else{
+    LOG_ERROR(WARN, "Appliation '%s' is not found", app_conf->name.str);
+    app_conf->next = conf->apps;
+    conf->apps = app_conf;
+  }
+  return 0;
 }
 
 /** Remove the existing application specification if exists.
@@ -936,7 +965,7 @@ wr_app_conf_t* wr_conf_app_update(wr_conf_t* conf, const char *app_name, char* e
       conf->apps = app->next;
     }
     app->next = NULL;
-    wr_app_conf_free(app);
+    //wr_conf_app_free(app);
   }else{
     if(err_msg)
       sprintf(err_msg, "Appliation '%s' is not found", app_name);
@@ -1010,23 +1039,27 @@ wr_app_conf_t* wr_conf_app_read(wr_conf_t* conf, const char *app_name, char* err
 
   node_free(root);
 
-  if(app && app->host_name_list) {
+  if(app) {
     // checking uniqueness for host name. While setting application object, we are parsing raw string of host_names
     // into host_name_list. We can easily check for uniqueness once host_name_list is ready.
-    if(wr_chk_host_within_list(app->host_name_list)!=0) {
-      wr_app_conf_free(app);
-      return NULL;
-    }
-
-    tmp = conf->apps;
-    while(tmp) {
-      if(tmp->host_name_list) {
-        if(wr_chk_host_lists(app->host_name_list, tmp->host_name_list)!=0) {
-          wr_app_conf_free(app);
-          return NULL;
-        }
+    if(app->host_name_list){
+      if(wr_chk_host_within_list(app->host_name_list)!=0) {
+        LOG_ERROR(WARN,"Checking hosts within list is failed.");
+        wr_conf_app_free(app);
+        return NULL;
       }
-      tmp = tmp->next;
+
+      tmp = conf->apps;
+      while(tmp) {
+        if(tmp->host_name_list) {
+          if(wr_chk_host_lists(app->host_name_list, tmp->host_name_list)!=0) {
+            LOG_ERROR(WARN,"Checking host lists is failed.");
+            wr_conf_app_free(app);
+            return NULL;
+          }
+        }
+        tmp = tmp->next;
+      }
     }
     //Set application configuration into configuration data structure
     app->next = conf->apps;
@@ -1050,7 +1083,7 @@ void wr_conf_free(wr_conf_t* conf) {
     free(conf->server);
   }
   //Destroy application_configuration list
-  wr_app_conf_free(conf->apps);
+  wr_conf_app_free(conf->apps);
 
   // Destroy configuration structure
   wr_string_free(conf->wr_root_path);

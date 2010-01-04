@@ -764,8 +764,13 @@ int wr_wkr_connect(wr_ctl_t *ctl, const wr_ctl_msg_t *ctl_msg) {
       worker->app->high_ratio = TOTAL_WORKER_COUNT(worker->app) * WR_MAX_REQ_RATIO;
     return -1;
   }
-  
-  wr_queue_insert(worker->app->wkr_que, worker);
+
+  if(wr_queue_insert(worker->app->wkr_que, worker) < 0){
+    LOG_ERROR(WARN,"Worker queue is full.");
+    worker->app->high_ratio = TOTAL_WORKER_COUNT(worker->app) * WR_MAX_REQ_RATIO;
+    return -1;
+  }
+
   //Setting low load ratio for application, refer "wr_worker_remove_cb" in wr_server.c for details.
   worker->app->low_ratio = worker->app->wkr_que->q_count * WR_MIN_REQ_RATIO;
   ctl->wkr = worker;
@@ -778,6 +783,7 @@ int wr_wkr_connect(wr_ctl_t *ctl, const wr_ctl_msg_t *ctl_msg) {
   wr_wrk_allocate(worker);
   LOG_DEBUG(5,"Successfully connected to worker");
   LOG_DEBUG(DEBUG,"Allocated task to newly added worker %d",worker->id);
+  wr_app_wkr_added_cb(worker->app);
 
   return 0;
 }

@@ -40,10 +40,15 @@ struct wr_app_s {
   wr_svr_t       *svr;        /**< Server pointer */
   wr_ctl_t       *ctl;
 
-  short          low_ratio;
-  short          high_ratio;
-  short          in_use;
-  short          restarted;
+  short          low_ratio;    /** Ratio to remove the worker */
+  short          high_ratio;   /** Ratio to add the worker */
+  short          in_use;       /** Application status flag */
+
+  /** Variables used to reload an application without any downtime */
+  short          restarted;    /** Application restart status flag */
+  short          old_workers;  /** Number of old workers to be removed */
+  short          add_workers;  /** Number of new workers to be created */
+
   wr_u_short     last_wkr_pid[WR_MAX_PENDING_WKR];    /**< PID of the last worker */
 
   ev_timer       t_add;          /**< Timer to add worker */
@@ -77,6 +82,8 @@ void wr_app_add_cb(wr_ctl_t*, const wr_ctl_msg_t*);
 void wr_app_remove_cb(wr_ctl_t*, const wr_ctl_msg_t*);
 /** Allication reload callback */
 void wr_app_reload_cb(wr_ctl_t*, const wr_ctl_msg_t*);
+/** Worker added to application callback */
+void wr_app_wkr_added_cb(wr_app_t *app);
 
 /**************************/
 

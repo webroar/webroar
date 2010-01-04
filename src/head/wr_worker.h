@@ -34,12 +34,13 @@ typedef enum{
   WR_WKR_PING_SENT = 32,    //Sent PING when worker found idle for certain time
   WR_WKR_PING_REPLIED = 64,    //PING replied, indicating worker is live
   WR_WKR_HANG = 128,
+  WR_WKR_OLD = 256
 }wr_wkr_state_t;
 
 /** Worker structure */
 struct wr_wkr_s {
   wr_u_short    id;    /**< Worker index/id */
-  short        state;      /**< Worker state */
+  int        state;      /**< Worker state */
   wr_u_short    pid;    /**< Worker id */
   struct ev_loop   *loop;
 
