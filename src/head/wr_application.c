@@ -257,36 +257,13 @@ static inline int wr_app_reload(wr_app_t *app){
   // Set the number of workers to be added.
   app->add_workers = app->conf->min_worker;
   // Mark all existing workers to OLD worker.
-  for(count = 0; count < app->old_workers ; count++){
+  for(count = 0; count < app->old_workers ; count++) {
     worker = (wr_wkr_t*)wr_queue_fetch(app->wkr_que);
     wr_queue_insert(app->wkr_que, worker);
     worker->state |= WR_WKR_OLD;
   } 
 
   LOG_DEBUG(DEBUG,"Number of old and add workers are %d and %d respectively", app->old_workers, app->add_workers);
-
-  // Create queue with higher capacity to accomodate extra worker(which would remain during transient period of application reload) if required.
-  //TODO: If max_worker < WR_QUEUE_MAX_SIZE(app->wkr_que) and queue is full, need to create new queue 
-  if(app->conf->max_worker >= WR_QUEUE_MAX_SIZE(app->wkr_que)){
-    void *element;
-    LOG_DEBUG(DEBUG,"Create a worker queue with size %d", app->conf->max_worker + 1);
-    wr_queue_t *queue = wr_queue_new(app->conf->max_worker + 1);
-
-    // Create new worker queue.
-    while(element = wr_queue_fetch(app->wkr_que)){
-      wr_queue_insert(queue, element);
-    }
-    wr_queue_free(app->wkr_que);
-    app->wkr_que = queue;
-
-    // Create new free worker queue.
-    queue = wr_queue_new(app->conf->max_worker + 1);
-    while(element = wr_queue_fetch(app->free_wkr_que)){
-      wr_queue_insert(queue, element);
-    }
-    wr_queue_free(app->free_wkr_que);
-    app->free_wkr_que = queue;
-  }
   return 0;
 }
 
@@ -376,9 +353,10 @@ static int wr_app_insert(wr_svr_t* server, wr_app_conf_t* config, wr_ctl_t *ctl)
   if(strcmp(config->name.str, WR_STATIC_FILE_SERVER_NAME) == 0){
     is_static_server = 1;
   }
-  
-  app->free_wkr_que = wr_queue_new(config->max_worker);
-  app->wkr_que = wr_queue_new(config->max_worker);
+
+  // Queue size is WR_ALLOWED_MAX_WORKERS + 1 to accommodate temporary extra worker, created during application restart 
+  app->free_wkr_que = wr_queue_new(WR_ALLOWED_MAX_WORKERS + 1);
+  app->wkr_que = wr_queue_new(WR_ALLOWED_MAX_WORKERS + 1);
   app->msg_que = wr_queue_new(WR_MSG_QUE_SIZE);
 
   if(  app->wkr_que == NULL ||
