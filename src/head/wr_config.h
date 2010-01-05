@@ -26,6 +26,9 @@
 // Default request listining port
 #define WR_DEFAULT_SVR_PORT 3000
 
+// Maximum value allowed for number of workers
+#define WR_ALLOWED_MAX_WORKERS 20
+
 #ifdef HAVE_GNUTLS
 // Default SSL listining port
 #define WR_DEFAULT_SSL_PORT 443

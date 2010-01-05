@@ -216,14 +216,26 @@ static inline int wr_conf_server_set(wr_conf_t * conf, node_t *root) {
 
   // Set min_worker
   str = wr_validate_string(get_node_value(root, WR_CONF_SVR_MIN_WKR));
-  if(str)
+  if(str) {
     server->min_worker = atoi(str);
-
+    if(server->min_worker > WR_ALLOWED_MAX_WORKERS) {
+      LOG_ERROR(SEVERE, "Server Specification: Minimum workers should be a number between 1 and %d. Server can not start.", WR_ALLOWED_MAX_WORKERS);
+      printf("Server Specification: Minimum workers should be a number between 1 and %d. Server can not start.\n", WR_ALLOWED_MAX_WORKERS);
+      return -1; 
+    }
+  }
+  
   // Set max_worker
   str = wr_validate_string(get_node_value(root, WR_CONF_SVR_MAX_WKR));
-  if(str)
+  if(str) {
     server->max_worker = atoi(str);
-
+    if(server->max_worker > WR_ALLOWED_MAX_WORKERS) {
+      LOG_ERROR(SEVERE, "Server Specification: Maximum workers should be a number between 1 and %d. Server can not start.", WR_ALLOWED_MAX_WORKERS);
+      printf("Server Specification: Maximum workers should be a number between 1 and %d. Server can not start.\n", WR_ALLOWED_MAX_WORKERS);
+      return -1; 
+    }
+  }
+  
   if(server->min_worker > server->max_worker) {
     LOG_ERROR(SEVERE,"Server Specification: Min worker value is greater than Max worker value. Server can not start.");
     printf("Server Specification: Min worker value is greater than Max worker value. Server can not start.\n");
@@ -597,11 +609,6 @@ static inline wr_app_conf_t* wr_app_conf_set (wr_conf_t* conf, node_t* app_node,
     free_app_obj = 1;
   }
 
-  if(free_app_obj & 1) {
-    wr_conf_app_free(app);
-    return NULL;
-  }
-
   // Set application environment
   str = wr_validate_string(get_node_value(app_node->child, WR_CONF_APP_ENV));
   if(str && strlen(str) > 0) {
@@ -615,14 +622,35 @@ static inline wr_app_conf_t* wr_app_conf_set (wr_conf_t* conf, node_t* app_node,
 
   // Set min_worker
   str = wr_validate_string(get_node_value(app_node->child, WR_CONF_APP_MIN_WKR));
-  if(str && strlen(str) > 0)
+  if(str && strlen(str) > 0) {
     app->min_worker = atoi(str);
+    if(app->min_worker > WR_ALLOWED_MAX_WORKERS) {
+      LOG_ERROR(SEVERE, "Application(%s)-Minimum workers should be a number between 1 and %d. Application not started.", app_name, WR_ALLOWED_MAX_WORKERS);
+      printf("Application(%s)-Minimum workers should be a number between 1 and %d. Application not started.\n", app_name, WR_ALLOWED_MAX_WORKERS);
+      if(err_msg)
+        sprintf(err_msg + strlen(err_msg), "Application(%s)-Minimum workers should be a number between 1 and %d. Application not started.", app_name, WR_ALLOWED_MAX_WORKERS);
+      free_app_obj = 1; 
+    }
+  }
 
   // Set max_worker
   str = wr_validate_string(get_node_value(app_node->child, WR_CONF_APP_MAX_WKR));
-  if(str && strlen(str) > 0)
+  if(str && strlen(str) > 0) {
     app->max_worker = atoi(str);
+    if(app->max_worker > WR_ALLOWED_MAX_WORKERS) {
+      LOG_ERROR(SEVERE, "Application(%s)-Maximum workers should be a number between 1 and %d. Application not started.", app_name, WR_ALLOWED_MAX_WORKERS);
+      printf("Application(%s)-Maximum workers should be a number between 1 and %d. Application not started.\n", app_name, WR_ALLOWED_MAX_WORKERS);
+      if(err_msg)
+        sprintf(err_msg + strlen(err_msg), "Application(%s)-Maximum workers should be a number between 1 and %d. Application not started.", app_name, WR_ALLOWED_MAX_WORKERS);
+      free_app_obj = 1; 
+    }
+  }
 
+  if(free_app_obj & 1) {
+    wr_conf_app_free(app);
+    return NULL;
+  }
+  
   // Check min_worker should be less than or equal to max_worker
   if(app->min_worker > app->max_worker) {
     LOG_ERROR(SEVERE,"Application(%s) no. of min workers(%d) should not be greater than no. of max workers(%d). Application not started.",app_name, app->min_worker, app->max_worker);
