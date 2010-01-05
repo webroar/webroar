@@ -20,9 +20,9 @@
 #define WR_CONFIG_H_
 
 // Default max_worker
-#define WR_MAX_WKR 6
+#define WR_MAX_WKR 8
 // Default min_worker
-#define WR_MIN_WKR 1
+#define WR_MIN_WKR 4
 // Default request listining port
 #define WR_DEFAULT_SVR_PORT 3000
 
