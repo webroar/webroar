@@ -73,7 +73,7 @@ void wr_app_wrk_add_timeout_cb(struct ev_loop *loop, ev_timer *w, int revents) {
     app->high_ratio = TOTAL_WORKER_COUNT(app) * WR_MAX_REQ_RATIO;
   }
 
-  //TODO: Check minimum no. of workers and, cretae worker if needed.
+  //TODO: Check minimum no. of workers and, create worker if needed.
   // Also, do not OK if some worker were failed to connect.
   // For timebeing sending OK even if some worker failed to connect.
   if(app->in_use == FALSE && app->ctl && app->pending_wkr == 0) {
@@ -265,7 +265,8 @@ static inline int wr_app_reload(wr_app_t *app){
 
   LOG_DEBUG(DEBUG,"Number of old and add workers are %d and %d respectively", app->old_workers, app->add_workers);
 
-  // Create queue qith higer capacity if required.
+  // Create queue with higher capacity to accomodate extra worker(which would remain during transient period of application reload) if required.
+  //TODO: If max_worker < WR_QUEUE_MAX_SIZE(app->wkr_que) and queue is full, need to create new queue 
   if(app->conf->max_worker >= WR_QUEUE_MAX_SIZE(app->wkr_que)){
     void *element;
     LOG_DEBUG(DEBUG,"Create a worker queue with size %d", app->conf->max_worker + 1);
