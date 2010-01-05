@@ -26,6 +26,7 @@ MAX_WORKERS=8
 SERVER_NAME='WebROaR' 	
 LOG_LEVEL="SEVERE"	
 ACCESS_LOG = "No"
+ALLOWED_MAX_WORKERS = 20
 #session timeout in minutes
 SESSION_TIMEOUT = 10
 
@@ -71,15 +72,15 @@ NO_DEPLOYED_APPLICATION_MESSAGE="No applications are deployed on the server curr
 
 
 SERVER_PORT_VALIDATION="Port should be a number between 1 and 65535."
-MINIMUM_WORKERS_VALIDATION="Minimum workers should be a number between 1 and 20."
-MAXIMUM_WORKERS_VALIDATION="Maximum workers should be number between 1 and 20."
+MINIMUM_WORKERS_VALIDATION="Minimum workers should be a number between 1 and #{ALLOWED_MAX_WORKERS}."
+MAXIMUM_WORKERS_VALIDATION="Maximum workers should be number between 1 and #{ALLOWED_MAX_WORKERS}."
 
 
 #ApplicationSpecification Class validation message.
 BASEURI_AS_ADMIN_PANEL_BASEURI_VALIDATION="'#{ADMIN_PANEL_BASE_URI}' is reserved as Admin Panel's base uri."
-MIN_WORKERS_VALIDATION="Application can have utmost 20 minimum workers."
+MIN_WORKERS_VALIDATION="Application can have utmost #{ALLOWED_MAX_WORKERS} minimum workers."
 MAX_WORKERS_VALIDATION_1="Application must have maximum number of worker greater than or equal to minimum number of workers."
-MAX_WORKERS_VALIDATION_2="Application can have utmost 20 maximum workers."
+MAX_WORKERS_VALIDATION_2="Application can have utmost #{ALLOWED_MAX_WORKERS} maximum workers."
 APPLICATION_PATH_EXISTANCE_VALIDATION="The application path entered does not exist."
 ANALYTICS_VALIDATION="Analytics should be either enabled or disabled."
 #ENVIRONMENT_VALIDATION="Environment should be either Production, Development or Test."

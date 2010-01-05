@@ -34,14 +34,14 @@ class ServerSpecification
         end
         text = port
       when 'min_pro_div'
-        if data =~ /^\d+$/ and data.to_i > 0 and data.to_i <= 20 and data.to_i <= info['Server Specification']['max_worker'].to_i
+        if data =~ /^\d+$/ and data.to_i > 0 and data.to_i <= ALLOWED_MAX_WORKERS and data.to_i <= info['Server Specification']['max_worker'].to_i
           min_worker = data.to_i
         else
           error_message = MINIMUM_WORKERS_VALIDATION
         end
         text = min_worker
       when 'max_pro_div'
-        if data =~ /^\d+$/ and data.to_i > 0 and data.to_i <= 20 and data.to_i >= info['Server Specification']['min_worker'].to_i
+        if data =~ /^\d+$/ and data.to_i > 0 and data.to_i <= ALLOWED_MAX_WORKERS and data.to_i >= info['Server Specification']['min_worker'].to_i
           max_worker = data.to_i
         else
           error_message = MAXIMUM_WORKERS_VALIDATION
