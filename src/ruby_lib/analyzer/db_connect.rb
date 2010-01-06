@@ -38,7 +38,7 @@ module Webroar
       end
       
       def self.load_models      
-        models = Dir.glob(File.join(ADMIN_PANEL_ROOT, 'app', 'models', '**', '*.rb'))
+        models = Dir.glob(File.join(ADMIN_PANEL_ROOT, 'app', 'models', "{app,url_breakup_time_sample,app_time_sample,resource_usage,url_time_sample,app_exception}.rb"))
         unloaded = Array.new
         models.each do |f|
           begin
