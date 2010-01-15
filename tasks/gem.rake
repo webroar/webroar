@@ -111,13 +111,13 @@ task :install => [:check_root_user, :clobber, :gem] do
   sh "gem install pkg/#{spec.full_name}.gem"
   opt_str = ""
   
-  if ENV["ssl"] == "yes"
-    opt_str += "-s "
-  end
-  
-  if ENV['debug_build'] == 'yes'
-    opt_str += "-d "
-  end 
+  opt_str += "-s " if ENV["ssl"] == "yes"
+  opt_str += "-d " if ENV['debug_build'] == 'yes'
+  opt_str += "-i " if ENV['import'] == 'yes'
+  opt_str += "--no-import " if ENV['import'] == 'no'
+  opt_str += "-p#{ENV['password']} " if ENV['password']
+  opt_str += "-u#{ENV['username']} " if ENV['username']
+  opt_str += "-P#{ENV['port']} " if ENV['port']
   
   sh "webroar install #{opt_str}" 
 end

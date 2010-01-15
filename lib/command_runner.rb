@@ -54,8 +54,12 @@ HELP_INSTALL =%{
     webroar install [option]
 
   Options:
-    -s, --ssl-support      Install the server with SSL support
     -d, --debug-build      Compile the server as a debug build to output extremely verbose logs 
+    -i, --[no-]import      Import configuration, logs and admin panel data from the previous installation
+    -p, --password         Password for the administrator account of server\'s admin panel
+    -P, --port             Server port number
+    -s, --ssl-support      Install the server with SSL support
+    -u, --username         Username for the administrator account of server's admin panel
 
   Summary:
     Install the server
@@ -130,8 +134,8 @@ HELP_TEST =%{
     webroar test [options...] 
 
   Options:
-    -l, --load-test         Also run the load tests
     -d, --debug-build       Compile the server as a debug build to output extremely verbose logs
+    -l, --load-test         Also run the load tests
     -r, --report-dir DIR    Report directory 
 
   Summary:
@@ -143,35 +147,41 @@ class CommandRunner
   def run
     options = {}
     optparse = OptionParser.new do|opts|
+    
+    opts.on( '-h', '--help', 'Version information') { options[:help] = true }
+    opts.on( '-s', '--ssl-support', 'Install with SSL support') { options[:ssl] = true }
+    opts.on( '-d', '--debug-build', 'Compile with debug mode') { options[:debug_build] = true }
+    opts.on( '-n', '--no-report', 'Do not generate test report') { options[:no_report] = true }
+    opts.on( '-l', '--load-test', 'Run load test') { options[:load_test] = true }
+    opts.on( '-i', '--import', 'Import configuration, logs and admin panel data from the previous installation') { options[:import] = true }
+    opts.on( '--no-import', 'Do not import configuration, logs and admin panel data from the previous installation') { options[:import] = false }
 
     opts.on( '-v', '--version', 'Version information') do
       Installer.new.version
       exit
     end
-
-    opts.on( '-h', '--help', 'Version information') do
-      options[:help] = true
+    
+    opts.on( '-u', '--username USERNAME', 'Username for the administrator account of server\'s admin panel') do |value|
+      value.lstrip!
+      value.gsub!(/^=/,"")
+      options[:username] = value
     end
 
-    opts.on( '-s', '--ssl-support', 'Install with SSL support') do
-      options[:ssl] = true
+    opts.on( '-p', '--password PASSWORD', 'Password for the administrator account of server\'s admin panel') do |value|
+      value.lstrip!
+      value.gsub!(/^=/,"")
+      options[:password] = value
     end
 
-    opts.on( '-d', '--debug-build', 'Compile with debug mode') do
-      options[:debug_build] = true
-    end
-
-    opts.on( '-l', '--load-test', 'Run load test') do
-      options[:load_test] = true
-    end
-
-    opts.on( '-n', '--no-report', 'Do not generate test report') do
-      options[:no_report] = true
+    opts.on( '-P', '--port PORT<>', 'Server port number') do |value|
+      value.lstrip!
+      value.gsub!(/^=/,"")
+      options[:port] = value
     end
 
     opts.on( '-r', '--report-dir [DIR]', 'Report directory') do |dir|
       dir.lstrip!
-      dir.gsub!("=","")
+      dir.gsub!(/^=/,"")
       options[:report_dir] = dir
     end
 

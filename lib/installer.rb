@@ -177,7 +177,7 @@ class Installer
       puts "Checking for the dependencies ..."
       check_dependencies(ssl) || exit(1)
       
-      port, import, gem_name = user_input
+      port, import, gem_name = user_input(options)
       port = import_files(gem_name) if import
       write_server_port(port, ssl) if !import
       
