@@ -122,7 +122,7 @@ module Webroar
 
       puts "Setting up server specifications ..."
 
-      if !options[:port] or options[:port].to_i < 1 or options[:port].to_i > 65535
+      if !options[:port] or !(options[:port]=~/^\d+$/) or options[:port].to_i < 1 or options[:port].to_i > 65535
         while(true)
           puts "\nInvalid port number. Valid port is a number between 1 and 65535. Please try again ..." if options[:port]
           print "Enter server port (default is 3000): "
