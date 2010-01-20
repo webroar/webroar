@@ -16,6 +16,8 @@
 # You should have received a copy of the GNU General Public License
 # along with WebROaR.  If not, see <http://www.gnu.org/licenses/>.
 
+ADMIN_PANEL_ROOT = File.join(WEBROAR_ROOT, 'src', 'admin_panel').freeze
+
 class WebroarCommand
 
   def remove_logrotate  # Clear log files
@@ -354,4 +356,93 @@ class WebroarCommand
     end
   end
 
+  def load_files(files)
+    unloaded = Array.new
+    files.each do |f|
+      begin
+        require f
+      rescue NameError
+        unloaded << f
+        next
+      end
+    end
+    unloaded.each do |f|
+      require f
+    end
+  end
+
+  def remove(options, args)
+    return if CheckUser.new.check != 0
+    if args.count < 2
+      puts "Application name is missing."
+      return
+    end
+
+    gem 'activesupport', '>= 2.3.5'
+    gem 'activerecord', '>= 2.3.5'
+    require 'active_record'
+
+    files = Dir.glob(File.join(ADMIN_PANEL_ROOT, 'app', 'models', "{app,pseudo_model,application_specification,server_specification}.rb"))
+    files << File.join(ADMIN_PANEL_ROOT, 'config','initializers','application_constants.rb')
+    files << File.join(ADMIN_PANEL_ROOT, 'lib','yaml_writer.rb')
+
+    load_files(files)
+
+    reply = App.stop(args[1])
+    if reply.nil?
+      puts "Application '#{args[1]}' removed successfully."
+      ApplicationSpecification::remove(args[1]) if reply.nil?
+    else
+      puts reply
+    end
+
+  end
+
+  def add(options, args)
+    return if CheckUser.new.check != 0
+    if args.count < 2
+      puts "Application name is missing."
+      return
+    end
+    gem 'activesupport', '>= 2.3.5'
+    gem 'activerecord', '>= 2.3.5'
+    require 'active_record'
+
+    params = {:app_id=>nil, :name=>nil, :host_names=>nil, :baseuri=>nil, :resolver=>nil, :path=>nil, :run_as_user=>nil, :type1=>'Rails', :analytics=>'Disabled', :environment=>'production', :min_worker=>'4', :max_worker=>'8'}
+
+    files = Dir.glob(File.join(ADMIN_PANEL_ROOT, 'app', 'models', "{app,pseudo_model,application_specification,server_specification}.rb"))
+    files << File.join(ADMIN_PANEL_ROOT, 'config','initializers','application_constants.rb')
+    files << File.join(ADMIN_PANEL_ROOT, 'lib','yaml_writer.rb')
+
+    load_files(files)
+
+    options[:name] = args[1]
+
+    params = params.merge(options)
+
+    application_specification = ApplicationSpecification.new(params)
+
+    if application_specification.save
+      application_specification.write
+      app_name = params[:name]
+      err_obj = nil
+      reply = nil
+      reply, err_obj = App.start(app_name)
+      #reply = nil indicate success
+      if(err_obj)
+        puts err_obj
+        puts err_obj.backtrace
+        application_specification.remove
+      end
+      puts "Application '#{app_name}' added successfully." if reply == nil
+      if reply
+        puts reply
+        application_specification.remove
+      end
+    else
+      application_specification.errors.each_full{|msg| puts msg }
+    end
+    
+  end
+  
 end

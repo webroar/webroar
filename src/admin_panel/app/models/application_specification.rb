@@ -35,10 +35,10 @@ class ApplicationSpecification < PseudoModel
   validates_numericality_of :min_worker, :max_worker, :greater_than_or_equal_to => 1, :less_than_or_equal_to => ALLOWED_MAX_WORKERS
   validates_format_of :name, :with => /^[A-Za-z0-9_\-]*$/i, :message => " must consist of A-Z, a-z, 0-9 , _ , -  and /."
 #  validates_format_of :path, :with => /^\/.*$/i, :message => "entered is not the complete path for your web application root directory."
-  validates_length_of :name, :maximum => 30
+  validates_length_of :name, :maximum => 30, :allow_nil => true
   #validates_length_of :path, :maximum => 256
-  validates_length_of :run_as_user, :maximum => 30  
-  validates_length_of :environment, :maximum => 30
+  validates_length_of :run_as_user, :maximum => 30, :allow_nil => true
+  validates_length_of :environment, :maximum => 30, :allow_nil => true
   #  validates_format_of :baseuri, :with => /^\/[A-Za-z0-9_\-\/]*$/i, :message => "must start with '/' and contains characters A-Z, a-z, 0-9 , _ , -  and /."
 
   def write
@@ -57,6 +57,28 @@ class ApplicationSpecification < PseudoModel
     end
     info = Hash['Server Specification' => server_specification, 'Application Specification' => data]
     YAMLWriter.write(info, CONFIG_FILE_PATH, "config")
+  end
+
+  def self.remove(app_name)
+    server_specification = ServerSpecification.get_hash
+    info = YAML::load_file(CONFIG_FILE_PATH) rescue nil
+    
+    if info and info['Application Specification']
+      info['Application Specification'].each do |x|
+        if x['name'].to_s.eql?(app_name.to_s)
+          info['Application Specification'].delete(x)
+        end
+      end
+      
+      info = Hash['Server Specification' => server_specification] if info['Application Specification'].length == 0
+
+    end
+
+    YAMLWriter.write(info, CONFIG_FILE_PATH, "config")
+  end
+
+  def remove
+    ApplicationSpecification::remove(name)
   end
     
   #Converting ApplicationSpecification obeject into a Hash.
@@ -98,179 +120,182 @@ class ApplicationSpecification < PseudoModel
       end      
     end  
     # Resolver take either baseuri or host_names, not both. 
-    # baseuri starts with '/'      
-    tokens = resolver.split(/ /)
+    # baseuri starts with '/'
+    if resolver
+      tokens = resolver.split(/ /)
       
-    curr_host_names = []
-    host_names_flag = 0
-    if tokens.size == 1 and tokens[0].start_with?('/')
-      write_attribute(:baseuri, resolver)
-      errors.add_to_base "BaseURI must start with '/' and contains characters A-Z, a-z, 0-9 , _ , -  and /." if !(baseuri.strip =~ /^\/[A-Za-z0-9_\-\/]*$/i)
-    else
-      write_attribute(:host_names, resolver)
-      host_name_flag = 1
-    end
-    # More than one token would come only in case of host_names
-    if host_name_flag == 1 and tokens.size > 0
-      tokens.each do |token|
-        next if token == ""
-        len = token.size
-        # Whole name can not exceed total length of 253
-        if len > 253
-          errors.add_to_base HOSTNAME_LENGTH_EXCEEDS
-          next
-        end          
-        # Subdivision can go down to maximum 127 level.
-        labels = token.split(/\./)
-        if labels.size > 127
-          errors.add_to_base SUBDIVISION_EXCEEDS_127
-          next
-        end
-        # Start with '/' indicates BaseURI
-        if token.start_with?('/')
-          errors.add_to_base BASEURI_AND_HOSTNAMES_EXIST
-          break
-        end
-        # If wildcard '*' presents, Hostname should prefix with '~'
-        if token.include?("*") and !(token =~ /^~/)
-          errors.add_to_base "#{token} - #{START_WTIH_TILD}"   
-          next         
-        end
-        # Wildcard '*' can come either at start or at end, not inbetween
-        pos = token.index('*', 1)
-        if pos and pos != 1 and pos != len-1
-          errors.add_to_base "#{token} - #{WILDCARD_AT_START_OR_END}"
-          next
-        end
-        pos = token.index('*', 2)
-        if pos and pos != len - 1
-          errors.add_to_base "#{token} - #{WILDCARD_AT_START_OR_END}"
-          next
-        end
-        if token =~ /[.][.]/
-          errors.add_to_base "#{token} - #{CONSECUTIVE_DOTS}"
-          next
-        end
-        # Check for Letters, Digits and Hyphen
-        err_flag = 0
-        #first label can have '~' as first char and '*' as second char, last label can have '*' as last character
-        first_label = labels[0]              
-        last_label = labels[labels.size - 1]
-        labels = labels[1..labels.size - 2]
-        labels.each do |label|
-          if label.size > 63
-            errors.add_to_base LABEL_LENGTH_EXCEEDS
+      curr_host_names = []
+      host_names_flag = 0
+      if tokens.size == 1 and tokens[0].start_with?('/')
+        write_attribute(:baseuri, resolver)
+        errors.add_to_base "BaseURI must start with '/' and contains characters A-Z, a-z, 0-9 , _ , -  and /." if !(baseuri.strip =~ /^\/[A-Za-z0-9_\-\/]*$/i)
+      else
+        write_attribute(:host_names, resolver)
+        host_name_flag = 1
+      end
+
+      # More than one token would come only in case of host_names
+      if host_name_flag == 1 and tokens.size > 0
+        tokens.each do |token|
+          next if token == ""
+          len = token.size
+          # Whole name can not exceed total length of 253
+          if len > 253
+            errors.add_to_base HOSTNAME_LENGTH_EXCEEDS
             next
           end
-          label.each_char do |c|
-            if (c >= 'a' and c <= 'z') or (c >= 'A' and c <= 'Z') or (c >= '0' and c <= '9') or c == '-' 
+          # Subdivision can go down to maximum 127 level.
+          labels = token.split(/\./)
+          if labels.size > 127
+            errors.add_to_base SUBDIVISION_EXCEEDS_127
+            next
+          end
+          # Start with '/' indicates BaseURI
+          if token.start_with?('/')
+            errors.add_to_base BASEURI_AND_HOSTNAMES_EXIST
+            break
+          end
+          # If wildcard '*' presents, Hostname should prefix with '~'
+          if token.include?("*") and !(token =~ /^~/)
+            errors.add_to_base "#{token} - #{START_WTIH_TILD}"
+            next
+          end
+          # Wildcard '*' can come either at start or at end, not inbetween
+          pos = token.index('*', 1)
+          if pos and pos != 1 and pos != len-1
+            errors.add_to_base "#{token} - #{WILDCARD_AT_START_OR_END}"
+            next
+          end
+          pos = token.index('*', 2)
+          if pos and pos != len - 1
+            errors.add_to_base "#{token} - #{WILDCARD_AT_START_OR_END}"
+            next
+          end
+          if token =~ /[.][.]/
+            errors.add_to_base "#{token} - #{CONSECUTIVE_DOTS}"
+            next
+          end
+          # Check for Letters, Digits and Hyphen
+          err_flag = 0
+          #first label can have '~' as first char and '*' as second char, last label can have '*' as last character
+          first_label = labels[0]
+          last_label = labels[labels.size - 1]
+          labels = labels[1..labels.size - 2]
+          labels.each do |label|
+            if label.size > 63
+              errors.add_to_base LABEL_LENGTH_EXCEEDS
               next
-            else
-              errors.add_to_base HOSTNAME_LDH 
-              err_flag = 1
-              break;
+            end
+            label.each_char do |c|
+              if (c >= 'a' and c <= 'z') or (c >= 'A' and c <= 'Z') or (c >= '0' and c <= '9') or c == '-'
+                next
+              else
+                errors.add_to_base HOSTNAME_LDH
+                err_flag = 1
+                break;
+              end
             end
           end
-        end
-        char_array = []
-        first_label.each_char do |c|
-          char_array << c
-        end
-        #p char_array
-        # checking first character of first label against LDH and ~
-        if err_flag == 0            
-          c = char_array[0]
-          if (c >= 'a' and c <= 'z') or (c >= 'A' and c <= 'Z') or (c >= '0' and c <= '9') or c == '~'             
-          else
-            errors.add_to_base HOSTNAME_LDH
-            err_flag = 1
+          char_array = []
+          first_label.each_char do |c|
+            char_array << c
           end
-        end
-        #checking second char of first label against LDH and *
-        if err_flag == 0
-          c = char_array[1]
-          if (c >= 'a' and c <= 'z') or (c >= 'A' and c <= 'Z') or (c >= '0' and c <= '9') or c == '*'             
-          else
-            errors.add_to_base HOSTNAME_LDH
-            err_flag = 1
-          end
-        end
-        #checking remaining character of first label against LDH
-        char_array = char_array[2..char_array.size - 1]
-        if err_flag == 0
-          char_array.each do |c| 
-            if (c >= 'a' and c <= 'z') or (c >= 'A' and c <= 'Z') or (c >= '0' and c <= '9') or c == '-' 
-              next
-            else
-              errors.add_to_base HOSTNAME_LDH 
-              err_flag = 1
-              break;
-            end
-          end            
-        end
-        #checking last character of last label against LDH and *
-        char_array = []
-        last_label.each_char do |c|
-          char_array << c
-        end
-        if err_flag == 0
-          c = char_array[char_array.size - 1]
-          if (c >= 'a' and c <= 'z') or (c >= 'A' and c <= 'Z') or (c >= '0' and c <= '9') or c == '*'             
-          else
-            errors.add_to_base HOSTNAME_LDH
-            err_flag = 1
-          end
-        end
-        #checking remaining characters of the last label against LDH
-        if err_flag == 0
-          char_array = char_array[1..char_array.size - 2]
-          char_array.each do |c|
-            if (c >= 'a' and c <= 'z') or (c >= 'A' and c <= 'Z') or (c >= '0' and c <= '9') or c == '*'             
+          #p char_array
+          # checking first character of first label against LDH and ~
+          if err_flag == 0
+            c = char_array[0]
+            if (c >= 'a' and c <= 'z') or (c >= 'A' and c <= 'Z') or (c >= '0' and c <= '9') or c == '~'
             else
               errors.add_to_base HOSTNAME_LDH
               err_flag = 1
             end
-          end            
-        end
-        if err_flag == 0
-          curr_host_names << token
+          end
+          #checking second char of first label against LDH and *
+          if err_flag == 0
+            c = char_array[1]
+            if (c >= 'a' and c <= 'z') or (c >= 'A' and c <= 'Z') or (c >= '0' and c <= '9') or c == '*'
+            else
+              errors.add_to_base HOSTNAME_LDH
+              err_flag = 1
+            end
+          end
+          #checking remaining character of first label against LDH
+          char_array = char_array[2..char_array.size - 1]
+          if err_flag == 0
+            char_array.each do |c|
+              if (c >= 'a' and c <= 'z') or (c >= 'A' and c <= 'Z') or (c >= '0' and c <= '9') or c == '-'
+                next
+              else
+                errors.add_to_base HOSTNAME_LDH
+                err_flag = 1
+                break;
+              end
+            end
+          end
+          #checking last character of last label against LDH and *
+          char_array = []
+          last_label.each_char do |c|
+            char_array << c
+          end
+          if err_flag == 0
+            c = char_array[char_array.size - 1]
+            if (c >= 'a' and c <= 'z') or (c >= 'A' and c <= 'Z') or (c >= '0' and c <= '9') or c == '*'
+            else
+              errors.add_to_base HOSTNAME_LDH
+              err_flag = 1
+            end
+          end
+          #checking remaining characters of the last label against LDH
+          if err_flag == 0
+            char_array = char_array[1..char_array.size - 2]
+            char_array.each do |c|
+              if (c >= 'a' and c <= 'z') or (c >= 'A' and c <= 'Z') or (c >= '0' and c <= '9') or c == '*'
+              else
+                errors.add_to_base HOSTNAME_LDH
+                err_flag = 1
+              end
+            end
+          end
+          if err_flag == 0
+            curr_host_names << token
+          end
         end
       end
-    end
-    
-    #BaseURI can not be /admin-panel
-    errors.add_to_base BASEURI_AS_ADMIN_PANEL_BASEURI_VALIDATION if baseuri and baseuri.strip == ADMIN_PANEL_BASE_URI
-    all_host_names = []
-    curr_host_names_size = curr_host_names.size
-      
-    #checking uniqueness of BaseURI
-    info= YAML::load_file(CONFIG_FILE_PATH)
-    if info and info['Application Specification']
-      i = 0
-      flag = 0
-      while(info['Application Specification'][i])
-        flag = 1 if baseuri and baseuri.strip and info['Application Specification'][i]['baseuri'] == baseuri.strip and app_id.to_i != i.to_i
-        errors.add_to_base "#{name} - #{APPLICATION_NAME_REPEATED}" if info['Application Specification'][i]['name'] == name and app_id.to_i != i.to_i
-        all_host_names << info['Application Specification'][i]['host_names'].split(/ /) if info['Application Specification'][i]['host_names'] and curr_host_names_size > 0 and app_id.to_i != i.to_i
-        i += 1
-      end        
-      errors.add_to_base BASEURI_EXISTANCE_VALIDATION if flag == 1
-    end
-    all_host_names.flatten!
-    # checking uniqueness of Hostnames
-    if curr_host_names_size > 0
-      errors.add_to_base HOSTNAME_REPEATED  if curr_host_names_size != curr_host_names.uniq.size
-      if all_host_names.size > 0
-        curr_host_names.each do |c_host_name|
-          all_host_names.each do |host_name|
-            if c_host_name.eql?(host_name)
-              errors.add_to_base "#{c_host_name}-#{HOSTNAME_REPEATED }"
-              break
+
+      #BaseURI can not be /admin-panel
+      errors.add_to_base BASEURI_AS_ADMIN_PANEL_BASEURI_VALIDATION if baseuri and baseuri.strip == ADMIN_PANEL_BASE_URI
+      all_host_names = []
+      curr_host_names_size = curr_host_names.size
+
+      #checking uniqueness of BaseURI
+      info= YAML::load_file(CONFIG_FILE_PATH)
+      if info and info['Application Specification']
+        i = 0
+        flag = 0
+        while(info['Application Specification'][i])
+          flag = 1 if baseuri and baseuri.strip and info['Application Specification'][i]['baseuri'] == baseuri.strip and app_id.to_i != i.to_i
+          errors.add_to_base "#{name} - #{APPLICATION_NAME_REPEATED}" if info['Application Specification'][i]['name'] == name and app_id.to_i != i.to_i
+          all_host_names << info['Application Specification'][i]['host_names'].split(/ /) if info['Application Specification'][i]['host_names'] and curr_host_names_size > 0 and app_id.to_i != i.to_i
+          i += 1
+        end
+        errors.add_to_base BASEURI_EXISTANCE_VALIDATION if flag == 1
+      end
+      all_host_names.flatten!
+      # checking uniqueness of Hostnames
+      if curr_host_names_size > 0
+        errors.add_to_base HOSTNAME_REPEATED  if curr_host_names_size != curr_host_names.uniq.size
+        if all_host_names.size > 0
+          curr_host_names.each do |c_host_name|
+            all_host_names.each do |host_name|
+              if c_host_name.eql?(host_name)
+                errors.add_to_base "#{c_host_name}-#{HOSTNAME_REPEATED }"
+                break
+              end
             end
           end
         end
       end
-    end      
+    end
   end
  
   class << self

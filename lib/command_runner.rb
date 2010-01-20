@@ -51,7 +51,7 @@ HELP_COMMAND =%{
 HELP_INSTALL =%{
 
   Usage:
-    webroar install [option]
+    webroar install [options]
 
   Options:
     -d, --debug-build      Compile the server as a debug build to output extremely verbose logs 
@@ -131,7 +131,7 @@ HELP_RESTART =%{
 
 HELP_TEST =%{
   Usage:
-    webroar test [options...] 
+    webroar test [options] 
 
   Options:
     -d, --debug-build       Compile the server as a debug build to output extremely verbose logs
@@ -141,6 +141,45 @@ HELP_TEST =%{
   Summary:
     Run the test suite
   }
+
+HELP_REMOVE = %{
+  Usage:
+    webroar remove APPNAME
+
+  Arguments:
+    APPNAME        Name of the application to remove
+
+  Summary:
+    Remove the applicaiton from the server.
+}
+
+HELP_ADD = %{
+  Usage:
+    webroar add APPNAME [options]
+
+  Options:
+    -R, --resolver
+          Resolver to identify the application. Set it to '/' if you would like to run the application on the root domain. e.g. http://yourserver:port/.
+          Else set the relevant base URI with which you would like to access the application, e.g. '/app1' if you want the application to be accessible via http://yourserver:port/app1.
+          If you would like to set a virtual host for your application e.g. www.company1.com, please specify it here. You can also host this application on a particular subdomain e.g. app1.company1.com. Wildcard '*' can also be used in defining the virtual host name, but it should only be used either at the start or the end. Prefix the virtual host name with tilde(~), if a wildcard is used in defining it. e.g. (i) ~*.server.com (ii) ~www.server.* (iii) ~*.server.*
+    -D, --path
+          Path for the web application root directory.
+    -t, --type
+          Type of the application either rack or rails.
+    -e, --environment
+          Environment in which you want to run the application.
+    -a, --[no-]analytics
+          Enable analytics to get detailed numbers about the run time performance of the application. his number gathering adds a very small overhead on your application.
+    -n, --min-workers
+          Minimum number of worker processes that should run for the deployed application.
+    -x, --max-workers
+          Maximum number of worker processes that should run for the deployed application.
+    -U, --run-as-user
+          Name of the user with whose privileges you would like to run the application. This user should have all the necessary permissions to get your web application working properly.
+
+  Summary:
+    Add and start an application on the server.
+}
 
 class CommandRunner
 
@@ -153,6 +192,8 @@ class CommandRunner
     opts.on( '-d', '--debug-build', 'Compile with debug mode') { options[:debug_build] = true }
     opts.on( '-n', '--no-report', 'Do not generate test report') { options[:no_report] = true }
     opts.on( '-l', '--load-test', 'Run load test') { options[:load_test] = true }
+    opts.on( '-a', '--analytics', 'Enable the application analytics') { options[:analytics] = true }
+    opts.on( '--no-analytics', 'Disable the application analytics') { options[:analytics] = false }
     opts.on( '-i', '--import', 'Import configuration, logs and admin panel data from the previous installation') { options[:import] = true }
     opts.on( '--no-import', 'Do not import configuration, logs and admin panel data from the previous installation') { options[:import] = false }
 
@@ -179,10 +220,52 @@ class CommandRunner
       options[:port] = value
     end
 
-    opts.on( '-r', '--report-dir [DIR]', 'Report directory') do |dir|
-      dir.lstrip!
-      dir.gsub!(/^=/,"")
-      options[:report_dir] = dir
+    opts.on( '-r', '--report-dir [DIR]', 'Report directory') do |value|
+      value.lstrip!
+      value.gsub!(/^=/,"")
+      options[:report_dir] = value
+    end
+
+    opts.on( '-R', '--resolver RESOLVER', 'Resolver to identify the application') do |value|
+      value.lstrip!
+      value.gsub!(/^=/,"")
+      options[:resolver] = value
+    end
+
+    opts.on( '-D', '--path DIR', 'Path for the web application root directory') do |value|
+      value.lstrip!
+      value.gsub!(/^=/,"")
+      options[:path] = value
+    end
+
+    opts.on( '-t', '--type APPTYPE', 'Type of the application either rack or rails') do |value|
+      value.lstrip!
+      value.gsub!(/^=/,"")
+      options[:type1] = value.capitalize
+    end
+
+    opts.on( '-e', '--environment ENV', 'Environment in which you want to run the application') do |value|
+      value.lstrip!
+      value.gsub!(/^=/,"")
+      options[:environment] = value
+    end
+
+    opts.on( '-n', '--min-workers WORKER', 'Minimum number of worker processes that should run for the deployed application.') do |value|
+      value.lstrip!
+      value.gsub!(/^=/,"")
+      options[:min_worker] = value
+    end
+
+    opts.on( '-x', '--max-workers WORKER', 'Maximum number of worker processes that should run for the deployed application.') do |value|
+      value.lstrip!
+      value.gsub!(/^=/,"")
+      options[:max_worker] = value
+    end
+
+    opts.on( '-U', '--run-as-user USERNAME', 'Name of the user with whose privileges you would like to run the application') do |value|
+      value.lstrip!
+      value.gsub!(/^=/,"")
+      options[:run_as_user] = value
     end
 
   end
@@ -221,6 +304,8 @@ class CommandRunner
     when "start" ; WebroarCommand.new.start(options, ARGV)
     when "stop" ; WebroarCommand.new.stop(options, ARGV)
     when "restart" ; WebroarCommand.new.restart(options, ARGV)
+    when "add" ; WebroarCommand.new.add(options, ARGV)
+    when "remove" ; WebroarCommand.new.remove(options, ARGV)
     when "test"; Installer.new.test(options, ARGV)
   else
     puts "ERROR:  Invalid command: #{ARGV[0]}.  See 'webroar help commands'."
@@ -240,6 +325,8 @@ def run (options, args)
     when "start"; puts HELP_START
     when "stop"; puts HELP_STOP
     when "restart"; puts HELP_RESTART
+    when "add"; puts HELP_ADD
+    when "remove"; puts HELP_REMOVE
     when "test"; puts HELP_TEST
   else puts "WARNING:  Unknown command #{args[1]}. See 'webroar help commands'."
   end
