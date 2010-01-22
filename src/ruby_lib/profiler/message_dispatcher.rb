@@ -17,7 +17,7 @@
 # along with WebROaR.  If not, see <http://www.gnu.org/licenses/>.
 
 require 'singleton'
-gem 'starling-starling', '>=0.10.0'
+gem 'starling', '>=0.10.0'
 require 'starling'
 require 'yaml'
 module Webroar
