@@ -154,4 +154,6 @@
 #define WR_REQ_ID_LEN      12
 #endif
 
+#define WR_MAX_HOST_NAMES 16
+
 #endif /*WR_CONFIG_H_*/

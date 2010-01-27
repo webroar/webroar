@@ -340,8 +340,7 @@ static int wr_validate_app_host_name(const char *host_name, char *err_msg) {
     LOG_ERROR(WARN,"Length of host name %s exceeds 253", host_name);
     goto err_ret;
   }
-  strncpy(tmp_host, host_name, len);
-  tmp_host[len] = 0;
+  strcpy(tmp_host, host_name);
   //there should be a label between two consicutive dot(.)
   if(strstr(tmp_host,"..")) {
     if(err_msg)
@@ -396,18 +395,27 @@ err_ret:
 
 static int wr_app_host_name_set(wr_app_conf_t *app, char *host_names, char *err_msg) {
   LOG_FUNCTION
-  char *host = NULL;
+  char *host = NULL, *host_array[WR_MAX_HOST_NAMES];
   wr_host_name_t *hosts = NULL, *tmp_host = NULL;
-  int rv;
+  int rv, counter = 0, no_of_hosts = 0;
   size_t len;
 
   if(!app || !host_names) {
     return -1;
   }
 
+  /* Tokenizing all the hostnames here, as in wr_validate_app_host_name() individual hostname is again tokenizing for further validations.
+   * Call to second strtok for tokenizing of new string, before completion of its first call, messing up with the original string of first call. */
   host = strtok(host_names, " ");
-  while(host) {
-
+  while(host && counter < WR_MAX_HOST_NAMES) {
+    host_array[counter++] = host;    
+    host = strtok(NULL, " ");
+  }
+  no_of_hosts = counter;
+  counter = 0;
+  
+  while(counter < no_of_hosts) {
+    host = host_array[counter++];
     if(host[0]=='~') {
       rv = wr_validate_app_host_name(host+1, err_msg);
     } else {
@@ -452,9 +460,7 @@ static int wr_app_host_name_set(wr_app_conf_t *app, char *host_names, char *err_
       app->host_name_list = hosts = tmp_host;
     } else {
       hosts->next = tmp_host;
-    }
-
-    host = strtok(NULL, " ");
+    }    
   }
   return 0;
 }
