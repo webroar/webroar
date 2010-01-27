@@ -460,6 +460,7 @@ static int wr_app_host_name_set(wr_app_conf_t *app, char *host_names, char *err_
       app->host_name_list = hosts = tmp_host;
     } else {
       hosts->next = tmp_host;
+      hosts = hosts->next;
     }    
   }
   return 0;
