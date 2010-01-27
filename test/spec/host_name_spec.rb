@@ -211,5 +211,35 @@ end
       remove_messaging_config.should be_true
     end
   end
-
+  
+    it "should resolve multiple host names" do
+    create_config({},{'host_names' => 'test1 test2 www.test.com www.mytest.com'}).should be_true
+    move_config.should be_true
+    create_messaging_config.should be_true
+    move_messaging_config.should be_true
+    start_server.should be_true
+    
+    begin
+      request = "GET /test/host_name HTTP/1.1\r\nHost: test1\r\n\r\n"
+      conn = open_connection      
+      conn.write request
+      conn.read.should =~ /^HTTP\/1[.]1 200.*$/
+      request = "GET /test/host_name HTTP/1.1\r\nHost: test2\r\n\r\n"
+      conn = open_connection      
+      conn.write request
+      conn.read.should =~ /^HTTP\/1[.]1 200.*$/
+      request = "GET /test/host_name HTTP/1.1\r\nHost: www.test.com\r\n\r\n"
+      conn = open_connection      
+      conn.write request
+      conn.read.should =~ /^HTTP\/1[.]1 200.*$/
+      request = "GET /test/host_name HTTP/1.1\r\nHost: www.mytest.com\r\n\r\n"
+      conn = open_connection      
+      conn.write request
+      conn.read.should =~ /^HTTP\/1[.]1 200.*$/
+    ensure
+      stop_server
+      remove_config.should be_true
+      remove_messaging_config.should be_true
+    end
+  end
 end
