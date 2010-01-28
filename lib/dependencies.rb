@@ -37,7 +37,7 @@ module Webroar
     def find
       name = @name
       case (name)
-      when Config::CONFIG['CC'], "make", Config::CONFIG['RUBY_INSTALL_NAME'], "starling"; flag = find_command(name)
+      when File.basename(Config::CONFIG['CC']), "make", Config::CONFIG['RUBY_INSTALL_NAME'], "starling"; flag = find_command(name)
       when "libsqlite3.so", "sqlite3.h", "gnutls/gnutls.h"; flag = find_so(name)
       when "ruby_headers"; flag = find_ruby_headers()
       when "openssl.so"; flag = find_openssl(name)
@@ -162,7 +162,7 @@ module Webroar
     
   end    
   module Dependencies 
-    GCC = Dependency.new(Config::CONFIG['CC'])
+    GCC = Dependency.new(File.basename(Config::CONFIG['CC']))
     Gnutls = Dependency.new('gnutls/gnutls.h')
     Make = Dependency.new('make')
     LibRuby = Dependency.new(Config::CONFIG['LIBRUBY_SO'])
