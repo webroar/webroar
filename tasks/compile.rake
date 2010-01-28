@@ -241,7 +241,7 @@ file worker_bin do
     webroar_config
   end
   #libraries for making executable
-  $libs += $LIBS + ' ' + Config::expand($LIBRUBYARG_SHARED,CONFIG)
+  $libs = $LIBS + ' -L' + Config::expand($libdir,CONFIG)  + ' ' + Config::expand($LIBRUBYARG_SHARED,CONFIG)
   #$libs += ' '+CONFIG["LIBRUBYARG"]  
   $libs += ' -lpthread '
   out_file=File.join(BIN_DIR,'webroar-worker')
@@ -256,7 +256,7 @@ file webroar_bin do
     webroar_config
   end
   #libraries for making executable
-  $libs += $LIBS + ' ' + Config::expand($LIBRUBYARG_SHARED,CONFIG)
+  $libs = $LIBS + ' -L' + Config::expand($libdir,CONFIG)  + ' ' + Config::expand($LIBRUBYARG_SHARED,CONFIG)
   #$libs += ' '+CONFIG["LIBRUBYARG"]  
   $libs += ' -lpthread '
   if ENV['ssl'].eql?("yes")
