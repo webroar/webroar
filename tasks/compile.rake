@@ -101,6 +101,8 @@ else
   $inc_flags = Config::expand($INCFLAGS,CONFIG.merge('hdrdir' => $hdrdir.quote, 'srcdir' => $srcdir.quote, 'arch_hdrdir' => "#$arch_hdrdir", 'top_srcdir' => $top_srcdir.quote))
 end
 
+$inc_flags << " #{Config::CONFIG['cppflags']}" if Config::CONFIG['cppflags']
+
 $c_flags = Config::expand($CFLAGS,CONFIG)
 if RUBY_PLATFORM =~ /darwin/
   $c_flags += " -g -O2 "
@@ -241,13 +243,13 @@ file worker_bin do
     webroar_config
   end
   #libraries for making executable
-  $libs = $LIBS + ' -L' + Config::expand($libdir,CONFIG)  + ' ' + Config::expand($LIBRUBYARG_SHARED,CONFIG)
+  lib_flags = $libs + $LIBS + ' -L' + Config::expand($libdir,CONFIG)  + ' ' + Config::expand($LIBRUBYARG_SHARED,CONFIG)
   #$libs += ' '+CONFIG["LIBRUBYARG"]  
   #$libs += ' -lpthread '
   out_file=File.join(BIN_DIR,'webroar-worker')
   object_files=FileList[File.join(WORKER_OBJ_DIR,'*.o'), helper_obj.keys, File.join(YAML_OBJ_DIR,'*.o')]
   # -rdynamic option to get function name in stacktrace
-  cmd="#{COMPILER} #$libs -rdynamic #{object_files} -o #{out_file}"
+  cmd="#{COMPILER} #{lib_flags} -rdynamic #{object_files} -o #{out_file}"
   sh cmd
 end
 
@@ -256,17 +258,17 @@ file webroar_bin do
     webroar_config
   end
   #libraries for making executable
-  $libs = $LIBS # + ' -L' + Config::expand($libdir,CONFIG)  + ' ' + Config::expand($LIBRUBYARG_SHARED,CONFIG)
+  lib_flags = $libs + $LIBS # + ' -L' + Config::expand($libdir,CONFIG)  + ' ' + Config::expand($LIBRUBYARG_SHARED,CONFIG)
   #$libs += ' '+CONFIG["LIBRUBYARG"]  
   #$libs += ' -lpthread '
   if ENV['ssl'].eql?("yes")
     puts "Compiling with gnutls library."
-    $libs += ' -lgnutls '
+    lib_flags += ' -L' + Config::CONFIG['libdir'] + ' -lgnutls '
   end
   out_file=File.join(BIN_DIR,'webroar-head')
   object_files=FileList[File.join(OBJ_DIR,'*.o'),File.join(YAML_OBJ_DIR,'*.o')]
   # -rdynamic option to get function name in stacktrace
-  cmd="#{COMPILER} #$libs -rdynamic #{object_files} -o #{out_file}"
+  cmd="#{COMPILER} #{lib_flags} -rdynamic #{object_files} -o #{out_file}"
   sh cmd
 end
 
