@@ -243,7 +243,7 @@ file worker_bin do
   #libraries for making executable
   $libs = $LIBS + ' -L' + Config::expand($libdir,CONFIG)  + ' ' + Config::expand($LIBRUBYARG_SHARED,CONFIG)
   #$libs += ' '+CONFIG["LIBRUBYARG"]  
-  $libs += ' -lpthread '
+  #$libs += ' -lpthread '
   out_file=File.join(BIN_DIR,'webroar-worker')
   object_files=FileList[File.join(WORKER_OBJ_DIR,'*.o'), helper_obj.keys, File.join(YAML_OBJ_DIR,'*.o')]
   # -rdynamic option to get function name in stacktrace
@@ -256,9 +256,9 @@ file webroar_bin do
     webroar_config
   end
   #libraries for making executable
-  $libs = $LIBS + ' -L' + Config::expand($libdir,CONFIG)  + ' ' + Config::expand($LIBRUBYARG_SHARED,CONFIG)
+  $libs = $LIBS # + ' -L' + Config::expand($libdir,CONFIG)  + ' ' + Config::expand($LIBRUBYARG_SHARED,CONFIG)
   #$libs += ' '+CONFIG["LIBRUBYARG"]  
-  $libs += ' -lpthread '
+  #$libs += ' -lpthread '
   if ENV['ssl'].eql?("yes")
     puts "Compiling with gnutls library."
     $libs += ' -lgnutls '
