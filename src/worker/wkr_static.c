@@ -135,19 +135,16 @@ static void set_expires_time(char *ext, long int expires) {
 
 /* Get mime-type */
 static static_file_t* get_mime_type(const char *path) {
-  char *ext = get_file_ext(path);
-  char *str;
+  char *ext = get_file_ext(path);  
   if (ext) {
-    str = ext;
-    while ((*str)) {
-      (*str++) = ((*str) >= 'A' && (*str) <= 'Z' ? (*str) + 'a' - 'A' : (*str));
-    }
     int index;
     if(*ext >= '0' && *ext <= '9'){
       index = (*ext) - '0';
-    }else if(*ext >= 'a' && *ext <= 'z'){
+    }else if(*ext >= 'a' && *ext <= 'z') {
       index = (*ext) - 'a' + 10;
-    }else{
+    }else if(*ext >= 'A' && *ext <= 'Z') {
+      index = (*ext) - 'A' + 10;
+    } else {
       index = MAP_SIZE;
       LOG_ERROR(WARN, "Extension %s is not supported", ext);
     }
