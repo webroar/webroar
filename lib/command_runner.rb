@@ -60,6 +60,8 @@ HELP_INSTALL =%{
     -P, --port             Server port number
     -s, --ssl-support      Install the server with SSL support
     -u, --username         Username for the administrator account of server's admin panel
+    -L                     Additional library path
+    -I                     Additional include path
 
   Summary:
     Install the server
@@ -184,7 +186,11 @@ HELP_ADD = %{
 class CommandRunner
 
   def run
+
     options = {}
+    options[:include_paths] = ""
+    options[:library_paths] = ""
+
     optparse = OptionParser.new do|opts|
     
     opts.on( '-h', '--help', 'Version information') { options[:help] = true }
@@ -196,7 +202,7 @@ class CommandRunner
     opts.on( '--no-analytics', 'Disable the application analytics') { options[:analytics] = false }
     opts.on( '-i', '--import', 'Import configuration, logs and admin panel data from the previous installation') { options[:import] = true }
     opts.on( '--no-import', 'Do not import configuration, logs and admin panel data from the previous installation') { options[:import] = false }
-
+    
     opts.on( '-v', '--version', 'Version information') do
       Installer.new.version
       exit
@@ -214,7 +220,7 @@ class CommandRunner
       options[:password] = value
     end
 
-    opts.on( '-P', '--port PORT<>', 'Server port number') do |value|
+    opts.on( '-P', '--port PORT', 'Server port number') do |value|
       value.lstrip!
       value.gsub!(/^=/,"")
       options[:port] = value
@@ -266,6 +272,18 @@ class CommandRunner
       value.lstrip!
       value.gsub!(/^=/,"")
       options[:run_as_user] = value
+    end
+    
+    opts.on( '-L PATH', 'Additional library path') do |value|
+      value.lstrip!
+      value.gsub!(/^=/,"")
+      options[:library_paths] += " -L'#{value}'"
+    end
+    
+    opts.on( '-I PATH', 'Additional include path') do |value|
+      value.lstrip!
+      value.gsub!(/^=/,"")
+      options[:include_paths] += " -I'#{value}'"
     end
 
   end

@@ -157,14 +157,6 @@ class Installer
   end
 
   def install(options, args)
-    ssl = false
-    str = ""
-    err_msg = nil
-    
-    if options[:ssl]
-      ssl = true
-      str = "ssl=yes "
-    end
     
     if CheckUser.new.check == 0
       
@@ -173,6 +165,18 @@ class Installer
 #        puts "WebROaR is already installed on this machine. Please uninstall it with *sudo webroar uninstall* and run install command again."
 #        return
 #      end
+
+      ssl = false
+      str = ""
+      err_msg = nil
+    
+      if options[:ssl]
+        ssl = true
+        str = "ssl=yes "
+      end
+
+      str += " include_flags=\"#{options[:include_paths]}\"" if options[:include_paths].length > 0
+      str += " library_flags=\"#{options[:library_paths]}\"" if options[:library_paths].length > 0
       
       puts "Checking for the dependencies ..."
       check_dependencies(ssl) || exit(1)

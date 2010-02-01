@@ -140,6 +140,8 @@ include_dir.each do |dir|
   $inc_flags << " -I#{dir} "
 end
 
+$inc_flags << " #{ENV['include_flags']}" if ENV['include_flags']
+
 CLEAN.include(File.join(OBJ_DIR,'*.o'),File.join(WORKER_OBJ_DIR,'*.o'), File.join(YAML_OBJ_DIR,'*.o'), File.join(TEST_OBJ_DIR,'*.o'))
 CLOBBER.include(File.join(BIN_DIR,'webroar-head'),File.join(BIN_DIR,'webroar-worker'), File.join(UNIT_TEST_DIR,'*.so'))
 
@@ -246,6 +248,7 @@ file worker_bin do
   lib_flags = $libs + $LIBS + ' -L' + Config::expand($libdir,CONFIG)  + ' ' + Config::expand($LIBRUBYARG_SHARED,CONFIG)
   #$libs += ' '+CONFIG["LIBRUBYARG"]  
   #$libs += ' -lpthread '
+  lib_flags += " #{ENV['library_flags']}" if ENV['library_flags']
   out_file=File.join(BIN_DIR,'webroar-worker')
   object_files=FileList[File.join(WORKER_OBJ_DIR,'*.o'), helper_obj.keys, File.join(YAML_OBJ_DIR,'*.o')]
   # -rdynamic option to get function name in stacktrace
@@ -261,6 +264,7 @@ file webroar_bin do
   lib_flags = $libs + $LIBS # + ' -L' + Config::expand($libdir,CONFIG)  + ' ' + Config::expand($LIBRUBYARG_SHARED,CONFIG)
   #$libs += ' '+CONFIG["LIBRUBYARG"]  
   #$libs += ' -lpthread '
+  lib_flags += " #{ENV['library_flags']}" if ENV['library_flags']
   if ENV['ssl'].eql?("yes")
     puts "Compiling with gnutls library."
     lib_flags += ' -L' + Config::CONFIG['libdir'] + ' -lgnutls '
