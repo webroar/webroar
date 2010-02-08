@@ -172,7 +172,7 @@ HELP_ADD = %{
           Environment in which you want to run the application.
     -a, --[no-]analytics
           Enable analytics to get detailed numbers about the run time performance of the application. his number gathering adds a very small overhead on your application.
-    -n, --min-workers
+    -N, --min-workers
           Minimum number of worker processes that should run for the deployed application.
     -x, --max-workers
           Maximum number of worker processes that should run for the deployed application.
@@ -256,7 +256,7 @@ class CommandRunner
       options[:environment] = value
     end
 
-    opts.on( '-n', '--min-workers WORKER', 'Minimum number of worker processes that should run for the deployed application.') do |value|
+    opts.on( '-N', '--min-workers WORKER', 'Minimum number of worker processes that should run for the deployed application.') do |value|
       value.lstrip!
       value.gsub!(/^=/,"")
       options[:min_worker] = value
