@@ -53,14 +53,15 @@ class ApplicationSpecificationController < ApplicationController
     if @application_specification.save
       @application_specification.write
       app_name = params[:application_specification][:name]
-      reply, err_obj = App.start(app_name)
+      #reply, err_obj = App.start(app_name)
+      reply, err_log = App.start(app_name)
       # reply = nil indicate success
-      if(err_obj)
-        logger.warn err_obj
-        logger.warn err_obj.backtrace
-      end
+      #if(err_obj)
+      #  logger.warn err_obj
+      #  logger.warn err_obj.backtrace
+      #end
       flash[:server_message] = "Application '#{app_name}' started successfully." if reply == nil
-      flash[:error] = reply if reply
+      set_error(reply, err_log)
       render :js => "<script>self.top.location='#{configuration_path}'</script>"						
     else        
       render :partial => 'application_specification_form', :locals => {:type => 'Add'} 
@@ -73,10 +74,10 @@ class ApplicationSpecificationController < ApplicationController
     application_name = params[:id]
     application_id = ApplicationSpecification.get_application_id_from_name(application_name)
     app_name = ApplicationSpecification.delete(application_id)
-    reply = App.stop(app_name)
+    reply, err_log = App.stop(app_name)
     # reply = nil indicate success
     flash[:server_message] = "Application '#{app_name}' deleted successfully." if reply == nil
-    flash[:error] = reply if reply
+    set_error(reply, err_log)
     render :js => "<script>self.top.location='#{configuration_path}'</script>"
   end
   
@@ -90,10 +91,10 @@ class ApplicationSpecificationController < ApplicationController
       application_id = ApplicationSpecification.get_application_id_from_name(app_name)
       @application_specification.update(application_id)      
       app_name = params[:application_specification][:name]
-      reply = App.restart(app_name)
+      reply, err_log = App.restart(app_name)
       # reply = nil indicate success
       flash[:server_message] = "Application '#{app_name}' restarted successfully." if reply == nil
-      flash[:error] = reply if reply
+      set_error(reply, err_log)
       render :js => "<script>self.top.location='#{configuration_path}'</script>"
     else		  
       render :partial => 'application_specification_form', :locals => {:type => 'Edit'} 
@@ -105,10 +106,10 @@ class ApplicationSpecificationController < ApplicationController
     sleep(2)
     info= YAML::load_file(CONFIG_FILE_PATH) rescue nil
     app_name = params[:id]
-    reply = App.restart(app_name)
+    reply, err_log = App.restart(app_name)
     # reply = nil indicate success
     flash[:server_message] = "Application '#{app_name}' restarted successfully." if reply == nil
-    flash[:error] = reply if reply
+    set_error(reply, err_log)
     render :js => "<script>self.top.location='#{configuration_path}'</script>"
   end
   
@@ -118,4 +119,10 @@ class ApplicationSpecificationController < ApplicationController
     return ApplicationSpecification.new(application[:name], application[:baseuri], application[:path], application[:run_as_user], application[:type], 
       application[:analytics], application[:environment], application[:min_worker].to_i, application[:max_worker].to_i)
   end
+
+  def set_error(reply, err_log)
+    flash[:error] = reply if reply
+    flash[:error] += "<br/><br/><div align='left'><font color='red'" + err_log.gsub("\n","<br/>") + "</font></div>" if err_log
+  end
+
 end

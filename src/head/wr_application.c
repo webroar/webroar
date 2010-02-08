@@ -79,7 +79,7 @@ void wr_app_wrk_add_timeout_cb(struct ev_loop *loop, ev_timer *w, int revents) {
   if(app->in_use == FALSE && app->ctl && app->pending_wkr == 0) {
     LOG_DEBUG(DEBUG,"Some problem occurred while starting Application %s.", app->conf->name.str);
     scgi_header_add(app->ctl->scgi, "STATUS", strlen("STATUS"), "ERROR", strlen("ERROR"));
-    err_msg_len = sprintf(err_msg,"The application could not be started due to an error. Please refer '/var/log/webroar/%s.log' and the application log file for details.", app->conf->name.str); 
+    err_msg_len = sprintf(err_msg,"The application could not be started due to the following error. Please refer '/var/log/webroar/%s.log' and the application log file for more details.", app->conf->name.str);
     scgi_body_add(app->ctl->scgi, err_msg, err_msg_len);
     wr_ctl_resp_write(app->ctl);
     app->ctl = NULL;

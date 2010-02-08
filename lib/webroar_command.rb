@@ -208,13 +208,14 @@ class WebroarCommand
     while (count < args.length)
       ctl = Control.new(args[count])      									
       begin
-        reply = ctl.add
+        reply, err_log = ctl.add
         # reply = nil indicate success
         if reply == nil
           puts "Application '#{args[count]}' started successfully."
         else
           puts reply
         end
+        puts "\n\e[31m" + err_log + "\e[0m" if err_log
       rescue Exception => e
         puts e
         puts e.backtrace
@@ -287,13 +288,14 @@ class WebroarCommand
     while (count < args.length)
       ctl = Control.new(args[count])  
       begin
-        reply = ctl.delete
+        reply, err_log = ctl.delete
         # reply = nil indicate success
         if reply == nil
           puts "Application '#{args[count]}' stopped successfully."
         else
           puts reply
         end
+        puts "\n\e[31m" + err_log + "\e[0m" if err_log
       rescue Exception => e
         puts e
         puts e.backtrace
@@ -330,13 +332,14 @@ class WebroarCommand
     while (count < args.length)
       ctl = Control.new(args[count])      
       begin
-        reply = ctl.restart
+        reply, err_log = ctl.restart
         # reply = nil indicate success
         if reply == nil
           puts "Application '#{args[count]}' restarted successfully."
         else
           puts reply
         end
+        puts "\n\e[31m" + err_log + "\e[0m" if err_log
       rescue Exception => e
         puts e
         puts e.backtrace

@@ -34,37 +34,41 @@ class App < ActiveRecord::Base
   def self.start(app_name)
     ctl = Control.new(app_name)
     reply = nil
-    err_obj = nil
+    #err_obj = nil
+    err_log = nil
     begin
-      reply = ctl.add    
+      reply, err_log = ctl.add
     rescue Exception => e
-      err_obj = e      
+      #err_obj = e
       reply = "An error occurred while sending 'start' request for application '#{app_name}'. Please refer the '/var/log/webroar/Admin_panel.production.log' file for details."
     end
-    return reply, e
+    #return reply, e
+    return reply, err_log
   end
   
   # Stop the application
   def self.stop(app_name)
     ctl = Control.new(app_name)
     reply = nil
+    err_log = nil
     begin
-      reply = ctl.delete      
+      reply, err_log = ctl.delete
     rescue Exception => e
       reply = "An error occurred while sending 'stop' request for application '#{app_name}'. Please refer the '/var/log/webroar/Admin_panel.production.log' file for details."
     end
-    return reply
+    return reply, err_log
   end
   
   # Restart the application
   def self.restart(app_name)
     ctl = Control.new(app_name)
     reply = nil
+    err_log = nil
     begin
-      reply = ctl.restart
+      reply, err_log = ctl.restart
     rescue Exception => e
       reply = "An error occurred while sending 'stop' request for application '#{app_name}'. Please refer the '/var/log/webroar/Admin_panel.production.log' file for details."
     end
-    return reply
+    return reply, err_log
   end    
 end

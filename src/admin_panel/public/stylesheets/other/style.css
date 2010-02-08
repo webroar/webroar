@@ -611,7 +611,7 @@ a.white:hover{
 
 #message_box_header{
   background-color : #666;
-  width : 300px;
+  width : 50%;
   padding : 5px;
   border-left : 1px solid #000000;
   border-right : 1px solid #000000;
@@ -625,7 +625,7 @@ a.white:hover{
   background-color : #ffffff;
   padding : 5px;
   border : 1px solid #000000;
-  width : 300px;
+  width : 50%;
   font-size : 11px;
   font-family : verdana;  
 }

@@ -20,13 +20,15 @@
 
 require 'socket'
 require 'scgi'
+require 'date'
 
 #Class to send SCGI control message on socket. It also receive and parse the acknowledge message.
 class Control
+  @@LOG_DIR = File.join('','var','log','webroar')
   
   # Constructor.
   def initialize(name)
-    @name=name	# Application name
+    @name = name	# Application name
     @req = SCGI.new	# SCGI control message
     @req.header_add("component","APPLICATION")
     @req.header_add("app_name",@name)
@@ -54,14 +56,16 @@ class Control
     @req.header_add("method","RELOAD")
     send_control
   end
-  
+
+  private
+
   # Build and send SCGI control message.
   def send_control
     @req.build
     sockFile = File.join("","tmp","webroar.sock")
     
     if !File.exist?(sockFile)
-      return "Either altas-server is not started or 'webroar.sock' file is deleted."  
+      return "Either altas-server is not started or 'webroar.sock' file is deleted.", nil
     end
     
     file = File.new(sockFile)
@@ -73,20 +77,53 @@ class Control
       streamSock = TCPSocket.new( "127.0.0.1", port.to_i)
     end
     streamSock.send(@req.request, 0)
+    start_time = DateTime.parse(Time.now.strftime("%a %b %d %H:%M:%S %Y"))
     str = streamSock.recv(2048)
+    end_time = DateTime.parse(Time.now.strftime("%a %b %d %H:%M:%S %Y"))
     streamSock.close
     @resp = SCGI.new
     @resp.parse(str)
     
     if @resp.header("STATUS") == "OK" or @resp.header("STATUS") == "ok"
-      return nil
+      return nil, nil
     else
       if @resp.body == nil
-        return "Error: Operation not performed."
+        return "Error: Operation not performed.", get_error_log(start_time, end_time)
       else
-        return @resp.body
+        return @resp.body, get_error_log(start_time, end_time)
       end
     end
+  end
+
+  def get_error_log(start_time, end_time)
+    # Open a log file
+    file_name = File.join(@@LOG_DIR, @name+'.log')
+    return nil if !File.file?(file_name)
+    log_file = File.open(file_name,"r")
+    err_log = ""
+    flag = false
+    error = false
+    log_file.each_line do |x|
+      # Set write flag if logged after strat date.
+      if !flag and check_date(x)
+        flag = true if DateTime.parse(x) >= start_time
+      end
+
+      # Stop if logged after end date.
+      if flag and check_date(x)
+        break if DateTime.parse(x) > end_time
+      end
+      error = true if !error and flag and x.include? "-Error:"
+      err_log += x if error
+
+    end
+
+    err_log.length > 1 ? err_log : nil
+
+  end
+
+  def check_date(str)
+    /^(Sun|Mon|Tue|Wed|Thu|Fri|Sat) (Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec) {1,2}\d{1,2} {1,2}\d{1,2}:\d{1,2}:\d{1,2} \d{4}/.match(str)
   end
   
 end #Class end
