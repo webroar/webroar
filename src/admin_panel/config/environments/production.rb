@@ -7,7 +7,7 @@ config.cache_classes = true
 # Use a different logger for distributed setups
 # config.logger = SyslogLogger.new
 
-config.log_path = File.join("","var","log","webroar","admin_panel_rails.production.log")
+config.log_path = File.join("","var","log","webroar","Admin_panel.production.log")
 
 # Full error reports are disabled and caching is turned on
 config.action_controller.consider_all_requests_local = false
