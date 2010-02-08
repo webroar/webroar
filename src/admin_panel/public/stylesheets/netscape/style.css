@@ -113,6 +113,12 @@ body
   right:10px;
 }
 
+#menu_tab_div A:link {color:#990b0a}
+#menu_tab_div A:visited {color:#990b0a}
+#menu_tab_div A:active {color:#990b0a}
+#menu_tab_div A:hover {color:#990b0a}
+
+
 .link a
 {
 	text-decoration:underline;
