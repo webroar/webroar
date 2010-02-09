@@ -40,7 +40,7 @@
  *         APP_NAME: <application name>
  *         APP_BASE_URI: <baseuri>
  *         APP_TYPE: <application type>
- *         APP_PATH: <appliaction path>
+ *         APP_PATH: <application path>
  *         APP_ANALYTICS: <analytics flag>
  *         APP_LOG_LEVEL: <logging level> (optional)
  *         APP_MIN_WORKER: <min workers> (optional)

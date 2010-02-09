@@ -629,7 +629,7 @@ void wr_app_add_cb(wr_ctl_t *ctl, const wr_ctl_msg_t *ctl_msg) {
   }
   ctl->svr->err_msg[0] = 0;
   if(app) {
-    sprintf(ctl->svr->err_msg, "Appliation '%s' is already running.", ctl_msg->msg.app.app_name.str);
+    sprintf(ctl->svr->err_msg, "Application '%s' is already running.", ctl_msg->msg.app.app_name.str);
   }
   
   if(!app && ctl && ctl->svr && ctl->svr->conf) {
@@ -640,7 +640,7 @@ void wr_app_add_cb(wr_ctl_t *ctl, const wr_ctl_msg_t *ctl_msg) {
       if(wr_app_insert(ctl->svr, app_conf, ctl) >= 0)
         return;
     } else if(ctl->svr->err_msg[0] == 0) {
-      sprintf(ctl->svr->err_msg, "Appliation '%s' is not found.", ctl_msg->msg.app.app_name.str);
+      sprintf(ctl->svr->err_msg, "Application '%s' is not found.", ctl_msg->msg.app.app_name.str);
     }
   }
 
@@ -720,8 +720,8 @@ void wr_app_reload_cb(wr_ctl_t *ctl, const wr_ctl_msg_t *ctl_msg) {
     LOG_ERROR(WARN,"Aapplication %s didn't found in list", ctl_msg->msg.app.app_name.str);
     sprintf(ctl->svr->err_msg, "Application '%s' is not found.", ctl_msg->msg.app.app_name.str);
     scgi_body_add(ctl->scgi,
-                          "Couldn't remove application. But trying to start appliaction.",
-                          strlen("Couldn't remove application. But trying to start appliaction."));
+                          "Couldn't remove application. But trying to start application.",
+                          strlen("Couldn't remove application. But trying to start application."));
     if(wr_app_insert(ctl->svr, app_config, ctl) == 0)
       return;
   }

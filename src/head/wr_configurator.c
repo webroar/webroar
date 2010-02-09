@@ -973,7 +973,7 @@ int wr_conf_app_replace(wr_conf_t *conf, wr_app_conf_t *app_conf){
     app->next = NULL;
     wr_conf_app_free(app);
   }else{
-    LOG_ERROR(WARN, "Appliation '%s' is not found", app_conf->name.str);
+    LOG_ERROR(WARN, "Application '%s' is not found", app_conf->name.str);
     app_conf->next = conf->apps;
     conf->apps = app_conf;
   }
@@ -1003,7 +1003,7 @@ wr_app_conf_t* wr_conf_app_update(wr_conf_t* conf, const char *app_name, char* e
     //wr_conf_app_free(app);
   }else{
     if(err_msg)
-      sprintf(err_msg, "Appliation '%s' is not found", app_name);
+      sprintf(err_msg, "Application '%s' is not found", app_name);
   }
 
   return wr_conf_app_read(conf, app_name, err_msg);
@@ -1022,7 +1022,7 @@ wr_app_conf_t* wr_conf_app_read(wr_conf_t* conf, const char *app_name, char* err
   while(app) {
     if(strcmp(app->name.str, app_name) == 0) {
       if(err_msg)
-        sprintf(err_msg, "Appliation '%s' is already exists", app_name);
+        sprintf(err_msg, "Application '%s' is already exists", app_name);
       return NULL;
     }
     app = app->next;
