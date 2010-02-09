@@ -32,16 +32,11 @@ module Webroar
         @starling.set(@profiler_queue,{}) rescue nil
         @starling.set(@exception_queue,{}) rescue nil     
         #@starling.set(@pid_queue, {}) rescue nil
-      end
+      end      
       
-      #TODO: one read method for every queue
-      def read_profiling_data
-        begin
-          if @starling.sizeof(@profiler_queue) > 0
-            @starling.get(@profiler_queue)
-          else
-            nil
-          end
+      def read(queue_name, raw = false)        
+        begin          
+          @starling.fetch(queue_name, raw)          
         rescue MemCache::MemCacheError, Timeout::Error => e
           Logger.error(e)
           Logger.error(e.backtrace.join("\n"))
@@ -51,43 +46,19 @@ module Webroar
           Logger.error(e.backtrace.join("\n"))
           nil
         end
+      end
+      
+      def read_profiling_data
+        read(@profiler_queue)        
       end
       
       def read_exception
-        begin
-          if @starling.sizeof(@exception_queue) > 0
-            return @starling.get(@exception_queue)
-          else
-            return nil
-          end
-        rescue MemCache::MemCacheError, Timeout::Error => e
-          Logger.error(e)
-          Logger.error(e.backtrace.join("\n"))
-          nil
-        rescue Exception => e
-          Logger.error(e)
-          Logger.error(e.backtrace.join("\n"))
-          nil
-        end
+        read(@exception_queue)        
       end
       
       def read_pid
-        begin
-          if @starling.sizeof(@pid_queue) > 0
-            # read raw entry
-            return @starling.get(@pid_queue, true)
-          else
-            return nil
-          end
-        rescue MemCache::MemCacheError, Timeout::Error => e
-          Logger.error(e)
-          Logger.error(e.backtrace.join("\n"))
-          nil
-        rescue Exception => e
-          Logger.error(e)
-          Logger.error(e.backtrace.join("\n"))
-          nil
-        end
+        # read raw entry
+        read(@pid_queue, true)
       end
       
     end # class MessageReader
