@@ -60,7 +60,7 @@ module Webroar
       def process_messages
         begin
           # return on getting nil from @message_reader.read()
-          item = @message_reader.read()
+          item = @message_reader.read_profiling_data()
           #p item
           while item
             wall_time = item[:wall_time]
@@ -105,7 +105,7 @@ module Webroar
                 Logger.error(e.backtrace.join("\n"))
               end            
             end  # case message_type
-            item = @message_reader.read()
+            item = @message_reader.read_profiling_data()
           end # while item
         rescue Exception => e
           Logger.error(e)

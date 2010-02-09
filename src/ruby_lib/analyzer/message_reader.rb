@@ -35,7 +35,7 @@ module Webroar
       end
       
       #TODO: one read method for every queue
-      def read
+      def read_profiling_data
         begin
           if @starling.sizeof(@profiler_queue) > 0
             @starling.get(@profiler_queue)
