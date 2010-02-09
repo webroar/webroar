@@ -39,8 +39,9 @@ module Webroar
         @pid_queue = "#{configuration['pid_queue_name']}".freeze
         @max_entry = configuration["max_queue_items"] || 10000
         # Until an item is set into queue, stats(e.g. sizeof) of that queue is not available(after every time starling has been restarted).
-        @starling.set(@profiler_queue,{}) rescue nil
-        @starling.set(@exception_queue,{}) rescue nil
+        # setting it from Analyzer process, as once the stats available with Starling server, it can reach to all the clients
+        #@starling.set(@profiler_queue,{}) rescue nil
+        #@starling.set(@exception_queue,{}) rescue nil
         #@starling.set(@pid_queue,{}) rescue nil
       end
 
