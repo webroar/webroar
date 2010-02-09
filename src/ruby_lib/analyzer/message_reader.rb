@@ -24,7 +24,7 @@ module Webroar
     class MessageReader
       def initialize(host, port, profiler_queue_name,exception_queue_name, pid_queue_name)
         @server = %Q{#{host}:#{port}}.freeze
-        @starling = Starling.new(@server)
+        @starling = Starling.new(@server, :timeout => 30.0)
         @profiler_queue = profiler_queue_name.freeze
         @exception_queue = exception_queue_name
         @pid_queue = pid_queue_name   

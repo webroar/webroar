@@ -52,12 +52,19 @@ module Webroar
       end
 
       def send_pid()
-        # send raw entry
-        rv = send_entry(@pid_queue, "#{@app_name}:#{Process.pid}", 0, true)        
-        if rv
+        # It looks Starling is reading entire queue log file before the very first operation on it. It takes long time to respond to first 
+        # call and IO timeout error is thrown by memcache-client.
+        # http://github.com/starling/starling/issues/issue/4
+        # Creating a temporary connection with higher timeout value to set PID successfully. 
+        starling = Starling.new(@server, :timeout => 15.0)
+        begin
+          # send raw entry
+          starling.set(@pid_queue, "#{@app_name}:#{Process.pid}", 0, true)
           Webroar.log_info("PID #{Process.pid} sent on queue.")
           $pid_sent = true
-        else
+        rescue MemCache::MemCacheError, Timeout::Error => e
+          Webroar.log_error("Dispatching message on queue:#{e}")
+          Webroar.log_error("#{e.backtrace.join("\n")}")
           Webroar.log_info("Dispatching pid on queue failed.")
           $pid_sent = false
         end
