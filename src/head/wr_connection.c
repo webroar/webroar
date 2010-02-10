@@ -140,7 +140,7 @@ void wr_conn_close_cb(ebb_connection* connection) {
     // Destroy wr_connection
     wr_conn_free(conn);
   } else {
-    // Set altas_connection to closed
+    // Set connection to closed
     LOG_DEBUG(DEBUG,"closed flag set %d", conn->id);
     conn->is_closed = 1;
     conn->keep_alive = 0;
@@ -235,7 +235,7 @@ int wr_conn_resp_body_add(wr_conn_t* conn, const char* str, size_t len) {
 /** Allocates and initializes an ebb_connection */
 ebb_connection* wr_new_conn_cb(ebb_server* server, struct sockaddr_in* addr) {
   LOG_FUNCTION
-  // Create new altas_connection
+  // Create new connection
   wr_conn_t* conn = wr_conn_new(server->data);
 
   if(conn == NULL) {

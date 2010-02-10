@@ -65,7 +65,7 @@ class Control
     sockFile = File.join("","tmp","webroar.sock")
     
     if !File.exist?(sockFile)
-      return "Either altas-server is not started or 'webroar.sock' file is deleted.", nil
+      return "Either the server is not started or 'webroar.sock' file is deleted.", nil
     end
     
     file = File.new(sockFile)
