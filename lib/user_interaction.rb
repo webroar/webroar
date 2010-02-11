@@ -36,9 +36,7 @@ module Webroar
       #gem_names = list.collect {|gem| gem.full_name}
       gem_list = list.collect {|gem| gem.version}
       gem_list.each_with_index do |item, index|
-        if !File.exist?(File.join(WEBROAR_ROOT,"..","webroar-#{item}","conf","config.yml"))
-          gem_list.delete(item)
-        end
+        gem_list.delete(item) if !File.exist?(File.join(WEBROAR_ROOT,"..","webroar-#{item}","conf","config.yml"))
       end
 
       if gem_list.length == 0
@@ -86,7 +84,7 @@ module Webroar
           if(username.length < 1)
             #puts "Please enter a username."
             redo
-            else
+          else
             break
           end
         end
@@ -111,7 +109,7 @@ module Webroar
           if(re_pswd  == pswd)
             write_user(username, pswd)
             break
-            else
+          else
             puts "\nPasswords do not match. Please try again."
             redo
           end

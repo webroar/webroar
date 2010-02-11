@@ -37,13 +37,10 @@ $LOAD_PATH.unshift("#{ADMIN_PANEL_LIB_DIR}")
 class CheckUser
 
   # Check for root user
-  def check
-    if File.writable?(TESTFILE)
-      return 0
-    else
-      puts "#{MESSAGE_DEPLOYMENT}"
-      return -1
-    end
+  def self.check
+    return true if File.writable?(TESTFILE)
+    puts "#{MESSAGE_DEPLOYMENT}"
+    return false
   end
 
 end #class CheckUser

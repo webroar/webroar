@@ -103,7 +103,7 @@ class ApplicationSpecification < PseudoModel
 #    elsif max_worker.to_i > 20
 #      errors.add_to_base MAX_WORKERS_VALIDATION_2
     end
-#    errors.add_to_base APPLICATION_PATH_EXISTANCE_VALIDATION if !File.directory?(path)
+    #errors.add_to_base APPLICATION_PATH_EXISTANCE_VALIDATION if !File.directory?(path)
     errors.add_to_base ANALYTICS_VALIDATION if type1=="Rails" and !(analytics.downcase == "enabled" or analytics.downcase == "disabled")
     #errors.add_to_base ENVIRONMENT_VALIDATION if !(environment.downcase == "production" or environment.downcase == "development" or environment.downcase == "test")
     errors.add_to_base TYPE_VALIDATION if !(type1.downcase == RAILS or type1.downcase == RACK)
@@ -125,8 +125,9 @@ class ApplicationSpecification < PseudoModel
       tokens = resolver.split(/ /)
       
       curr_host_names = []
-      host_names_flag = 0
-      if tokens.size == 1 and tokens[0].start_with?('/')
+      host_name_flag = 0
+      
+      if (tokens.size == 1 and tokens[0].start_with?('/'))
         write_attribute(:baseuri, resolver)
         errors.add_to_base "BaseURI must start with '/' and contains characters A-Z, a-z, 0-9 , _ , -  and /." if !(baseuri.strip =~ /^\/[A-Za-z0-9_\-\/]*$/i)
       else
@@ -267,18 +268,18 @@ class ApplicationSpecification < PseudoModel
       all_host_names = []
       curr_host_names_size = curr_host_names.size
 
+      tmp_id = app_id.nil? ? -1 : app_id.to_i
+
       #checking uniqueness of BaseURI
       info= YAML::load_file(CONFIG_FILE_PATH)
       if info and info['Application Specification']
         i = 0
-        flag = 0
-        while(info['Application Specification'][i])
-          flag = 1 if baseuri and baseuri.strip and info['Application Specification'][i]['baseuri'] == baseuri.strip and app_id.to_i != i.to_i
-          errors.add_to_base "#{name} - #{APPLICATION_NAME_REPEATED}" if info['Application Specification'][i]['name'] == name and app_id.to_i != i.to_i
-          all_host_names << info['Application Specification'][i]['host_names'].split(/ /) if info['Application Specification'][i]['host_names'] and curr_host_names_size > 0 and app_id.to_i != i.to_i
+        info['Application Specification'].each do |app_info|
+          errors.add_to_base "#{name} - #{APPLICATION_NAME_REPEATED}" if app_info['name'] == name and tmp_id != i
+          errors.add_to_base BASEURI_EXISTANCE_VALIDATION if baseuri and baseuri.strip and app_info['baseuri'] == baseuri.strip and tmp_id != i
+          all_host_names << app_info['host_names'].split(/ /) if app_info['host_names'] and curr_host_names_size > 0 and tmp_id != i
           i += 1
         end
-        errors.add_to_base BASEURI_EXISTANCE_VALIDATION if flag == 1
       end
       all_host_names.flatten!
       # checking uniqueness of Hostnames

@@ -49,105 +49,24 @@ module Webroar
       end
       return flag
     end
-    
+
+    private
+
     def find_shared_lib()
       if File.exist?(File.join(Config::CONFIG['libdir'],Config::CONFIG['LIBRUBY_SO']))
         flag = "\e[32mfound\e[0m  at #{Config::CONFIG['libdir']}."
       elsif Config::CONFIG['ENABLE_SHARED'] == 'yes'
         flag = "\e[32mfound\e[0m."
       else
-        flag="\e[31mnot found\e[0m.\nUnable to find #{Config::CONFIG['LIBRUBY_SO']} at #{Config::CONFIG['libdir']}."        
+        flag="\e[31mnot found\e[0m.\nUnable to find #{Config::CONFIG['LIBRUBY_SO']} at #{Config::CONFIG['libdir']}."
       end
       return flag
     end
-    
-    def find_Xcode(name)      
-      directory="/Developer/Applications"
-      if File.exist?(directory+"/#{name}")
-        flag="\e[32mfound\e[0m   at #{directory}/#{name}."
-        return flag        
-      end
-      flag="\e[31mnot found\e[0m.\nUnable to find #{name} at #{directory}."
-      return flag
+
+    def find_Xcode(name)
+      return check_file(["/Developer/Applications"], name)
     end
-    
-    def find_command(name)
-      ENV['PATH'].split(File::PATH_SEPARATOR).detect do |directory|
-        path = File.join(directory, File.basename(name))
-        if File.executable?(path)
-          flag="\e[32mfound\e[0m   at #{path}."
-          return flag
-        end
-      end
-      flag = nil
-      arr = ENV['PATH'].split(File::PATH_SEPARATOR)
-      arr.delete("") if arr!= nil
-      if arr == nil or arr.length == 0
-        flag="\e[31mnot found\e[0m.\nUnable to find #{name} from 'PATH'."
-      elsif arr.length == 1
-        flag="\e[31mnot found\e[0m.\nUnable to find #{name} at #{arr}."
-      else
-        flag="\e[31mnot found\e[0m.\nUnable to find #{name} at any of these locations #{arr*","}"
-      end 
-      return flag
-    end  
-  
-    def find_so(name)
-      ENV['LD_LIBRARY_PATH'].split(File::PATH_SEPARATOR).detect do |directory|
-        if File.exist?(directory+"/#{name}")
-          flag="\e[32mfound\e[0m   at #{directory}/#{name}."
-          return flag
-        end
-      end
-      flag = nil
-      arr = ENV['LD_LIBRARY_PATH'].split(File::PATH_SEPARATOR)
-      arr.delete("") if arr!= nil
-      if arr == nil or arr.length == 0
-        flag="\e[31mnot found\e[0m.\nUnable to find #{name} from 'LD_LIBRARY_PATH'."
-      elsif arr.length == 1
-        flag="\e[31mnot found\e[0m.\nUnable to find #{name} at #{arr}."
-      else
-        flag="\e[31mnot found\e[0m.\nUnable to find #{name} at any of these locations #{arr*","}"
-      end 
-      return flag
-    end  
-    
-    def find_ruby_headers
-      begin
-        require 'rbconfig'
-        require 'mkmf'
-        ruby_header_dir = Config::CONFIG['rubyhdrdir'] || Config::CONFIG['archdir']
-        if File.exist?("#{ruby_header_dir}/ruby.h")
-          flag="\e[32mfound\e[0m   at #{ruby_header_dir}/ruby.h."
-          return flag
-        else
-          flag="\e[31mnot found\e[0m.\nUnable to find ruby.h at #{ruby_header_dir}."
-          return flag
-        end
-      rescue LoadError
-        flag="\e[31mnot found\e[0m.\nUnable to find ruby.h at #{ruby_header_dir}."
-        return flag
-      end
-    end
-  
-    def find_openssl(name)
-      begin
-        require 'rbconfig'
-        require 'mkmf'
-        if File.exist?(Config::CONFIG['archdir'] +"/"+ name) or 
-            File.exist?(Config::CONFIG['sitearchdir'] +"/"+ name)
-          flag="\e[32mfound\e[0m   at #{Config::CONFIG['archdir']}/#{name}."
-          return flag
-        else
-          flag="\e[31mnot found\e[0m.\nUnable to find #{name} at #{Config::CONFIG['archdir']}."
-          return flag
-        end
-      rescue LoadError
-        flag="\e[31mnot found\e[0m.\nUnable to find #{name} at #{Config::CONFIG['archdir']}."
-        return flag
-      end
-    end
-  
+
     def find_gem(name)
       begin
         require 'rubygems'
@@ -159,7 +78,52 @@ module Webroar
       return flag
     end
     
-    
+    def find_command(name)
+      arr = ENV['PATH'].split(File::PATH_SEPARATOR)
+      arr.delete("") if arr!= nil
+      return "\e[31mnot found\e[0m.\nUnable to find #{name} from 'PATH'." if arr.nil? or arr.length == 0
+      return check_file(arr, name)
+    end
+
+    def find_so(name)
+      arr = ENV['LD_LIBRARY_PATH'].split(File::PATH_SEPARATOR)
+      arr.delete("") if arr!= nil
+      return "\e[31mnot found\e[0m.\nUnable to find #{name} from 'LD_LIBRARY_PATH'." if arr.nil? or arr.length == 0
+      return check_file(arr, name)
+    end
+
+    def find_openssl(name)
+      begin
+        require 'rbconfig'
+        require 'mkmf'
+
+        check_file([Config::CONFIG['archdir'], Config::CONFIG['sitearchdir']], name)
+
+      rescue LoadError
+        return "\e[31mnot found\e[0m.\nUnable to find #{name} at #{[Config::CONFIG['archdir'], Config::CONFIG['sitearchdir']] * ','}."
+      end
+    end
+
+    def find_ruby_headers
+      begin
+        require 'rbconfig'
+        require 'mkmf'
+        ruby_header_dir = Config::CONFIG['rubyhdrdir'] || Config::CONFIG['archdir']
+        return check_file([ruby_header_dir], 'ruby.h')
+      rescue LoadError
+        return "\e[31mnot found\e[0m.\nUnable to find ruby.h at #{ruby_header_dir}."
+      end
+    end
+
+    def check_file(dirs, file)
+
+      dirs.each do |dir|
+        return "\e[32mfound\e[0m   at #{File.join(dir, file)}." if File.exist?(File.join(dir, file))
+      end
+      
+      return "\e[31mnot found\e[0m.\nUnable to find #{file} at #{dirs * ','}."
+    end
+
   end    
   module Dependencies 
     GCC = Dependency.new(File.basename(Config::CONFIG['CC']))
