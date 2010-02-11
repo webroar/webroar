@@ -51,7 +51,7 @@ begin
       #    STDERR.sync = true
       #    puts '...........file opened..............'
       require File.join(File.dirname(__FILE__), 'profiler', 'message_dispatcher') #to send pid of worker
-      if $pid_sent
+      if $pid_sent and $g_options["app_name"].strip != 'Admin Panel'
         require File.join(File.dirname(__FILE__), 'exception_tracker', 'webroar_exception.rb')
       else
         Webroar.log_info("Exception notification would not work.")
