@@ -17,7 +17,7 @@
 # along with WebROaR.  If not, see <http://www.gnu.org/licenses/>.
 
 require File.expand_path(File.join(WEBROAR_ROOT,'src','ruby_lib','mailer','smtpmail'))
-
+require File.expand_path(File.join(WEBROAR_ROOT,'src','admin_panel', 'config', 'initializers', 'application_constants'))
 include Email
 
 module Webroar
@@ -152,8 +152,8 @@ module Webroar
       
       def process_exceptions
         begin 
-          exception_hash=@message_reader.read_exception()
-          from,recipients,mail_configuration=Email.mail_settings
+          exception_hash = @message_reader.read_exception()
+          from,recipients, mail_configuration = Email.mail_settings
           while exception_hash
             if exception_hash[:app_name]
               app_name = exception_hash[:app_name]
@@ -182,8 +182,8 @@ module Webroar
                 Logger.info("Exception entry App.find failed.")
               end   
               app_id = app.id if app
-              if app_name.strip != "Admin Panel"
-                status=1
+              if app_name.strip != "Admin Panel"                
+                status = OPEN_EXCEPTION
                 trial = 0
                 begin
                   exception=AppException.find(:first,:conditions=>["exception_message=? and app_id=?",exception_hash[:exception_message],app_id])
@@ -209,11 +209,12 @@ module Webroar
                   Logger.info("Exception entry AppException.find failed.")
                 end
                 if exception 
-                  if exception.exception_status.to_i==2
-                    status=2
-                  elsif exception.exception_status.to_i==1     
-                    status=1
+                  if exception.exception_status.to_i == IGNORED_EXCEPTION
+                    status = IGNORED_EXCEPTION
+                  elsif exception.exception_status.to_i == OPEN_EXCEPTION     
+                    status = OPEN_EXCEPTION
                   else
+                    # if its been closed, open it
                     trial = 0
                     begin     
                       exceptions=AppException.find(:all,:conditions=>["exception_message=? and app_id=?",exception_hash[:exception_message],app_id])
@@ -239,9 +240,9 @@ module Webroar
                       Logger.info("Exception entry AppException.find failed.")
                     end
                     exceptions.each do |exception|
-                      exception.update_attribute(:exception_status,1)
+                      exception.update_attribute(:exception_status, OPEN_EXCEPTION)
                     end if exceptions
-                    status=1
+                    status = OPEN_EXCEPTION
                   end
                 end
                 trial = 0

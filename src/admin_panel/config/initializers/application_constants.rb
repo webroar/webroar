@@ -17,9 +17,11 @@
 # along with WebROaR.  If not, see <http://www.gnu.org/licenses/>.
 
 PREFIX='/admin-panel/'
-CONFIG_FILE_PATH="#{RAILS_ROOT}/../../conf/config.yml"
-MAIL_FILE_PATH="#{RAILS_ROOT}/../../conf/mail_config.yml"
-USERS_FILE_PATH="#{RAILS_ROOT}/config/user.yml"
+if defined? RAILS_ROOT
+  CONFIG_FILE_PATH="#{RAILS_ROOT}/../../conf/config.yml"
+  MAIL_FILE_PATH="#{RAILS_ROOT}/../../conf/mail_config.yml"
+  USERS_FILE_PATH="#{RAILS_ROOT}/config/user.yml"
+end
 SERVER_PORT=3000
 MIN_WORKERS=4
 MAX_WORKERS=8
@@ -139,3 +141,8 @@ SENDMAIL_RECIPIENT_EMAIL_VALIDATION1 = "<li>Recipient email id is blank.</li>"
 #
 RAILS = 'rails'
 RACK = 'rack'
+
+# Exception notification related
+CLOSED_EXCEPTION = 0
+OPEN_EXCEPTION = 1
+IGNORED_EXCEPTION = 2
