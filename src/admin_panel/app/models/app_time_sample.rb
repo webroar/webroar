@@ -20,7 +20,7 @@
 
 #This is the model class AppTimeSample related to the application_samples table in the database.
 class AppTimeSample < ActiveRecord::Base
-  MAX_TRIAL = 3
+  extend Webroar::Analyzer::WithExceptionHandling if defined? Webroar::Analyzer::WithExceptionHandling 
   class << self
     #This method supplies the url and there statistics to the admin panel application. This data is used for the graph ploting.
     #This method supplies the data for database consumption by an application, throughtput and Average Response Time of an application.
@@ -83,8 +83,7 @@ class AppTimeSample < ActiveRecord::Base
     
     #This section of the model is used by the WebROaR Analyzer.
     
-    def create_sample(app_id, sample, sampling_rate, wall_time)
-      trial = 0
+    def create_sample(app_id, sample, sampling_rate, wall_time)      
       # peak requests serverd is maximum of number of requests served in a second      
       prs = sample[4].max || 0
       sample[4].reject!{|e| e == 0}
@@ -95,35 +94,9 @@ class AppTimeSample < ActiveRecord::Base
         art = 0
       end
       #      puts 'creating'
-      begin 
+      with_exception_handling("Application sample creation for application #{app_id}, wall_time #{wall_time}") do
         create({:app_id => app_id, :total_time_in_request => sample[0], :db_time => sample[1], :rendering_time => sample[2], :number_of_requests => sample[3], :wall_time => wall_time, :sampling_rate => sampling_rate, :avg_response_time => art, :peak_requests_served => prs})
-      rescue ActiveRecord::StatementInvalid => e
-        if e.message =~ /locked/
-          if trial < MAX_TRIAL
-            trial += 1
-            Webroar::Analyzer::Logger.info "Creating Application Sample - Database is busy try no #{trial}" if defined? Webroar::Analyzer::Logger
-            sleep(5)          
-            retry
-          end
-        end
-        if defined? Webroar::Analyzer::Logger
-          Webroar::Analyzer::Logger.info "Application sample creation for application #{app_id}, wall_time #{wall_time} failed."
-          Webroar::Analyzer::Logger.error(e)
-          Webroar::Analyzer::Logger.error(e.backtrace.join("\n"))
-        end
-      rescue Exception => e
-        if defined? Webroar::Analyzer::Logger
-          Webroar::Analyzer::Logger.error(e) 
-          Webroar::Analyzer::Logger.error(e.backtrace.join("\n"))        
-          if trial < 1
-            sleep(2)
-            Webroar::Analyzer::Logger.info "Trying again..."
-            trial += 1
-            retry
-          end
-          Webroar::Analyzer::Logger.info "Application sample creation for application #{app_id}, wall_time #{wall_time} failed."
-        end
-      end
+      end      
     end
     # application_samples contains at the most one sample and that is for current sampling period.
     # if sample doesn't exists ,create it.

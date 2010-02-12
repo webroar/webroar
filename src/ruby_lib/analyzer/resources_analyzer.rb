@@ -19,7 +19,7 @@
 module Webroar
   module Analyzer
     class ResourceAnalyzer
-      MAX_TRIAL = 3
+      include WithExceptionHandling   
       
       def initialize(starling_pid)
         # @apps is a hash having application name as key and id as value. It contains all the application running under WebROaR.
@@ -89,60 +89,17 @@ module Webroar
           
           unless app_id = @apps[app_name]
             #TODO: Here chances of race condition in record creation with MessageAnalyzer#process_messages
-            trial = 0
-            begin
+            app = nil
+            with_exception_handling("App.find for application #{app_name}") do
               app = App.find(:first, :conditions=>["name = ?", app_name])
-            rescue ActiveRecord::StatementInvalid => e              
-              if trial < MAX_TRIAL
-                trial += 1
-                Logger.info "App entry - Database is busy try no #{trial}"
-                sleep(2)          
-                retry
-              end
-              Logger.info("App find for application #{app_name} failed.")
-              Logger.error(e)
-              Logger.error(e.backtrace.join("\n"))
-              app = nil
-            rescue Exception => e
-              Logger.error(e) 
-              Logger.error(e.backtrace.join("\n"))
-              if trial < 1
-                trial += 1
-                sleep(2)          
-                Logger.info "Retrying..."
-                retry
-              end
-              Logger.info("App find for application #{app_name} failed.")
-              app = nil
-            end      
-            
+            end            
             if app
               app_id = app.id
-            else              
-              begin
+            else   
+              with_exception_handling("App create for application #{app_name}") do
                 app = App.create({:name => app_name})
-              rescue ActiveRecord::StatementInvalid => e
-                if e.message =~ /(locked|busy)/i
-                  if trial < MAX_TRIAL + 3
-                    trial += 1
-                    Logger.info "Database is busy try no #{trial}"
-                    sleep(2)          
-                    retry
-                  end
-                end
-                Logger.info("App creation for application #{app_name} failed.")
-                Logger.error(e)
-                Logger.error(e.backtrace.join("\n"))
-                app = nil                
-              rescue Exception => e
-                Logger.info("App creation for application #{app_name} failed.")
-                Logger.error(e) 
-                Logger.error(e.backtrace.join("\n"))
-                app = nil
-              end      
-              
-              app_id = app.id if app
-              
+              end
+              app_id = app.id if app              
             end
             
             if app_id
@@ -204,30 +161,9 @@ module Webroar
               sum_mem = 0
               mem.each { |e| sum_mem += e}
               # Storing wall_time taken before the begining of block, due to that there is slight difference in actual wall_time vs resouce usage
-              trial = 0
-              begin                
-                ResourceUsage.create({:app_id => app_id, :cpu_usage => sum_pcpu, :memory_usage => sum_mem, :wall_time => wall_time})
-              rescue ActiveRecord::StatementInvalid => e
-                if trial < MAX_TRIAL
-                  trial += 1
-                  Logger.info "ResourceUsage creation - Database is busy try no #{trial}"
-                  sleep(2)          
-                  retry
-                end
-                Logger.info("Resource usage creation for application #{app_id} failed.")
-                Logger.error(e)
-                Logger.error(e.backtrace.join("\n"))                
-              rescue Exception => e
-                Logger.error(e) 
-                Logger.error(e.backtrace.join("\n"))
-                if trial < 1
-                  trial += 1
-                  sleep(2)
-                  Logger.info"Retrying..."
-                  retry
-                end
-                Logger.info("Resource usage creation for application #{app_id} failed.")
-              end      
+              with_exception_handling("Resource usage entry creation for app_id=#{app_id}") do
+                ResourceUsage.create({:app_id => app_id, :cpu_usage => sum_pcpu, :memory_usage => sum_mem, :wall_time => wall_time})                
+              end                    
             end # if
           end #  do |app_id, pid_array|
         rescue Exception => e

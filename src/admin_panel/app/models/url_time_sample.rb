@@ -20,7 +20,7 @@
 
 #This is the model class UrlTimeSample related to the url_samples table in the database.
 class UrlTimeSample < ActiveRecord::Base
-  MAX_TRIAL = 3  
+  extend Webroar::Analyzer::WithExceptionHandling if defined? Webroar::Analyzer::WithExceptionHandling 
   class << self
     # This method returns a hash of data for the graphs Url HIts , Slowest Url and 
     # Most time Consuming Url for an application.
@@ -138,35 +138,9 @@ class UrlTimeSample < ActiveRecord::Base
     #This section of the model is used by the Webraor Analyzer.
     
     def create_sample(app_id, url, sample, wall_time, sampling_rate, db_time_breakup)
-      trial = 0
-      begin
+      url_sample = nil
+      with_exception_handling("URL sample creation for application #{app_id}, URL #{url}, wall_time #{wall_time}") do
         url_sample =  create({:app_id => app_id, :url => url, :total_time => sample[0], :db_time => sample[1], :rendering_time => sample[2], :number_of_requests => sample[3], :wall_time => wall_time, :sampling_rate => sampling_rate})
-      rescue ActiveRecord::StatementInvalid => e
-        if e.message =~ /(locked|busy)/i
-          if trial < MAX_TRIAL
-            trial += 1
-            Webroar::Analyzer::Logger.info "URL sample creation - Database is busy try no #{trial}" if defined? Webroar::Analyzer::Logger
-            sleep(2)          
-            retry
-          end
-        end
-        if defined? Webroar::Analyzer::Logger
-          Webroar::Analyzer::Logger.info "URL sample creation for application #{app_id}, url #{url}, wall_time #{wall_time} failed."
-          Webroar::Analyzer::Logger.error(e) 
-          Webroar::Analyzer::Logger.error(e.backtrace.join("\n"))
-        end
-      rescue Exception => e
-        if defined? Webroar::Analyzer::Logger
-          Webroar::Analyzer::Logger.error(e) 
-          Webroar::Analyzer::Logger.error(e.backtrace.join("\n"))
-          if trial < 1
-            trial += 1
-            sleep(2)
-            Webroar::Analyzer::Logger.info "Trying again..."
-            retry
-          end
-          Webroar::Analyzer::Logger.info "URL sample creation for application #{app_id}, url #{url}, wall_time #{wall_time} failed."
-        end
       end
       if url_sample.id and db_time_breakup
         db_time_breakup.each_pair do |key, value|
@@ -176,36 +150,9 @@ class UrlTimeSample < ActiveRecord::Base
     end
     
     def create_breakup_sample(app_id, url_sample_id, key, value, wall_time)
-      trial = 0
-      begin
+      with_exception_handling("URL breakup sample creation for application #{app_id}, url_sample_id #{url_sample_id}, wall_time #{wall_time} failed.") do
         UrlBreakupTimeSample.create({:app_id => app_id, :url_sample_id => url_sample_id, :method_name => key, :spent_time => value, :wall_time => wall_time})
-      rescue ActiveRecord::StatementInvalid => e
-        if e.message =~ /(locked|busy)/i
-          if trial < MAX_TRIAL
-            trial += 1
-            Webroar::Analyzer::Logger.info "URL breakup sample creation - Database is busy try no #{trial}" if defined? Webroar::Analyzer::Logger
-            sleep(2)          
-            retry
-          end
-        end
-        if defined? Webroar::Analyzer::Logger
-          Webroar::Analyzer::Logger.info("URL breakup sample creation for application #{app_id}, url_sample_id #{url_sample_id}, wall_time #{wall_time} failed.")
-          Webroar::Analyzer::Logger.error(e) 
-          Webroar::Analyzer::Logger.error(e.backtrace.join("\n"))
-        end
-      rescue Exception => e
-        if defined? Webroar::Analyzer::Logger
-          Webroar::Analyzer::Logger.error(e)
-          Webroar::Analyzer::Logger.error(e.backtrace.join("\n"))
-          if trial < 1
-            trial += 1
-            sleep(2)
-            Webroar::Analyzer::Logger.info "Trying again..."
-            retry
-          end
-          Webroar::Analyzer::Logger.info("URL breakup sample creation for application #{app_id}, url_sample_id #{url_sample_id}, wall_time #{wall_time} failed.") 
-        end
-      end      
+      end            
     end
     
     # url_samples contain at most one sample per url in the scope of application.

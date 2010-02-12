@@ -157,118 +157,55 @@ module Webroar
           while exception_hash
             if exception_hash[:app_name]
               app_name = exception_hash[:app_name]
-              trial = 0
-              begin
+              app = nil
+              with_exception_handling("Exception entry App.find") do
                 app = App.find(:first, :conditions=>["name = ?", app_name])
-              rescue ActiveRecord::StatementInvalid => e
-                if trial < MAX_TRIAL
-                  trial += 1
-                  Logger.info "Exception entry App.find - Database is busy try no #{trial}"
-                  sleep(2)          
-                  retry
+              end
+              if app
+                app_id = app.id 
+                exception = nil
+                with_exception_handling("Exception entry AppException.find") do
+                  exception = AppException.find(:first,:conditions=>["exception_message=? and app_id=?",exception_hash[:exception_message],app_id])
                 end
-                Logger.info("Exception entry App.find failed.")
-                Logger.error(e)
-                Logger.error(e.backtrace.join("\n"))                
-              rescue Exception => e
-                Logger.error(e) 
-                Logger.error(e.backtrace.join("\n"))
-                if trial < 1
-                  trial += 1
-                  sleep(2)
-                  Logger.info"Retrying..."
-                  retry
-                end
-                Logger.info("Exception entry App.find failed.")
-              end   
-              app_id = app.id if app                              
-              status = OPEN_EXCEPTION
-              trial = 0
-              begin
-                exception=AppException.find(:first,:conditions=>["exception_message=? and app_id=?",exception_hash[:exception_message],app_id])
-              rescue ActiveRecord::StatementInvalid => e
-                if trial < MAX_TRIAL
-                  trial += 1
-                  Logger.info "Exception entry AppException.find - Database is busy try no #{trial}"
-                  sleep(2)          
-                  retry
-                end
-                Logger.info("Exception entry AppException.find failed.")
-                Logger.error(e)
-                Logger.error(e.backtrace.join("\n"))                
-              rescue Exception => e
-                Logger.error(e) 
-                Logger.error(e.backtrace.join("\n"))
-                if trial < 1
-                  trial += 1
-                  sleep(2)
-                  Logger.info"Retrying..."
-                  retry
-                end
-                Logger.info("Exception entry AppException.find failed.")
               end
               if exception 
-                if exception.exception_status.to_i == IGNORED_EXCEPTION
-                  status = IGNORED_EXCEPTION
-                elsif exception.exception_status.to_i == OPEN_EXCEPTION     
+                status = exception.exception_status.to_i
+                if status == CLOSED_EXCEPTION
                   status = OPEN_EXCEPTION
-                else
-                  # if its been closed, open it
-                  trial = 0
-                  begin     
-                    exceptions=AppException.find(:all,:conditions=>["exception_message=? and app_id=?",exception_hash[:exception_message],app_id])
-                  rescue ActiveRecord::StatementInvalid => e
-                    if trial < MAX_TRIAL
-                      trial += 1
-                      Logger.info "Exception entry AppException.find - Database is busy try no #{trial}"
-                      sleep(2)          
-                      retry
-                    end
-                    Logger.info("Exception entry AppException.find failed.")
-                    Logger.error(e)
-                    Logger.error(e.backtrace.join("\n"))                
-                  rescue Exception => e
-                    Logger.error(e) 
-                    Logger.error(e.backtrace.join("\n"))
-                    if trial < 1
-                      trial += 1
-                      sleep(2)
-                      Logger.info"Retrying..."
-                      retry
-                    end
-                    Logger.info("Exception entry AppException.find failed.")
-                  end                    
+                  # if its been closed, mark each entry as open
+                  exceptions = nil
+                  with_exception_handling("Exception entry AppException.find") do
+                    exceptions = AppException.find(:all,:conditions=>["exception_message=? and app_id=?",exception_hash[:exception_message],app_id])
+                  end                
                   exceptions.each do |exception|
-                    exception.update_attribute(:exception_status, OPEN_EXCEPTION)
-                  end if exceptions
-                  status = OPEN_EXCEPTION
+                    exception.update_attribute(:exception_status, status)
+                  end if exceptions                  
                 end
-              end              
-              trial = 0
-              begin
-                app=AppException.new({:app_id=>app_id,:app_env=>exception_hash[:app_env],:controller=>exception_hash[:controller],:method=>exception_hash[:method],:exception_message=>exception_hash[:exception_message],:exception_class=>exception_hash[:exception_class],:exception_backtrace=>exception_hash[:exception_backtrace],:exception_status=>status,:wall_time=>exception_hash[:wall_time],:chunked=>exception_hash[:chunked],:content_length=>exception_hash[:content_length],:http_accept=>exception_hash[:http_accept],:http_accept_charset=>exception_hash[:http_accept_charset],:http_accept_encoding=>exception_hash[:http_accept_encoding],:http_accept_language=>exception_hash[:http_accept_language],:http_connection=>exception_hash[:http_connection],:http_cookie=>exception_hash[:http_cookie],:http_host=>exception_hash[:http_host],:http_keep_alive=>exception_hash[:http_keep_alive],:http_user_agent=>exception_hash[:http_user_agent],:http_version=>exception_hash[:http_version],:path_info=>exception_hash[:path_info],:query_string=>exception_hash[:query_string],:remote_addr=>exception_hash[:remote_addr],:request_method=>exception_hash[:request_method],:request_path=>exception_hash[:request_path],:request_uri=>exception_hash[:request_uri],:script_name=>exception_hash[:script_name],:server_name=>exception_hash[:server_name],:server_port=>exception_hash[:server_port],:server_protocol=>exception_hash[:server_protocol],:server_software=>exception_hash[:server_software],:rack_errors=>exception_hash[:rack_errors],:rack_input=>exception_hash[:rack_input],:rack_multiprocess=>exception_hash[:rack_multiprocess],:rack_multithread=>exception_hash[:rack_multithread],:rack_run_once=>exception_hash[:rack_run_once],:rack_url_scheme=>exception_hash[:rack_url_scheme],:rack_version=>exception_hash[:rack_version]})
-                app.save
-              rescue ActiveRecord::StatementInvalid => e
-                if trial < MAX_TRIAL
-                  trial += 1
-                  Logger.info "Exception entry AppException.create - Database is busy try no #{trial}"
-                  sleep(2)          
-                  retry
-                end
-                Logger.info("Exception entry AppException.create failed.")
-                Logger.error(e)
-                Logger.error(e.backtrace.join("\n"))                
-              rescue Exception => e
-                Logger.error(e) 
-                Logger.error(e.backtrace.join("\n"))
-                if trial < 1
-                  trial += 1
-                  sleep(2)
-                  Logger.info"Retrying..."
-                  retry
-                end
-                Logger.info("Exception entry AppException.create failed.")
-              end  
+              else
+                # New exception,  set it as Open
+                status = OPEN_EXCEPTION
+              end
+              with_exception_handling("Exception entry AppException.create") do
+                AppException.create({:app_id => app_id, :app_env => exception_hash[:app_env], :controller => exception_hash[:controller],
+                                      :method => exception_hash[:method], :exception_message => exception_hash[:exception_message],
+                                      :exception_class => exception_hash[:exception_class], :exception_backtrace => exception_hash[:exception_backtrace],
+                                      :exception_status => status, :wall_time => exception_hash[:wall_time], :chunked => exception_hash[:chunked],
+                                      :content_length => exception_hash[:content_length], :http_accept => exception_hash[:http_accept],
+                                      :http_accept_charset => exception_hash[:http_accept_charset], :http_accept_encoding => exception_hash[:http_accept_encoding],
+                                      :http_accept_language => exception_hash[:http_accept_language], :http_connection => exception_hash[:http_connection],
+                                      :http_cookie => exception_hash[:http_cookie], :http_host => exception_hash[:http_host], 
+                                      :http_keep_alive => exception_hash[:http_keep_alive], :http_user_agent => exception_hash[:http_user_agent],
+                                      :http_version => exception_hash[:http_version], :path_info => exception_hash[:path_info],
+                                      :query_string => exception_hash[:query_string], :remote_addr => exception_hash[:remote_addr],
+                                      :request_method => exception_hash[:request_method], :request_path => exception_hash[:request_path],
+                                      :request_uri => exception_hash[:request_uri], :script_name => exception_hash[:script_name],
+                                      :server_name => exception_hash[:server_name], :server_port => exception_hash[:server_port],
+                                      :server_protocol => exception_hash[:server_protocol], :server_software => exception_hash[:server_software],
+                                      :rack_errors => exception_hash[:rack_errors], :rack_input => exception_hash[:rack_input],
+                                      :rack_multiprocess => exception_hash[:rack_multiprocess], :rack_multithread => exception_hash[:rack_multithread],
+                                      :rack_run_once => exception_hash[:rack_run_once], :rack_url_scheme => exception_hash[:rack_url_scheme],
+                                      :rack_version => exception_hash[:rack_version]})                
+              end            
               
               if mail_configuration and status != IGNORED_EXCEPTION
                 subject = "#{exception_hash[:app_name]} : #{exception_hash[:controller]}# #{exception_hash[:method]} (#{exception_hash[:exception_class]}) ' #{exception_hash[:exception_message]}'"
@@ -276,7 +213,7 @@ module Webroar
                 EmailHandler.deliver_send_email(subject,body,from,recipients)
               end              
             end
-            exception_hash=@message_reader.read_exception()
+            exception_hash = @message_reader.read_exception()
           end
         rescue Exception => e
           Logger.error(e)

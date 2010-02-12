@@ -17,6 +17,7 @@
 # along with WebROaR.  If not, see <http://www.gnu.org/licenses/>.
 
 require File.expand_path(File.join(File.dirname(__FILE__), 'user_defined_exception.rb'))
+require File.expand_path(File.join(File.dirname(__FILE__), 'with_exception_handling'))
 require File.expand_path(File.join(File.dirname(__FILE__), 'db_connect.rb'))
 require File.expand_path(File.join(File.dirname(__FILE__) , 'message_reader.rb'))
 require File.expand_path(File.join(File.dirname(__FILE__), 'message_analyzer.rb'))
