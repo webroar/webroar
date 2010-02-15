@@ -112,19 +112,27 @@ static char* get_file_ext(const char *path) {
 /** Set expires time based on file type */
 static void set_expires_time(char *ext, long int expires) {
   int index;
-  if(*ext >= '0' && *ext <= '9'){
-    index = (*ext) - '0';
-  }else if(*ext >= 'a' && *ext <= 'z'){
-    index = (*ext) - 'a' + 10;
+  char tmp_ext[WR_STR_LEN], *p;
+  strcpy(tmp_ext, ext);
+  p = tmp_ext;
+  while(*p){
+    *p = wr_tolower(*p);
+    p++;
+  }
+
+  if(*tmp_ext >= '0' && *tmp_ext <= '9'){
+    index = (*tmp_ext) - '0';
+  }else if(*tmp_ext >= 'a' && *tmp_ext <= 'z'){
+    index = (*tmp_ext) - 'a' + 10;
   }else{
-    LOG_ERROR(WARN, "Extension %s is not supported", ext);
+    LOG_ERROR(WARN, "Extension %s is not supported", tmp_ext);
     return;
   }
 
   if (index >= 0 && index < MAP_SIZE) {
     static_file_t *e = map[index];
     while (e) {
-      if (strcmp(e->ext, ext) == 0) {
+      if (strcmp(e->ext, tmp_ext) == 0) {
         e->expires = expires;
         break;
       }
@@ -135,24 +143,30 @@ static void set_expires_time(char *ext, long int expires) {
 
 /* Get mime-type */
 static static_file_t* get_mime_type(const char *path) {
-  char *ext = get_file_ext(path);  
-  if (ext) {
+  char *ext = get_file_ext(path);
+  char tmp_ext[WR_STR_LEN], *p;
+  strcpy(tmp_ext, ext);
+  p = tmp_ext;
+  while(*p){
+    *p = wr_tolower(*p);
+    p++;
+  }
+
+  if (tmp_ext) {
     int index;
-    if(*ext >= '0' && *ext <= '9'){
-      index = (*ext) - '0';
-    }else if(*ext >= 'a' && *ext <= 'z') {
-      index = (*ext) - 'a' + 10;
-    }else if(*ext >= 'A' && *ext <= 'Z') {
-      index = (*ext) - 'A' + 10;
-    } else {
+    if(*tmp_ext >= '0' && *tmp_ext <= '9'){
+      index = (*tmp_ext) - '0';
+    }else if(*tmp_ext >= 'a' && *tmp_ext <= 'z') {
+      index = (*tmp_ext) - 'a' + 10;
+    }else {
       index = MAP_SIZE;
-      LOG_ERROR(WARN, "Extension %s is not supported", ext);
+      LOG_ERROR(WARN, "Extension %s is not supported", tmp_ext);
     }
     
     if (index >= 0 && index < MAP_SIZE) {
       static_file_t *e = map[index];
       while (e) {
-        if (strcmp(e->ext, ext) == 0) {
+        if (strcmp(e->ext, tmp_ext) == 0) {
           return e;
         }
         e = e->next;
@@ -254,8 +268,9 @@ static int create_dictionary(const char *mapping_file, long int expires) {
 
   // Set default mime type
   ext = wr_malloc(static_file_t);
-  strcpy(ext->ext, "");
+  strcpy(ext->ext, "txt");
   strcpy(ext->mime_type, "text/plain");
+  ext->expires = expires;
   ext->next = NULL;
   map[MAP_SIZE] = ext;
 
@@ -291,7 +306,7 @@ void http_resp_200(http_t *h, const char *path, struct stat *buf) {
   
   t = get_time(current_date, WR_STR_LEN);
   time_to_httpdate(buf->st_mtime, modify_date, WR_STR_LEN);
-  
+
   if (ext->expires > 0) {
     t += ext->expires;
     time_to_httpdate(t, expire_date, WR_STR_LEN);

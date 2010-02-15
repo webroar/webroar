@@ -1,3 +1,4 @@
+# File extension entry should be in lower case.
 eps: application/postscript
 mpg: video/mpeg
 ppt: application/vnd.ms-powerpoint
