@@ -245,6 +245,8 @@ class GraphController < ApplicationController
     if max < 10 
       labels = ['0','1','2','3','4','5','6','7','8','9']
     else
+      # TODO find some way to prevent empty label creation, max could be 1,000,000 and gives unnecessary overhead to server and client
+      # http://teethgrinder.co.uk/open-flash-chart-2/x-axis-labels-step.php 
       0.upto(max) do |i|
         if i % slab == 0
           labels << i.to_s
@@ -252,6 +254,7 @@ class GraphController < ApplicationController
           labels << ''
         end
       end
+      x_labels.steps = slab
     end
     x_labels.labels = labels
     x = OFC2::XAxis.new
