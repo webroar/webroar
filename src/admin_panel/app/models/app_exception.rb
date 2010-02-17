@@ -21,40 +21,33 @@
 #Model class for App Exceptions. This model helps to show the details of the exceptions tracked by the server.
 class AppException < ActiveRecord::Base
   class << self
-    #Gives the array of the five open exceptions starting from the value of varriable 'start' for an application.
-    def get_open_exceptions(app_id, start = 0)
-      exceptions = find(:all, :select => '*, count(*) as count', :conditions => ['app_id = ?  and exception_status = ?', app_id, OPEN_EXCEPTION], :group => 'exception_message', :limit => "#{start}, 5", :order => 'wall_time desc')
-      return exceptions
+    #Gives the array of the five (open|closed|ignored) exceptions starting from the value of varriable 'start' for an application.
+    def get_all(exception_status, app_id, start = 0)
+      all(:select => 'id, exception_message, exception_class, controller, method, wall_time, count(*) as count', :conditions => ['app_id = ?  and exception_status = ?', app_id, exception_status], :group => 'exception_message', :limit => "#{start}, 5", :order => 'wall_time desc')
     end
     
-    #Gives the array of the all open exceptions for an application.
-    def get_all_open_exceptions(app_id)
-      exceptions = find(:all, :select => '*, count(*) as count', :conditions => ['app_id = ?  and exception_status = ?', app_id, OPEN_EXCEPTION], :group => 'exception_message', :order => 'wall_time desc')
-      return exceptions
+    # Take App.id as argument and returns count of distinct open exceptions for an Application
+    def count_open(app_id)
+      count(:exception_message, :conditions => {:app_id => app_id, :exception_status => OPEN_EXCEPTION}, :distinct => true)
     end
     
-    #Gives the array of the all closed exceptions for an application.
-    def get_all_closed_exceptions(app_id)
-      exceptions = find(:all, :select => '*, count(*) as count', :conditions => ['app_id = ?  and exception_status = ?', app_id, CLOSED_EXCEPTION], :group => 'exception_message', :order => 'wall_time desc')
-      return exceptions
+    # Take App.id as argument and returns count of distinct closed exceptions for an Application
+    def count_closed(app_id)
+      count(:exception_message, :conditions => {:app_id => app_id, :exception_status => CLOSED_EXCEPTION}, :distinct => true)
     end
     
-    #Gives the array of the closed exceptions starting from the value of varriable 'start' for an application.
-    def get_closed_exceptions(app_id, start = 0)
-      exceptions = find(:all, :select => '*, count(*) as count', :conditions => ['app_id = ?  and exception_status = ?', app_id, CLOSED_EXCEPTION], :group => 'exception_message', :limit => "#{start}, 5", :order => 'wall_time desc')
-      return exceptions
+    # Take App.id as argument and returns count of distinct ignored exceptions for an Application
+    def count_ignored(app_id)
+      count(:exception_message, :conditions => {:app_id => app_id, :exception_status => IGNORED_EXCEPTION}, :distinct => true)
     end
-    
-    #Gives the array of the ignored exceptions starting from the value of varriable 'start' for an application.
-    def get_ignored_exceptions(app_id, start = 0)
-      exceptions = find(:all, :select => '*, count(*) as count', :conditions => ['app_id = ?  and exception_status = ?', app_id, IGNORED_EXCEPTION], :group => 'exception_message' , :limit => "#{start},5" , :order => 'wall_time desc')
-      return exceptions
-    end
-    
-    #Gives the array of the all ignored exceptions for an application.
-    def get_all_ignored_exceptions(app_id)
-      exceptions = find(:all, :select => '*, count(*) as count', :conditions => ['app_id = ?  and exception_status = ?', app_id, IGNORED_EXCEPTION], :group => 'exception_message', :order => 'wall_time desc')
-      return exceptions
+
+    # Update all exceptions status for a matching application and exception message  
+    def update_status_to(status, app_name, exception_message)
+      if app = App.first(:select => 'id', :conditions => {:name => app_name})
+        app_id = app.id
+        exceptions_id_array = all(:select =>'id', :conditions => ["exception_message = ? and app_id  = ?", exception_message, app_id]).collect { |e| e.id } 
+        update_all(["exception_status = ?",status], ["id in (#{exceptions_id_array.join(',')})"])
+      end
     end
     
     #Gives the details of the exception with some specific id.

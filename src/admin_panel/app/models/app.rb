@@ -28,6 +28,15 @@ class App < ActiveRecord::Base
       app = find(:first, :conditions => ['name = ?', name])
       return app
     end
+    
+    # Take Application Name as argument and returns count of distinct open exceptions
+    def exceptions_count(name)
+      if app = get_application_data(name)
+        AppException.count_open(app.id)
+      else
+        0
+      end
+    end    
   end
   
     # Start the application

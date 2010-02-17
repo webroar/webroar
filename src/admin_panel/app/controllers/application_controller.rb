@@ -23,7 +23,6 @@
 require 'digest/md5'
 class ApplicationController < ActionController::Base
   helper :all # include all helpers, all the time
-  helper_method :get_exceptions
   filter_parameter_logging :password #This is to protect the password logging in the log files.
   # See ActionController::RequestForgeryProtection for details
   # Uncomment the :secret if you're not using the cookie session store
@@ -126,12 +125,5 @@ private
       end	
     end
     return apps
-  end
-  
-  #Lists the open exceptions for a specific application.
-  def get_exceptions(app_name)     
-    app = App.get_application_data(app_name)      
-    return AppException.get_all_open_exceptions(app.id) if app
-    return []
   end
 end

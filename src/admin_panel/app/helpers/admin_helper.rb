@@ -78,7 +78,7 @@ module AdminHelper
           bg_class = "BG_white"
           index = 1
         end
-        exception_count = get_exceptions(application[:name]).size || 0
+        exception_count = App.exceptions_count(application[:name])
         if exception_count > 0 
           link_text = "Yes (#{exception_count})"
           exception_td_data = "<span id='#{application[:name]}_exception' class='exception_link'>#{link_to link_text, :controller => 'exceptions', :action => 'get_exceptions_list', :application_name => application[:name]}</span>"

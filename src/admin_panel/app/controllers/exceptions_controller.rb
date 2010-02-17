@@ -37,9 +37,9 @@ class ExceptionsController < ApplicationController
     end  
     @application_name = app
     app_id = App.get_application_data(app).id rescue nil
-    @start = 0
-    @size = AppException.get_all_open_exceptions(app_id).size
-    @exceptions = AppException.get_open_exceptions(app_id, @start)
+    @start = 0    
+    @size = AppException.count_open(app_id)
+    @exceptions = AppException.get_all(OPEN_EXCEPTION, app_id, @start)
   end  
   
   #This method is to display the information of the specific exception.
@@ -56,14 +56,14 @@ class ExceptionsController < ApplicationController
     session[:exceptions_application_name] = @application_name
     app_id = App.get_application_data(@application_name).id
     @start = 0
-    @size = AppException.get_all_open_exceptions(app_id).size
-    @exceptions = AppException.get_open_exceptions(app_id)
+    @size = AppException.count_open(app_id)
+    @exceptions = AppException.get_all(OPEN_EXCEPTION, app_id)
     render :partial => 'exceptions_listing_partial'
   end
   
   #This methos is used to put the exception count on the home tab of the admin panel.
   def get_exception
-    exceptions_count = get_exceptions(params[:app_name]).size  
+    exceptions_count = App.exceptions_count(params[:app_name])  
     if  exceptions_count > 0
       link_text = "Yes (#{exceptions_count})"
       exception_span_data = link_text
@@ -94,8 +94,8 @@ class ExceptionsController < ApplicationController
   def opened_exceptions(app_name)
     app_id = App.get_application_data(app_name).id
     @application_name = app_name
-    @size = AppException.get_all_open_exceptions(app_id).size
-    @exceptions = AppException.get_open_exceptions(app_id, 0)
+    @size = AppException.count_open(app_id)
+    @exceptions = AppException.get_all(OPEN_EXCEPTION, app_id, 0)
     render :partial => 'exception_list_partial', :locals => {:start => 0}
   end
   
@@ -103,8 +103,8 @@ class ExceptionsController < ApplicationController
   def closed_exceptions(app_name)
     app_id = App.get_application_data(app_name).id
     @application_name = app_name
-    @size = AppException.get_all_closed_exceptions(app_id).size
-    @exceptions = AppException.get_closed_exceptions(app_id, 0)
+    @size = AppException.count_closed(app_id)
+    @exceptions = AppException.get_all(CLOSED_EXCEPTION, app_id, 0)
     render :partial => 'close_exception_list_partial', :locals => {:start => 0}
   end
   
@@ -112,38 +112,26 @@ class ExceptionsController < ApplicationController
   def ignored_exceptions(app_name)
     app_id = App.get_application_data(app_name).id
     @application_name = app_name
-    @size = AppException.get_all_ignored_exceptions(app_id).size
-    @exceptions = AppException.get_ignored_exceptions(app_id)
+    @size = AppException.count_ignored(app_id)
+    @exceptions = AppException.get_all(IGNORED_EXCEPTION, app_id)
     render :partial => 'ignored_exception_list_partial', :locals => {:start => 0}
   end
   
   #Method is used to set the status for an exception as closed.
   def close_exception
-    app_id = App.get_application_data(params[:app_name]).id
-    exceptions = AppException.get_exception_details_by_exception_message(params[:exception_name], app_id)
-    exceptions.each do |exception|
-      exception.update_attribute(:exception_status, 0)
-    end
+    AppException.update_status_to(CLOSED_EXCEPTION, params[:app_name], params[:exception_name])    
     redirect_to :action => 'index'
   end
   
   #Method is used to set the status for an exception as ignored.
   def ignore_exception
-    app_id = App.get_application_data(params[:app_name]).id
-    exceptions = AppException.get_exception_details_by_exception_message(params[:exception_name], app_id)
-    exceptions.each do |exception|
-      exception.update_attribute(:exception_status, 2)
-    end
+    AppException.update_status_to(IGNORED_EXCEPTION, params[:app_name], params[:exception_name])    
     redirect_to :action => 'index'
   end
   
   #Method is used to set the status for an exception as reopened.  
   def reopen_exception
-    app_id = App.get_application_data(params[:app_name]).id
-    exceptions = AppException.get_exception_details_by_exception_message(params[:exception_name], app_id)
-    exceptions.each do |exception|
-      exception.update_attribute(:exception_status, 1)
-    end
+    AppException.update_status_to(OPEN_EXCEPTION, params[:app_name], params[:exception_name])    
     redirect_to :action => 'index'
   end
   
@@ -152,8 +140,8 @@ class ExceptionsController < ApplicationController
     app_id = App.get_application_data(params[:app_name]).id
     @application_name = params[:app_name]
     @start = params[:start].to_i
-    @size = AppException.get_all_open_exceptions(app_id).size
-    @exceptions = AppException.get_open_exceptions(app_id, @start)
+    @size = AppException.count_open(app_id)
+    @exceptions = AppException.get_all(OPEN_EXCEPTION, app_id, @start)
     render :partial => 'exception_list_partial', :locals => {:start => @start}
   end
   
@@ -162,8 +150,8 @@ class ExceptionsController < ApplicationController
     app_id = App.get_application_data(params[:app_name]).id
     @application_name = params[:app_name]
     @start = params[:start].to_i
-    @size = AppException.get_all_closed_exceptions(app_id).size
-    @exceptions = AppException.get_closed_exceptions(app_id, @start)
+    @size = AppException.count_closed(app_id)
+    @exceptions = AppException.get_all(CLOSED_EXCEPTION, app_id, @start)
     render :partial => 'close_exception_list_partial', :locals => {:start => @start}
   end
   
@@ -172,8 +160,8 @@ class ExceptionsController < ApplicationController
     app_id = App.get_application_data(params[:app_name]).id
     @application_name = params[:app_name]
     @start = params[:start].to_i
-    @size = AppException.get_all_ignored_exceptions(app_id).size
-    @exceptions = AppException.get_ignored_exceptions(app_id, @start)
+    @size = AppException.count_ignored(app_id)
+    @exceptions = AppException.get_all(IGNORED_EXCEPTION, app_id, @start)
     render :partial => 'ignored_exception_list_partial', :locals => {:start => @start}
   end
 end
