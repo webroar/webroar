@@ -95,21 +95,21 @@ feature.
       <h3 class="section-bar">Methods</h3>
 
       <div class="name-list">
-      <a href="#M000061">close_exception</a>&nbsp;&nbsp;
-      <a href="#M000059">closed_exceptions</a>&nbsp;&nbsp;
-      <a href="#M000055">get_exception</a>&nbsp;&nbsp;
-      <a href="#M000056">get_exceptions_list</a>&nbsp;&nbsp;
-      <a href="#M000062">ignore_exception</a>&nbsp;&nbsp;
-      <a href="#M000060">ignored_exceptions</a>&nbsp;&nbsp;
-      <a href="#M000052">index</a>&nbsp;&nbsp;
-      <a href="#M000054">list</a>&nbsp;&nbsp;
-      <a href="#M000057">list_statuswise_exceptions</a>&nbsp;&nbsp;
-      <a href="#M000058">opened_exceptions</a>&nbsp;&nbsp;
-      <a href="#M000063">reopen_exception</a>&nbsp;&nbsp;
-      <a href="#M000065">required_closed_exceptions</a>&nbsp;&nbsp;
-      <a href="#M000066">required_ignored_exceptions</a>&nbsp;&nbsp;
-      <a href="#M000064">required_open_exceptions</a>&nbsp;&nbsp;
-      <a href="#M000053">show</a>&nbsp;&nbsp;
+      <a href="#M000072">close_exception</a>&nbsp;&nbsp;
+      <a href="#M000070">closed_exceptions</a>&nbsp;&nbsp;
+      <a href="#M000066">get_exception</a>&nbsp;&nbsp;
+      <a href="#M000067">get_exceptions_list</a>&nbsp;&nbsp;
+      <a href="#M000073">ignore_exception</a>&nbsp;&nbsp;
+      <a href="#M000071">ignored_exceptions</a>&nbsp;&nbsp;
+      <a href="#M000063">index</a>&nbsp;&nbsp;
+      <a href="#M000065">list</a>&nbsp;&nbsp;
+      <a href="#M000068">list_statuswise_exceptions</a>&nbsp;&nbsp;
+      <a href="#M000069">opened_exceptions</a>&nbsp;&nbsp;
+      <a href="#M000074">reopen_exception</a>&nbsp;&nbsp;
+      <a href="#M000076">required_closed_exceptions</a>&nbsp;&nbsp;
+      <a href="#M000077">required_ignored_exceptions</a>&nbsp;&nbsp;
+      <a href="#M000075">required_open_exceptions</a>&nbsp;&nbsp;
+      <a href="#M000064">show</a>&nbsp;&nbsp;
       </div>
     </div>
 
@@ -131,11 +131,11 @@ feature.
     <div id="methods">
       <h3 class="section-bar">Public Instance methods</h3>
 
-      <div id="method-M000061" class="method-detail">
-        <a name="M000061"></a>
+      <div id="method-M000072" class="method-detail">
+        <a name="M000072"></a>
 
         <div class="method-heading">
-          <a href="#M000061" class="method-signature">
+          <a href="#M000072" class="method-signature">
           <span class="method-name">close_exception</span><span class="method-args">()</span>
           </a>
         </div>
@@ -145,47 +145,43 @@ feature.
 Method is used to set the status for an exception as closed.
 </p>
           <p><a class="source-toggle" href="#"
-            onclick="toggleCode('M000061-source');return false;">[Source]</a></p>
-          <div class="method-source-code" id="M000061-source">
+            onclick="toggleCode('M000072-source');return false;">[Source]</a></p>
+          <div class="method-source-code" id="M000072-source">
 <pre>
      <span class="ruby-comment cmt"># File app/controllers/exceptions_controller.rb, line 121</span>
 121:   <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">close_exception</span>
-122:     <span class="ruby-identifier">app_id</span> = <span class="ruby-constant">App</span>.<span class="ruby-identifier">get_application_data</span>(<span class="ruby-identifier">params</span>[<span class="ruby-identifier">:app_name</span>]).<span class="ruby-identifier">id</span>
-123:     <span class="ruby-identifier">exceptions</span> = <span class="ruby-constant">AppException</span>.<span class="ruby-identifier">get_exception_details_by_exception_message</span>(<span class="ruby-identifier">params</span>[<span class="ruby-identifier">:exception_name</span>], <span class="ruby-identifier">app_id</span>)
-124:     <span class="ruby-identifier">exceptions</span>.<span class="ruby-identifier">each</span> <span class="ruby-keyword kw">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">exception</span><span class="ruby-operator">|</span>
-125:       <span class="ruby-identifier">exception</span>.<span class="ruby-identifier">update_attribute</span>(<span class="ruby-identifier">:exception_status</span>, <span class="ruby-value">0</span>)
-126:     <span class="ruby-keyword kw">end</span>
-127:     <span class="ruby-identifier">redirect_to</span> <span class="ruby-identifier">:action</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-value str">'index'</span>
-128:   <span class="ruby-keyword kw">end</span>
+122:     <span class="ruby-constant">AppException</span>.<span class="ruby-identifier">update_status_to</span>(<span class="ruby-constant">CLOSED_EXCEPTION</span>, <span class="ruby-identifier">params</span>[<span class="ruby-identifier">:app_name</span>], <span class="ruby-identifier">params</span>[<span class="ruby-identifier">:exception_name</span>])    
+123:     <span class="ruby-identifier">redirect_to</span> <span class="ruby-identifier">:action</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-value str">'index'</span>
+124:   <span class="ruby-keyword kw">end</span>
 </pre>
           </div>
         </div>
       </div>
 
-      <div id="method-M000059" class="method-detail">
-        <a name="M000059"></a>
+      <div id="method-M000070" class="method-detail">
+        <a name="M000070"></a>
 
         <div class="method-heading">
-          <a href="#M000059" class="method-signature">
+          <a href="#M000070" class="method-signature">
           <span class="method-name">closed_exceptions</span><span class="method-args">(app_name)</span>
           </a>
         </div>
       
         <div class="method-description">
           <p>
-Method is used to <a href="ExceptionsController.html#M000054">list</a> all
+Method is used to <a href="ExceptionsController.html#M000065">list</a> all
 closed exceptions for an application.
 </p>
           <p><a class="source-toggle" href="#"
-            onclick="toggleCode('M000059-source');return false;">[Source]</a></p>
-          <div class="method-source-code" id="M000059-source">
+            onclick="toggleCode('M000070-source');return false;">[Source]</a></p>
+          <div class="method-source-code" id="M000070-source">
 <pre>
      <span class="ruby-comment cmt"># File app/controllers/exceptions_controller.rb, line 103</span>
 103:   <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">closed_exceptions</span>(<span class="ruby-identifier">app_name</span>)
 104:     <span class="ruby-identifier">app_id</span> = <span class="ruby-constant">App</span>.<span class="ruby-identifier">get_application_data</span>(<span class="ruby-identifier">app_name</span>).<span class="ruby-identifier">id</span>
 105:     <span class="ruby-ivar">@application_name</span> = <span class="ruby-identifier">app_name</span>
-106:     <span class="ruby-ivar">@size</span> = <span class="ruby-constant">AppException</span>.<span class="ruby-identifier">get_all_closed_exceptions</span>(<span class="ruby-identifier">app_id</span>).<span class="ruby-identifier">size</span>
-107:     <span class="ruby-ivar">@exceptions</span> = <span class="ruby-constant">AppException</span>.<span class="ruby-identifier">get_closed_exceptions</span>(<span class="ruby-identifier">app_id</span>,<span class="ruby-value">0</span>)
+106:     <span class="ruby-ivar">@size</span> = <span class="ruby-constant">AppException</span>.<span class="ruby-identifier">count_closed</span>(<span class="ruby-identifier">app_id</span>)
+107:     <span class="ruby-ivar">@exceptions</span> = <span class="ruby-constant">AppException</span>.<span class="ruby-identifier">get_all</span>(<span class="ruby-constant">CLOSED_EXCEPTION</span>, <span class="ruby-identifier">app_id</span>, <span class="ruby-value">0</span>)
 108:     <span class="ruby-identifier">render</span> <span class="ruby-identifier">:partial</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-value str">'close_exception_list_partial'</span>, <span class="ruby-identifier">:locals</span> =<span class="ruby-operator">&gt;</span> {<span class="ruby-identifier">:start</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-value">0</span>}
 109:   <span class="ruby-keyword kw">end</span>
 </pre>
@@ -193,11 +189,11 @@ closed exceptions for an application.
         </div>
       </div>
 
-      <div id="method-M000055" class="method-detail">
-        <a name="M000055"></a>
+      <div id="method-M000066" class="method-detail">
+        <a name="M000066"></a>
 
         <div class="method-heading">
-          <a href="#M000055" class="method-signature">
+          <a href="#M000066" class="method-signature">
           <span class="method-name">get_exception</span><span class="method-args">()</span>
           </a>
         </div>
@@ -208,30 +204,30 @@ This methos is used to put the exception count on the home tab of the admin
 panel.
 </p>
           <p><a class="source-toggle" href="#"
-            onclick="toggleCode('M000055-source');return false;">[Source]</a></p>
-          <div class="method-source-code" id="M000055-source">
+            onclick="toggleCode('M000066-source');return false;">[Source]</a></p>
+          <div class="method-source-code" id="M000066-source">
 <pre>
     <span class="ruby-comment cmt"># File app/controllers/exceptions_controller.rb, line 65</span>
 65:   <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">get_exception</span>
-66:     <span class="ruby-identifier">exceptions_count</span> = <span class="ruby-identifier">get_exceptions</span>(<span class="ruby-identifier">params</span>[<span class="ruby-identifier">:app_name</span>]).<span class="ruby-identifier">size</span>  
+66:     <span class="ruby-identifier">exceptions_count</span> = <span class="ruby-constant">App</span>.<span class="ruby-identifier">exceptions_count</span>(<span class="ruby-identifier">params</span>[<span class="ruby-identifier">:app_name</span>])  
 67:     <span class="ruby-keyword kw">if</span>  <span class="ruby-identifier">exceptions_count</span> <span class="ruby-operator">&gt;</span> <span class="ruby-value">0</span>
 68:       <span class="ruby-identifier">link_text</span> = <span class="ruby-node">&quot;Yes (#{exceptions_count})&quot;</span>
 69:       <span class="ruby-identifier">exception_span_data</span> = <span class="ruby-identifier">link_text</span>
 70:     <span class="ruby-keyword kw">else</span>
 71:       <span class="ruby-identifier">exception_span_data</span> = <span class="ruby-value str">&quot;No&quot;</span>
 72:     <span class="ruby-keyword kw">end</span>
-73:     <span class="ruby-identifier">render</span> <span class="ruby-identifier">:partial</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-value str">'link_partial'</span>,<span class="ruby-identifier">:locals</span> =<span class="ruby-operator">&gt;</span> {<span class="ruby-identifier">:data</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">exception_span_data</span>}
+73:     <span class="ruby-identifier">render</span> <span class="ruby-identifier">:partial</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-value str">'link_partial'</span>, <span class="ruby-identifier">:locals</span> =<span class="ruby-operator">&gt;</span> {<span class="ruby-identifier">:data</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">exception_span_data</span>}
 74:   <span class="ruby-keyword kw">end</span>
 </pre>
           </div>
         </div>
       </div>
 
-      <div id="method-M000056" class="method-detail">
-        <a name="M000056"></a>
+      <div id="method-M000067" class="method-detail">
+        <a name="M000067"></a>
 
         <div class="method-heading">
-          <a href="#M000056" class="method-signature">
+          <a href="#M000067" class="method-signature">
           <span class="method-name">get_exceptions_list</span><span class="method-args">()</span>
           </a>
         </div>
@@ -239,11 +235,11 @@ panel.
         <div class="method-description">
           <p>
 Method sets the application name in the in the session and redirect it to
-the method <a href="ExceptionsController.html#M000052">index</a>.
+the method <a href="ExceptionsController.html#M000063">index</a>.
 </p>
           <p><a class="source-toggle" href="#"
-            onclick="toggleCode('M000056-source');return false;">[Source]</a></p>
-          <div class="method-source-code" id="M000056-source">
+            onclick="toggleCode('M000067-source');return false;">[Source]</a></p>
+          <div class="method-source-code" id="M000067-source">
 <pre>
     <span class="ruby-comment cmt"># File app/controllers/exceptions_controller.rb, line 77</span>
 77:   <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">get_exceptions_list</span>
@@ -255,11 +251,11 @@ the method <a href="ExceptionsController.html#M000052">index</a>.
         </div>
       </div>
 
-      <div id="method-M000062" class="method-detail">
-        <a name="M000062"></a>
+      <div id="method-M000073" class="method-detail">
+        <a name="M000073"></a>
 
         <div class="method-heading">
-          <a href="#M000062" class="method-signature">
+          <a href="#M000073" class="method-signature">
           <span class="method-name">ignore_exception</span><span class="method-args">()</span>
           </a>
         </div>
@@ -269,47 +265,43 @@ the method <a href="ExceptionsController.html#M000052">index</a>.
 Method is used to set the status for an exception as ignored.
 </p>
           <p><a class="source-toggle" href="#"
-            onclick="toggleCode('M000062-source');return false;">[Source]</a></p>
-          <div class="method-source-code" id="M000062-source">
+            onclick="toggleCode('M000073-source');return false;">[Source]</a></p>
+          <div class="method-source-code" id="M000073-source">
 <pre>
-     <span class="ruby-comment cmt"># File app/controllers/exceptions_controller.rb, line 131</span>
-131:   <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">ignore_exception</span>
-132:     <span class="ruby-identifier">app_id</span> = <span class="ruby-constant">App</span>.<span class="ruby-identifier">get_application_data</span>(<span class="ruby-identifier">params</span>[<span class="ruby-identifier">:app_name</span>]).<span class="ruby-identifier">id</span>
-133:     <span class="ruby-identifier">exceptions</span> = <span class="ruby-constant">AppException</span>.<span class="ruby-identifier">get_exception_details_by_exception_message</span>(<span class="ruby-identifier">params</span>[<span class="ruby-identifier">:exception_name</span>], <span class="ruby-identifier">app_id</span>)
-134:     <span class="ruby-identifier">exceptions</span>.<span class="ruby-identifier">each</span> <span class="ruby-keyword kw">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">exception</span><span class="ruby-operator">|</span>
-135:       <span class="ruby-identifier">exception</span>.<span class="ruby-identifier">update_attribute</span>(<span class="ruby-identifier">:exception_status</span>,<span class="ruby-value">2</span>)
-136:     <span class="ruby-keyword kw">end</span>
-137:     <span class="ruby-identifier">redirect_to</span> <span class="ruby-identifier">:action</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-value str">'index'</span>
-138:   <span class="ruby-keyword kw">end</span>
+     <span class="ruby-comment cmt"># File app/controllers/exceptions_controller.rb, line 127</span>
+127:   <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">ignore_exception</span>
+128:     <span class="ruby-constant">AppException</span>.<span class="ruby-identifier">update_status_to</span>(<span class="ruby-constant">IGNORED_EXCEPTION</span>, <span class="ruby-identifier">params</span>[<span class="ruby-identifier">:app_name</span>], <span class="ruby-identifier">params</span>[<span class="ruby-identifier">:exception_name</span>])    
+129:     <span class="ruby-identifier">redirect_to</span> <span class="ruby-identifier">:action</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-value str">'index'</span>
+130:   <span class="ruby-keyword kw">end</span>
 </pre>
           </div>
         </div>
       </div>
 
-      <div id="method-M000060" class="method-detail">
-        <a name="M000060"></a>
+      <div id="method-M000071" class="method-detail">
+        <a name="M000071"></a>
 
         <div class="method-heading">
-          <a href="#M000060" class="method-signature">
+          <a href="#M000071" class="method-signature">
           <span class="method-name">ignored_exceptions</span><span class="method-args">(app_name)</span>
           </a>
         </div>
       
         <div class="method-description">
           <p>
-Method is used to <a href="ExceptionsController.html#M000054">list</a> all
+Method is used to <a href="ExceptionsController.html#M000065">list</a> all
 ignored exceptions for an application.
 </p>
           <p><a class="source-toggle" href="#"
-            onclick="toggleCode('M000060-source');return false;">[Source]</a></p>
-          <div class="method-source-code" id="M000060-source">
+            onclick="toggleCode('M000071-source');return false;">[Source]</a></p>
+          <div class="method-source-code" id="M000071-source">
 <pre>
      <span class="ruby-comment cmt"># File app/controllers/exceptions_controller.rb, line 112</span>
 112:   <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">ignored_exceptions</span>(<span class="ruby-identifier">app_name</span>)
 113:     <span class="ruby-identifier">app_id</span> = <span class="ruby-constant">App</span>.<span class="ruby-identifier">get_application_data</span>(<span class="ruby-identifier">app_name</span>).<span class="ruby-identifier">id</span>
 114:     <span class="ruby-ivar">@application_name</span> = <span class="ruby-identifier">app_name</span>
-115:     <span class="ruby-ivar">@size</span> = <span class="ruby-constant">AppException</span>.<span class="ruby-identifier">get_all_ignored_exceptions</span>(<span class="ruby-identifier">app_id</span>).<span class="ruby-identifier">size</span>
-116:     <span class="ruby-ivar">@exceptions</span> = <span class="ruby-constant">AppException</span>.<span class="ruby-identifier">get_ignored_exceptions</span>(<span class="ruby-identifier">app_id</span>)
+115:     <span class="ruby-ivar">@size</span> = <span class="ruby-constant">AppException</span>.<span class="ruby-identifier">count_ignored</span>(<span class="ruby-identifier">app_id</span>)
+116:     <span class="ruby-ivar">@exceptions</span> = <span class="ruby-constant">AppException</span>.<span class="ruby-identifier">get_all</span>(<span class="ruby-constant">IGNORED_EXCEPTION</span>, <span class="ruby-identifier">app_id</span>)
 117:     <span class="ruby-identifier">render</span> <span class="ruby-identifier">:partial</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-value str">'ignored_exception_list_partial'</span>, <span class="ruby-identifier">:locals</span> =<span class="ruby-operator">&gt;</span> {<span class="ruby-identifier">:start</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-value">0</span>}
 118:   <span class="ruby-keyword kw">end</span>
 </pre>
@@ -317,11 +309,11 @@ ignored exceptions for an application.
         </div>
       </div>
 
-      <div id="method-M000052" class="method-detail">
-        <a name="M000052"></a>
+      <div id="method-M000063" class="method-detail">
+        <a name="M000063"></a>
 
         <div class="method-heading">
-          <a href="#M000052" class="method-signature">
+          <a href="#M000063" class="method-signature">
           <span class="method-name">index</span><span class="method-args">()</span>
           </a>
         </div>
@@ -329,13 +321,13 @@ ignored exceptions for an application.
         <div class="method-description">
           <p>
 the method is to render the <a
-href="ExceptionsController.html#M000052">index</a> page of exception tab.
+href="ExceptionsController.html#M000063">index</a> page of exception tab.
 on this page the exception of the first application in the application
 array is deiplayed.
 </p>
           <p><a class="source-toggle" href="#"
-            onclick="toggleCode('M000052-source');return false;">[Source]</a></p>
-          <div class="method-source-code" id="M000052-source">
+            onclick="toggleCode('M000063-source');return false;">[Source]</a></p>
+          <div class="method-source-code" id="M000063-source">
 <pre>
     <span class="ruby-comment cmt"># File app/controllers/exceptions_controller.rb, line 29</span>
 29:   <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">index</span>
@@ -348,21 +340,21 @@ array is deiplayed.
 36:       <span class="ruby-identifier">app</span> = <span class="ruby-identifier">session</span>[<span class="ruby-identifier">:exceptions_application_name</span>]
 37:     <span class="ruby-keyword kw">end</span>  
 38:     <span class="ruby-ivar">@application_name</span> = <span class="ruby-identifier">app</span>
-39:     <span class="ruby-identifier">app_id</span> = <span class="ruby-constant">App</span>.<span class="ruby-identifier">get_application_data</span>(<span class="ruby-identifier">app</span>).<span class="ruby-identifier">id</span>
-40:     <span class="ruby-ivar">@start</span> = <span class="ruby-value">0</span>
-41:     <span class="ruby-ivar">@size</span> = <span class="ruby-constant">AppException</span>.<span class="ruby-identifier">get_all_open_exceptions</span>(<span class="ruby-identifier">app_id</span>).<span class="ruby-identifier">size</span>
-42:     <span class="ruby-ivar">@exceptions</span> = <span class="ruby-constant">AppException</span>.<span class="ruby-identifier">get_open_exceptions</span>(<span class="ruby-identifier">app_id</span>, <span class="ruby-ivar">@start</span>)
+39:     <span class="ruby-identifier">app_id</span> = <span class="ruby-constant">App</span>.<span class="ruby-identifier">get_application_data</span>(<span class="ruby-identifier">app</span>).<span class="ruby-identifier">id</span> <span class="ruby-keyword kw">rescue</span> <span class="ruby-keyword kw">nil</span>
+40:     <span class="ruby-ivar">@start</span> = <span class="ruby-value">0</span>    
+41:     <span class="ruby-ivar">@size</span> = <span class="ruby-constant">AppException</span>.<span class="ruby-identifier">count_open</span>(<span class="ruby-identifier">app_id</span>)
+42:     <span class="ruby-ivar">@exceptions</span> = <span class="ruby-constant">AppException</span>.<span class="ruby-identifier">get_all</span>(<span class="ruby-constant">OPEN_EXCEPTION</span>, <span class="ruby-identifier">app_id</span>, <span class="ruby-ivar">@start</span>)
 43:   <span class="ruby-keyword kw">end</span>
 </pre>
           </div>
         </div>
       </div>
 
-      <div id="method-M000054" class="method-detail">
-        <a name="M000054"></a>
+      <div id="method-M000065" class="method-detail">
+        <a name="M000065"></a>
 
         <div class="method-heading">
-          <a href="#M000054" class="method-signature">
+          <a href="#M000065" class="method-signature">
           <span class="method-name">list</span><span class="method-args">()</span>
           </a>
         </div>
@@ -370,12 +362,12 @@ array is deiplayed.
         <div class="method-description">
           <p>
 This method is to display the <a
-href="ExceptionsController.html#M000054">list</a> of exceptions as
+href="ExceptionsController.html#M000065">list</a> of exceptions as
 selection made from select box.
 </p>
           <p><a class="source-toggle" href="#"
-            onclick="toggleCode('M000054-source');return false;">[Source]</a></p>
-          <div class="method-source-code" id="M000054-source">
+            onclick="toggleCode('M000065-source');return false;">[Source]</a></p>
+          <div class="method-source-code" id="M000065-source">
 <pre>
     <span class="ruby-comment cmt"># File app/controllers/exceptions_controller.rb, line 54</span>
 54:   <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">list</span>
@@ -383,8 +375,8 @@ selection made from select box.
 56:     <span class="ruby-identifier">session</span>[<span class="ruby-identifier">:exceptions_application_name</span>] = <span class="ruby-ivar">@application_name</span>
 57:     <span class="ruby-identifier">app_id</span> = <span class="ruby-constant">App</span>.<span class="ruby-identifier">get_application_data</span>(<span class="ruby-ivar">@application_name</span>).<span class="ruby-identifier">id</span>
 58:     <span class="ruby-ivar">@start</span> = <span class="ruby-value">0</span>
-59:     <span class="ruby-ivar">@size</span> = <span class="ruby-constant">AppException</span>.<span class="ruby-identifier">get_all_open_exceptions</span>(<span class="ruby-identifier">app_id</span>).<span class="ruby-identifier">size</span>
-60:     <span class="ruby-ivar">@exceptions</span> = <span class="ruby-constant">AppException</span>.<span class="ruby-identifier">get_open_exceptions</span>(<span class="ruby-identifier">app_id</span>)
+59:     <span class="ruby-ivar">@size</span> = <span class="ruby-constant">AppException</span>.<span class="ruby-identifier">count_open</span>(<span class="ruby-identifier">app_id</span>)
+60:     <span class="ruby-ivar">@exceptions</span> = <span class="ruby-constant">AppException</span>.<span class="ruby-identifier">get_all</span>(<span class="ruby-constant">OPEN_EXCEPTION</span>, <span class="ruby-identifier">app_id</span>)
 61:     <span class="ruby-identifier">render</span> <span class="ruby-identifier">:partial</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-value str">'exceptions_listing_partial'</span>
 62:   <span class="ruby-keyword kw">end</span>
 </pre>
@@ -392,23 +384,23 @@ selection made from select box.
         </div>
       </div>
 
-      <div id="method-M000057" class="method-detail">
-        <a name="M000057"></a>
+      <div id="method-M000068" class="method-detail">
+        <a name="M000068"></a>
 
         <div class="method-heading">
-          <a href="#M000057" class="method-signature">
+          <a href="#M000068" class="method-signature">
           <span class="method-name">list_statuswise_exceptions</span><span class="method-args">()</span>
           </a>
         </div>
       
         <div class="method-description">
           <p>
-Method is used to <a href="ExceptionsController.html#M000054">list</a> the
+Method is used to <a href="ExceptionsController.html#M000065">list</a> the
 exceptions with different status.
 </p>
           <p><a class="source-toggle" href="#"
-            onclick="toggleCode('M000057-source');return false;">[Source]</a></p>
-          <div class="method-source-code" id="M000057-source">
+            onclick="toggleCode('M000068-source');return false;">[Source]</a></p>
+          <div class="method-source-code" id="M000068-source">
 <pre>
     <span class="ruby-comment cmt"># File app/controllers/exceptions_controller.rb, line 83</span>
 83:   <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">list_statuswise_exceptions</span>
@@ -425,30 +417,30 @@ exceptions with different status.
         </div>
       </div>
 
-      <div id="method-M000058" class="method-detail">
-        <a name="M000058"></a>
+      <div id="method-M000069" class="method-detail">
+        <a name="M000069"></a>
 
         <div class="method-heading">
-          <a href="#M000058" class="method-signature">
+          <a href="#M000069" class="method-signature">
           <span class="method-name">opened_exceptions</span><span class="method-args">(app_name)</span>
           </a>
         </div>
       
         <div class="method-description">
           <p>
-Method is used to <a href="ExceptionsController.html#M000054">list</a> all
+Method is used to <a href="ExceptionsController.html#M000065">list</a> all
 open exceptions for an application.
 </p>
           <p><a class="source-toggle" href="#"
-            onclick="toggleCode('M000058-source');return false;">[Source]</a></p>
-          <div class="method-source-code" id="M000058-source">
+            onclick="toggleCode('M000069-source');return false;">[Source]</a></p>
+          <div class="method-source-code" id="M000069-source">
 <pre>
      <span class="ruby-comment cmt"># File app/controllers/exceptions_controller.rb, line 94</span>
  94:   <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">opened_exceptions</span>(<span class="ruby-identifier">app_name</span>)
  95:     <span class="ruby-identifier">app_id</span> = <span class="ruby-constant">App</span>.<span class="ruby-identifier">get_application_data</span>(<span class="ruby-identifier">app_name</span>).<span class="ruby-identifier">id</span>
  96:     <span class="ruby-ivar">@application_name</span> = <span class="ruby-identifier">app_name</span>
- 97:     <span class="ruby-ivar">@size</span> = <span class="ruby-constant">AppException</span>.<span class="ruby-identifier">get_all_open_exceptions</span>(<span class="ruby-identifier">app_id</span>).<span class="ruby-identifier">size</span>
- 98:     <span class="ruby-ivar">@exceptions</span> = <span class="ruby-constant">AppException</span>.<span class="ruby-identifier">get_open_exceptions</span>(<span class="ruby-identifier">app_id</span>,<span class="ruby-value">0</span>)
+ 97:     <span class="ruby-ivar">@size</span> = <span class="ruby-constant">AppException</span>.<span class="ruby-identifier">count_open</span>(<span class="ruby-identifier">app_id</span>)
+ 98:     <span class="ruby-ivar">@exceptions</span> = <span class="ruby-constant">AppException</span>.<span class="ruby-identifier">get_all</span>(<span class="ruby-constant">OPEN_EXCEPTION</span>, <span class="ruby-identifier">app_id</span>, <span class="ruby-value">0</span>)
  99:     <span class="ruby-identifier">render</span> <span class="ruby-identifier">:partial</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-value str">'exception_list_partial'</span>, <span class="ruby-identifier">:locals</span> =<span class="ruby-operator">&gt;</span> {<span class="ruby-identifier">:start</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-value">0</span>}
 100:   <span class="ruby-keyword kw">end</span>
 </pre>
@@ -456,11 +448,11 @@ open exceptions for an application.
         </div>
       </div>
 
-      <div id="method-M000063" class="method-detail">
-        <a name="M000063"></a>
+      <div id="method-M000074" class="method-detail">
+        <a name="M000074"></a>
 
         <div class="method-heading">
-          <a href="#M000063" class="method-signature">
+          <a href="#M000074" class="method-signature">
           <span class="method-name">reopen_exception</span><span class="method-args">()</span>
           </a>
         </div>
@@ -470,28 +462,24 @@ open exceptions for an application.
 Method is used to set the status for an exception as reopened.
 </p>
           <p><a class="source-toggle" href="#"
-            onclick="toggleCode('M000063-source');return false;">[Source]</a></p>
-          <div class="method-source-code" id="M000063-source">
+            onclick="toggleCode('M000074-source');return false;">[Source]</a></p>
+          <div class="method-source-code" id="M000074-source">
 <pre>
-     <span class="ruby-comment cmt"># File app/controllers/exceptions_controller.rb, line 141</span>
-141:   <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">reopen_exception</span>
-142:     <span class="ruby-identifier">app_id</span> = <span class="ruby-constant">App</span>.<span class="ruby-identifier">get_application_data</span>(<span class="ruby-identifier">params</span>[<span class="ruby-identifier">:app_name</span>]).<span class="ruby-identifier">id</span>
-143:     <span class="ruby-identifier">exceptions</span> = <span class="ruby-constant">AppException</span>.<span class="ruby-identifier">get_exception_details_by_exception_message</span>(<span class="ruby-identifier">params</span>[<span class="ruby-identifier">:exception_name</span>], <span class="ruby-identifier">app_id</span>)
-144:     <span class="ruby-identifier">exceptions</span>.<span class="ruby-identifier">each</span> <span class="ruby-keyword kw">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">exception</span><span class="ruby-operator">|</span>
-145:       <span class="ruby-identifier">exception</span>.<span class="ruby-identifier">update_attribute</span>(<span class="ruby-identifier">:exception_status</span>,<span class="ruby-value">1</span>)
-146:     <span class="ruby-keyword kw">end</span>
-147:     <span class="ruby-identifier">redirect_to</span> <span class="ruby-identifier">:action</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-value str">'index'</span>
-148:   <span class="ruby-keyword kw">end</span>
+     <span class="ruby-comment cmt"># File app/controllers/exceptions_controller.rb, line 133</span>
+133:   <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">reopen_exception</span>
+134:     <span class="ruby-constant">AppException</span>.<span class="ruby-identifier">update_status_to</span>(<span class="ruby-constant">OPEN_EXCEPTION</span>, <span class="ruby-identifier">params</span>[<span class="ruby-identifier">:app_name</span>], <span class="ruby-identifier">params</span>[<span class="ruby-identifier">:exception_name</span>])    
+135:     <span class="ruby-identifier">redirect_to</span> <span class="ruby-identifier">:action</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-value str">'index'</span>
+136:   <span class="ruby-keyword kw">end</span>
 </pre>
           </div>
         </div>
       </div>
 
-      <div id="method-M000065" class="method-detail">
-        <a name="M000065"></a>
+      <div id="method-M000076" class="method-detail">
+        <a name="M000076"></a>
 
         <div class="method-heading">
-          <a href="#M000065" class="method-signature">
+          <a href="#M000076" class="method-signature">
           <span class="method-name">required_closed_exceptions</span><span class="method-args">()</span>
           </a>
         </div>
@@ -501,28 +489,28 @@ Method is used to set the status for an exception as reopened.
 Gives the array of five closed exceptions for pagination.
 </p>
           <p><a class="source-toggle" href="#"
-            onclick="toggleCode('M000065-source');return false;">[Source]</a></p>
-          <div class="method-source-code" id="M000065-source">
+            onclick="toggleCode('M000076-source');return false;">[Source]</a></p>
+          <div class="method-source-code" id="M000076-source">
 <pre>
-     <span class="ruby-comment cmt"># File app/controllers/exceptions_controller.rb, line 161</span>
-161:   <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">required_closed_exceptions</span>
-162:     <span class="ruby-identifier">app_id</span> = <span class="ruby-constant">App</span>.<span class="ruby-identifier">get_application_data</span>(<span class="ruby-identifier">params</span>[<span class="ruby-identifier">:app_name</span>]).<span class="ruby-identifier">id</span>
-163:     <span class="ruby-ivar">@application_name</span> = <span class="ruby-identifier">params</span>[<span class="ruby-identifier">:app_name</span>]
-164:     <span class="ruby-ivar">@start</span> = <span class="ruby-identifier">params</span>[<span class="ruby-identifier">:start</span>].<span class="ruby-identifier">to_i</span>
-165:     <span class="ruby-ivar">@size</span> = <span class="ruby-constant">AppException</span>.<span class="ruby-identifier">get_all_closed_exceptions</span>(<span class="ruby-identifier">app_id</span>).<span class="ruby-identifier">size</span>
-166:     <span class="ruby-ivar">@exceptions</span> = <span class="ruby-constant">AppException</span>.<span class="ruby-identifier">get_closed_exceptions</span>(<span class="ruby-identifier">app_id</span>,<span class="ruby-ivar">@start</span>)
-167:     <span class="ruby-identifier">render</span> <span class="ruby-identifier">:partial</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-value str">'close_exception_list_partial'</span>, <span class="ruby-identifier">:locals</span> =<span class="ruby-operator">&gt;</span> {<span class="ruby-identifier">:start</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-ivar">@start</span>}
-168:   <span class="ruby-keyword kw">end</span>
+     <span class="ruby-comment cmt"># File app/controllers/exceptions_controller.rb, line 149</span>
+149:   <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">required_closed_exceptions</span>
+150:     <span class="ruby-identifier">app_id</span> = <span class="ruby-constant">App</span>.<span class="ruby-identifier">get_application_data</span>(<span class="ruby-identifier">params</span>[<span class="ruby-identifier">:app_name</span>]).<span class="ruby-identifier">id</span>
+151:     <span class="ruby-ivar">@application_name</span> = <span class="ruby-identifier">params</span>[<span class="ruby-identifier">:app_name</span>]
+152:     <span class="ruby-ivar">@start</span> = <span class="ruby-identifier">params</span>[<span class="ruby-identifier">:start</span>].<span class="ruby-identifier">to_i</span>
+153:     <span class="ruby-ivar">@size</span> = <span class="ruby-constant">AppException</span>.<span class="ruby-identifier">count_closed</span>(<span class="ruby-identifier">app_id</span>)
+154:     <span class="ruby-ivar">@exceptions</span> = <span class="ruby-constant">AppException</span>.<span class="ruby-identifier">get_all</span>(<span class="ruby-constant">CLOSED_EXCEPTION</span>, <span class="ruby-identifier">app_id</span>, <span class="ruby-ivar">@start</span>)
+155:     <span class="ruby-identifier">render</span> <span class="ruby-identifier">:partial</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-value str">'close_exception_list_partial'</span>, <span class="ruby-identifier">:locals</span> =<span class="ruby-operator">&gt;</span> {<span class="ruby-identifier">:start</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-ivar">@start</span>}
+156:   <span class="ruby-keyword kw">end</span>
 </pre>
           </div>
         </div>
       </div>
 
-      <div id="method-M000066" class="method-detail">
-        <a name="M000066"></a>
+      <div id="method-M000077" class="method-detail">
+        <a name="M000077"></a>
 
         <div class="method-heading">
-          <a href="#M000066" class="method-signature">
+          <a href="#M000077" class="method-signature">
           <span class="method-name">required_ignored_exceptions</span><span class="method-args">()</span>
           </a>
         </div>
@@ -532,18 +520,49 @@ Gives the array of five closed exceptions for pagination.
 Gives the array of five ignored exceptions for pagination.
 </p>
           <p><a class="source-toggle" href="#"
-            onclick="toggleCode('M000066-source');return false;">[Source]</a></p>
-          <div class="method-source-code" id="M000066-source">
+            onclick="toggleCode('M000077-source');return false;">[Source]</a></p>
+          <div class="method-source-code" id="M000077-source">
 <pre>
-     <span class="ruby-comment cmt"># File app/controllers/exceptions_controller.rb, line 171</span>
-171:   <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">required_ignored_exceptions</span>
-172:     <span class="ruby-identifier">app_id</span> = <span class="ruby-constant">App</span>.<span class="ruby-identifier">get_application_data</span>(<span class="ruby-identifier">params</span>[<span class="ruby-identifier">:app_name</span>]).<span class="ruby-identifier">id</span>
-173:     <span class="ruby-ivar">@application_name</span> = <span class="ruby-identifier">params</span>[<span class="ruby-identifier">:app_name</span>]
-174:     <span class="ruby-ivar">@start</span> = <span class="ruby-identifier">params</span>[<span class="ruby-identifier">:start</span>].<span class="ruby-identifier">to_i</span>
-175:     <span class="ruby-ivar">@size</span> = <span class="ruby-constant">AppException</span>.<span class="ruby-identifier">get_all_ignored_exceptions</span>(<span class="ruby-identifier">app_id</span>).<span class="ruby-identifier">size</span>
-176:     <span class="ruby-ivar">@exceptions</span> = <span class="ruby-constant">AppException</span>.<span class="ruby-identifier">get_ignored_exceptions</span>(<span class="ruby-identifier">app_id</span>,<span class="ruby-ivar">@start</span>)
-177:     <span class="ruby-identifier">render</span> <span class="ruby-identifier">:partial</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-value str">'ignored_exception_list_partial'</span>, <span class="ruby-identifier">:locals</span> =<span class="ruby-operator">&gt;</span> {<span class="ruby-identifier">:start</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-ivar">@start</span>}
-178:   <span class="ruby-keyword kw">end</span>
+     <span class="ruby-comment cmt"># File app/controllers/exceptions_controller.rb, line 159</span>
+159:   <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">required_ignored_exceptions</span>
+160:     <span class="ruby-identifier">app_id</span> = <span class="ruby-constant">App</span>.<span class="ruby-identifier">get_application_data</span>(<span class="ruby-identifier">params</span>[<span class="ruby-identifier">:app_name</span>]).<span class="ruby-identifier">id</span>
+161:     <span class="ruby-ivar">@application_name</span> = <span class="ruby-identifier">params</span>[<span class="ruby-identifier">:app_name</span>]
+162:     <span class="ruby-ivar">@start</span> = <span class="ruby-identifier">params</span>[<span class="ruby-identifier">:start</span>].<span class="ruby-identifier">to_i</span>
+163:     <span class="ruby-ivar">@size</span> = <span class="ruby-constant">AppException</span>.<span class="ruby-identifier">count_ignored</span>(<span class="ruby-identifier">app_id</span>)
+164:     <span class="ruby-ivar">@exceptions</span> = <span class="ruby-constant">AppException</span>.<span class="ruby-identifier">get_all</span>(<span class="ruby-constant">IGNORED_EXCEPTION</span>, <span class="ruby-identifier">app_id</span>, <span class="ruby-ivar">@start</span>)
+165:     <span class="ruby-identifier">render</span> <span class="ruby-identifier">:partial</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-value str">'ignored_exception_list_partial'</span>, <span class="ruby-identifier">:locals</span> =<span class="ruby-operator">&gt;</span> {<span class="ruby-identifier">:start</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-ivar">@start</span>}
+166:   <span class="ruby-keyword kw">end</span>
+</pre>
+          </div>
+        </div>
+      </div>
+
+      <div id="method-M000075" class="method-detail">
+        <a name="M000075"></a>
+
+        <div class="method-heading">
+          <a href="#M000075" class="method-signature">
+          <span class="method-name">required_open_exceptions</span><span class="method-args">()</span>
+          </a>
+        </div>
+      
+        <div class="method-description">
+          <p>
+Gives the array of five open exceptions for pagination.
+</p>
+          <p><a class="source-toggle" href="#"
+            onclick="toggleCode('M000075-source');return false;">[Source]</a></p>
+          <div class="method-source-code" id="M000075-source">
+<pre>
+     <span class="ruby-comment cmt"># File app/controllers/exceptions_controller.rb, line 139</span>
+139:   <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">required_open_exceptions</span>
+140:     <span class="ruby-identifier">app_id</span> = <span class="ruby-constant">App</span>.<span class="ruby-identifier">get_application_data</span>(<span class="ruby-identifier">params</span>[<span class="ruby-identifier">:app_name</span>]).<span class="ruby-identifier">id</span>
+141:     <span class="ruby-ivar">@application_name</span> = <span class="ruby-identifier">params</span>[<span class="ruby-identifier">:app_name</span>]
+142:     <span class="ruby-ivar">@start</span> = <span class="ruby-identifier">params</span>[<span class="ruby-identifier">:start</span>].<span class="ruby-identifier">to_i</span>
+143:     <span class="ruby-ivar">@size</span> = <span class="ruby-constant">AppException</span>.<span class="ruby-identifier">count_open</span>(<span class="ruby-identifier">app_id</span>)
+144:     <span class="ruby-ivar">@exceptions</span> = <span class="ruby-constant">AppException</span>.<span class="ruby-identifier">get_all</span>(<span class="ruby-constant">OPEN_EXCEPTION</span>, <span class="ruby-identifier">app_id</span>, <span class="ruby-ivar">@start</span>)
+145:     <span class="ruby-identifier">render</span> <span class="ruby-identifier">:partial</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-value str">'exception_list_partial'</span>, <span class="ruby-identifier">:locals</span> =<span class="ruby-operator">&gt;</span> {<span class="ruby-identifier">:start</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-ivar">@start</span>}
+146:   <span class="ruby-keyword kw">end</span>
 </pre>
           </div>
         </div>
@@ -554,37 +573,6 @@ Gives the array of five ignored exceptions for pagination.
 
         <div class="method-heading">
           <a href="#M000064" class="method-signature">
-          <span class="method-name">required_open_exceptions</span><span class="method-args">()</span>
-          </a>
-        </div>
-      
-        <div class="method-description">
-          <p>
-Gives the array of five open exceptions for pagination.
-</p>
-          <p><a class="source-toggle" href="#"
-            onclick="toggleCode('M000064-source');return false;">[Source]</a></p>
-          <div class="method-source-code" id="M000064-source">
-<pre>
-     <span class="ruby-comment cmt"># File app/controllers/exceptions_controller.rb, line 151</span>
-151:   <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">required_open_exceptions</span>
-152:     <span class="ruby-identifier">app_id</span> = <span class="ruby-constant">App</span>.<span class="ruby-identifier">get_application_data</span>(<span class="ruby-identifier">params</span>[<span class="ruby-identifier">:app_name</span>]).<span class="ruby-identifier">id</span>
-153:     <span class="ruby-ivar">@application_name</span> = <span class="ruby-identifier">params</span>[<span class="ruby-identifier">:app_name</span>]
-154:     <span class="ruby-ivar">@start</span> = <span class="ruby-identifier">params</span>[<span class="ruby-identifier">:start</span>].<span class="ruby-identifier">to_i</span>
-155:     <span class="ruby-ivar">@size</span> = <span class="ruby-constant">AppException</span>.<span class="ruby-identifier">get_all_open_exceptions</span>(<span class="ruby-identifier">app_id</span>).<span class="ruby-identifier">size</span>
-156:     <span class="ruby-ivar">@exceptions</span> = <span class="ruby-constant">AppException</span>.<span class="ruby-identifier">get_open_exceptions</span>(<span class="ruby-identifier">app_id</span>,<span class="ruby-ivar">@start</span>)
-157:     <span class="ruby-identifier">render</span> <span class="ruby-identifier">:partial</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-value str">'exception_list_partial'</span>, <span class="ruby-identifier">:locals</span> =<span class="ruby-operator">&gt;</span> {<span class="ruby-identifier">:start</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-ivar">@start</span>}
-158:   <span class="ruby-keyword kw">end</span>
-</pre>
-          </div>
-        </div>
-      </div>
-
-      <div id="method-M000053" class="method-detail">
-        <a name="M000053"></a>
-
-        <div class="method-heading">
-          <a href="#M000053" class="method-signature">
           <span class="method-name">show</span><span class="method-args">()</span>
           </a>
         </div>
@@ -594,8 +582,8 @@ Gives the array of five open exceptions for pagination.
 This method is to display the information of the specific exception.
 </p>
           <p><a class="source-toggle" href="#"
-            onclick="toggleCode('M000053-source');return false;">[Source]</a></p>
-          <div class="method-source-code" id="M000053-source">
+            onclick="toggleCode('M000064-source');return false;">[Source]</a></p>
+          <div class="method-source-code" id="M000064-source">
 <pre>
     <span class="ruby-comment cmt"># File app/controllers/exceptions_controller.rb, line 46</span>
 46:   <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">show</span>

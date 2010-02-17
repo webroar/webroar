@@ -93,20 +93,20 @@ related to the url_samples table in the database.
       <h3 class="section-bar">Methods</h3>
 
       <div class="name-list">
-      <a href="#M000109">add_to_sample</a>&nbsp;&nbsp;
-      <a href="#M000108">create_breakup_sample</a>&nbsp;&nbsp;
-      <a href="#M000107">create_sample</a>&nbsp;&nbsp;
-      <a href="#M000103">get_max_and_slab</a>&nbsp;&nbsp;
-      <a href="#M000100">get_slowest_url_data</a>&nbsp;&nbsp;
-      <a href="#M000101">get_time_consuming_url_data</a>&nbsp;&nbsp;
-      <a href="#M000102">get_top_db_consuming_url_data</a>&nbsp;&nbsp;
-      <a href="#M000098">get_url_calls_data</a>&nbsp;&nbsp;
-      <a href="#M000105">get_url_data</a>&nbsp;&nbsp;
-      <a href="#M000099">get_url_hits_data</a>&nbsp;&nbsp;
-      <a href="#M000106">get_url_id</a>&nbsp;&nbsp;
-      <a href="#M000104">get_urls</a>&nbsp;&nbsp;
-      <a href="#M000111">write_all_samples</a>&nbsp;&nbsp;
-      <a href="#M000110">write_stale_samples</a>&nbsp;&nbsp;
+      <a href="#M000118">add_to_sample</a>&nbsp;&nbsp;
+      <a href="#M000117">create_breakup_sample</a>&nbsp;&nbsp;
+      <a href="#M000116">create_sample</a>&nbsp;&nbsp;
+      <a href="#M000112">get_max_and_slab</a>&nbsp;&nbsp;
+      <a href="#M000109">get_slowest_url_data</a>&nbsp;&nbsp;
+      <a href="#M000110">get_time_consuming_url_data</a>&nbsp;&nbsp;
+      <a href="#M000111">get_top_db_consuming_url_data</a>&nbsp;&nbsp;
+      <a href="#M000107">get_url_calls_data</a>&nbsp;&nbsp;
+      <a href="#M000114">get_url_data</a>&nbsp;&nbsp;
+      <a href="#M000108">get_url_hits_data</a>&nbsp;&nbsp;
+      <a href="#M000115">get_url_id</a>&nbsp;&nbsp;
+      <a href="#M000113">get_urls</a>&nbsp;&nbsp;
+      <a href="#M000120">write_all_samples</a>&nbsp;&nbsp;
+      <a href="#M000119">write_stale_samples</a>&nbsp;&nbsp;
       </div>
     </div>
 
@@ -118,19 +118,6 @@ related to the url_samples table in the database.
     <div id="section">
 
 
-    <div id="constants-list">
-      <h3 class="section-bar">Constants</h3>
-
-      <div class="name-list">
-        <table summary="Constants">
-        <tr class="top-aligned-row context-row">
-          <td class="context-item-name">MAX_TRIAL</td>
-          <td>=</td>
-          <td class="context-item-value">3</td>
-        </tr>
-        </table>
-      </div>
-    </div>
 
 
 
@@ -141,11 +128,11 @@ related to the url_samples table in the database.
     <div id="methods">
       <h3 class="section-bar">Public Class methods</h3>
 
-      <div id="method-M000109" class="method-detail">
-        <a name="M000109"></a>
+      <div id="method-M000118" class="method-detail">
+        <a name="M000118"></a>
 
         <div class="method-heading">
-          <a href="#M000109" class="method-signature">
+          <a href="#M000118" class="method-signature">
           <span class="method-name">add_to_sample</span><span class="method-args">( message_analyzer, app_id, url, total_spent_time, db_time, rendering_time, db_time_breakup, wall_time)</span>
           </a>
         </div>
@@ -161,137 +148,110 @@ period and greater than sampling period, create new sample and insert
 current into database.
 </p>
           <p><a class="source-toggle" href="#"
-            onclick="toggleCode('M000109-source');return false;">[Source]</a></p>
-          <div class="method-source-code" id="M000109-source">
+            onclick="toggleCode('M000118-source');return false;">[Source]</a></p>
+          <div class="method-source-code" id="M000118-source">
 <pre>
-     <span class="ruby-comment cmt"># File app/models/url_time_sample.rb, line 216</span>
-216:     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">add_to_sample</span>( <span class="ruby-identifier">message_analyzer</span>, <span class="ruby-identifier">app_id</span>, <span class="ruby-identifier">url</span>, <span class="ruby-identifier">total_spent_time</span>, <span class="ruby-identifier">db_time</span>, <span class="ruby-identifier">rendering_time</span>, <span class="ruby-identifier">db_time_breakup</span>, <span class="ruby-identifier">wall_time</span>)
-217:       <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">message_analyzer</span>.<span class="ruby-identifier">url_samples</span>[<span class="ruby-identifier">app_id</span>][<span class="ruby-identifier">url</span>] <span class="ruby-operator">==</span> <span class="ruby-keyword kw">nil</span>
-218:         <span class="ruby-identifier">message_analyzer</span>.<span class="ruby-identifier">url_samples</span>[<span class="ruby-identifier">app_id</span>][<span class="ruby-identifier">url</span>] = [<span class="ruby-identifier">wall_time</span>, [ <span class="ruby-identifier">total_spent_time</span>, <span class="ruby-identifier">db_time</span>, <span class="ruby-identifier">rendering_time</span>, <span class="ruby-value">1</span>]] <span class="ruby-comment cmt">#one more element(as a hash) come in last position for keeping db_breakup time</span>
-219:         <span class="ruby-identifier">message_analyzer</span>.<span class="ruby-identifier">url_samples</span>[<span class="ruby-identifier">app_id</span>][<span class="ruby-identifier">url</span>][<span class="ruby-value">1</span>][<span class="ruby-value">4</span>] = <span class="ruby-identifier">db_time_breakup</span>.<span class="ruby-identifier">dup</span>
-220:       <span class="ruby-keyword kw">elsif</span> <span class="ruby-identifier">wall_time</span> <span class="ruby-operator">&gt;=</span> <span class="ruby-identifier">message_analyzer</span>.<span class="ruby-identifier">url_samples</span>[<span class="ruby-identifier">app_id</span>][<span class="ruby-identifier">url</span>].<span class="ruby-identifier">first</span> <span class="ruby-keyword kw">and</span> <span class="ruby-identifier">wall_time</span> <span class="ruby-operator">&lt;=</span> <span class="ruby-identifier">message_analyzer</span>.<span class="ruby-identifier">url_samples</span>[<span class="ruby-identifier">app_id</span>][<span class="ruby-identifier">url</span>].<span class="ruby-identifier">first</span> <span class="ruby-operator">+</span> <span class="ruby-identifier">message_analyzer</span>.<span class="ruby-identifier">sampling_rate</span>
-221:         <span class="ruby-identifier">sample</span> = <span class="ruby-identifier">message_analyzer</span>.<span class="ruby-identifier">url_samples</span>[<span class="ruby-identifier">app_id</span>][<span class="ruby-identifier">url</span>][<span class="ruby-value">1</span>]
-222:         <span class="ruby-identifier">sample</span>[<span class="ruby-value">0</span>] <span class="ruby-operator">+=</span> <span class="ruby-identifier">total_spent_time</span>
-223:         <span class="ruby-identifier">sample</span>[<span class="ruby-value">1</span>] <span class="ruby-operator">+=</span> <span class="ruby-identifier">db_time</span>
-224:         <span class="ruby-identifier">sample</span>[<span class="ruby-value">2</span>] <span class="ruby-operator">+=</span> <span class="ruby-identifier">rendering_time</span>
-225:         <span class="ruby-identifier">sample</span>[<span class="ruby-value">3</span>] <span class="ruby-operator">+=</span> <span class="ruby-value">1</span>
-226:         <span class="ruby-identifier">tmp_hash</span> = <span class="ruby-identifier">sample</span>[<span class="ruby-value">4</span>]
-227:         <span class="ruby-identifier">db_time_breakup</span>.<span class="ruby-identifier">each_pair</span> <span class="ruby-keyword kw">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">key</span>, <span class="ruby-identifier">value</span><span class="ruby-operator">|</span>
-228:           <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">tmp_hash</span>[<span class="ruby-identifier">key</span>]
-229:             <span class="ruby-identifier">tmp_hash</span>[<span class="ruby-identifier">key</span>] <span class="ruby-operator">+=</span> <span class="ruby-identifier">value</span>
-230:           <span class="ruby-keyword kw">else</span>
-231:             <span class="ruby-identifier">tmp_hash</span>[<span class="ruby-identifier">key</span>] = <span class="ruby-identifier">value</span>
-232:           <span class="ruby-keyword kw">end</span>
-233:         <span class="ruby-keyword kw">end</span>
-234:         <span class="ruby-identifier">sample</span>[<span class="ruby-value">4</span>] = <span class="ruby-identifier">tmp_hash</span>
-235:         <span class="ruby-identifier">message_analyzer</span>.<span class="ruby-identifier">url_samples</span>[<span class="ruby-identifier">app_id</span>][<span class="ruby-identifier">url</span>][<span class="ruby-value">1</span>] = <span class="ruby-identifier">sample</span>
-236:       <span class="ruby-keyword kw">elsif</span> <span class="ruby-identifier">wall_time</span> <span class="ruby-operator">&lt;</span> <span class="ruby-identifier">message_analyzer</span>.<span class="ruby-identifier">url_samples</span>[<span class="ruby-identifier">app_id</span>][<span class="ruby-identifier">url</span>].<span class="ruby-identifier">first</span>
-237:         <span class="ruby-identifier">url_sample</span> = <span class="ruby-identifier">find</span>(<span class="ruby-identifier">:first</span>, <span class="ruby-identifier">:conditions</span> =<span class="ruby-operator">&gt;</span> [<span class="ruby-value str">&quot;app_id = ? and url = ? and wall_time &gt;= ? and wall_time &lt;= ?&quot;</span>,<span class="ruby-identifier">app_id</span>, <span class="ruby-identifier">url</span>, <span class="ruby-identifier">wall_time</span>, <span class="ruby-identifier">wall_time</span> <span class="ruby-operator">+</span> <span class="ruby-identifier">message_analyzer</span>.<span class="ruby-identifier">sampling_rate</span>])
-238:         <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">url_sample</span>
-239:           <span class="ruby-identifier">url_breakup_sample</span> = <span class="ruby-constant">UrlBreakupTimeSample</span>.<span class="ruby-identifier">find</span>(<span class="ruby-identifier">:all</span>, <span class="ruby-identifier">:conditions</span> =<span class="ruby-operator">&gt;</span> [<span class="ruby-value str">&quot;url_sample_id = ?&quot;</span>,<span class="ruby-identifier">url_sample</span>.<span class="ruby-identifier">id</span>])
-240:           <span class="ruby-identifier">url_sample</span>.<span class="ruby-identifier">total_time</span> <span class="ruby-operator">+=</span> <span class="ruby-identifier">total_spent_time</span>
-241:           <span class="ruby-identifier">url_sample</span>.<span class="ruby-identifier">db_time</span> <span class="ruby-operator">+=</span> <span class="ruby-identifier">db_time</span>
-242:           <span class="ruby-identifier">url_sample</span>.<span class="ruby-identifier">rendering_time</span> <span class="ruby-operator">+=</span> <span class="ruby-identifier">rendering_time</span>
-243:           <span class="ruby-identifier">url_sample</span>.<span class="ruby-identifier">number_of_requests</span> <span class="ruby-operator">+=</span> <span class="ruby-value">1</span>
-244:           <span class="ruby-identifier">url_sample</span>.<span class="ruby-identifier">save!</span> <span class="ruby-keyword kw">rescue</span> <span class="ruby-keyword kw">nil</span>
-245:         <span class="ruby-identifier">db_breakup_keys</span> = <span class="ruby-identifier">db_time_breakup</span>.<span class="ruby-identifier">keys</span>
-246:           <span class="ruby-identifier">covered_keys</span> = []
-247:           <span class="ruby-identifier">url_breakup_sample</span>.<span class="ruby-identifier">each</span> <span class="ruby-keyword kw">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">breakup</span><span class="ruby-operator">|</span>
-248:             <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">db_breakup_keys</span>.<span class="ruby-identifier">include?</span>(<span class="ruby-identifier">breakup</span>.<span class="ruby-identifier">method_name</span>)
-249:               <span class="ruby-identifier">breakup</span>.<span class="ruby-identifier">spent_time</span> <span class="ruby-operator">+=</span> <span class="ruby-identifier">db_time_breakup</span>[<span class="ruby-identifier">breakup</span>.<span class="ruby-identifier">method_name</span>]
-250:               <span class="ruby-identifier">breakup</span>.<span class="ruby-identifier">save!</span> <span class="ruby-keyword kw">rescue</span> <span class="ruby-keyword kw">nil</span>
-251:             <span class="ruby-identifier">covered_keys</span>.<span class="ruby-identifier">push</span>(<span class="ruby-identifier">breakup</span>.<span class="ruby-identifier">method_name</span>)
-252:             <span class="ruby-keyword kw">end</span>
-253:           <span class="ruby-keyword kw">end</span>
-254:           <span class="ruby-identifier">remaining_keys</span> = <span class="ruby-identifier">db_breakup_keys</span> <span class="ruby-operator">-</span> <span class="ruby-identifier">covered_keys</span>
-255:           <span class="ruby-identifier">remaining_keys</span>.<span class="ruby-identifier">each</span> <span class="ruby-keyword kw">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">key</span><span class="ruby-operator">|</span>
-256:             <span class="ruby-constant">UrlBreakupTimeSample</span>.<span class="ruby-identifier">create</span>({<span class="ruby-identifier">:app_id</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">app_id</span>, <span class="ruby-identifier">:url_sample_id</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">url_sample</span>.<span class="ruby-identifier">id</span>, <span class="ruby-identifier">:method_name</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">key</span>, <span class="ruby-identifier">:spent_time</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">db_time_breakup</span>[<span class="ruby-identifier">key</span>], <span class="ruby-identifier">:wall_time</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">url_sample</span>.<span class="ruby-identifier">wall_time</span>}) <span class="ruby-keyword kw">rescue</span> <span class="ruby-keyword kw">nil</span>
-257:           <span class="ruby-keyword kw">end</span>
-258:         <span class="ruby-keyword kw">else</span>
-259:           <span class="ruby-identifier">wall_time</span> <span class="ruby-operator">+=</span> <span class="ruby-identifier">message_analyzer</span>.<span class="ruby-identifier">sampling_rate</span>
-260:           <span class="ruby-identifier">create_sample</span>(<span class="ruby-identifier">app_id</span>, <span class="ruby-identifier">url</span>, [<span class="ruby-identifier">total_spent_time</span>, <span class="ruby-identifier">db_time</span>, <span class="ruby-identifier">rendering_time</span>, <span class="ruby-value">1</span>], <span class="ruby-identifier">wall_time</span>, <span class="ruby-identifier">message_analyzer</span>.<span class="ruby-identifier">sampling_rate</span>, <span class="ruby-identifier">db_time_breakup</span>)
-261:           <span class="ruby-comment cmt">#url_sample = create({:app_id =&gt; app_id, :url =&gt; url, :total_time =&gt; total_spent_time, :db_time =&gt; db_time, :rendering_time =&gt; rendering_time, :number_of_requests =&gt; 1, :wall_time =&gt; wall_time, :sampling_rate =&gt; message_analyzer.sampling_rate})</span>
-262:           <span class="ruby-comment cmt">#db_time_breakup.each_pair do |key, value|</span>
-263:           <span class="ruby-comment cmt">#  UrlBreakupTimeSample.create({:app_id =&gt; app_id, :url_sample_id =&gt; url_sample.id, :method_name =&gt; key, :spent_time =&gt; value, :wall_time =&gt; url_sample.wall_time})</span>
-264:           <span class="ruby-comment cmt">#end</span>
-265:         <span class="ruby-keyword kw">end</span> <span class="ruby-comment cmt"># if url_sample</span>
-266:       <span class="ruby-keyword kw">elsif</span> <span class="ruby-identifier">wall_time</span> <span class="ruby-operator">&gt;</span> <span class="ruby-identifier">message_analyzer</span>.<span class="ruby-identifier">url_samples</span>[<span class="ruby-identifier">app_id</span>][<span class="ruby-identifier">url</span>].<span class="ruby-identifier">first</span> <span class="ruby-operator">+</span> <span class="ruby-identifier">message_analyzer</span>.<span class="ruby-identifier">sampling_rate</span>
-267:         <span class="ruby-identifier">o_wall_time</span> = <span class="ruby-identifier">message_analyzer</span>.<span class="ruby-identifier">url_samples</span>[<span class="ruby-identifier">app_id</span>][<span class="ruby-identifier">url</span>].<span class="ruby-identifier">first</span> <span class="ruby-operator">+</span> <span class="ruby-identifier">message_analyzer</span>.<span class="ruby-identifier">sampling_rate</span>
-268:         <span class="ruby-identifier">sample</span> = <span class="ruby-identifier">message_analyzer</span>.<span class="ruby-identifier">url_samples</span>[<span class="ruby-identifier">app_id</span>][<span class="ruby-identifier">url</span>][<span class="ruby-value">1</span>]
-269:         <span class="ruby-identifier">create_sample</span>(<span class="ruby-identifier">app_id</span>, <span class="ruby-identifier">url</span>, <span class="ruby-identifier">sample</span>, <span class="ruby-identifier">wall_time</span>, <span class="ruby-identifier">message_analyzer</span>.<span class="ruby-identifier">sampling_rate</span>, <span class="ruby-identifier">sample</span>[<span class="ruby-value">4</span>])
-270:         <span class="ruby-comment cmt">#        url_sample = create({:app_id =&gt; app_id, :url =&gt; url, :total_time =&gt; sample[0], :db_time =&gt; sample[1], :rendering_time =&gt; sample[2], :number_of_requests =&gt; sample[3], :wall_time =&gt; o_wall_time, :sampling_rate =&gt; message_analyzer.sampling_rate})</span>
-271:         <span class="ruby-comment cmt">#        tmp_hash = sample[4]</span>
-272:         <span class="ruby-comment cmt">#        tmp_hash.each_pair do |key, value|</span>
-273:         <span class="ruby-comment cmt">#          UrlBreakupTimeSample.create({:app_id =&gt; app_id, :url_sample_id =&gt; url_sample.id, :method_name =&gt; key, :spent_time =&gt; value, :wall_time =&gt; url_sample.wall_time})</span>
-274:         <span class="ruby-comment cmt">#        end</span>
-275:         <span class="ruby-identifier">message_analyzer</span>.<span class="ruby-identifier">url_samples</span>[<span class="ruby-identifier">app_id</span>][<span class="ruby-identifier">url</span>] = [<span class="ruby-identifier">wall_time</span>, [ <span class="ruby-identifier">total_spent_time</span>, <span class="ruby-identifier">db_time</span>, <span class="ruby-identifier">rendering_time</span>, <span class="ruby-value">1</span>]]
-276:         <span class="ruby-identifier">message_analyzer</span>.<span class="ruby-identifier">url_samples</span>[<span class="ruby-identifier">app_id</span>][<span class="ruby-identifier">url</span>][<span class="ruby-value">1</span>][<span class="ruby-value">4</span>] = <span class="ruby-identifier">db_time_breakup</span>.<span class="ruby-identifier">dup</span>
-277:       <span class="ruby-keyword kw">else</span>
-278:         <span class="ruby-identifier">raise</span> <span class="ruby-constant">UndefinedSituation</span>, <span class="ruby-value str">&quot;Think of this possibility!&quot;</span>
-279:       <span class="ruby-keyword kw">end</span> <span class="ruby-comment cmt"># if</span>
-280:     <span class="ruby-keyword kw">end</span>
+     <span class="ruby-comment cmt"># File app/models/url_time_sample.rb, line 163</span>
+163:     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">add_to_sample</span>( <span class="ruby-identifier">message_analyzer</span>, <span class="ruby-identifier">app_id</span>, <span class="ruby-identifier">url</span>, <span class="ruby-identifier">total_spent_time</span>, <span class="ruby-identifier">db_time</span>, <span class="ruby-identifier">rendering_time</span>, <span class="ruby-identifier">db_time_breakup</span>, <span class="ruby-identifier">wall_time</span>)
+164:       <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">message_analyzer</span>.<span class="ruby-identifier">url_samples</span>[<span class="ruby-identifier">app_id</span>][<span class="ruby-identifier">url</span>] <span class="ruby-operator">==</span> <span class="ruby-keyword kw">nil</span>
+165:         <span class="ruby-identifier">message_analyzer</span>.<span class="ruby-identifier">url_samples</span>[<span class="ruby-identifier">app_id</span>][<span class="ruby-identifier">url</span>] = [<span class="ruby-identifier">wall_time</span>, [ <span class="ruby-identifier">total_spent_time</span>, <span class="ruby-identifier">db_time</span>, <span class="ruby-identifier">rendering_time</span>, <span class="ruby-value">1</span>]] <span class="ruby-comment cmt">#one more element(as a hash) come in last position for keeping db_breakup time</span>
+166:         <span class="ruby-identifier">message_analyzer</span>.<span class="ruby-identifier">url_samples</span>[<span class="ruby-identifier">app_id</span>][<span class="ruby-identifier">url</span>][<span class="ruby-value">1</span>][<span class="ruby-value">4</span>] = <span class="ruby-identifier">db_time_breakup</span>.<span class="ruby-identifier">dup</span>
+167:       <span class="ruby-keyword kw">elsif</span> <span class="ruby-identifier">wall_time</span> <span class="ruby-operator">&gt;=</span> <span class="ruby-identifier">message_analyzer</span>.<span class="ruby-identifier">url_samples</span>[<span class="ruby-identifier">app_id</span>][<span class="ruby-identifier">url</span>].<span class="ruby-identifier">first</span> <span class="ruby-keyword kw">and</span> <span class="ruby-identifier">wall_time</span> <span class="ruby-operator">&lt;=</span> <span class="ruby-identifier">message_analyzer</span>.<span class="ruby-identifier">url_samples</span>[<span class="ruby-identifier">app_id</span>][<span class="ruby-identifier">url</span>].<span class="ruby-identifier">first</span> <span class="ruby-operator">+</span> <span class="ruby-identifier">message_analyzer</span>.<span class="ruby-identifier">sampling_rate</span>
+168:         <span class="ruby-identifier">sample</span> = <span class="ruby-identifier">message_analyzer</span>.<span class="ruby-identifier">url_samples</span>[<span class="ruby-identifier">app_id</span>][<span class="ruby-identifier">url</span>][<span class="ruby-value">1</span>]
+169:         <span class="ruby-identifier">sample</span>[<span class="ruby-value">0</span>] <span class="ruby-operator">+=</span> <span class="ruby-identifier">total_spent_time</span>
+170:         <span class="ruby-identifier">sample</span>[<span class="ruby-value">1</span>] <span class="ruby-operator">+=</span> <span class="ruby-identifier">db_time</span>
+171:         <span class="ruby-identifier">sample</span>[<span class="ruby-value">2</span>] <span class="ruby-operator">+=</span> <span class="ruby-identifier">rendering_time</span>
+172:         <span class="ruby-identifier">sample</span>[<span class="ruby-value">3</span>] <span class="ruby-operator">+=</span> <span class="ruby-value">1</span>
+173:         <span class="ruby-identifier">tmp_hash</span> = <span class="ruby-identifier">sample</span>[<span class="ruby-value">4</span>]
+174:         <span class="ruby-identifier">db_time_breakup</span>.<span class="ruby-identifier">each_pair</span> <span class="ruby-keyword kw">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">key</span>, <span class="ruby-identifier">value</span><span class="ruby-operator">|</span>
+175:           <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">tmp_hash</span>[<span class="ruby-identifier">key</span>]
+176:             <span class="ruby-identifier">tmp_hash</span>[<span class="ruby-identifier">key</span>] <span class="ruby-operator">+=</span> <span class="ruby-identifier">value</span>
+177:           <span class="ruby-keyword kw">else</span>
+178:             <span class="ruby-identifier">tmp_hash</span>[<span class="ruby-identifier">key</span>] = <span class="ruby-identifier">value</span>
+179:           <span class="ruby-keyword kw">end</span>
+180:         <span class="ruby-keyword kw">end</span>
+181:         <span class="ruby-identifier">sample</span>[<span class="ruby-value">4</span>] = <span class="ruby-identifier">tmp_hash</span>
+182:         <span class="ruby-identifier">message_analyzer</span>.<span class="ruby-identifier">url_samples</span>[<span class="ruby-identifier">app_id</span>][<span class="ruby-identifier">url</span>][<span class="ruby-value">1</span>] = <span class="ruby-identifier">sample</span>
+183:       <span class="ruby-keyword kw">elsif</span> <span class="ruby-identifier">wall_time</span> <span class="ruby-operator">&lt;</span> <span class="ruby-identifier">message_analyzer</span>.<span class="ruby-identifier">url_samples</span>[<span class="ruby-identifier">app_id</span>][<span class="ruby-identifier">url</span>].<span class="ruby-identifier">first</span>
+184:         <span class="ruby-identifier">url_sample</span> = <span class="ruby-identifier">find</span>(<span class="ruby-identifier">:first</span>, <span class="ruby-identifier">:conditions</span> =<span class="ruby-operator">&gt;</span> [<span class="ruby-value str">&quot;app_id = ? and url = ? and wall_time &gt;= ? and wall_time &lt;= ?&quot;</span>,<span class="ruby-identifier">app_id</span>, <span class="ruby-identifier">url</span>, <span class="ruby-identifier">wall_time</span>, <span class="ruby-identifier">wall_time</span> <span class="ruby-operator">+</span> <span class="ruby-identifier">message_analyzer</span>.<span class="ruby-identifier">sampling_rate</span>])
+185:         <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">url_sample</span>
+186:           <span class="ruby-identifier">url_breakup_sample</span> = <span class="ruby-constant">UrlBreakupTimeSample</span>.<span class="ruby-identifier">find</span>(<span class="ruby-identifier">:all</span>, <span class="ruby-identifier">:conditions</span> =<span class="ruby-operator">&gt;</span> [<span class="ruby-value str">&quot;url_sample_id = ?&quot;</span>,<span class="ruby-identifier">url_sample</span>.<span class="ruby-identifier">id</span>])
+187:           <span class="ruby-identifier">url_sample</span>.<span class="ruby-identifier">total_time</span> <span class="ruby-operator">+=</span> <span class="ruby-identifier">total_spent_time</span>
+188:           <span class="ruby-identifier">url_sample</span>.<span class="ruby-identifier">db_time</span> <span class="ruby-operator">+=</span> <span class="ruby-identifier">db_time</span>
+189:           <span class="ruby-identifier">url_sample</span>.<span class="ruby-identifier">rendering_time</span> <span class="ruby-operator">+=</span> <span class="ruby-identifier">rendering_time</span>
+190:           <span class="ruby-identifier">url_sample</span>.<span class="ruby-identifier">number_of_requests</span> <span class="ruby-operator">+=</span> <span class="ruby-value">1</span>
+191:           <span class="ruby-identifier">url_sample</span>.<span class="ruby-identifier">save!</span> <span class="ruby-keyword kw">rescue</span> <span class="ruby-keyword kw">nil</span>
+192:         <span class="ruby-identifier">db_breakup_keys</span> = <span class="ruby-identifier">db_time_breakup</span>.<span class="ruby-identifier">keys</span>
+193:           <span class="ruby-identifier">covered_keys</span> = []
+194:           <span class="ruby-identifier">url_breakup_sample</span>.<span class="ruby-identifier">each</span> <span class="ruby-keyword kw">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">breakup</span><span class="ruby-operator">|</span>
+195:             <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">db_breakup_keys</span>.<span class="ruby-identifier">include?</span>(<span class="ruby-identifier">breakup</span>.<span class="ruby-identifier">method_name</span>)
+196:               <span class="ruby-identifier">breakup</span>.<span class="ruby-identifier">spent_time</span> <span class="ruby-operator">+=</span> <span class="ruby-identifier">db_time_breakup</span>[<span class="ruby-identifier">breakup</span>.<span class="ruby-identifier">method_name</span>]
+197:               <span class="ruby-identifier">breakup</span>.<span class="ruby-identifier">save!</span> <span class="ruby-keyword kw">rescue</span> <span class="ruby-keyword kw">nil</span>
+198:             <span class="ruby-identifier">covered_keys</span>.<span class="ruby-identifier">push</span>(<span class="ruby-identifier">breakup</span>.<span class="ruby-identifier">method_name</span>)
+199:             <span class="ruby-keyword kw">end</span>
+200:           <span class="ruby-keyword kw">end</span>
+201:           <span class="ruby-identifier">remaining_keys</span> = <span class="ruby-identifier">db_breakup_keys</span> <span class="ruby-operator">-</span> <span class="ruby-identifier">covered_keys</span>
+202:           <span class="ruby-identifier">remaining_keys</span>.<span class="ruby-identifier">each</span> <span class="ruby-keyword kw">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">key</span><span class="ruby-operator">|</span>
+203:             <span class="ruby-constant">UrlBreakupTimeSample</span>.<span class="ruby-identifier">create</span>({<span class="ruby-identifier">:app_id</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">app_id</span>, <span class="ruby-identifier">:url_sample_id</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">url_sample</span>.<span class="ruby-identifier">id</span>, <span class="ruby-identifier">:method_name</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">key</span>, <span class="ruby-identifier">:spent_time</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">db_time_breakup</span>[<span class="ruby-identifier">key</span>], <span class="ruby-identifier">:wall_time</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">url_sample</span>.<span class="ruby-identifier">wall_time</span>}) <span class="ruby-keyword kw">rescue</span> <span class="ruby-keyword kw">nil</span>
+204:           <span class="ruby-keyword kw">end</span>
+205:         <span class="ruby-keyword kw">else</span>
+206:           <span class="ruby-identifier">wall_time</span> <span class="ruby-operator">+=</span> <span class="ruby-identifier">message_analyzer</span>.<span class="ruby-identifier">sampling_rate</span>
+207:           <span class="ruby-identifier">create_sample</span>(<span class="ruby-identifier">app_id</span>, <span class="ruby-identifier">url</span>, [<span class="ruby-identifier">total_spent_time</span>, <span class="ruby-identifier">db_time</span>, <span class="ruby-identifier">rendering_time</span>, <span class="ruby-value">1</span>], <span class="ruby-identifier">wall_time</span>, <span class="ruby-identifier">message_analyzer</span>.<span class="ruby-identifier">sampling_rate</span>, <span class="ruby-identifier">db_time_breakup</span>)
+208:           <span class="ruby-comment cmt">#url_sample = create({:app_id =&gt; app_id, :url =&gt; url, :total_time =&gt; total_spent_time, :db_time =&gt; db_time, :rendering_time =&gt; rendering_time, :number_of_requests =&gt; 1, :wall_time =&gt; wall_time, :sampling_rate =&gt; message_analyzer.sampling_rate})</span>
+209:           <span class="ruby-comment cmt">#db_time_breakup.each_pair do |key, value|</span>
+210:           <span class="ruby-comment cmt">#  UrlBreakupTimeSample.create({:app_id =&gt; app_id, :url_sample_id =&gt; url_sample.id, :method_name =&gt; key, :spent_time =&gt; value, :wall_time =&gt; url_sample.wall_time})</span>
+211:           <span class="ruby-comment cmt">#end</span>
+212:         <span class="ruby-keyword kw">end</span> <span class="ruby-comment cmt"># if url_sample</span>
+213:       <span class="ruby-keyword kw">elsif</span> <span class="ruby-identifier">wall_time</span> <span class="ruby-operator">&gt;</span> <span class="ruby-identifier">message_analyzer</span>.<span class="ruby-identifier">url_samples</span>[<span class="ruby-identifier">app_id</span>][<span class="ruby-identifier">url</span>].<span class="ruby-identifier">first</span> <span class="ruby-operator">+</span> <span class="ruby-identifier">message_analyzer</span>.<span class="ruby-identifier">sampling_rate</span>
+214:         <span class="ruby-identifier">o_wall_time</span> = <span class="ruby-identifier">message_analyzer</span>.<span class="ruby-identifier">url_samples</span>[<span class="ruby-identifier">app_id</span>][<span class="ruby-identifier">url</span>].<span class="ruby-identifier">first</span> <span class="ruby-operator">+</span> <span class="ruby-identifier">message_analyzer</span>.<span class="ruby-identifier">sampling_rate</span>
+215:         <span class="ruby-identifier">sample</span> = <span class="ruby-identifier">message_analyzer</span>.<span class="ruby-identifier">url_samples</span>[<span class="ruby-identifier">app_id</span>][<span class="ruby-identifier">url</span>][<span class="ruby-value">1</span>]
+216:         <span class="ruby-identifier">create_sample</span>(<span class="ruby-identifier">app_id</span>, <span class="ruby-identifier">url</span>, <span class="ruby-identifier">sample</span>, <span class="ruby-identifier">wall_time</span>, <span class="ruby-identifier">message_analyzer</span>.<span class="ruby-identifier">sampling_rate</span>, <span class="ruby-identifier">sample</span>[<span class="ruby-value">4</span>])
+217:         <span class="ruby-comment cmt">#        url_sample = create({:app_id =&gt; app_id, :url =&gt; url, :total_time =&gt; sample[0], :db_time =&gt; sample[1], :rendering_time =&gt; sample[2], :number_of_requests =&gt; sample[3], :wall_time =&gt; o_wall_time, :sampling_rate =&gt; message_analyzer.sampling_rate})</span>
+218:         <span class="ruby-comment cmt">#        tmp_hash = sample[4]</span>
+219:         <span class="ruby-comment cmt">#        tmp_hash.each_pair do |key, value|</span>
+220:         <span class="ruby-comment cmt">#          UrlBreakupTimeSample.create({:app_id =&gt; app_id, :url_sample_id =&gt; url_sample.id, :method_name =&gt; key, :spent_time =&gt; value, :wall_time =&gt; url_sample.wall_time})</span>
+221:         <span class="ruby-comment cmt">#        end</span>
+222:         <span class="ruby-identifier">message_analyzer</span>.<span class="ruby-identifier">url_samples</span>[<span class="ruby-identifier">app_id</span>][<span class="ruby-identifier">url</span>] = [<span class="ruby-identifier">wall_time</span>, [ <span class="ruby-identifier">total_spent_time</span>, <span class="ruby-identifier">db_time</span>, <span class="ruby-identifier">rendering_time</span>, <span class="ruby-value">1</span>]]
+223:         <span class="ruby-identifier">message_analyzer</span>.<span class="ruby-identifier">url_samples</span>[<span class="ruby-identifier">app_id</span>][<span class="ruby-identifier">url</span>][<span class="ruby-value">1</span>][<span class="ruby-value">4</span>] = <span class="ruby-identifier">db_time_breakup</span>.<span class="ruby-identifier">dup</span>
+224:       <span class="ruby-keyword kw">else</span>
+225:         <span class="ruby-identifier">raise</span> <span class="ruby-constant">UndefinedSituation</span>, <span class="ruby-value str">&quot;Think of this possibility!&quot;</span>
+226:       <span class="ruby-keyword kw">end</span> <span class="ruby-comment cmt"># if</span>
+227:     <span class="ruby-keyword kw">end</span>
 </pre>
           </div>
         </div>
       </div>
 
-      <div id="method-M000108" class="method-detail">
-        <a name="M000108"></a>
+      <div id="method-M000117" class="method-detail">
+        <a name="M000117"></a>
 
         <div class="method-heading">
-          <a href="#M000108" class="method-signature">
+          <a href="#M000117" class="method-signature">
           <span class="method-name">create_breakup_sample</span><span class="method-args">(app_id, url_sample_id, key, value, wall_time)</span>
           </a>
         </div>
       
         <div class="method-description">
           <p><a class="source-toggle" href="#"
-            onclick="toggleCode('M000108-source');return false;">[Source]</a></p>
-          <div class="method-source-code" id="M000108-source">
+            onclick="toggleCode('M000117-source');return false;">[Source]</a></p>
+          <div class="method-source-code" id="M000117-source">
 <pre>
-     <span class="ruby-comment cmt"># File app/models/url_time_sample.rb, line 178</span>
-178:     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">create_breakup_sample</span>(<span class="ruby-identifier">app_id</span>, <span class="ruby-identifier">url_sample_id</span>, <span class="ruby-identifier">key</span>, <span class="ruby-identifier">value</span>, <span class="ruby-identifier">wall_time</span>)
-179:       <span class="ruby-identifier">trial</span> = <span class="ruby-value">0</span>
-180:       <span class="ruby-keyword kw">begin</span>
-181:         <span class="ruby-constant">UrlBreakupTimeSample</span>.<span class="ruby-identifier">create</span>({<span class="ruby-identifier">:app_id</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">app_id</span>, <span class="ruby-identifier">:url_sample_id</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">url_sample_id</span>, <span class="ruby-identifier">:method_name</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">key</span>, <span class="ruby-identifier">:spent_time</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">value</span>, <span class="ruby-identifier">:wall_time</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">wall_time</span>})
-182:       <span class="ruby-keyword kw">rescue</span> <span class="ruby-constant">ActiveRecord</span><span class="ruby-operator">::</span><span class="ruby-constant">StatementInvalid</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">e</span>
-183:         <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">e</span>.<span class="ruby-identifier">message</span> <span class="ruby-operator">=~</span> <span class="ruby-regexp re">/(locked|busy)/i</span>
-184:           <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">trial</span> <span class="ruby-operator">&lt;</span> <span class="ruby-constant">MAX_TRIAL</span>
-185:             <span class="ruby-identifier">trial</span> <span class="ruby-operator">+=</span> <span class="ruby-value">1</span>
-186:             <span class="ruby-constant">Webroar</span><span class="ruby-operator">::</span><span class="ruby-constant">Analyzer</span><span class="ruby-operator">::</span><span class="ruby-constant">Logger</span>.<span class="ruby-identifier">info</span> <span class="ruby-node">&quot;URL breakup sample creation - Database is busy try no #{trial}&quot;</span> <span class="ruby-keyword kw">if</span> <span class="ruby-keyword kw">defined?</span> <span class="ruby-constant">Webroar</span><span class="ruby-operator">::</span><span class="ruby-constant">Analyzer</span><span class="ruby-operator">::</span><span class="ruby-constant">Logger</span>
-187:             <span class="ruby-identifier">sleep</span>(<span class="ruby-value">2</span>)          
-188:             <span class="ruby-keyword kw">retry</span>
-189:           <span class="ruby-keyword kw">end</span>
-190:         <span class="ruby-keyword kw">end</span>
-191:         <span class="ruby-keyword kw">if</span> <span class="ruby-keyword kw">defined?</span> <span class="ruby-constant">Webroar</span><span class="ruby-operator">::</span><span class="ruby-constant">Analyzer</span><span class="ruby-operator">::</span><span class="ruby-constant">Logger</span>
-192:           <span class="ruby-constant">Webroar</span><span class="ruby-operator">::</span><span class="ruby-constant">Analyzer</span><span class="ruby-operator">::</span><span class="ruby-constant">Logger</span>.<span class="ruby-identifier">info</span>(<span class="ruby-node">&quot;URL breakup sample creation for application #{app_id}, url_sample_id #{url_sample_id}, wall_time #{wall_time} failed.&quot;</span>)
-193:           <span class="ruby-constant">Webroar</span><span class="ruby-operator">::</span><span class="ruby-constant">Analyzer</span><span class="ruby-operator">::</span><span class="ruby-constant">Logger</span>.<span class="ruby-identifier">error</span>(<span class="ruby-identifier">e</span>) 
-194:           <span class="ruby-constant">Webroar</span><span class="ruby-operator">::</span><span class="ruby-constant">Analyzer</span><span class="ruby-operator">::</span><span class="ruby-constant">Logger</span>.<span class="ruby-identifier">error</span>(<span class="ruby-identifier">e</span>.<span class="ruby-identifier">backtrace</span>.<span class="ruby-identifier">join</span>(<span class="ruby-value str">&quot;\n&quot;</span>))
-195:         <span class="ruby-keyword kw">end</span>
-196:       <span class="ruby-keyword kw">rescue</span> <span class="ruby-constant">Exception</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">e</span>
-197:         <span class="ruby-keyword kw">if</span> <span class="ruby-keyword kw">defined?</span> <span class="ruby-constant">Webroar</span><span class="ruby-operator">::</span><span class="ruby-constant">Analyzer</span><span class="ruby-operator">::</span><span class="ruby-constant">Logger</span>
-198:           <span class="ruby-constant">Webroar</span><span class="ruby-operator">::</span><span class="ruby-constant">Analyzer</span><span class="ruby-operator">::</span><span class="ruby-constant">Logger</span>.<span class="ruby-identifier">error</span>(<span class="ruby-identifier">e</span>)
-199:           <span class="ruby-constant">Webroar</span><span class="ruby-operator">::</span><span class="ruby-constant">Analyzer</span><span class="ruby-operator">::</span><span class="ruby-constant">Logger</span>.<span class="ruby-identifier">error</span>(<span class="ruby-identifier">e</span>.<span class="ruby-identifier">backtrace</span>.<span class="ruby-identifier">join</span>(<span class="ruby-value str">&quot;\n&quot;</span>))
-200:           <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">trial</span> <span class="ruby-operator">&lt;</span> <span class="ruby-value">1</span>
-201:             <span class="ruby-identifier">trial</span> <span class="ruby-operator">+=</span> <span class="ruby-value">1</span>
-202:             <span class="ruby-identifier">sleep</span>(<span class="ruby-value">2</span>)
-203:             <span class="ruby-constant">Webroar</span><span class="ruby-operator">::</span><span class="ruby-constant">Analyzer</span><span class="ruby-operator">::</span><span class="ruby-constant">Logger</span>.<span class="ruby-identifier">info</span> <span class="ruby-value str">&quot;Trying again...&quot;</span>
-204:             <span class="ruby-keyword kw">retry</span>
-205:           <span class="ruby-keyword kw">end</span>
-206:           <span class="ruby-constant">Webroar</span><span class="ruby-operator">::</span><span class="ruby-constant">Analyzer</span><span class="ruby-operator">::</span><span class="ruby-constant">Logger</span>.<span class="ruby-identifier">info</span>(<span class="ruby-node">&quot;URL breakup sample creation for application #{app_id}, url_sample_id #{url_sample_id}, wall_time #{wall_time} failed.&quot;</span>) 
-207:         <span class="ruby-keyword kw">end</span>
-208:       <span class="ruby-keyword kw">end</span>      
-209:     <span class="ruby-keyword kw">end</span>
+     <span class="ruby-comment cmt"># File app/models/url_time_sample.rb, line 152</span>
+152:     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">create_breakup_sample</span>(<span class="ruby-identifier">app_id</span>, <span class="ruby-identifier">url_sample_id</span>, <span class="ruby-identifier">key</span>, <span class="ruby-identifier">value</span>, <span class="ruby-identifier">wall_time</span>)
+153:       <span class="ruby-identifier">with_exception_handling</span>(<span class="ruby-node">&quot;URL breakup sample creation for application #{app_id}, url_sample_id #{url_sample_id}, wall_time #{wall_time} failed.&quot;</span>) <span class="ruby-keyword kw">do</span>
+154:         <span class="ruby-constant">UrlBreakupTimeSample</span>.<span class="ruby-identifier">create</span>({<span class="ruby-identifier">:app_id</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">app_id</span>, <span class="ruby-identifier">:url_sample_id</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">url_sample_id</span>, <span class="ruby-identifier">:method_name</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">key</span>, <span class="ruby-identifier">:spent_time</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">value</span>, <span class="ruby-identifier">:wall_time</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">wall_time</span>})
+155:       <span class="ruby-keyword kw">end</span>            
+156:     <span class="ruby-keyword kw">end</span>
 </pre>
           </div>
         </div>
       </div>
 
-      <div id="method-M000107" class="method-detail">
-        <a name="M000107"></a>
+      <div id="method-M000116" class="method-detail">
+        <a name="M000116"></a>
 
         <div class="method-heading">
-          <a href="#M000107" class="method-signature">
+          <a href="#M000116" class="method-signature">
           <span class="method-name">create_sample</span><span class="method-args">(app_id, url, sample, wall_time, sampling_rate, db_time_breakup)</span>
           </a>
         </div>
@@ -301,57 +261,31 @@ current into database.
 This section of the model is used by the Webraor Analyzer.
 </p>
           <p><a class="source-toggle" href="#"
-            onclick="toggleCode('M000107-source');return false;">[Source]</a></p>
-          <div class="method-source-code" id="M000107-source">
+            onclick="toggleCode('M000116-source');return false;">[Source]</a></p>
+          <div class="method-source-code" id="M000116-source">
 <pre>
      <span class="ruby-comment cmt"># File app/models/url_time_sample.rb, line 140</span>
 140:     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">create_sample</span>(<span class="ruby-identifier">app_id</span>, <span class="ruby-identifier">url</span>, <span class="ruby-identifier">sample</span>, <span class="ruby-identifier">wall_time</span>, <span class="ruby-identifier">sampling_rate</span>, <span class="ruby-identifier">db_time_breakup</span>)
-141:       <span class="ruby-identifier">trial</span> = <span class="ruby-value">0</span>
-142:       <span class="ruby-keyword kw">begin</span>
+141:       <span class="ruby-identifier">url_sample</span> = <span class="ruby-keyword kw">nil</span>
+142:       <span class="ruby-identifier">with_exception_handling</span>(<span class="ruby-node">&quot;URL sample creation for application #{app_id}, URL #{url}, wall_time #{wall_time}&quot;</span>) <span class="ruby-keyword kw">do</span>
 143:         <span class="ruby-identifier">url_sample</span> =  <span class="ruby-identifier">create</span>({<span class="ruby-identifier">:app_id</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">app_id</span>, <span class="ruby-identifier">:url</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">url</span>, <span class="ruby-identifier">:total_time</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">sample</span>[<span class="ruby-value">0</span>], <span class="ruby-identifier">:db_time</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">sample</span>[<span class="ruby-value">1</span>], <span class="ruby-identifier">:rendering_time</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">sample</span>[<span class="ruby-value">2</span>], <span class="ruby-identifier">:number_of_requests</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">sample</span>[<span class="ruby-value">3</span>], <span class="ruby-identifier">:wall_time</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">wall_time</span>, <span class="ruby-identifier">:sampling_rate</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">sampling_rate</span>})
-144:       <span class="ruby-keyword kw">rescue</span> <span class="ruby-constant">ActiveRecord</span><span class="ruby-operator">::</span><span class="ruby-constant">StatementInvalid</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">e</span>
-145:         <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">e</span>.<span class="ruby-identifier">message</span> <span class="ruby-operator">=~</span> <span class="ruby-regexp re">/(locked|busy)/i</span>
-146:           <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">trial</span> <span class="ruby-operator">&lt;</span> <span class="ruby-constant">MAX_TRIAL</span>
-147:             <span class="ruby-identifier">trial</span> <span class="ruby-operator">+=</span> <span class="ruby-value">1</span>
-148:             <span class="ruby-constant">Webroar</span><span class="ruby-operator">::</span><span class="ruby-constant">Analyzer</span><span class="ruby-operator">::</span><span class="ruby-constant">Logger</span>.<span class="ruby-identifier">info</span> <span class="ruby-node">&quot;URL sample creation - Database is busy try no #{trial}&quot;</span> <span class="ruby-keyword kw">if</span> <span class="ruby-keyword kw">defined?</span> <span class="ruby-constant">Webroar</span><span class="ruby-operator">::</span><span class="ruby-constant">Analyzer</span><span class="ruby-operator">::</span><span class="ruby-constant">Logger</span>
-149:             <span class="ruby-identifier">sleep</span>(<span class="ruby-value">2</span>)          
-150:             <span class="ruby-keyword kw">retry</span>
-151:           <span class="ruby-keyword kw">end</span>
-152:         <span class="ruby-keyword kw">end</span>
-153:         <span class="ruby-keyword kw">if</span> <span class="ruby-keyword kw">defined?</span> <span class="ruby-constant">Webroar</span><span class="ruby-operator">::</span><span class="ruby-constant">Analyzer</span><span class="ruby-operator">::</span><span class="ruby-constant">Logger</span>
-154:           <span class="ruby-constant">Webroar</span><span class="ruby-operator">::</span><span class="ruby-constant">Analyzer</span><span class="ruby-operator">::</span><span class="ruby-constant">Logger</span>.<span class="ruby-identifier">info</span> <span class="ruby-node">&quot;URL sample creation for application #{app_id}, url #{url}, wall_time #{wall_time} failed.&quot;</span>
-155:           <span class="ruby-constant">Webroar</span><span class="ruby-operator">::</span><span class="ruby-constant">Analyzer</span><span class="ruby-operator">::</span><span class="ruby-constant">Logger</span>.<span class="ruby-identifier">error</span>(<span class="ruby-identifier">e</span>) 
-156:           <span class="ruby-constant">Webroar</span><span class="ruby-operator">::</span><span class="ruby-constant">Analyzer</span><span class="ruby-operator">::</span><span class="ruby-constant">Logger</span>.<span class="ruby-identifier">error</span>(<span class="ruby-identifier">e</span>.<span class="ruby-identifier">backtrace</span>.<span class="ruby-identifier">join</span>(<span class="ruby-value str">&quot;\n&quot;</span>))
-157:         <span class="ruby-keyword kw">end</span>
-158:       <span class="ruby-keyword kw">rescue</span> <span class="ruby-constant">Exception</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">e</span>
-159:         <span class="ruby-keyword kw">if</span> <span class="ruby-keyword kw">defined?</span> <span class="ruby-constant">Webroar</span><span class="ruby-operator">::</span><span class="ruby-constant">Analyzer</span><span class="ruby-operator">::</span><span class="ruby-constant">Logger</span>
-160:           <span class="ruby-constant">Webroar</span><span class="ruby-operator">::</span><span class="ruby-constant">Analyzer</span><span class="ruby-operator">::</span><span class="ruby-constant">Logger</span>.<span class="ruby-identifier">error</span>(<span class="ruby-identifier">e</span>) 
-161:           <span class="ruby-constant">Webroar</span><span class="ruby-operator">::</span><span class="ruby-constant">Analyzer</span><span class="ruby-operator">::</span><span class="ruby-constant">Logger</span>.<span class="ruby-identifier">error</span>(<span class="ruby-identifier">e</span>.<span class="ruby-identifier">backtrace</span>.<span class="ruby-identifier">join</span>(<span class="ruby-value str">&quot;\n&quot;</span>))
-162:           <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">trial</span> <span class="ruby-operator">&lt;</span> <span class="ruby-value">1</span>
-163:             <span class="ruby-identifier">trial</span> <span class="ruby-operator">+=</span> <span class="ruby-value">1</span>
-164:             <span class="ruby-identifier">sleep</span>(<span class="ruby-value">2</span>)
-165:             <span class="ruby-constant">Webroar</span><span class="ruby-operator">::</span><span class="ruby-constant">Analyzer</span><span class="ruby-operator">::</span><span class="ruby-constant">Logger</span>.<span class="ruby-identifier">info</span> <span class="ruby-value str">&quot;Trying again...&quot;</span>
-166:             <span class="ruby-keyword kw">retry</span>
-167:           <span class="ruby-keyword kw">end</span>
-168:           <span class="ruby-constant">Webroar</span><span class="ruby-operator">::</span><span class="ruby-constant">Analyzer</span><span class="ruby-operator">::</span><span class="ruby-constant">Logger</span>.<span class="ruby-identifier">info</span> <span class="ruby-node">&quot;URL sample creation for application #{app_id}, url #{url}, wall_time #{wall_time} failed.&quot;</span>
-169:         <span class="ruby-keyword kw">end</span>
-170:       <span class="ruby-keyword kw">end</span>
-171:       <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">url_sample</span>.<span class="ruby-identifier">id</span> <span class="ruby-keyword kw">and</span> <span class="ruby-identifier">db_time_breakup</span>
-172:         <span class="ruby-identifier">db_time_breakup</span>.<span class="ruby-identifier">each_pair</span> <span class="ruby-keyword kw">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">key</span>, <span class="ruby-identifier">value</span><span class="ruby-operator">|</span>
-173:           <span class="ruby-identifier">create_breakup_sample</span>(<span class="ruby-identifier">app_id</span>, <span class="ruby-identifier">url_sample</span>.<span class="ruby-identifier">id</span>, <span class="ruby-identifier">key</span>, <span class="ruby-identifier">value</span>, <span class="ruby-identifier">wall_time</span>)  
-174:         <span class="ruby-keyword kw">end</span>
-175:       <span class="ruby-keyword kw">end</span>
-176:     <span class="ruby-keyword kw">end</span>
+144:       <span class="ruby-keyword kw">end</span>
+145:       <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">url_sample</span>.<span class="ruby-identifier">id</span> <span class="ruby-keyword kw">and</span> <span class="ruby-identifier">db_time_breakup</span>
+146:         <span class="ruby-identifier">db_time_breakup</span>.<span class="ruby-identifier">each_pair</span> <span class="ruby-keyword kw">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">key</span>, <span class="ruby-identifier">value</span><span class="ruby-operator">|</span>
+147:           <span class="ruby-identifier">create_breakup_sample</span>(<span class="ruby-identifier">app_id</span>, <span class="ruby-identifier">url_sample</span>.<span class="ruby-identifier">id</span>, <span class="ruby-identifier">key</span>, <span class="ruby-identifier">value</span>, <span class="ruby-identifier">wall_time</span>)  
+148:         <span class="ruby-keyword kw">end</span>
+149:       <span class="ruby-keyword kw">end</span>
+150:     <span class="ruby-keyword kw">end</span>
 </pre>
           </div>
         </div>
       </div>
 
-      <div id="method-M000103" class="method-detail">
-        <a name="M000103"></a>
+      <div id="method-M000112" class="method-detail">
+        <a name="M000112"></a>
 
         <div class="method-heading">
-          <a href="#M000103" class="method-signature">
+          <a href="#M000112" class="method-signature">
           <span class="method-name">get_max_and_slab</span><span class="method-args">(max)</span>
           </a>
         </div>
@@ -362,8 +296,8 @@ This method gives the maximum value for y axis and the value by which the y
 axis is to be partitioned.
 </p>
           <p><a class="source-toggle" href="#"
-            onclick="toggleCode('M000103-source');return false;">[Source]</a></p>
-          <div class="method-source-code" id="M000103-source">
+            onclick="toggleCode('M000112-source');return false;">[Source]</a></p>
+          <div class="method-source-code" id="M000112-source">
 <pre>
      <span class="ruby-comment cmt"># File app/models/url_time_sample.rb, line 98</span>
  98:     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">get_max_and_slab</span>(<span class="ruby-identifier">max</span>)
@@ -385,11 +319,11 @@ axis is to be partitioned.
         </div>
       </div>
 
-      <div id="method-M000100" class="method-detail">
-        <a name="M000100"></a>
+      <div id="method-M000109" class="method-detail">
+        <a name="M000109"></a>
 
         <div class="method-heading">
-          <a href="#M000100" class="method-signature">
+          <a href="#M000109" class="method-signature">
           <span class="method-name">get_slowest_url_data</span><span class="method-args">(app_id, start_time, end_time)</span>
           </a>
         </div>
@@ -398,11 +332,11 @@ axis is to be partitioned.
           <p>
 This method is get data of the slowest urls of an application. This method
 is called by the <a
-href="UrlTimeSample.html#M000098">get_url_calls_data</a> method.
+href="UrlTimeSample.html#M000107">get_url_calls_data</a> method.
 </p>
           <p><a class="source-toggle" href="#"
-            onclick="toggleCode('M000100-source');return false;">[Source]</a></p>
-          <div class="method-source-code" id="M000100-source">
+            onclick="toggleCode('M000109-source');return false;">[Source]</a></p>
+          <div class="method-source-code" id="M000109-source">
 <pre>
     <span class="ruby-comment cmt"># File app/models/url_time_sample.rb, line 80</span>
 80:     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">get_slowest_url_data</span>(<span class="ruby-identifier">app_id</span>, <span class="ruby-identifier">start_time</span>, <span class="ruby-identifier">end_time</span>)
@@ -414,11 +348,11 @@ href="UrlTimeSample.html#M000098">get_url_calls_data</a> method.
         </div>
       </div>
 
-      <div id="method-M000101" class="method-detail">
-        <a name="M000101"></a>
+      <div id="method-M000110" class="method-detail">
+        <a name="M000110"></a>
 
         <div class="method-heading">
-          <a href="#M000101" class="method-signature">
+          <a href="#M000110" class="method-signature">
           <span class="method-name">get_time_consuming_url_data</span><span class="method-args">(app_id, start_time, end_time)</span>
           </a>
         </div>
@@ -427,11 +361,11 @@ href="UrlTimeSample.html#M000098">get_url_calls_data</a> method.
           <p>
 This method is get data of the time consuming urls of an application. This
 method is called by the <a
-href="UrlTimeSample.html#M000098">get_url_calls_data</a> method.
+href="UrlTimeSample.html#M000107">get_url_calls_data</a> method.
 </p>
           <p><a class="source-toggle" href="#"
-            onclick="toggleCode('M000101-source');return false;">[Source]</a></p>
-          <div class="method-source-code" id="M000101-source">
+            onclick="toggleCode('M000110-source');return false;">[Source]</a></p>
+          <div class="method-source-code" id="M000110-source">
 <pre>
     <span class="ruby-comment cmt"># File app/models/url_time_sample.rb, line 86</span>
 86:     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">get_time_consuming_url_data</span>(<span class="ruby-identifier">app_id</span>, <span class="ruby-identifier">start_time</span>, <span class="ruby-identifier">end_time</span>)
@@ -443,11 +377,11 @@ href="UrlTimeSample.html#M000098">get_url_calls_data</a> method.
         </div>
       </div>
 
-      <div id="method-M000102" class="method-detail">
-        <a name="M000102"></a>
+      <div id="method-M000111" class="method-detail">
+        <a name="M000111"></a>
 
         <div class="method-heading">
-          <a href="#M000102" class="method-signature">
+          <a href="#M000111" class="method-signature">
           <span class="method-name">get_top_db_consuming_url_data</span><span class="method-args">(app_id, start_time, end_time)</span>
           </a>
         </div>
@@ -456,11 +390,11 @@ href="UrlTimeSample.html#M000098">get_url_calls_data</a> method.
           <p>
 This method is get data of the top database consuming urls of an
 application. This method is called by the <a
-href="UrlTimeSample.html#M000098">get_url_calls_data</a> method.
+href="UrlTimeSample.html#M000107">get_url_calls_data</a> method.
 </p>
           <p><a class="source-toggle" href="#"
-            onclick="toggleCode('M000102-source');return false;">[Source]</a></p>
-          <div class="method-source-code" id="M000102-source">
+            onclick="toggleCode('M000111-source');return false;">[Source]</a></p>
+          <div class="method-source-code" id="M000111-source">
 <pre>
     <span class="ruby-comment cmt"># File app/models/url_time_sample.rb, line 92</span>
 92:     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">get_top_db_consuming_url_data</span>(<span class="ruby-identifier">app_id</span>, <span class="ruby-identifier">start_time</span>, <span class="ruby-identifier">end_time</span>)
@@ -472,11 +406,11 @@ href="UrlTimeSample.html#M000098">get_url_calls_data</a> method.
         </div>
       </div>
 
-      <div id="method-M000098" class="method-detail">
-        <a name="M000098"></a>
+      <div id="method-M000107" class="method-detail">
+        <a name="M000107"></a>
 
         <div class="method-heading">
-          <a href="#M000098" class="method-signature">
+          <a href="#M000107" class="method-signature">
           <span class="method-name">get_url_calls_data</span><span class="method-args">(app_id, from_date, to_date, type)</span>
           </a>
         </div>
@@ -487,8 +421,8 @@ This method returns a hash of data for the graphs Url HIts , Slowest Url
 and Most time Consuming Url for an application.
 </p>
           <p><a class="source-toggle" href="#"
-            onclick="toggleCode('M000098-source');return false;">[Source]</a></p>
-          <div class="method-source-code" id="M000098-source">
+            onclick="toggleCode('M000107-source');return false;">[Source]</a></p>
+          <div class="method-source-code" id="M000107-source">
 <pre>
     <span class="ruby-comment cmt"># File app/models/url_time_sample.rb, line 27</span>
 27:     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">get_url_calls_data</span>(<span class="ruby-identifier">app_id</span>, <span class="ruby-identifier">from_date</span>, <span class="ruby-identifier">to_date</span>, <span class="ruby-identifier">type</span>)
@@ -523,17 +457,17 @@ and Most time Consuming Url for an application.
 56:             <span class="ruby-identifier">max</span> = <span class="ruby-identifier">data</span>
 57:           <span class="ruby-keyword kw">end</span>
 58:         <span class="ruby-keyword kw">end</span>
-59:         <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">urls</span>.<span class="ruby-identifier">size</span> <span class="ruby-operator">&lt;</span> <span class="ruby-value">20</span>
-60:           <span class="ruby-keyword kw">for</span> <span class="ruby-identifier">i</span> <span class="ruby-keyword kw">in</span> <span class="ruby-value">0</span><span class="ruby-operator">..</span><span class="ruby-value">19</span> <span class="ruby-operator">-</span> <span class="ruby-identifier">urls</span>.<span class="ruby-identifier">size</span>
+59:         <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">urls</span>.<span class="ruby-identifier">size</span> <span class="ruby-operator">&lt;</span> <span class="ruby-value">15</span>
+60:           <span class="ruby-keyword kw">for</span> <span class="ruby-identifier">i</span> <span class="ruby-keyword kw">in</span> <span class="ruby-value">0</span><span class="ruby-operator">..</span><span class="ruby-value">14</span> <span class="ruby-operator">-</span> <span class="ruby-identifier">urls</span>.<span class="ruby-identifier">size</span>
 61:             <span class="ruby-identifier">urls</span> <span class="ruby-operator">&lt;&lt;</span> <span class="ruby-value str">&quot;&quot;</span>
 62:             <span class="ruby-identifier">final_data</span> <span class="ruby-operator">&lt;&lt;</span> <span class="ruby-value">0</span>
 63:           <span class="ruby-keyword kw">end</span>
 64:         <span class="ruby-keyword kw">else</span>
-65:           <span class="ruby-identifier">urls</span> = <span class="ruby-identifier">urls</span>[<span class="ruby-value">0</span><span class="ruby-operator">..</span><span class="ruby-value">24</span>]
-66:           <span class="ruby-identifier">final_data</span> = <span class="ruby-identifier">final_data</span>[<span class="ruby-value">0</span><span class="ruby-operator">..</span><span class="ruby-value">24</span>]
+65:           <span class="ruby-identifier">urls</span> = <span class="ruby-identifier">urls</span>[<span class="ruby-value">0</span><span class="ruby-operator">..</span><span class="ruby-value">14</span>]
+66:           <span class="ruby-identifier">final_data</span> = <span class="ruby-identifier">final_data</span>[<span class="ruby-value">0</span><span class="ruby-operator">..</span><span class="ruby-value">14</span>]
 67:         <span class="ruby-keyword kw">end</span>
 68:       <span class="ruby-keyword kw">end</span>
-69:       <span class="ruby-identifier">max</span>, <span class="ruby-identifier">slab</span>=<span class="ruby-identifier">get_max_and_slab</span>(<span class="ruby-identifier">max</span>)
+69:       <span class="ruby-identifier">max</span>, <span class="ruby-identifier">slab</span> = <span class="ruby-identifier">get_max_and_slab</span>(<span class="ruby-identifier">max</span>)
 70:       <span class="ruby-keyword kw">return</span> <span class="ruby-identifier">urls</span>, <span class="ruby-identifier">final_data</span>, <span class="ruby-identifier">max</span>, <span class="ruby-identifier">slab</span>
 71:     <span class="ruby-keyword kw">end</span>
 </pre>
@@ -541,11 +475,11 @@ and Most time Consuming Url for an application.
         </div>
       </div>
 
-      <div id="method-M000105" class="method-detail">
-        <a name="M000105"></a>
+      <div id="method-M000114" class="method-detail">
+        <a name="M000114"></a>
 
         <div class="method-heading">
-          <a href="#M000105" class="method-signature">
+          <a href="#M000114" class="method-signature">
           <span class="method-name">get_url_data</span><span class="method-args">(start_time, end_time, app_id, url_name)</span>
           </a>
         </div>
@@ -556,8 +490,8 @@ This method returns the total_time, db_time and rendering time for an url
 of an application for the given period between start_time and end_time
 </p>
           <p><a class="source-toggle" href="#"
-            onclick="toggleCode('M000105-source');return false;">[Source]</a></p>
-          <div class="method-source-code" id="M000105-source">
+            onclick="toggleCode('M000114-source');return false;">[Source]</a></p>
+          <div class="method-source-code" id="M000114-source">
 <pre>
      <span class="ruby-comment cmt"># File app/models/url_time_sample.rb, line 125</span>
 125:     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">get_url_data</span>(<span class="ruby-identifier">start_time</span>, <span class="ruby-identifier">end_time</span>, <span class="ruby-identifier">app_id</span>, <span class="ruby-identifier">url_name</span>)
@@ -569,11 +503,11 @@ of an application for the given period between start_time and end_time
         </div>
       </div>
 
-      <div id="method-M000099" class="method-detail">
-        <a name="M000099"></a>
+      <div id="method-M000108" class="method-detail">
+        <a name="M000108"></a>
 
         <div class="method-heading">
-          <a href="#M000099" class="method-signature">
+          <a href="#M000108" class="method-signature">
           <span class="method-name">get_url_hits_data</span><span class="method-args">(app_id, start_time, end_time)</span>
           </a>
         </div>
@@ -581,12 +515,12 @@ of an application for the given period between start_time and end_time
         <div class="method-description">
           <p>
 This method is get data of the url hits for an application. This method is
-called by the <a href="UrlTimeSample.html#M000098">get_url_calls_data</a>
+called by the <a href="UrlTimeSample.html#M000107">get_url_calls_data</a>
 method.
 </p>
           <p><a class="source-toggle" href="#"
-            onclick="toggleCode('M000099-source');return false;">[Source]</a></p>
-          <div class="method-source-code" id="M000099-source">
+            onclick="toggleCode('M000108-source');return false;">[Source]</a></p>
+          <div class="method-source-code" id="M000108-source">
 <pre>
     <span class="ruby-comment cmt"># File app/models/url_time_sample.rb, line 74</span>
 74:     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">get_url_hits_data</span>(<span class="ruby-identifier">app_id</span>, <span class="ruby-identifier">start_time</span>, <span class="ruby-identifier">end_time</span>)
@@ -598,11 +532,11 @@ method.
         </div>
       </div>
 
-      <div id="method-M000106" class="method-detail">
-        <a name="M000106"></a>
+      <div id="method-M000115" class="method-detail">
+        <a name="M000115"></a>
 
         <div class="method-heading">
-          <a href="#M000106" class="method-signature">
+          <a href="#M000115" class="method-signature">
           <span class="method-name">get_url_id</span><span class="method-args">(start_time, end_time, url_name,app_id)</span>
           </a>
         </div>
@@ -613,8 +547,8 @@ This method returns the array of the url ids for a particular url of an
 application that was hit in a period between start_time and end_time
 </p>
           <p><a class="source-toggle" href="#"
-            onclick="toggleCode('M000106-source');return false;">[Source]</a></p>
-          <div class="method-source-code" id="M000106-source">
+            onclick="toggleCode('M000115-source');return false;">[Source]</a></p>
+          <div class="method-source-code" id="M000115-source">
 <pre>
      <span class="ruby-comment cmt"># File app/models/url_time_sample.rb, line 132</span>
 132:     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">get_url_id</span>(<span class="ruby-identifier">start_time</span>, <span class="ruby-identifier">end_time</span>, <span class="ruby-identifier">url_name</span>,<span class="ruby-identifier">app_id</span>)
@@ -626,11 +560,11 @@ application that was hit in a period between start_time and end_time
         </div>
       </div>
 
-      <div id="method-M000104" class="method-detail">
-        <a name="M000104"></a>
+      <div id="method-M000113" class="method-detail">
+        <a name="M000113"></a>
 
         <div class="method-heading">
-          <a href="#M000104" class="method-signature">
+          <a href="#M000113" class="method-signature">
           <span class="method-name">get_urls</span><span class="method-args">(start_time, end_time, app_id)</span>
           </a>
         </div>
@@ -641,8 +575,8 @@ This method returns the array of the url for an application that were hit
 between start_time and end_time
 </p>
           <p><a class="source-toggle" href="#"
-            onclick="toggleCode('M000104-source');return false;">[Source]</a></p>
-          <div class="method-source-code" id="M000104-source">
+            onclick="toggleCode('M000113-source');return false;">[Source]</a></p>
+          <div class="method-source-code" id="M000113-source">
 <pre>
      <span class="ruby-comment cmt"># File app/models/url_time_sample.rb, line 114</span>
 114:     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">get_urls</span>(<span class="ruby-identifier">start_time</span>, <span class="ruby-identifier">end_time</span>, <span class="ruby-identifier">app_id</span>)      
@@ -658,11 +592,11 @@ between start_time and end_time
         </div>
       </div>
 
-      <div id="method-M000111" class="method-detail">
-        <a name="M000111"></a>
+      <div id="method-M000120" class="method-detail">
+        <a name="M000120"></a>
 
         <div class="method-heading">
-          <a href="#M000111" class="method-signature">
+          <a href="#M000120" class="method-signature">
           <span class="method-name">write_all_samples</span><span class="method-args">(message_analyzer)</span>
           </a>
         </div>
@@ -673,47 +607,47 @@ At time of stopping a script, we would write the samples which are in
 memory.
 </p>
           <p><a class="source-toggle" href="#"
-            onclick="toggleCode('M000111-source');return false;">[Source]</a></p>
-          <div class="method-source-code" id="M000111-source">
+            onclick="toggleCode('M000120-source');return false;">[Source]</a></p>
+          <div class="method-source-code" id="M000120-source">
 <pre>
-     <span class="ruby-comment cmt"># File app/models/url_time_sample.rb, line 310</span>
-310:     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">write_all_samples</span>(<span class="ruby-identifier">message_analyzer</span>)      
-311:       <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">message_analyzer</span>.<span class="ruby-identifier">url_samples</span>.<span class="ruby-identifier">length</span> <span class="ruby-operator">==</span> <span class="ruby-value">0</span>
-312:         <span class="ruby-keyword kw">return</span>
-313:       <span class="ruby-keyword kw">end</span>
-314:       
-315:       <span class="ruby-comment cmt"># it will contain all the url samples for all the application.</span>
-316:       <span class="ruby-identifier">all_samples</span> = <span class="ruby-identifier">message_analyzer</span>.<span class="ruby-identifier">url_samples</span>
-317:       <span class="ruby-identifier">all_samples</span>.<span class="ruby-identifier">each_pair</span> <span class="ruby-keyword kw">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">app_id</span>, <span class="ruby-identifier">app_samples</span><span class="ruby-operator">|</span>
-318:         <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">app_samples</span>.<span class="ruby-identifier">length</span> <span class="ruby-operator">!=</span> <span class="ruby-value">0</span>
-319:           <span class="ruby-identifier">app_samples</span>.<span class="ruby-identifier">each_pair</span> <span class="ruby-keyword kw">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">url</span>, <span class="ruby-identifier">sample</span><span class="ruby-operator">|</span>
-320:             <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">sample</span> <span class="ruby-keyword kw">and</span> <span class="ruby-identifier">sample</span>.<span class="ruby-identifier">length</span> <span class="ruby-operator">&gt;</span> <span class="ruby-value">0</span>
-321:               <span class="ruby-identifier">o_wall_time</span> = <span class="ruby-identifier">sample</span>.<span class="ruby-identifier">first</span> <span class="ruby-operator">+</span> <span class="ruby-identifier">message_analyzer</span>.<span class="ruby-identifier">sampling_rate</span>
-322:               <span class="ruby-identifier">tmp_sample</span> = <span class="ruby-identifier">sample</span>[<span class="ruby-value">1</span>]
-323:               <span class="ruby-identifier">create_sample</span>(<span class="ruby-identifier">app_id</span>, <span class="ruby-identifier">url</span>, <span class="ruby-identifier">tmp_sample</span>, <span class="ruby-identifier">o_wall_time</span>, <span class="ruby-identifier">message_analyzer</span>.<span class="ruby-identifier">sampling_rate</span>, <span class="ruby-identifier">tmp_sample</span>[<span class="ruby-value">4</span>])
-324:               <span class="ruby-comment cmt">#url_sample = create({:app_id =&gt; app_id, :url =&gt; url, :total_time =&gt; tmp_sample[0], :db_time =&gt; tmp_sample[1], :rendering_time =&gt; tmp_sample[2], :number_of_requests =&gt; tmp_sample[3], :wall_time =&gt; o_wall_time, :sampling_rate =&gt; message_analyzer.sampling_rate})</span>
-325:               <span class="ruby-comment cmt">#tmp_hash = tmp_sample[4]</span>
-326:               <span class="ruby-comment cmt">#p tmp_hash</span>
-327:               <span class="ruby-comment cmt">#if tmp_hash and tmp_hash.length &gt; 0</span>
-328:               <span class="ruby-comment cmt">#  tmp_hash.each_pair do |key, value|</span>
-329:               <span class="ruby-comment cmt">#    UrlBreakupTimeSample.create({:app_id =&gt; app_id, :url_sample_id =&gt; url_sample.id, :method_name =&gt; key, :spent_time =&gt; value, :wall_time =&gt; url_sample.wall_time})</span>
-330:               <span class="ruby-comment cmt">#  end # do |key, value|</span>
-331:               <span class="ruby-comment cmt">#end</span>
-332:             <span class="ruby-keyword kw">end</span>
-333:           <span class="ruby-keyword kw">end</span> <span class="ruby-comment cmt"># do |url, sample|</span>
-334:         <span class="ruby-keyword kw">end</span> <span class="ruby-comment cmt"># if app_samples.length != 0</span>
-335:       <span class="ruby-keyword kw">end</span> <span class="ruby-comment cmt"># do |app_id, app_samples|</span>
-336:     <span class="ruby-keyword kw">end</span>
+     <span class="ruby-comment cmt"># File app/models/url_time_sample.rb, line 257</span>
+257:     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">write_all_samples</span>(<span class="ruby-identifier">message_analyzer</span>)      
+258:       <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">message_analyzer</span>.<span class="ruby-identifier">url_samples</span>.<span class="ruby-identifier">length</span> <span class="ruby-operator">==</span> <span class="ruby-value">0</span>
+259:         <span class="ruby-keyword kw">return</span>
+260:       <span class="ruby-keyword kw">end</span>
+261:       
+262:       <span class="ruby-comment cmt"># it will contain all the url samples for all the application.</span>
+263:       <span class="ruby-identifier">all_samples</span> = <span class="ruby-identifier">message_analyzer</span>.<span class="ruby-identifier">url_samples</span>
+264:       <span class="ruby-identifier">all_samples</span>.<span class="ruby-identifier">each_pair</span> <span class="ruby-keyword kw">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">app_id</span>, <span class="ruby-identifier">app_samples</span><span class="ruby-operator">|</span>
+265:         <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">app_samples</span>.<span class="ruby-identifier">length</span> <span class="ruby-operator">!=</span> <span class="ruby-value">0</span>
+266:           <span class="ruby-identifier">app_samples</span>.<span class="ruby-identifier">each_pair</span> <span class="ruby-keyword kw">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">url</span>, <span class="ruby-identifier">sample</span><span class="ruby-operator">|</span>
+267:             <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">sample</span> <span class="ruby-keyword kw">and</span> <span class="ruby-identifier">sample</span>.<span class="ruby-identifier">length</span> <span class="ruby-operator">&gt;</span> <span class="ruby-value">0</span>
+268:               <span class="ruby-identifier">o_wall_time</span> = <span class="ruby-identifier">sample</span>.<span class="ruby-identifier">first</span> <span class="ruby-operator">+</span> <span class="ruby-identifier">message_analyzer</span>.<span class="ruby-identifier">sampling_rate</span>
+269:               <span class="ruby-identifier">tmp_sample</span> = <span class="ruby-identifier">sample</span>[<span class="ruby-value">1</span>]
+270:               <span class="ruby-identifier">create_sample</span>(<span class="ruby-identifier">app_id</span>, <span class="ruby-identifier">url</span>, <span class="ruby-identifier">tmp_sample</span>, <span class="ruby-identifier">o_wall_time</span>, <span class="ruby-identifier">message_analyzer</span>.<span class="ruby-identifier">sampling_rate</span>, <span class="ruby-identifier">tmp_sample</span>[<span class="ruby-value">4</span>])
+271:               <span class="ruby-comment cmt">#url_sample = create({:app_id =&gt; app_id, :url =&gt; url, :total_time =&gt; tmp_sample[0], :db_time =&gt; tmp_sample[1], :rendering_time =&gt; tmp_sample[2], :number_of_requests =&gt; tmp_sample[3], :wall_time =&gt; o_wall_time, :sampling_rate =&gt; message_analyzer.sampling_rate})</span>
+272:               <span class="ruby-comment cmt">#tmp_hash = tmp_sample[4]</span>
+273:               <span class="ruby-comment cmt">#p tmp_hash</span>
+274:               <span class="ruby-comment cmt">#if tmp_hash and tmp_hash.length &gt; 0</span>
+275:               <span class="ruby-comment cmt">#  tmp_hash.each_pair do |key, value|</span>
+276:               <span class="ruby-comment cmt">#    UrlBreakupTimeSample.create({:app_id =&gt; app_id, :url_sample_id =&gt; url_sample.id, :method_name =&gt; key, :spent_time =&gt; value, :wall_time =&gt; url_sample.wall_time})</span>
+277:               <span class="ruby-comment cmt">#  end # do |key, value|</span>
+278:               <span class="ruby-comment cmt">#end</span>
+279:             <span class="ruby-keyword kw">end</span>
+280:           <span class="ruby-keyword kw">end</span> <span class="ruby-comment cmt"># do |url, sample|</span>
+281:         <span class="ruby-keyword kw">end</span> <span class="ruby-comment cmt"># if app_samples.length != 0</span>
+282:       <span class="ruby-keyword kw">end</span> <span class="ruby-comment cmt"># do |app_id, app_samples|</span>
+283:     <span class="ruby-keyword kw">end</span>
 </pre>
           </div>
         </div>
       </div>
 
-      <div id="method-M000110" class="method-detail">
-        <a name="M000110"></a>
+      <div id="method-M000119" class="method-detail">
+        <a name="M000119"></a>
 
         <div class="method-heading">
-          <a href="#M000110" class="method-signature">
+          <a href="#M000119" class="method-signature">
           <span class="method-name">write_stale_samples</span><span class="method-args">(message_analyzer)</span>
           </a>
         </div>
@@ -725,35 +659,35 @@ memory for maximum one minute. By this method we # would write all such
 samples which are in memory for more than a minute.
 </p>
           <p><a class="source-toggle" href="#"
-            onclick="toggleCode('M000110-source');return false;">[Source]</a></p>
-          <div class="method-source-code" id="M000110-source">
+            onclick="toggleCode('M000119-source');return false;">[Source]</a></p>
+          <div class="method-source-code" id="M000119-source">
 <pre>
-     <span class="ruby-comment cmt"># File app/models/url_time_sample.rb, line 283</span>
-283:     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">write_stale_samples</span>(<span class="ruby-identifier">message_analyzer</span>)
-284:       <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">message_analyzer</span>.<span class="ruby-identifier">url_samples</span>.<span class="ruby-identifier">length</span> <span class="ruby-operator">==</span> <span class="ruby-value">0</span>
-285:         <span class="ruby-keyword kw">return</span>
-286:       <span class="ruby-keyword kw">end</span>
-287:       <span class="ruby-comment cmt"># it will contain all the url samples for all the application.</span>
-288:       <span class="ruby-identifier">all_samples</span> = <span class="ruby-identifier">message_analyzer</span>.<span class="ruby-identifier">url_samples</span>
-289:       <span class="ruby-identifier">all_samples</span>.<span class="ruby-identifier">each_pair</span> <span class="ruby-keyword kw">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">app_id</span>, <span class="ruby-identifier">app_samples</span><span class="ruby-operator">|</span>
-290:         <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">app_samples</span>.<span class="ruby-identifier">length</span> <span class="ruby-operator">!=</span> <span class="ruby-value">0</span>
-291:           <span class="ruby-identifier">app_samples</span>.<span class="ruby-identifier">each_pair</span> <span class="ruby-keyword kw">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">url</span>, <span class="ruby-identifier">sample</span><span class="ruby-operator">|</span>
-292:             <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">sample</span> <span class="ruby-keyword kw">and</span> <span class="ruby-identifier">sample</span>.<span class="ruby-identifier">length</span> <span class="ruby-operator">&gt;</span> <span class="ruby-value">0</span> <span class="ruby-keyword kw">and</span> (<span class="ruby-identifier">o_wall_time</span> = <span class="ruby-identifier">sample</span>.<span class="ruby-identifier">first</span> <span class="ruby-operator">+</span> <span class="ruby-identifier">message_analyzer</span>.<span class="ruby-identifier">sampling_rate</span>) <span class="ruby-operator">&lt;</span> <span class="ruby-constant">Time</span>.<span class="ruby-identifier">now</span>
-293:               <span class="ruby-identifier">tmp_sample</span> = <span class="ruby-identifier">sample</span>[<span class="ruby-value">1</span>]
-294:               <span class="ruby-identifier">create_sample</span>(<span class="ruby-identifier">app_id</span>, <span class="ruby-identifier">url</span>, <span class="ruby-identifier">tmp_sample</span>, <span class="ruby-identifier">o_wall_time</span>, <span class="ruby-identifier">message_analyzer</span>.<span class="ruby-identifier">sampling_rate</span>, <span class="ruby-identifier">tmp_sample</span>[<span class="ruby-value">4</span>])
-295:               <span class="ruby-comment cmt">#url_sample = create({:app_id =&gt; app_id, :url =&gt; url, :total_time =&gt; tmp_sample[0], :db_time =&gt; tmp_sample[1], :rendering_time =&gt; tmp_sample[2], :number_of_requests =&gt; tmp_sample[3], :wall_time =&gt; o_wall_time, :sampling_rate =&gt; message_analyzer.sampling_rate})</span>
-296:               <span class="ruby-comment cmt">#tmp_hash = tmp_sample[4]</span>
-297:               <span class="ruby-comment cmt">#if tmp_hash and tmp_hash.length &gt; 0</span>
-298:               <span class="ruby-comment cmt">#  tmp_hash.each_pair do |key, value|</span>
-299:               <span class="ruby-comment cmt">#    UrlBreakupTimeSample.create({:app_id =&gt; app_id, :url_sample_id =&gt; url_sample.id, :method_name =&gt; key, :spent_time =&gt; value, :wall_time =&gt; url_sample.wall_time})</span>
-300:               <span class="ruby-comment cmt">#  end # do |key, value|</span>
-301:               <span class="ruby-comment cmt">#end</span>
-302:               <span class="ruby-identifier">app_samples</span>[<span class="ruby-identifier">url</span>] = <span class="ruby-keyword kw">nil</span>
-303:             <span class="ruby-keyword kw">end</span> <span class="ruby-comment cmt"># if (o_wall_time = url_sample.first + message_analyzer.sampling_rate) &lt; Time.now</span>
-304:           <span class="ruby-keyword kw">end</span> <span class="ruby-comment cmt"># do |url, sample|</span>
-305:         <span class="ruby-keyword kw">end</span> <span class="ruby-comment cmt"># if app_samples.length != 0</span>
-306:       <span class="ruby-keyword kw">end</span> <span class="ruby-comment cmt"># do |app_id, app_samples|</span>
-307:     <span class="ruby-keyword kw">end</span>
+     <span class="ruby-comment cmt"># File app/models/url_time_sample.rb, line 230</span>
+230:     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">write_stale_samples</span>(<span class="ruby-identifier">message_analyzer</span>)
+231:       <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">message_analyzer</span>.<span class="ruby-identifier">url_samples</span>.<span class="ruby-identifier">length</span> <span class="ruby-operator">==</span> <span class="ruby-value">0</span>
+232:         <span class="ruby-keyword kw">return</span>
+233:       <span class="ruby-keyword kw">end</span>
+234:       <span class="ruby-comment cmt"># it will contain all the url samples for all the application.</span>
+235:       <span class="ruby-identifier">all_samples</span> = <span class="ruby-identifier">message_analyzer</span>.<span class="ruby-identifier">url_samples</span>
+236:       <span class="ruby-identifier">all_samples</span>.<span class="ruby-identifier">each_pair</span> <span class="ruby-keyword kw">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">app_id</span>, <span class="ruby-identifier">app_samples</span><span class="ruby-operator">|</span>
+237:         <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">app_samples</span>.<span class="ruby-identifier">length</span> <span class="ruby-operator">!=</span> <span class="ruby-value">0</span>
+238:           <span class="ruby-identifier">app_samples</span>.<span class="ruby-identifier">each_pair</span> <span class="ruby-keyword kw">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">url</span>, <span class="ruby-identifier">sample</span><span class="ruby-operator">|</span>
+239:             <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">sample</span> <span class="ruby-keyword kw">and</span> <span class="ruby-identifier">sample</span>.<span class="ruby-identifier">length</span> <span class="ruby-operator">&gt;</span> <span class="ruby-value">0</span> <span class="ruby-keyword kw">and</span> (<span class="ruby-identifier">o_wall_time</span> = <span class="ruby-identifier">sample</span>.<span class="ruby-identifier">first</span> <span class="ruby-operator">+</span> <span class="ruby-identifier">message_analyzer</span>.<span class="ruby-identifier">sampling_rate</span>) <span class="ruby-operator">&lt;</span> <span class="ruby-constant">Time</span>.<span class="ruby-identifier">now</span>
+240:               <span class="ruby-identifier">tmp_sample</span> = <span class="ruby-identifier">sample</span>[<span class="ruby-value">1</span>]
+241:               <span class="ruby-identifier">create_sample</span>(<span class="ruby-identifier">app_id</span>, <span class="ruby-identifier">url</span>, <span class="ruby-identifier">tmp_sample</span>, <span class="ruby-identifier">o_wall_time</span>, <span class="ruby-identifier">message_analyzer</span>.<span class="ruby-identifier">sampling_rate</span>, <span class="ruby-identifier">tmp_sample</span>[<span class="ruby-value">4</span>])
+242:               <span class="ruby-comment cmt">#url_sample = create({:app_id =&gt; app_id, :url =&gt; url, :total_time =&gt; tmp_sample[0], :db_time =&gt; tmp_sample[1], :rendering_time =&gt; tmp_sample[2], :number_of_requests =&gt; tmp_sample[3], :wall_time =&gt; o_wall_time, :sampling_rate =&gt; message_analyzer.sampling_rate})</span>
+243:               <span class="ruby-comment cmt">#tmp_hash = tmp_sample[4]</span>
+244:               <span class="ruby-comment cmt">#if tmp_hash and tmp_hash.length &gt; 0</span>
+245:               <span class="ruby-comment cmt">#  tmp_hash.each_pair do |key, value|</span>
+246:               <span class="ruby-comment cmt">#    UrlBreakupTimeSample.create({:app_id =&gt; app_id, :url_sample_id =&gt; url_sample.id, :method_name =&gt; key, :spent_time =&gt; value, :wall_time =&gt; url_sample.wall_time})</span>
+247:               <span class="ruby-comment cmt">#  end # do |key, value|</span>
+248:               <span class="ruby-comment cmt">#end</span>
+249:               <span class="ruby-identifier">app_samples</span>[<span class="ruby-identifier">url</span>] = <span class="ruby-keyword kw">nil</span>
+250:             <span class="ruby-keyword kw">end</span> <span class="ruby-comment cmt"># if (o_wall_time = url_sample.first + message_analyzer.sampling_rate) &lt; Time.now</span>
+251:           <span class="ruby-keyword kw">end</span> <span class="ruby-comment cmt"># do |url, sample|</span>
+252:         <span class="ruby-keyword kw">end</span> <span class="ruby-comment cmt"># if app_samples.length != 0</span>
+253:       <span class="ruby-keyword kw">end</span> <span class="ruby-comment cmt"># do |app_id, app_samples|</span>
+254:     <span class="ruby-keyword kw">end</span>
 </pre>
           </div>
         </div>

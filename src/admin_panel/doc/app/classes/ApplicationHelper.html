@@ -87,10 +87,7 @@ application.
       <h3 class="section-bar">Methods</h3>
 
       <div class="name-list">
-      <a href="#M000167">get_tab_class_name</a>&nbsp;&nbsp;
-      <a href="#M000170">restart_application</a>&nbsp;&nbsp;
-      <a href="#M000168">start_application</a>&nbsp;&nbsp;
-      <a href="#M000169">stop_application</a>&nbsp;&nbsp;
+      <a href="#M000179">get_tab_class_name</a>&nbsp;&nbsp;
       </div>
     </div>
 
@@ -110,116 +107,13 @@ application.
 
     <!-- if method_list -->
     <div id="methods">
-      <h3 class="section-bar">Public Class methods</h3>
-
-      <div id="method-M000170" class="method-detail">
-        <a name="M000170"></a>
-
-        <div class="method-heading">
-          <a href="#M000170" class="method-signature">
-          <span class="method-name">restart_application</span><span class="method-args">(app_name)</span>
-          </a>
-        </div>
-      
-        <div class="method-description">
-          <p>
-Restart the application
-</p>
-          <p><a class="source-toggle" href="#"
-            onclick="toggleCode('M000170-source');return false;">[Source]</a></p>
-          <div class="method-source-code" id="M000170-source">
-<pre>
-    <span class="ruby-comment cmt"># File app/helpers/application_helper.rb, line 76</span>
-76:   <span class="ruby-keyword kw">def</span> <span class="ruby-keyword kw">self</span>.<span class="ruby-identifier">restart_application</span>(<span class="ruby-identifier">app_name</span>)
-77:     <span class="ruby-identifier">ctl</span> = <span class="ruby-constant">Control</span>.<span class="ruby-identifier">new</span>(<span class="ruby-identifier">app_name</span>)
-78:     <span class="ruby-identifier">reply</span> = <span class="ruby-keyword kw">nil</span>
-79:     <span class="ruby-keyword kw">begin</span>
-80:       <span class="ruby-identifier">reply</span> = <span class="ruby-identifier">ctl</span>.<span class="ruby-identifier">restart</span>
-81:     <span class="ruby-keyword kw">rescue</span> <span class="ruby-constant">Exception</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">e</span>
-82:       <span class="ruby-identifier">reply</span> = <span class="ruby-node">&quot;An error occurred while sending 'stop' request for application '#{app_name}'. Please refer the Admin Panel log file for details.&quot;</span>
-83:     <span class="ruby-keyword kw">end</span>
-84:     <span class="ruby-keyword kw">return</span> <span class="ruby-identifier">reply</span>
-85:   <span class="ruby-keyword kw">end</span>
-</pre>
-          </div>
-        </div>
-      </div>
-
-      <div id="method-M000168" class="method-detail">
-        <a name="M000168"></a>
-
-        <div class="method-heading">
-          <a href="#M000168" class="method-signature">
-          <span class="method-name">start_application</span><span class="method-args">(app_name)</span>
-          </a>
-        </div>
-      
-        <div class="method-description">
-          <p>
-Start the application
-</p>
-          <p><a class="source-toggle" href="#"
-            onclick="toggleCode('M000168-source');return false;">[Source]</a></p>
-          <div class="method-source-code" id="M000168-source">
-<pre>
-    <span class="ruby-comment cmt"># File app/helpers/application_helper.rb, line 50</span>
-50:   <span class="ruby-keyword kw">def</span> <span class="ruby-keyword kw">self</span>.<span class="ruby-identifier">start_application</span>(<span class="ruby-identifier">app_name</span>)
-51:     <span class="ruby-identifier">ctl</span> = <span class="ruby-constant">Control</span>.<span class="ruby-identifier">new</span>(<span class="ruby-identifier">app_name</span>)
-52:     <span class="ruby-identifier">reply</span> = <span class="ruby-keyword kw">nil</span>
-53:     <span class="ruby-identifier">err_obj</span> = <span class="ruby-keyword kw">nil</span>
-54:     <span class="ruby-keyword kw">begin</span>
-55:       <span class="ruby-identifier">reply</span> = <span class="ruby-identifier">ctl</span>.<span class="ruby-identifier">add</span>    
-56:     <span class="ruby-keyword kw">rescue</span> <span class="ruby-constant">Exception</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">e</span>
-57:       <span class="ruby-identifier">err_obj</span> = <span class="ruby-identifier">e</span>      
-58:       <span class="ruby-identifier">reply</span> = <span class="ruby-node">&quot;An error occurred while sending 'start' request for application '#{app_name}'. Please refer the Admin Panel log file for details.&quot;</span>
-59:     <span class="ruby-keyword kw">end</span>
-60:     <span class="ruby-keyword kw">return</span> <span class="ruby-identifier">reply</span>, <span class="ruby-identifier">e</span>
-61:   <span class="ruby-keyword kw">end</span>
-</pre>
-          </div>
-        </div>
-      </div>
-
-      <div id="method-M000169" class="method-detail">
-        <a name="M000169"></a>
-
-        <div class="method-heading">
-          <a href="#M000169" class="method-signature">
-          <span class="method-name">stop_application</span><span class="method-args">(app_name)</span>
-          </a>
-        </div>
-      
-        <div class="method-description">
-          <p>
-Stop the application
-</p>
-          <p><a class="source-toggle" href="#"
-            onclick="toggleCode('M000169-source');return false;">[Source]</a></p>
-          <div class="method-source-code" id="M000169-source">
-<pre>
-    <span class="ruby-comment cmt"># File app/helpers/application_helper.rb, line 64</span>
-64:   <span class="ruby-keyword kw">def</span> <span class="ruby-keyword kw">self</span>.<span class="ruby-identifier">stop_application</span>(<span class="ruby-identifier">app_name</span>)
-65:     <span class="ruby-identifier">ctl</span> = <span class="ruby-constant">Control</span>.<span class="ruby-identifier">new</span>(<span class="ruby-identifier">app_name</span>)
-66:     <span class="ruby-identifier">reply</span> = <span class="ruby-keyword kw">nil</span>
-67:     <span class="ruby-keyword kw">begin</span>
-68:       <span class="ruby-identifier">reply</span> = <span class="ruby-identifier">ctl</span>.<span class="ruby-identifier">delete</span>      
-69:     <span class="ruby-keyword kw">rescue</span> <span class="ruby-constant">Exception</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">e</span>
-70:       <span class="ruby-identifier">reply</span> = <span class="ruby-node">&quot;An error occurred while sending 'stop' request for application '#{app_name}'. Please refer the Admin Panel log file for details.&quot;</span>
-71:     <span class="ruby-keyword kw">end</span>
-72:     <span class="ruby-keyword kw">return</span> <span class="ruby-identifier">reply</span>
-73:   <span class="ruby-keyword kw">end</span>
-</pre>
-          </div>
-        </div>
-      </div>
-
       <h3 class="section-bar">Public Instance methods</h3>
 
-      <div id="method-M000167" class="method-detail">
-        <a name="M000167"></a>
+      <div id="method-M000179" class="method-detail">
+        <a name="M000179"></a>
 
         <div class="method-heading">
-          <a href="#M000167" class="method-signature">
+          <a href="#M000179" class="method-signature">
           <span class="method-name">get_tab_class_name</span><span class="method-args">(controller_name,action_name)</span>
           </a>
         </div>
@@ -230,8 +124,8 @@ This method is used to get the tabs image for the differnt tabs in the
 admin panel.
 </p>
           <p><a class="source-toggle" href="#"
-            onclick="toggleCode('M000167-source');return false;">[Source]</a></p>
-          <div class="method-source-code" id="M000167-source">
+            onclick="toggleCode('M000179-source');return false;">[Source]</a></p>
+          <div class="method-source-code" id="M000179-source">
 <pre>
     <span class="ruby-comment cmt"># File app/helpers/application_helper.rb, line 24</span>
 24:   <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">get_tab_class_name</span>(<span class="ruby-identifier">controller_name</span>,<span class="ruby-identifier">action_name</span>)

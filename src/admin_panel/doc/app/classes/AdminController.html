@@ -153,8 +153,8 @@ href="AdminController.html#M000011">configuration</a> page.
 <pre>
      <span class="ruby-comment cmt"># File app/controllers/admin_controller.rb, line 160</span>
 160:   <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">add_text_box</span>
-161:     <span class="ruby-ivar">@path</span>=<span class="ruby-constant">CONFIG_FILE_PATH</span>
-162:     <span class="ruby-identifier">render</span> <span class="ruby-identifier">:partial=</span><span class="ruby-operator">&gt;</span><span class="ruby-value str">'add_div'</span>
+161:     <span class="ruby-ivar">@path</span> = <span class="ruby-constant">CONFIG_FILE_PATH</span>
+162:     <span class="ruby-identifier">render</span> <span class="ruby-identifier">:partial</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-value str">'add_div'</span>
 163:   <span class="ruby-keyword kw">end</span>
 </pre>
           </div>
@@ -182,7 +182,7 @@ specification.
 <pre>
      <span class="ruby-comment cmt"># File app/controllers/admin_controller.rb, line 167</span>
 167:   <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">cancel_edit</span>
-168:     <span class="ruby-identifier">text</span>=<span class="ruby-identifier">params</span>[<span class="ruby-identifier">:old_value</span>].<span class="ruby-identifier">to_s</span>                
+168:     <span class="ruby-identifier">text</span> = <span class="ruby-identifier">params</span>[<span class="ruby-identifier">:old_value</span>].<span class="ruby-identifier">to_s</span>              
 169:     <span class="ruby-identifier">render</span> <span class="ruby-identifier">:text</span> =<span class="ruby-operator">&gt;</span>     <span class="ruby-identifier">text</span>
 170:   <span class="ruby-keyword kw">end</span>
 </pre>
@@ -210,23 +210,23 @@ The action is to change the password of the admin panel user.
      <span class="ruby-comment cmt"># File app/controllers/admin_controller.rb, line 128</span>
 128:   <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">change_password</span>
 129:     <span class="ruby-identifier">set_application_name</span>
-130:     <span class="ruby-identifier">password_changed</span>=<span class="ruby-keyword kw">false</span>
-131:     <span class="ruby-identifier">users</span>=<span class="ruby-constant">YAML</span><span class="ruby-operator">::</span><span class="ruby-identifier">load_file</span>(<span class="ruby-constant">USERS_FILE_PATH</span>) <span class="ruby-keyword kw">rescue</span> <span class="ruby-keyword kw">nil</span>
+130:     <span class="ruby-identifier">password_changed</span> = <span class="ruby-keyword kw">false</span>
+131:     <span class="ruby-identifier">users</span> = <span class="ruby-constant">YAML</span><span class="ruby-operator">::</span><span class="ruby-identifier">load_file</span>(<span class="ruby-constant">USERS_FILE_PATH</span>) <span class="ruby-keyword kw">rescue</span> <span class="ruby-keyword kw">nil</span>
 132:     <span class="ruby-identifier">users</span>.<span class="ruby-identifier">each</span> <span class="ruby-keyword kw">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">user</span><span class="ruby-operator">|</span>
-133:       <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">user</span>[<span class="ruby-value str">'user_name'</span>]<span class="ruby-operator">==</span><span class="ruby-identifier">session</span>[<span class="ruby-identifier">:user</span>] <span class="ruby-operator">&amp;&amp;</span>  <span class="ruby-identifier">user</span>[<span class="ruby-value str">'password'</span>] <span class="ruby-operator">==</span> <span class="ruby-constant">Digest</span><span class="ruby-operator">::</span><span class="ruby-constant">MD5</span>.<span class="ruby-identifier">hexdigest</span>(<span class="ruby-identifier">params</span>[<span class="ruby-identifier">:password</span>][<span class="ruby-identifier">:old</span>]) <span class="ruby-operator">&amp;&amp;</span> <span class="ruby-identifier">params</span>[<span class="ruby-identifier">:password</span>][<span class="ruby-identifier">:new</span>]<span class="ruby-operator">==</span><span class="ruby-identifier">params</span>[<span class="ruby-identifier">:password</span>][<span class="ruby-identifier">:confirm</span>] <span class="ruby-operator">&amp;&amp;</span> <span class="ruby-identifier">params</span>[<span class="ruby-identifier">:password</span>][<span class="ruby-identifier">:new</span>].<span class="ruby-identifier">length</span> <span class="ruby-operator">&gt;</span> <span class="ruby-value">5</span> 
-134:         <span class="ruby-identifier">user</span>[<span class="ruby-value str">'password'</span>]=<span class="ruby-constant">Digest</span><span class="ruby-operator">::</span><span class="ruby-constant">MD5</span>.<span class="ruby-identifier">hexdigest</span>(<span class="ruby-identifier">params</span>[<span class="ruby-identifier">:password</span>][<span class="ruby-identifier">:new</span>])
-135:         <span class="ruby-identifier">password_changed</span>=<span class="ruby-keyword kw">true</span>
+133:       <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">user</span>[<span class="ruby-value str">'user_name'</span>] <span class="ruby-operator">==</span> <span class="ruby-identifier">session</span>[<span class="ruby-identifier">:user</span>] <span class="ruby-operator">&amp;&amp;</span>  <span class="ruby-identifier">user</span>[<span class="ruby-value str">'password'</span>] <span class="ruby-operator">==</span> <span class="ruby-constant">Digest</span><span class="ruby-operator">::</span><span class="ruby-constant">MD5</span>.<span class="ruby-identifier">hexdigest</span>(<span class="ruby-identifier">params</span>[<span class="ruby-identifier">:password</span>][<span class="ruby-identifier">:old</span>]) <span class="ruby-operator">&amp;&amp;</span> <span class="ruby-identifier">params</span>[<span class="ruby-identifier">:password</span>][<span class="ruby-identifier">:new</span>] <span class="ruby-operator">==</span> <span class="ruby-identifier">params</span>[<span class="ruby-identifier">:password</span>][<span class="ruby-identifier">:confirm</span>] <span class="ruby-operator">&amp;&amp;</span> <span class="ruby-identifier">params</span>[<span class="ruby-identifier">:password</span>][<span class="ruby-identifier">:new</span>].<span class="ruby-identifier">length</span> <span class="ruby-operator">&gt;</span> <span class="ruby-value">5</span> 
+134:         <span class="ruby-identifier">user</span>[<span class="ruby-value str">'password'</span>] = <span class="ruby-constant">Digest</span><span class="ruby-operator">::</span><span class="ruby-constant">MD5</span>.<span class="ruby-identifier">hexdigest</span>(<span class="ruby-identifier">params</span>[<span class="ruby-identifier">:password</span>][<span class="ruby-identifier">:new</span>])
+135:         <span class="ruby-identifier">password_changed</span> = <span class="ruby-keyword kw">true</span>
 136:         <span class="ruby-keyword kw">break</span>
 137:       <span class="ruby-keyword kw">end</span>
 138:     <span class="ruby-keyword kw">end</span>
 139:     <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">password_changed</span>
-140:       <span class="ruby-identifier">flash</span>[<span class="ruby-identifier">:notice</span>]=<span class="ruby-constant">PASSWORD_CHANGED</span>
+140:       <span class="ruby-identifier">flash</span>[<span class="ruby-identifier">:notice</span>] = <span class="ruby-constant">PASSWORD_CHANGED</span>
 141:       <span class="ruby-constant">YAMLWriter</span>.<span class="ruby-identifier">write</span>(<span class="ruby-identifier">users</span>,<span class="ruby-constant">USERS_FILE_PATH</span>,<span class="ruby-value str">&quot;user&quot;</span>)
 142:     <span class="ruby-keyword kw">else</span>
 143:       <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">params</span>[<span class="ruby-identifier">:password</span>][<span class="ruby-identifier">:new</span>].<span class="ruby-identifier">length</span> <span class="ruby-operator">&lt;</span> <span class="ruby-value">6</span>
-144:         <span class="ruby-identifier">flash</span>[<span class="ruby-identifier">:notice</span>]=<span class="ruby-constant">WRONG_PASSWORD2</span>
+144:         <span class="ruby-identifier">flash</span>[<span class="ruby-identifier">:notice</span>] = <span class="ruby-constant">WRONG_PASSWORD2</span>
 145:       <span class="ruby-keyword kw">else</span> 
-146:         <span class="ruby-identifier">flash</span>[<span class="ruby-identifier">:notice</span>]=<span class="ruby-constant">WRONG_PASSWORD1</span>
+146:         <span class="ruby-identifier">flash</span>[<span class="ruby-identifier">:notice</span>] = <span class="ruby-constant">WRONG_PASSWORD1</span>
 147:       <span class="ruby-keyword kw">end</span>
 148:       <span class="ruby-comment cmt">#TODO : This message is to be made more specific for old password and confirm password.</span>
 149:     <span class="ruby-keyword kw">end</span>
@@ -317,7 +317,7 @@ After a minute it refreshes the cpu usage for a particalar application.
 <pre>
     <span class="ruby-comment cmt"># File app/controllers/admin_controller.rb, line 64</span>
 64:   <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">get_latest_app_cpu_usage</span>
-65:     <span class="ruby-identifier">apps_resource_usage</span>=<span class="ruby-constant">ResourceUsage</span>.<span class="ruby-identifier">get_latest_for_apps</span>
+65:     <span class="ruby-identifier">apps_resource_usage</span> = <span class="ruby-constant">ResourceUsage</span>.<span class="ruby-identifier">get_latest_for_apps</span>
 66:     <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">params</span>[<span class="ruby-identifier">:app_name</span>] <span class="ruby-keyword kw">and</span> <span class="ruby-identifier">apps_resource_usage</span>[<span class="ruby-identifier">params</span>[<span class="ruby-identifier">:app_name</span>]]
 67:       <span class="ruby-identifier">render</span> <span class="ruby-identifier">:text</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">apps_resource_usage</span>[<span class="ruby-identifier">params</span>[<span class="ruby-identifier">:app_name</span>]][<span class="ruby-value">0</span>].<span class="ruby-identifier">to_s</span>
 68:     <span class="ruby-keyword kw">else</span>
@@ -350,9 +350,9 @@ application.
 <pre>
     <span class="ruby-comment cmt"># File app/controllers/admin_controller.rb, line 75</span>
 75:   <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">get_latest_app_memory_usage</span>
-76:     <span class="ruby-identifier">apps_resource_usage</span>=<span class="ruby-constant">ResourceUsage</span>.<span class="ruby-identifier">get_latest_for_apps</span>
+76:     <span class="ruby-identifier">apps_resource_usage</span> = <span class="ruby-constant">ResourceUsage</span>.<span class="ruby-identifier">get_latest_for_apps</span>
 77:     <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">params</span>[<span class="ruby-identifier">:app_name</span>] <span class="ruby-keyword kw">and</span> <span class="ruby-identifier">apps_resource_usage</span>[<span class="ruby-identifier">params</span>[<span class="ruby-identifier">:app_name</span>]]
-78:       <span class="ruby-identifier">render</span> <span class="ruby-identifier">:text</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">format</span>(<span class="ruby-value str">&quot;%.2f&quot;</span>,<span class="ruby-identifier">apps_resource_usage</span>[<span class="ruby-identifier">params</span>[<span class="ruby-identifier">:app_name</span>]][<span class="ruby-value">1</span>]<span class="ruby-operator">/</span><span class="ruby-value">1024</span>.<span class="ruby-identifier">to_f</span>)        
+78:       <span class="ruby-identifier">render</span> <span class="ruby-identifier">:text</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">format</span>(<span class="ruby-value str">&quot;%.2f&quot;</span>,<span class="ruby-identifier">apps_resource_usage</span>[<span class="ruby-identifier">params</span>[<span class="ruby-identifier">:app_name</span>]][<span class="ruby-value">1</span>] <span class="ruby-operator">/</span> <span class="ruby-value">1024</span>.<span class="ruby-identifier">to_f</span>)      
 79:     <span class="ruby-keyword kw">else</span>
 80:       <span class="ruby-identifier">render</span> <span class="ruby-identifier">:text</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-value str">&quot;0.0&quot;</span>
 81:     <span class="ruby-keyword kw">end</span>
@@ -502,7 +502,7 @@ admin panel.
 33:       <span class="ruby-identifier">redirect_to</span> <span class="ruby-identifier">home_path</span>
 34:     <span class="ruby-keyword kw">else</span>
 35:       <span class="ruby-ivar">@user</span> = <span class="ruby-constant">User</span>.<span class="ruby-identifier">new</span>
-36:       <span class="ruby-identifier">render</span> <span class="ruby-identifier">:action</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-value str">'index'</span>, <span class="ruby-identifier">:layout=</span><span class="ruby-operator">&gt;</span><span class="ruby-value str">'index'</span>
+36:       <span class="ruby-identifier">render</span> <span class="ruby-identifier">:action</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-value str">'index'</span>, <span class="ruby-identifier">:layout</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-value str">'index'</span>
 37:     <span class="ruby-keyword kw">end</span>
 38:   <span class="ruby-keyword kw">end</span>
 </pre>
@@ -605,8 +605,8 @@ Used to paginate the list of deployed applications.
 <pre>
      <span class="ruby-comment cmt"># File app/controllers/admin_controller.rb, line 179</span>
 179:   <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">required_apps</span>
-180:     <span class="ruby-ivar">@info</span>= <span class="ruby-constant">YAML</span><span class="ruby-operator">::</span><span class="ruby-identifier">load_file</span>(<span class="ruby-constant">CONFIG_FILE_PATH</span>)    <span class="ruby-keyword kw">rescue</span> <span class="ruby-keyword kw">nil</span>
-181:     <span class="ruby-identifier">render</span> <span class="ruby-identifier">:partial=</span><span class="ruby-operator">&gt;</span><span class="ruby-value str">'application_table'</span>,<span class="ruby-identifier">:locals=</span><span class="ruby-operator">&gt;</span>{<span class="ruby-identifier">:start=</span><span class="ruby-operator">&gt;</span><span class="ruby-identifier">params</span>[<span class="ruby-identifier">:start</span>].<span class="ruby-identifier">to_i</span>}
+180:     <span class="ruby-ivar">@info</span> = <span class="ruby-constant">YAML</span><span class="ruby-operator">::</span><span class="ruby-identifier">load_file</span>(<span class="ruby-constant">CONFIG_FILE_PATH</span>)   <span class="ruby-keyword kw">rescue</span> <span class="ruby-keyword kw">nil</span>
+181:     <span class="ruby-identifier">render</span> <span class="ruby-identifier">:partial</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-value str">'application_table'</span>, <span class="ruby-identifier">:locals</span> =<span class="ruby-operator">&gt;</span> {<span class="ruby-identifier">:start</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">params</span>[<span class="ruby-identifier">:start</span>].<span class="ruby-identifier">to_i</span>}
 182:   <span class="ruby-keyword kw">end</span>
 </pre>
           </div>

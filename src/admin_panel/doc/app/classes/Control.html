@@ -93,12 +93,11 @@ also receive and parse the acknowledge message.
       <h3 class="section-bar">Methods</h3>
 
       <div class="name-list">
-      <a href="#M000093">add</a>&nbsp;&nbsp;
-      <a href="#M000094">delete</a>&nbsp;&nbsp;
-      <a href="#M000092">name</a>&nbsp;&nbsp;
-      <a href="#M000091">new</a>&nbsp;&nbsp;
-      <a href="#M000095">restart</a>&nbsp;&nbsp;
-      <a href="#M000096">send_control</a>&nbsp;&nbsp;
+      <a href="#M000103">add</a>&nbsp;&nbsp;
+      <a href="#M000104">delete</a>&nbsp;&nbsp;
+      <a href="#M000102">name</a>&nbsp;&nbsp;
+      <a href="#M000101">new</a>&nbsp;&nbsp;
+      <a href="#M000105">restart</a>&nbsp;&nbsp;
       </div>
     </div>
 
@@ -120,11 +119,11 @@ also receive and parse the acknowledge message.
     <div id="methods">
       <h3 class="section-bar">Public Class methods</h3>
 
-      <div id="method-M000091" class="method-detail">
-        <a name="M000091"></a>
+      <div id="method-M000101" class="method-detail">
+        <a name="M000101"></a>
 
         <div class="method-heading">
-          <a href="#M000091" class="method-signature">
+          <a href="#M000101" class="method-signature">
           <span class="method-name">new</span><span class="method-args">(name)</span>
           </a>
         </div>
@@ -134,16 +133,16 @@ also receive and parse the acknowledge message.
 Constructor.
 </p>
           <p><a class="source-toggle" href="#"
-            onclick="toggleCode('M000091-source');return false;">[Source]</a></p>
-          <div class="method-source-code" id="M000091-source">
+            onclick="toggleCode('M000101-source');return false;">[Source]</a></p>
+          <div class="method-source-code" id="M000101-source">
 <pre>
-    <span class="ruby-comment cmt"># File lib/control.rb, line 28</span>
-28:   <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">initialize</span>(<span class="ruby-identifier">name</span>)
-29:     <span class="ruby-ivar">@name</span>=<span class="ruby-identifier">name</span>  <span class="ruby-comment cmt"># Application name</span>
-30:     <span class="ruby-ivar">@req</span> = <span class="ruby-constant">SCGI</span>.<span class="ruby-identifier">new</span>     <span class="ruby-comment cmt"># SCGI control message</span>
-31:     <span class="ruby-ivar">@req</span>.<span class="ruby-identifier">header_add</span>(<span class="ruby-value str">&quot;component&quot;</span>,<span class="ruby-value str">&quot;APPLICATION&quot;</span>)
-32:     <span class="ruby-ivar">@req</span>.<span class="ruby-identifier">header_add</span>(<span class="ruby-value str">&quot;app_name&quot;</span>,<span class="ruby-ivar">@name</span>)
-33:   <span class="ruby-keyword kw">end</span>
+    <span class="ruby-comment cmt"># File lib/control.rb, line 30</span>
+30:   <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">initialize</span>(<span class="ruby-identifier">name</span>)
+31:     <span class="ruby-ivar">@name</span> = <span class="ruby-identifier">name</span>        <span class="ruby-comment cmt"># Application name</span>
+32:     <span class="ruby-ivar">@req</span> = <span class="ruby-constant">SCGI</span>.<span class="ruby-identifier">new</span>     <span class="ruby-comment cmt"># SCGI control message</span>
+33:     <span class="ruby-ivar">@req</span>.<span class="ruby-identifier">header_add</span>(<span class="ruby-value str">&quot;component&quot;</span>,<span class="ruby-value str">&quot;APPLICATION&quot;</span>)
+34:     <span class="ruby-ivar">@req</span>.<span class="ruby-identifier">header_add</span>(<span class="ruby-value str">&quot;app_name&quot;</span>,<span class="ruby-ivar">@name</span>)
+35:   <span class="ruby-keyword kw">end</span>
 </pre>
           </div>
         </div>
@@ -151,11 +150,11 @@ Constructor.
 
       <h3 class="section-bar">Public Instance methods</h3>
 
-      <div id="method-M000093" class="method-detail">
-        <a name="M000093"></a>
+      <div id="method-M000103" class="method-detail">
+        <a name="M000103"></a>
 
         <div class="method-heading">
-          <a href="#M000093" class="method-signature">
+          <a href="#M000103" class="method-signature">
           <span class="method-name">add</span><span class="method-args">()</span>
           </a>
         </div>
@@ -165,24 +164,24 @@ Constructor.
 Send control message to deploy newly added Applicaiton.
 </p>
           <p><a class="source-toggle" href="#"
-            onclick="toggleCode('M000093-source');return false;">[Source]</a></p>
-          <div class="method-source-code" id="M000093-source">
+            onclick="toggleCode('M000103-source');return false;">[Source]</a></p>
+          <div class="method-source-code" id="M000103-source">
 <pre>
-    <span class="ruby-comment cmt"># File lib/control.rb, line 41</span>
-41:   <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">add</span>
-42:     <span class="ruby-ivar">@req</span>.<span class="ruby-identifier">header_add</span>(<span class="ruby-value str">&quot;method&quot;</span>,<span class="ruby-value str">&quot;ADD&quot;</span>)
-43:     <span class="ruby-identifier">send_control</span>
-44:   <span class="ruby-keyword kw">end</span>
+    <span class="ruby-comment cmt"># File lib/control.rb, line 43</span>
+43:   <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">add</span>
+44:     <span class="ruby-ivar">@req</span>.<span class="ruby-identifier">header_add</span>(<span class="ruby-value str">&quot;method&quot;</span>,<span class="ruby-value str">&quot;ADD&quot;</span>)
+45:     <span class="ruby-identifier">send_control</span>
+46:   <span class="ruby-keyword kw">end</span>
 </pre>
           </div>
         </div>
       </div>
 
-      <div id="method-M000094" class="method-detail">
-        <a name="M000094"></a>
+      <div id="method-M000104" class="method-detail">
+        <a name="M000104"></a>
 
         <div class="method-heading">
-          <a href="#M000094" class="method-signature">
+          <a href="#M000104" class="method-signature">
           <span class="method-name">delete</span><span class="method-args">()</span>
           </a>
         </div>
@@ -192,24 +191,24 @@ Send control message to deploy newly added Applicaiton.
 Send control message to stop Applicaiton.
 </p>
           <p><a class="source-toggle" href="#"
-            onclick="toggleCode('M000094-source');return false;">[Source]</a></p>
-          <div class="method-source-code" id="M000094-source">
+            onclick="toggleCode('M000104-source');return false;">[Source]</a></p>
+          <div class="method-source-code" id="M000104-source">
 <pre>
-    <span class="ruby-comment cmt"># File lib/control.rb, line 47</span>
-47:   <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">delete</span>
-48:     <span class="ruby-ivar">@req</span>.<span class="ruby-identifier">header_add</span>(<span class="ruby-value str">&quot;method&quot;</span>,<span class="ruby-value str">&quot;REMOVE&quot;</span>)
-49:     <span class="ruby-identifier">send_control</span>
-50:   <span class="ruby-keyword kw">end</span>
+    <span class="ruby-comment cmt"># File lib/control.rb, line 49</span>
+49:   <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">delete</span>
+50:     <span class="ruby-ivar">@req</span>.<span class="ruby-identifier">header_add</span>(<span class="ruby-value str">&quot;method&quot;</span>,<span class="ruby-value str">&quot;REMOVE&quot;</span>)
+51:     <span class="ruby-identifier">send_control</span>
+52:   <span class="ruby-keyword kw">end</span>
 </pre>
           </div>
         </div>
       </div>
 
-      <div id="method-M000092" class="method-detail">
-        <a name="M000092"></a>
+      <div id="method-M000102" class="method-detail">
+        <a name="M000102"></a>
 
         <div class="method-heading">
-          <a href="#M000092" class="method-signature">
+          <a href="#M000102" class="method-signature">
           <span class="method-name">name</span><span class="method-args">()</span>
           </a>
         </div>
@@ -217,26 +216,26 @@ Send control message to stop Applicaiton.
         <div class="method-description">
           <p>
 Getter, setter method for Application <a
-href="Control.html#M000092">name</a>
+href="Control.html#M000102">name</a>
 </p>
           <p><a class="source-toggle" href="#"
-            onclick="toggleCode('M000092-source');return false;">[Source]</a></p>
-          <div class="method-source-code" id="M000092-source">
+            onclick="toggleCode('M000102-source');return false;">[Source]</a></p>
+          <div class="method-source-code" id="M000102-source">
 <pre>
-    <span class="ruby-comment cmt"># File lib/control.rb, line 36</span>
-36:   <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">name</span>
-37:     <span class="ruby-keyword kw">return</span> <span class="ruby-ivar">@name</span>
-38:   <span class="ruby-keyword kw">end</span>
+    <span class="ruby-comment cmt"># File lib/control.rb, line 38</span>
+38:   <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">name</span>
+39:     <span class="ruby-keyword kw">return</span> <span class="ruby-ivar">@name</span>
+40:   <span class="ruby-keyword kw">end</span>
 </pre>
           </div>
         </div>
       </div>
 
-      <div id="method-M000095" class="method-detail">
-        <a name="M000095"></a>
+      <div id="method-M000105" class="method-detail">
+        <a name="M000105"></a>
 
         <div class="method-heading">
-          <a href="#M000095" class="method-signature">
+          <a href="#M000105" class="method-signature">
           <span class="method-name">restart</span><span class="method-args">()</span>
           </a>
         </div>
@@ -246,69 +245,14 @@ href="Control.html#M000092">name</a>
 Send control message to refresh Applicaiton.
 </p>
           <p><a class="source-toggle" href="#"
-            onclick="toggleCode('M000095-source');return false;">[Source]</a></p>
-          <div class="method-source-code" id="M000095-source">
+            onclick="toggleCode('M000105-source');return false;">[Source]</a></p>
+          <div class="method-source-code" id="M000105-source">
 <pre>
-    <span class="ruby-comment cmt"># File lib/control.rb, line 53</span>
-53:   <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">restart</span>
-54:     <span class="ruby-ivar">@req</span>.<span class="ruby-identifier">header_add</span>(<span class="ruby-value str">&quot;method&quot;</span>,<span class="ruby-value str">&quot;RELOAD&quot;</span>)
-55:     <span class="ruby-identifier">send_control</span>
-56:   <span class="ruby-keyword kw">end</span>
-</pre>
-          </div>
-        </div>
-      </div>
-
-      <div id="method-M000096" class="method-detail">
-        <a name="M000096"></a>
-
-        <div class="method-heading">
-          <a href="#M000096" class="method-signature">
-          <span class="method-name">send_control</span><span class="method-args">()</span>
-          </a>
-        </div>
-      
-        <div class="method-description">
-          <p>
-Build and send <a href="SCGI.html">SCGI</a> control message.
-</p>
-          <p><a class="source-toggle" href="#"
-            onclick="toggleCode('M000096-source');return false;">[Source]</a></p>
-          <div class="method-source-code" id="M000096-source">
-<pre>
-    <span class="ruby-comment cmt"># File lib/control.rb, line 59</span>
-59:   <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">send_control</span>
-60:     <span class="ruby-ivar">@req</span>.<span class="ruby-identifier">build</span>
-61:     <span class="ruby-identifier">sockFile</span> = <span class="ruby-constant">File</span>.<span class="ruby-identifier">join</span>(<span class="ruby-value str">&quot;&quot;</span>,<span class="ruby-value str">&quot;tmp&quot;</span>,<span class="ruby-value str">&quot;webroar.sock&quot;</span>)
-62:     
-63:     <span class="ruby-keyword kw">if</span> <span class="ruby-operator">!</span><span class="ruby-constant">File</span>.<span class="ruby-identifier">exist?</span>(<span class="ruby-identifier">sockFile</span>)
-64:       <span class="ruby-keyword kw">return</span> <span class="ruby-value str">&quot;Either the server is not started or 'webroar.sock' file is deleted.&quot;</span>
-65:     <span class="ruby-keyword kw">end</span>
-66:     
-67:     <span class="ruby-identifier">file</span> = <span class="ruby-constant">File</span>.<span class="ruby-identifier">new</span>(<span class="ruby-identifier">sockFile</span>)
-68:     <span class="ruby-identifier">port</span> = <span class="ruby-identifier">file</span>.<span class="ruby-identifier">gets</span>
-69:     <span class="ruby-identifier">file</span>.<span class="ruby-identifier">close</span>
-70:     <span class="ruby-keyword kw">if</span>(<span class="ruby-identifier">port</span>.<span class="ruby-identifier">to_i</span> <span class="ruby-operator">==</span> <span class="ruby-value">0</span>)
-71:       <span class="ruby-identifier">streamSock</span> = <span class="ruby-constant">UNIXSocket</span>.<span class="ruby-identifier">new</span>(<span class="ruby-identifier">port</span>)
-72:     <span class="ruby-keyword kw">else</span>
-73:       <span class="ruby-identifier">streamSock</span> = <span class="ruby-constant">TCPSocket</span>.<span class="ruby-identifier">new</span>( <span class="ruby-value str">&quot;127.0.0.1&quot;</span>, <span class="ruby-identifier">port</span>.<span class="ruby-identifier">to_i</span>)
-74:     <span class="ruby-keyword kw">end</span>
-75:     <span class="ruby-identifier">streamSock</span>.<span class="ruby-identifier">send</span>(<span class="ruby-ivar">@req</span>.<span class="ruby-identifier">request</span>, <span class="ruby-value">0</span>)
-76:     <span class="ruby-identifier">str</span> = <span class="ruby-identifier">streamSock</span>.<span class="ruby-identifier">recv</span>(<span class="ruby-value">2048</span>)
-77:     <span class="ruby-identifier">streamSock</span>.<span class="ruby-identifier">close</span>
-78:     <span class="ruby-ivar">@resp</span> = <span class="ruby-constant">SCGI</span>.<span class="ruby-identifier">new</span>
-79:     <span class="ruby-ivar">@resp</span>.<span class="ruby-identifier">parse</span>(<span class="ruby-identifier">str</span>)
-80:     
-81:     <span class="ruby-keyword kw">if</span> <span class="ruby-ivar">@resp</span>.<span class="ruby-identifier">header</span>(<span class="ruby-value str">&quot;STATUS&quot;</span>) <span class="ruby-operator">==</span> <span class="ruby-value str">&quot;OK&quot;</span> <span class="ruby-keyword kw">or</span> <span class="ruby-ivar">@resp</span>.<span class="ruby-identifier">header</span>(<span class="ruby-value str">&quot;STATUS&quot;</span>) <span class="ruby-operator">==</span> <span class="ruby-value str">&quot;ok&quot;</span>
-82:       <span class="ruby-keyword kw">return</span> <span class="ruby-keyword kw">nil</span>
-83:     <span class="ruby-keyword kw">else</span>
-84:       <span class="ruby-keyword kw">if</span> <span class="ruby-ivar">@resp</span>.<span class="ruby-identifier">body</span> <span class="ruby-operator">==</span> <span class="ruby-keyword kw">nil</span>
-85:         <span class="ruby-keyword kw">return</span> <span class="ruby-value str">&quot;Error: Operation not performed.&quot;</span>
-86:       <span class="ruby-keyword kw">else</span>
-87:         <span class="ruby-keyword kw">return</span> <span class="ruby-ivar">@resp</span>.<span class="ruby-identifier">body</span>
-88:       <span class="ruby-keyword kw">end</span>
-89:     <span class="ruby-keyword kw">end</span>
-90:   <span class="ruby-keyword kw">end</span>
+    <span class="ruby-comment cmt"># File lib/control.rb, line 55</span>
+55:   <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">restart</span>
+56:     <span class="ruby-ivar">@req</span>.<span class="ruby-identifier">header_add</span>(<span class="ruby-value str">&quot;method&quot;</span>,<span class="ruby-value str">&quot;RELOAD&quot;</span>)
+57:     <span class="ruby-identifier">send_control</span>
+58:   <span class="ruby-keyword kw">end</span>
 </pre>
           </div>
         </div>
