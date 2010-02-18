@@ -200,8 +200,8 @@ class CommandRunner
     opts.on( '-d', '--debug-build', 'Compile with debug mode') { options[:debug_build] = true }
     opts.on( '-n', '--no-report', 'Do not generate test report') { options[:no_report] = true }
     opts.on( '-l', '--load-test', 'Run load test') { options[:load_test] = true }
-    opts.on( '-a', '--analytics', 'Enable the application analytics') { options[:analytics] = true }
-    opts.on( '--no-analytics', 'Disable the application analytics') { options[:analytics] = false }
+    opts.on( '-a', '--analytics', 'Enable the application analytics') { options[:analytics] = 'Enabled' }
+    opts.on( '--no-analytics', 'Disable the application analytics') { options[:analytics] = 'Disabled' }
     opts.on( '-i', '--import', 'Import configuration, logs and admin panel data from the previous installation') { options[:import] = true }
     opts.on( '--no-import', 'Do not import configuration, logs and admin panel data from the previous installation') { options[:import] = false }
     
