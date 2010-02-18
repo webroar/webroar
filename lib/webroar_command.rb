@@ -54,7 +54,7 @@ class WebroarCommand
   # Stop and remove the application
   def remove(args)
     return unless CheckUser.check
-    if args.count < 2
+    if args.length < 2
       puts "Application name is missing."
       return
     end
@@ -80,7 +80,7 @@ class WebroarCommand
   # Add and start the application
   def add(options, args)
     return unless CheckUser.check
-    if args.count < 2
+    if args.length < 2
       puts "Application name is missing."
       return
     end
