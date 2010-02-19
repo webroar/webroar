@@ -25,7 +25,7 @@ along with WebROaR.  If not, see <http://www.gnu.org/licenses/>.
   <hr/>
   <br/>
   <div id='data_div'>
-  		   <%=render :partial => 'exception_list_partial', :locals => {:start => @start}%>
+  		   <%=render :partial => 'exception_list_partial' %>
   </div>
- <%= observe_field 'status_name',:update => 'data_div', :url => {:controller => 'exceptions', :action => 'list_statuswise_exceptions', :app_name => @application_name}, :with => 'status_name'%>
+ <%= observe_field 'status_name', :url => {:controller => 'exceptions', :action => 'list_statuswise_exceptions', :app_name => @application_name}, :with => 'status_name'%>
 

@@ -36,10 +36,9 @@ class ExceptionsController < ApplicationController
       app = session[:exceptions_application_name]
     end  
     @application_name = app
-    app_id = App.get_application_data(app).id rescue nil
-    @start = 0    
+    app_id = App.get_application_data(app).id rescue nil    
     @size = AppException.count_open(app_id)
-    @exceptions = AppException.get_all(OPEN_EXCEPTION, app_id, @start)
+    @exceptions = AppException.get_all(OPEN_EXCEPTION, app_id, params[:page] || 1)
   end  
   
   #This method is to display the information of the specific exception.
@@ -54,14 +53,13 @@ class ExceptionsController < ApplicationController
   def list
     @application_name = params[:application_name]
     session[:exceptions_application_name] = @application_name
-    app_id = App.get_application_data(@application_name).id
-    @start = 0
+    app_id = App.get_application_data(@application_name).id    
     @size = AppException.count_open(app_id)
-    @exceptions = AppException.get_all(OPEN_EXCEPTION, app_id)
+    @exceptions = AppException.get_all(OPEN_EXCEPTION, app_id, params[:page] || 1)
     render :partial => 'exceptions_listing_partial'
   end
   
-  #This methos is used to put the exception count on the home tab of the admin panel.
+  #This method is used to put the exception count on the home tab of the admin panel.
   def get_exception
     exceptions_count = App.exceptions_count(params[:app_name])  
     if  exceptions_count > 0
@@ -82,39 +80,12 @@ class ExceptionsController < ApplicationController
   #Method is used to list the exceptions with different status.
   def list_statuswise_exceptions
     if params[:status_name] == 'Ignored'
-      ignored_exceptions(params[:app_name])
+      required_ignored_exceptions
     elsif params[:status_name] == 'Closed'
-      closed_exceptions(params[:app_name])
+      required_closed_exceptions
     else  
-      opened_exceptions(params[:app_name])
+      required_open_exceptions
     end
-  end
-  
-  #Method is used to list all open exceptions for an application.
-  def opened_exceptions(app_name)
-    app_id = App.get_application_data(app_name).id
-    @application_name = app_name
-    @size = AppException.count_open(app_id)
-    @exceptions = AppException.get_all(OPEN_EXCEPTION, app_id, 0)
-    render :partial => 'exception_list_partial', :locals => {:start => 0}
-  end
-  
-  #Method is used to list all closed exceptions for an application.
-  def closed_exceptions(app_name)
-    app_id = App.get_application_data(app_name).id
-    @application_name = app_name
-    @size = AppException.count_closed(app_id)
-    @exceptions = AppException.get_all(CLOSED_EXCEPTION, app_id, 0)
-    render :partial => 'close_exception_list_partial', :locals => {:start => 0}
-  end
-  
-  #Method is used to list all ignored exceptions for an application.
-  def ignored_exceptions(app_name)
-    app_id = App.get_application_data(app_name).id
-    @application_name = app_name
-    @size = AppException.count_ignored(app_id)
-    @exceptions = AppException.get_all(IGNORED_EXCEPTION, app_id)
-    render :partial => 'ignored_exception_list_partial', :locals => {:start => 0}
   end
   
   #Method is used to set the status for an exception as closed.
@@ -139,29 +110,29 @@ class ExceptionsController < ApplicationController
   def required_open_exceptions
     app_id = App.get_application_data(params[:app_name]).id
     @application_name = params[:app_name]
-    @start = params[:start].to_i
-    @size = AppException.count_open(app_id)
-    @exceptions = AppException.get_all(OPEN_EXCEPTION, app_id, @start)
-    render :partial => 'exception_list_partial', :locals => {:start => @start}
+    @exceptions = AppException.get_all(OPEN_EXCEPTION, app_id, params[:page] || 1)
+    render :update do |page|
+      page.replace_html 'data_div', :partial => 'exception_list_partial'      
+    end    
   end
   
   #Gives the array of five closed exceptions for pagination.
   def required_closed_exceptions
     app_id = App.get_application_data(params[:app_name]).id
     @application_name = params[:app_name]
-    @start = params[:start].to_i
-    @size = AppException.count_closed(app_id)
-    @exceptions = AppException.get_all(CLOSED_EXCEPTION, app_id, @start)
-    render :partial => 'close_exception_list_partial', :locals => {:start => @start}
+    @exceptions = AppException.get_all(CLOSED_EXCEPTION, app_id, params[:page] || 1)
+    render :update do |page|
+      page.replace_html 'data_div', :partial => 'close_exception_list_partial'  
+    end    
   end
   
   #Gives the array of five ignored exceptions for pagination.
   def required_ignored_exceptions
     app_id = App.get_application_data(params[:app_name]).id
     @application_name = params[:app_name]
-    @start = params[:start].to_i
-    @size = AppException.count_ignored(app_id)
-    @exceptions = AppException.get_all(IGNORED_EXCEPTION, app_id, @start)
-    render :partial => 'ignored_exception_list_partial', :locals => {:start => @start}
+    @exceptions = AppException.get_all(IGNORED_EXCEPTION, app_id, params[:page] || 1)
+    render :update do |page|
+      page.replace_html 'data_div', :partial => 'ignored_exception_list_partial'      
+    end
   end
 end

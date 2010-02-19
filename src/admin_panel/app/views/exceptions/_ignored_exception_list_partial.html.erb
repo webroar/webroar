@@ -43,13 +43,8 @@ along with WebROaR.  If not, see <http://www.gnu.org/licenses/>.
   <%end%>
 <tr>
         <td colspan = 7>
-            <%if start > 0 %>
-              <%=link_to_remote 'Previous', :update => 'data_div', :url => {:controller => 'exceptions', :action => 'required_ignored_exceptions', :start => start-5, :app_name => @application_name}%>
-            <%end%>          
-            <%if start +  5 < @size%>
-              <%=link_to_remote 'Next', :update => 'data_div', :url => {:controller => 'exceptions', :action => 'required_ignored_exceptions', :start => start + 5, :app_name => @application_name}%>
-            <%end%>
-    </td>
+          <%= will_paginate @exceptions, :params => {:controller => 'exceptions', :action => 'required_ignored_exceptions', :app_name => @application_name} %>
+        </td>
     </tr>
   </table>
 <%else%>

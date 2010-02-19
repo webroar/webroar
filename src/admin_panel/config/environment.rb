@@ -27,6 +27,7 @@ Rails::Initializer.run do |config|
   # config.gem "aws-s3", :lib => "aws/s3"
 
   config.gem "calendar_date_select"
+  config.gem 'will_paginate', :version => '~>2.3.12', :source => 'http://gemcutter.org'
 
   # Only load the plugins named here, in the order given. By default, all plugins 
   # in vendor/plugins are loaded in alphabetical order.

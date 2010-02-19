@@ -22,8 +22,11 @@
 class AppException < ActiveRecord::Base
   class << self
     #Gives the array of the five (open|closed|ignored) exceptions starting from the value of varriable 'start' for an application.
-    def get_all(exception_status, app_id, start = 0)
-      all(:select => 'id, exception_message, exception_class, controller, method, wall_time, count(*) as count', :conditions => ['app_id = ?  and exception_status = ?', app_id, exception_status], :group => 'exception_message', :limit => "#{start}, 5", :order => 'wall_time desc')
+    def get_all(exception_status, app_id, page = 1, per_page = 5)
+      paginate(:select => 'id, exception_message, exception_class, controller, method, wall_time, count(*) as count', 
+               :conditions => ['app_id = ?  and exception_status = ?', app_id, exception_status],
+               :group => 'exception_message', :order => 'wall_time desc',
+               :page => page, :per_page => per_page)
     end
     
     # Take App.id as argument and returns count of distinct open exceptions for an Application
