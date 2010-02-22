@@ -390,6 +390,7 @@ class Installer
   def create_service
     script = nil
     script_file = nil
+    service_dir = "init.d"
 
     if(check_exe_file("chkconfig"))
       script = get_service_script("# chkconfig: 2345 85 15")
@@ -397,7 +398,12 @@ class Installer
       script = get_service_script()
     end
 
-    system("find /etc/ -name init.d > /tmp/search_result 2>>#{WEBROAR_ROOT}/install.log")
+    system("find /etc/ -name #{service_dir} > /tmp/search_result 2>>#{WEBROAR_ROOT}/install.log")
+
+    if !File.size?("/tmp/search_result")
+      service_dir = "rc.d"
+      system("find /etc/ -name #{service_dir} > /tmp/search_result 2>>#{WEBROAR_ROOT}/install.log")
+    end
 
     return false if !File.size?("/tmp/search_result")
 
@@ -415,13 +421,23 @@ class Installer
 
     system("chmod +x #{script_file} 2>>#{WEBROAR_ROOT}/install.log")
 
-    return false if !create_service_link("0", 'K15webroar', script_file)
-    return false if !create_service_link("1", 'K15webroar', script_file)
-    return false if !create_service_link("6", 'K15webroar', script_file)
-    return false if !create_service_link("2", 'S85webroar', script_file)
-    return false if !create_service_link("3", 'S85webroar', script_file)
-    return false if !create_service_link("4", 'S85webroar', script_file)
-    return false if !create_service_link("5", 'S85webroar', script_file)
+    # Service script is created sucessfully. So return true in all the cases.
+
+#    return false if !create_service_link("0", 'K15webroar', script_file)
+#    return false if !create_service_link("1", 'K15webroar', script_file)
+#    return false if !create_service_link("6", 'K15webroar', script_file)
+#    return false if !create_service_link("2", 'S85webroar', script_file)
+#    return false if !create_service_link("3", 'S85webroar', script_file)
+#    return false if !create_service_link("4", 'S85webroar', script_file)
+#    return false if !create_service_link("5", 'S85webroar', script_file)
+
+    create_service_link("0", 'K15webroar', script_file)
+    create_service_link("1", 'K15webroar', script_file)
+    create_service_link("6", 'K15webroar', script_file)
+    create_service_link("2", 'S85webroar', script_file)
+    create_service_link("3", 'S85webroar', script_file)
+    create_service_link("4", 'S85webroar', script_file)
+    create_service_link("5", 'S85webroar', script_file)
 
     return true
 
