@@ -23,6 +23,8 @@ include Email
 module Webroar
   module Analyzer
     class MessageAnalyzer
+      include WithExceptionHandling
+      
       attr_reader :sampling_rate
       attr_accessor :application_samples, :url_samples
       MAX_TRIAL = 3
