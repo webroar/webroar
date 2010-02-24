@@ -83,7 +83,7 @@ class Installer
     check_dependencies(ssl) || exit(1)
       
     port, import, gem_name = user_input(options)
-    port = import_files(gem_name) if import
+    port = import_files(gem_name, options) if import
     write_server_port(port, ssl) if !import
       
     print 'Creating directory structure ...'
@@ -335,8 +335,12 @@ class Installer
       s = {'port' => port, 'min_worker' => 4, 'max_worker' => 8, 'log_level' => "SEVERE",'access_log'=>'enabled'}
     end
     info = {'Server Specification' => s}
+    write_server_config_file(info)
+  end
+
+  def write_server_config_file(info)
     yaml_obj=YAML::dump(info)
-    file=File.open(File.join(WEBROAR_ROOT,'conf','config.yml'),"w")
+    file=File.open(WEBROAR_CONFIG_FILE,"w")
     header_string=get_header()
     file.puts(header_string)
     file.puts(yaml_obj)
@@ -521,15 +525,31 @@ exit 0"
       "\}"
   end
 
-  def import_files(gem_name)
+  def import_files(gem_name, options)
     print "Importing configuration, logs and admin panel data from the previous #{gem_name} install ... "
     require File.join(WEBROAR_ROOT, 'src', 'ruby_lib', 'ruby_interface','version.rb')
+
+    # Get import directory path
+    import_dir = File.expand_path(File.join(WEBROAR_ROOT, "..", gem_name.downcase))
+
+    info = YAML.load(File.open(File.join(import_dir,"conf","config.yml")))
+    ssl = info['Server Specification']['SSL Specification'] if info and info['Server Specification'] and info['Server Specification']['SSL Specification']
+
+    # Check for ssl support
+    if options[:ssl]
+      info['Server Specification']['SSL Specification'] = {'ssl_port' => 443, 'ssl_support' => "disabled", 'certificate_file' => nil, 'key_file' => nil} if ssl.nil?
+    else
+      info['Server Specification'].delete('SSL Specification') unless ssl.nil?
+    end
+
+    # Write server configuration file.
+    write_server_config_file(info)
+
     if Webroar::SERVER.downcase == gem_name.downcase
       puts "done."
       return YAML.load(File.open(WEBROAR_CONFIG_FILE))["Server Specification"]["port"]
     end
-    import_dir = File.expand_path(File.join(WEBROAR_ROOT, "..", gem_name.downcase))
-    FileUtils.copy(File.join(import_dir,"conf","config.yml"), WEBROAR_CONFIG_FILE)
+
     FileUtils.copy(File.join(import_dir,"src","admin_panel","config","user.yml"), ADMIN_USER_FILE)
     FileUtils.copy(File.join(import_dir,"src","admin_panel","config","database.yml"), DB_CONFIG_FILE)
     configuration = YAML.load(File.open(DB_CONFIG_FILE))["production"]
