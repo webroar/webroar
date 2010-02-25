@@ -138,58 +138,19 @@ class Installer
     create_softlink('starling')
     create_softlink('webroar')
     create_softlink('webroar-analyzer')
-    
-    if RUBY_PLATFORM =~ /linux/ and !import
-      # Create log rotate script
-      file=File.open(File.join('','etc','logrotate.d','webroar'),"w")
-      logrotate_string = get_logrotate()
-      file.puts(logrotate_string)
-      file.close
 
-      print "Generating service script ..."
-      # Add service script in '/etc/init.d/' folder
-      if create_service()
-        puts " done."
-      else
-        puts " failed."
-        tmp_msg = "The server could not be installed as a service on this system. Unfortunately, you would have to set it up as a service yourself."
-        err_msg = err_msg ? err_msg + tmp_msg : tmp_msg
-      end
-    end
-
-    if RUBY_PLATFORM =~ /darwin/ and !import
-      # Create log rotate script
-      # read file into an array
-      f = File.open("/etc/newsyslog.conf")
-      results = f.readlines
-      f.close
-
-      saved = File.open("tmp.conf", "a")
-      # Is there a way to remove everything that's been read here?
-
-      results.each do |sending|
-        unless sending.include?"webroar"
-          saved.puts("#{sending}")
-        end
-      end
-
-      saved.puts("/var/log/webroar/*.log   644  5     10   *     GJ")
-
-      # Close the archive file
-      saved.close
-
-      FileUtils.mv("tmp.conf", "/etc/newsyslog.conf")
-    end
+    tmp_msg = log_rotate unless import
+    err_msg = err_msg ? err_msg + tmp_msg : tmp_msg if tmp_msg
 
     puts"WebROaR installed successfully."
 
     # Stop WebROaR if already running.
-    system("webroar stop") if File.exist?(PIDFILE)
+    WebroarCommand.new.operation(nil, "stop") if File.exist?(PIDFILE)
 
     # Start WebROaR
     puts"Starting WebROaR ... "
-    system("webroar start")
-
+    WebroarCommand.new.operation(nil, "start")
+    
     install_msg(port, false)
     puts "Warning: " + err_msg if err_msg
   end
@@ -226,7 +187,7 @@ class Installer
     filename = File.join(WEBROAR_ROOT, 'conf', 'server_internal_config.yml')
     pid_file = YAML.load(File.open(filename))["webroar_analyzer_script"]["pid_file"]
 
-    WebroarCommand.new.stop(nil) if File.exists?(PIDFILE) or File.exists?(pid_file)
+    WebroarCommand.new.operation(nil, "stop") if File.exists?(PIDFILE) or File.exists?(pid_file)
 
     Dir.chdir(WEBROAR_ROOT)
     print "Removing executables ..."
@@ -260,7 +221,7 @@ class Installer
     end
 
     print "Removing files ...\n"
-    remove_logrotate
+    log_rotate(false)
     dirs = [File.join('','var','log','webroar')]
     for dir in dirs
       file_pattern = File.join(dir, '*')
@@ -297,15 +258,36 @@ class Installer
   
   private
 
-  # Remove logrotate script
-  def remove_logrotate
+  # Add/Remove log rotate script
+  def log_rotate(add = true)
+
     if RUBY_PLATFORM =~ /linux/
-      print "Removing log rotate file ..."
       file = File.join('','etc','logrotate.d','webroar')
-      File.delete(file) if File.exists?(file)
+
+      if add
+        # Create log rotate script
+        file=File.open(file,"w")
+        logrotate_string = get_logrotate()
+        file.puts(logrotate_string)
+        file.close
+
+        print "Generating service script ..."
+        # Add service script in '/etc/init.d/' folder
+        if create_service()
+          puts " done."
+        else
+          puts " failed."
+          return "The server could not be installed as a service on this system. Unfortunately, you would have to set it up as a service yourself."
+        end
+      else
+        print "Removing log rotate file ..."
+        File.delete(file) if File.exists?(file)
+      end
+
     end
+
     if RUBY_PLATFORM =~ /darwin/
-      print "Removing log rotate entry ..."
+      print "Removing log rotate entry ..." unless add
       # read file into an array
       f = File.open("/etc/newsyslog.conf")
       results = f.readlines
@@ -313,18 +295,20 @@ class Installer
 
       saved = File.open("tmp.conf", "a")
       # Is there a way to remove everything that's been read here?
-      
+
       results.each do |sending|
         saved.puts("#{sending}") unless sending.include?"webroar"
       end
+
+      saved.puts("/var/log/webroar/*.log   644  5     10   *     GJ") if add
 
       # Close the archive file
       saved.close
 
       FileUtils.mv("tmp.conf", "/etc/newsyslog.conf")
     end
-
-    puts " done."
+    puts " done." unless add
+    return nil if add
   end
 
   def write_server_port(port, ssl)

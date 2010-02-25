@@ -33,22 +33,10 @@ class WebroarCommand
     puts " done."
   end
 
-  # The start command
-  def start(args)
-    return unless CheckUser.check
-    (args.nil? or args.length == 1) ? start_webroar : start_application(args)
-  end
-
-  # The stop command
-  def stop(args)
-    return unless CheckUser.check
-    (args.nil? or args.length == 1) ? stop_webroar : stop_application(args)
-  end
-
-  # The restart command
-  def restart(args)
-    return unless CheckUser.check
-    ( args.nil? or args.length == 1) ? restart_webroar : restart_application(args)
+  # Start/Stop/Restart Command
+  def operation(args, op)
+     return unless CheckUser.check
+    (args.nil? or args.length == 1) ? server_operation(op) : application_operation(args, op)
   end
 
   # Stop and remove the application
@@ -260,23 +248,6 @@ class WebroarCommand
     end
   end
 
-  # Start the application
-  def start_application(args)
-    # Start the application
-    for i in 1..args.length-1
-      begin
-        reply, err_log = Control.new(args[i]).add
-        # reply = nil indicate success
-        puts reply ? reply : "Application '#{args[i]}' started successfully."
-        puts "\n\e[31m" + err_log + "\e[0m" if err_log
-      rescue Exception => e
-        puts e
-        puts e.backtrace
-        puts "An error occurred while sending 'start' request for the application '#{args[i]}'."
-      end
-    end
-  end
-
   # Stop the server
   def stop_webroar
     begin
@@ -305,22 +276,6 @@ class WebroarCommand
     end
   end
 
-  # Stop the application
-  def stop_application(args)
-    for i in 1..args.length-1
-      begin
-        reply, err_log = Control.new(args[i]).delete
-        # reply = nil indicate success
-        puts reply ? reply : "Application '#{args[i]}' stopped successfully."
-        puts "\n\e[31m" + err_log + "\e[0m" if err_log
-      rescue Exception => e
-        puts e
-        puts e.backtrace
-        puts "An error occurred while sending 'stop' request for the application '#{args[i]}'."
-      end
-    end
-  end
-
   # Restart the server
   def restart_webroar
     puts "Restarting WebROaR ..."
@@ -331,22 +286,6 @@ class WebroarCommand
       system("sleep 1")
     end
     start_webroar
-  end
-
-  # Restart the application
-  def restart_application(args)
-    for i in 1..args.length-1
-      begin
-        reply, err_log = Control.new(args[i]).restart
-        # reply = nil indicate success
-        puts reply ? reply : "Application '#{args[i]}' restarted successfully."
-        puts "\n\e[31m" + err_log + "\e[0m" if err_log
-      rescue Exception => e
-        puts e
-        puts e.backtrace
-        puts "An error occurred while sending 'restart' request for the application '#{args[i]}'."
-      end
-    end
   end
 
   def kill_process(pid)
@@ -375,5 +314,45 @@ class WebroarCommand
     end
   end
 
+  # Server start/stop/restart
+  def server_operation(op)
+    case op
+    when 'start'
+      start_webroar
+    when 'stop'
+      stop_webroar
+    when 'restart'
+      restart_webroar
+    end
+  end
+
+  # Application start/stop/restart
+  def application_operation(args, op)
+    for i in 1..args.length-1
+      begin
+
+        case op
+        when 'start'
+          reply, err_log = Control.new(args[i]).add
+          # reply = nil indicate success
+          puts reply ? reply : "Application '#{args[i]}' started successfully."
+        when 'stop'
+          reply, err_log = Control.new(args[i]).delete
+          puts reply ? reply : "Application '#{args[i]}' stopped successfully."
+        when 'restart'
+          reply, err_log = Control.new(args[i]).restart
+          puts reply ? reply : "Application '#{args[i]}' restarted successfully."
+        else
+          return
+        end
+
+        puts "\n\e[31m" + err_log + "\e[0m" if err_log
+      rescue Exception => e
+        puts e
+        puts e.backtrace
+        puts "An error occurred while sending '#{op}' request for the application '#{args[i]}'."
+      end
+    end
+  end
   
 end

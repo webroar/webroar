@@ -296,9 +296,7 @@ class CommandRunner
         end
       when "uninstall"; Installer.new.uninstall
       when "clear"; WebroarCommand.new.clear
-      when "start" ; WebroarCommand.new.start(ARGV)
-      when "stop" ; WebroarCommand.new.stop(ARGV)
-      when "restart" ; WebroarCommand.new.restart(ARGV)
+      when "start", "stop", "restart" ; WebroarCommand.new.operation(ARGV, cmd)
       when "add" ; WebroarCommand.new.add(options, ARGV)
       when "remove" ; WebroarCommand.new.remove(ARGV)
       when "test"; Installer.new.test(options)
