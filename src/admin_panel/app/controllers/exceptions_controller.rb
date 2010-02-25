@@ -79,60 +79,55 @@ class ExceptionsController < ApplicationController
   
   #Method is used to list the exceptions with different status.
   def list_statuswise_exceptions
-    if params[:status_name] == 'Ignored'
-      required_ignored_exceptions
-    elsif params[:status_name] == 'Closed'
-      required_closed_exceptions
-    else  
-      required_open_exceptions
+    app_id = App.get_application_data(params[:app_name]).id
+    @application_name = params[:app_name]
+    status = get_status_const(params[:status_name])      
+    @exceptions = AppException.get_all(status, app_id, params[:page] || 1)    
+    render :update do |page|
+      page.replace_html 'data_div', :partial => 'exception_list_partial', :locals => { :current_status => status, :status_name => params[:status_name] }      
+    end 
+  end
+  
+  #Method is used to update the status for selected exceptions.
+  def change_status    
+    if request.method == :put
+      @application_name = params[:app_name]
+      app_id = App.get_application_data(@application_name).id  
+      if params[:exception_ids] and params[:status_name]        
+        params[:exception_ids].collect! do |e|
+          e.to_i
+        end
+        case params[:status_name].downcase
+          when 'delete'
+            
+          when 'ignore'
+            AppException.update_all_status_to(IGNORED_EXCEPTION, params[:exception_ids], app_id)
+          when 'close'
+            AppException.update_all_status_to(CLOSED_EXCEPTION, params[:exception_ids], app_id)
+          when 'open'
+            AppException.update_all_status_to(OPEN_EXCEPTION, params[:exception_ids], app_id)
+        end
+      end
+      status = get_status_const(params[:current_status])
+      @exceptions = AppException.get_all(status, app_id, params[:page])
+      if @exceptions.out_of_bounds? and (page = params[:page].to_i - 1) > 0
+        @exceptions = AppException.get_all(status, app_id, page)
+      end
+      render :update do |page|
+        page.replace_html 'data_div', :partial => 'exception_list_partial', :locals => { :current_status => status, :status_name => params[:current_status]}  
+      end
     end
   end
   
-  #Method is used to set the status for an exception as closed.
-  def close_exception
-    AppException.update_status_to(CLOSED_EXCEPTION, params[:app_name], params[:exception_name])    
-    redirect_to :action => 'index'
-  end
-  
-  #Method is used to set the status for an exception as ignored.
-  def ignore_exception
-    AppException.update_status_to(IGNORED_EXCEPTION, params[:app_name], params[:exception_name])    
-    redirect_to :action => 'index'
-  end
-  
-  #Method is used to set the status for an exception as reopened.  
-  def reopen_exception
-    AppException.update_status_to(OPEN_EXCEPTION, params[:app_name], params[:exception_name])    
-    redirect_to :action => 'index'
-  end
-  
-  #Gives the array of five open exceptions for pagination.
-  def required_open_exceptions
-    app_id = App.get_application_data(params[:app_name]).id
-    @application_name = params[:app_name]
-    @exceptions = AppException.get_all(OPEN_EXCEPTION, app_id, params[:page] || 1)
-    render :update do |page|
-      page.replace_html 'data_div', :partial => 'exception_list_partial'      
-    end    
-  end
-  
-  #Gives the array of five closed exceptions for pagination.
-  def required_closed_exceptions
-    app_id = App.get_application_data(params[:app_name]).id
-    @application_name = params[:app_name]
-    @exceptions = AppException.get_all(CLOSED_EXCEPTION, app_id, params[:page] || 1)
-    render :update do |page|
-      page.replace_html 'data_div', :partial => 'close_exception_list_partial'  
-    end    
-  end
-  
-  #Gives the array of five ignored exceptions for pagination.
-  def required_ignored_exceptions
-    app_id = App.get_application_data(params[:app_name]).id
-    @application_name = params[:app_name]
-    @exceptions = AppException.get_all(IGNORED_EXCEPTION, app_id, params[:page] || 1)
-    render :update do |page|
-      page.replace_html 'data_div', :partial => 'ignored_exception_list_partial'      
-    end
+private
+  def get_status_const(status_name)
+    case status_name.downcase
+      when 'open'
+        status = OPEN_EXCEPTION
+      when 'closed', 'close'
+        status = CLOSED_EXCEPTION
+      when 'ignored', 'ignore'
+        status = IGNORED_EXCEPTION
+    end  
   end
 end

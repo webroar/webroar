@@ -45,12 +45,17 @@ class AppException < ActiveRecord::Base
     end
 
     # Update all exceptions status for a matching application and exception message  
-    def update_status_to(status, app_name, exception_message)
-      if app = App.first(:select => 'id', :conditions => {:name => app_name})
-        app_id = app.id
-        exceptions_id_array = all(:select =>'id', :conditions => ["exception_message = ? and app_id  = ?", exception_message, app_id]).collect { |e| e.id } 
-        update_all(["exception_status = ?",status], ["id in (#{exceptions_id_array.join(',')})"])
-      end
+    def update_status_to(status, app_id, exception_message)
+      exceptions_id_array = all(:select =>'id', :conditions => ["exception_message = ? and app_id  = ?", exception_message, app_id]).collect { |e| e.id } 
+      update_all(["exception_status = ?",status], ["id in (#{exceptions_id_array.join(',')})"])
+    end
+    
+    # Update all exceptions status for given exceptions id array
+    def update_all_status_to(status, exceptions_id_array, app_id)
+      exception_messages = all(:select => 'exception_message', :conditions => ["id in (#{exceptions_id_array.join(',')})"]).collect { |e| e.exception_message }
+      exception_messages.each do |m|
+        update_status_to(status, app_id, m)
+      end      
     end
     
     #Gives the details of the exception with some specific id.

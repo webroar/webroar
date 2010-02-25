@@ -278,8 +278,6 @@ function hide_busy_div(request){
 	      }		
 
    }
-//var container = document.getElementsByTagName('body')
-//alert(container
 
 
 window.onload = function() {
@@ -304,4 +302,34 @@ window.onload = function() {
       }
     })
   }
+}
+
+
+function checkall(element) {
+  allCheckboxes = $('form_exception_list').getInputs('checkbox')
+    
+  if (element.checked == true) {
+      for (i = 0; i < allCheckboxes.length; i++) {          
+          allCheckboxes[i].checked = true;
+      }
+  }
+  else {
+      for (i = 0; i < allCheckboxes.length; i++) {
+          allCheckboxes[i].checked = false;
+      }
+  }
+}
+
+function checkMarked(arg) {
+	allCheckboxes = $('form_exception_list').getInputs('checkbox')
+	for (i = 0; i < allCheckboxes.length; i++)
+	  if ( allCheckboxes[i].checked == true)
+		  if(arg == 'delete') 
+				return confirm("Are you sure to delete selected exceptions?")				  
+			else 
+			 return true	
+						
+		  
+	alert('No exception selected')
+	return false
 }
