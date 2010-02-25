@@ -18,7 +18,7 @@ You should have received a copy of the GNU General Public License
 along with WebROaR.  If not, see <http://www.gnu.org/licenses/>.
 -->
 
-  <div id = 'reload'><%=link_to_remote 'Back', :update => 'exceptions_listing_div', :url => {:controller => 'exceptions', :action => 'list', :application_name => params[:application_name]}%></div>
+  <div id = 'reload'><%=link_to_remote 'Back', :url => {:controller => 'exceptions', :action => 'list_statuswise_exceptions', :app_name => app_name, :status_name => status_name, :page => page }%></div>
   <table width = 90% cellpadding = 5px style = "word-wrap: break-word;">
     <tr>
       <td width = 15%><b>Exception:-</b></td>
@@ -170,4 +170,4 @@ along with WebROaR.  If not, see <http://www.gnu.org/licenses/>.
   </table>
   <br/>
   <br/>
-  <div id = 'reload'><%=link_to_remote 'Back', :update => 'exceptions_listing_div', :url => {:controller => 'exceptions', :action => 'list', :application_name => params[:application_name]}%></div>
+  <div id = 'reload'><%=link_to_remote 'Back', :url => {:controller => 'exceptions', :action => 'list_statuswise_exceptions', :app_name => app_name, :status_name => status_name, :page => page }%></div>
