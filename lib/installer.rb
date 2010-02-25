@@ -80,7 +80,7 @@ class Installer
     str += " library_flags=\"#{options[:library_paths]}\"" if options[:library_paths].length > 0
       
     puts "Checking for the dependencies ..."
-    check_dependencies(ssl) || exit(1)
+    check_dependencies(ssl, options) || exit(1)
       
     port, import, gem_name = user_input(options)
     port = import_files(gem_name, options) if import
@@ -348,12 +348,12 @@ class Installer
   end
 
   # Check the dependency
-  def check_dependencies(ssl)
+  def check_dependencies(ssl, options)
     failed_dependencies =[]
     REQUIRED_DEPENDENCIES.each do |dep|
       if (dep.name=="gnutls/gnutls.h" and ssl) or dep.name != "gnutls/gnutls.h"
         print "Checking for #{dep.name}........"
-        status = dep.find
+        status = dep.find(options)
         status = "\e[31mnot found\e[0m." if status == nil
         puts status
         if status =~ /.*not found.*/

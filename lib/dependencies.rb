@@ -17,11 +17,6 @@
 # along with WebROaR.  If not, see <http://www.gnu.org/licenses/>.
 
 require 'mkmf'
-if ENV['LD_LIBRARY_PATH'].nil?
-  ENV['LD_LIBRARY_PATH'] = ":/usr/lib:/usr/include"
-else
-  ENV['LD_LIBRARY_PATH'] += ":/usr/lib:/usr/include"
-end
 
 module Webroar
   class Dependency
@@ -34,18 +29,19 @@ module Webroar
       @name
     end
   
-    def find
+    def find(options)
       name = @name
       case (name)
       when File.basename(Config::CONFIG['CC']), "make", Config::CONFIG['RUBY_INSTALL_NAME'], "starling"; flag = find_command(name)
-      when "libsqlite3.so", "sqlite3.h", "gnutls/gnutls.h"; flag = find_so(name)
-      when "ruby_headers"; flag = find_ruby_headers()
+      when "libsqlite3.so"; flag = find_so(name, options)
+      when "sqlite3.h", "gnutls/gnutls.h"; flag = find_header_file(name, options)
+      when "ruby_headers"; flag = find_header_file("ruby.h", options)
       when "openssl.so"; flag = find_openssl(name)
       when Config::CONFIG['LIBRUBY_SO']; flag = find_shared_lib()
       when "rubygems"; flag = find_gem(name)
       when "openssl-ruby"; flag = find_gem("openssl")
       when "zlib-ruby"; flag = find_gem("zlib")
-      when "Xcode.app"; flag = find_Xcode(name)
+      when "Xcode.app"; flag = find_xcode(name)
       end
       return flag
     end
@@ -63,8 +59,8 @@ module Webroar
       return flag
     end
 
-    def find_Xcode(name)
-      return check_file(["/Developer/Applications"], name)
+    def find_xcode(name)
+      check_file(["/Developer/Applications"], name)
     end
 
     def find_gem(name)
@@ -75,21 +71,41 @@ module Webroar
       rescue LoadError
         flag="\e[31mnot found\e[0m.\nUnable to find #{name} gem."
       end
-      return flag
+      flag
     end
     
     def find_command(name)
       arr = ENV['PATH'].split(File::PATH_SEPARATOR)
       arr.delete("") if arr!= nil
       return "\e[31mnot found\e[0m.\nUnable to find #{name} from 'PATH'." if arr.nil? or arr.length == 0
-      return check_file(arr, name)
+      check_file(arr, name)
     end
 
-    def find_so(name)
-      arr = ENV['LD_LIBRARY_PATH'].split(File::PATH_SEPARATOR)
-      arr.delete("") if arr!= nil
-      return "\e[31mnot found\e[0m.\nUnable to find #{name} from 'LD_LIBRARY_PATH'." if arr.nil? or arr.length == 0
-      return check_file(arr, name)
+    def find_so(name, options)
+      arr = []
+      arr += ENV['LD_LIBRARY_PATH'].split(File::PATH_SEPARATOR) if ENV['LD_LIBRARY_PATH']
+      arr += ["/usr/lib"]
+      arr += options[:library_paths].gsub(' -L','').gsub("''",":").gsub("'",'').split(File::PATH_SEPARATOR) if options[:library_paths]
+      arr.delete("")
+
+      check_file(arr, name)
+    end
+
+    def find_header_file(name, options)
+      arr = []
+
+      begin
+        require 'rbconfig'
+        require 'mkmf'
+        arr += [Config::CONFIG['archdir'], Config::CONFIG['sitearchdir']]
+      rescue LoadError
+      end
+
+      arr += ["/usr/include"]
+      arr += options[:include_paths].gsub(" -I",'').gsub("''",":").gsub("'",'').split(File::PATH_SEPARATOR) if options[:include_paths]
+      arr.delete("")
+
+      check_file(arr, name)
     end
 
     def find_openssl(name)
@@ -101,17 +117,6 @@ module Webroar
 
       rescue LoadError
         return "\e[31mnot found\e[0m.\nUnable to find #{name} at #{[Config::CONFIG['archdir'], Config::CONFIG['sitearchdir']] * ','}."
-      end
-    end
-
-    def find_ruby_headers
-      begin
-        require 'rbconfig'
-        require 'mkmf'
-        ruby_header_dir = Config::CONFIG['rubyhdrdir'] || Config::CONFIG['archdir']
-        return check_file([ruby_header_dir], 'ruby.h')
-      rescue LoadError
-        return "\e[31mnot found\e[0m.\nUnable to find ruby.h at #{ruby_header_dir}."
       end
     end
 
