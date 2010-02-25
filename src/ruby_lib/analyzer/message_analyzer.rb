@@ -176,12 +176,9 @@ module Webroar
                   status = OPEN_EXCEPTION
                   # if its been closed, mark each entry as open
                   exceptions = nil
-                  with_exception_handling("Exception entry AppException.find") do
-                    exceptions = AppException.find(:all,:conditions=>["exception_message=? and app_id=?",exception_hash[:exception_message],app_id])
-                  end                
-                  exceptions.each do |exception|
-                    exception.update_attribute(:exception_status, status)
-                  end if exceptions                  
+                  with_exception_handling("Exception entry - Update existing entries status to OPEN") do
+                    AppException.update_status_to(status, app_id, exception_hash[:exception_message])                    
+                  end                 
                 end
               else
                 # New exception,  set it as Open
