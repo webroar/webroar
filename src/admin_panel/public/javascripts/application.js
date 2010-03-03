@@ -333,11 +333,3 @@ function checkMarked(arg) {
 	alert('No exception selected')
 	return false
 }
-
-function updateTdCSS(element) {
-	allTd = $$("td.exception_wall_time")
-	allTd.each(function (td) {
-		td.removeAttribute('class')
-	})
-	element.parentNode.setAttribute('class', 'exception_wall_time')
-}

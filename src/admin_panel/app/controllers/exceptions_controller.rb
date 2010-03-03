@@ -49,11 +49,6 @@ class ExceptionsController < ApplicationController
     render :partial => 'show', :locals => { :status_name => params[:status_name], :app_name => params[:app_name], :page => params[:page] }
   end
   
-  def show_exception_detail
-    @excep = AppException.get_exception_details_by_id(params[:id])
-    render :partial => 'exception_detail'
-  end
-  
   # This method is to display the list of exceptions as selection made from select box.
   def list
     @application_name = params[:application_name]

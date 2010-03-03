@@ -667,12 +667,3 @@ a.white:hover{
   bottom: 0;
   min-height:100%;
 }
-
-.exception_wall_time
-{
-  background-color:#DADADA;
-  font-family:verdana;
-  font-size:12px;
-  font-weight:bold;
-  color:#585555;
-}
