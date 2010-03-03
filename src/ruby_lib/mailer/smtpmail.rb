@@ -18,13 +18,13 @@
 
 #require 'rubygems'
 #require 'action_mailer'
-#$LOAD_PATH.unshift("#{File.join(ADMIN_PANEL_ROOT,'vendor', 'rails', 'actionpack', 'lib')}")
-#$LOAD_PATH.unshift("#{File.join(ADMIN_PANEL_ROOT,'vendor', 'rails', 'actionmailer', 'lib')}")
-#require File.join(ADMIN_PANEL_ROOT,'vendor', 'rails', 'actionmailer', 'lib', 'action_mailer')
+$LOAD_PATH.unshift("#{File.join(ADMIN_PANEL_ROOT,'vendor', 'rails', 'actionpack', 'lib')}")
+$LOAD_PATH.unshift("#{File.join(ADMIN_PANEL_ROOT,'vendor', 'rails', 'actionmailer', 'lib')}")
+require File.join(ADMIN_PANEL_ROOT,'vendor', 'rails', 'actionmailer', 'lib', 'action_mailer')
 
-gem 'actionpack', '>= 2.3.5'
-gem 'actionmailer', '>= 2.3.5'
-require 'action_mailer' 
+#gem 'actionpack', '>= 2.3.5'
+#gem 'actionmailer', '>= 2.3.5'
+#require 'action_mailer'
 require 'yaml'
 
 module Email
