@@ -27,9 +27,9 @@ class WebroarCommand
     print "Clearing log files ..."
     log_file_pattern = File.join('','var','log','webroar','*.log')
     log_files = Dir.glob(log_file_pattern)
-    for file in log_files
-      File.truncate(file, 0) if File.exists?(file)
-    end
+	log_files.each do |file|
+	  File.truncate(file, 0) if File.exists?(file)
+	end
     puts " done."
   end
 
@@ -323,25 +323,25 @@ class WebroarCommand
       stop_webroar
     when 'restart'
       restart_webroar
+	else puts "Operation not supported."
     end
   end
 
   # Application start/stop/restart
   def application_operation(args, op)
-    for i in 1..args.length-1
-      begin
-
+    (args - args.first(1)).each do |app|
+	  begin
         case op
         when 'start'
-          reply, err_log = Control.new(args[i]).add
+          reply, err_log = Control.new(app).add
           # reply = nil indicate success
-          puts reply ? reply : "Application '#{args[i]}' started successfully."
+          puts reply ? reply : "Application '#{app}' started successfully."
         when 'stop'
-          reply, err_log = Control.new(args[i]).delete
-          puts reply ? reply : "Application '#{args[i]}' stopped successfully."
+          reply, err_log = Control.new(app).delete
+          puts reply ? reply : "Application '#{app}' stopped successfully."
         when 'restart'
-          reply, err_log = Control.new(args[i]).restart
-          puts reply ? reply : "Application '#{args[i]}' restarted successfully."
+          reply, err_log = Control.new(app).restart
+          puts reply ? reply : "Application '#{app}' restarted successfully."
         else
           return
         end
@@ -350,7 +350,7 @@ class WebroarCommand
       rescue Exception => e
         puts e
         puts e.backtrace
-        puts "An error occurred while sending '#{op}' request for the application '#{args[i]}'."
+        puts "An error occurred while sending '#{op}' request for the application '#{app}'."
       end
     end
   end

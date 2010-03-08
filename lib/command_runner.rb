@@ -290,7 +290,6 @@ class CommandRunner
         # is set to echo the character
         begin
           Installer.new.install(options)
-        rescue Interrupt
         ensure
           system('stty echo')
         end

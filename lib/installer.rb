@@ -223,10 +223,10 @@ class Installer
     print "Removing files ...\n"
     log_rotate(false)
     dirs = [File.join('','var','log','webroar')]
-    for dir in dirs
+    dirs.each do |dir|
       file_pattern = File.join(dir, '*')
       files = Dir.glob(file_pattern)
-      for file in files
+      files.each do |file|
         File.delete(file) if File.exists?(file)
       end
       Dir.rmdir(dir) if File.exists?(dir)

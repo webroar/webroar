@@ -42,6 +42,7 @@ module Webroar
       when "openssl-ruby"; flag = find_gem("openssl")
       when "zlib-ruby"; flag = find_gem("zlib")
       when "Xcode.app"; flag = find_xcode(name)
+	  else flag = "\e[31mUnknown dependency\e[0m."
       end
       return flag
     end
@@ -98,7 +99,6 @@ module Webroar
         require 'rbconfig'
         require 'mkmf'
         arr += [Config::CONFIG['archdir'], Config::CONFIG['sitearchdir']]
-      rescue LoadError
       end
 
       arr += ["/usr/include"]
