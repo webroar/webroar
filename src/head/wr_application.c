@@ -88,6 +88,8 @@ void wr_app_wrk_add_timeout_cb(struct ev_loop *loop, ev_timer *w, int revents) {
       app->add_workers = 0;
       app->restarted = FALSE;
     }
+    //Remove application from the server application list, otherwise it won't allow to add the application with same name, unless stopping it    
+    wr_app_remove(app->svr, app->conf->name.str);
   } else if(app->in_use == TRUE && (TOTAL_WORKER_COUNT(app) < app->conf->min_worker || app->add_workers)) {
     wr_app_wkr_add(app);
   }
