@@ -53,9 +53,12 @@ class WebroarCommand
       return
     end
 
-    gem 'activesupport', '>= 2.3.5'
-    gem 'activerecord', '>= 2.3.5'
-    require 'active_record'
+#    gem 'activesupport', '>= 2.3.5'
+#    gem 'activerecord', '>= 2.3.5'
+#    require 'active_record'
+    $LOAD_PATH.unshift("#{File.join(ADMIN_PANEL_ROOT,'vendor', 'rails', 'activerecord', 'lib')}")
+    $LOAD_PATH.unshift("#{File.join(ADMIN_PANEL_ROOT,'vendor', 'rails', 'activesupport', 'lib')}")
+    require File.join(ADMIN_PANEL_ROOT,'vendor', 'rails', 'activerecord', 'lib', 'active_record')
 
     files = Dir.glob(File.join(ADMIN_PANEL_ROOT, 'app', 'models', "{app,pseudo_model,application_specification,server_specification}.rb"))
     files << File.join(ADMIN_PANEL_ROOT, 'config','initializers','application_constants.rb')
@@ -86,10 +89,14 @@ class WebroarCommand
       return
     end
 
-    gem 'activesupport', '>= 2.3.5'
-    gem 'activerecord', '>= 2.3.5'
-    require 'active_record'
+#    gem 'activesupport', '>= 2.3.5'
+#    gem 'activerecord', '>= 2.3.5'
+#    require 'active_record'
 
+    $LOAD_PATH.unshift("#{File.join(ADMIN_PANEL_ROOT,'vendor', 'rails', 'activerecord', 'lib')}")
+    $LOAD_PATH.unshift("#{File.join(ADMIN_PANEL_ROOT,'vendor', 'rails', 'activesupport', 'lib')}")
+    require File.join(ADMIN_PANEL_ROOT,'vendor', 'rails', 'activerecord', 'lib', 'active_record')
+    
     params = {:app_id => nil,
       :name => args[1],
       :host_names => nil,
