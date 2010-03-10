@@ -97,6 +97,11 @@ class WebroarCommand
     $LOAD_PATH.unshift("#{File.join(ADMIN_PANEL_ROOT,'vendor', 'rails', 'activesupport', 'lib')}")
     require File.join(ADMIN_PANEL_ROOT,'vendor', 'rails', 'activerecord', 'lib', 'active_record')
     
+    files = Dir.glob(File.join(ADMIN_PANEL_ROOT, 'app', 'models', "{app,pseudo_model,application_specification,server_specification}.rb"))
+    files << File.join(ADMIN_PANEL_ROOT, 'config','initializers','application_constants.rb')
+    files << File.join(ADMIN_PANEL_ROOT, 'lib','yaml_writer.rb')
+    load_files(files)
+    
     params = {:app_id => nil,
       :name => args[1],
       :host_names => nil,
@@ -107,14 +112,8 @@ class WebroarCommand
       :type1 => options[:type1] ? options[:type1] : 'Rails',
       :analytics => options[:analytics] ? options[:analytics] : 'Disabled',
       :environment => options[:environment] ? options[:environment] : 'production',
-      :min_worker => options[:min_worker] ? options[:min_worker] : '4',
-      :max_worker => options[:max_worker] ? options[:max_worker] : '8'}
-
-    files = Dir.glob(File.join(ADMIN_PANEL_ROOT, 'app', 'models', "{app,pseudo_model,application_specification,server_specification}.rb"))
-    files << File.join(ADMIN_PANEL_ROOT, 'config','initializers','application_constants.rb')
-    files << File.join(ADMIN_PANEL_ROOT, 'lib','yaml_writer.rb')
-
-    load_files(files)
+      :min_worker => options[:min_worker] ? options[:min_worker] : MIN_WORKERS,
+      :max_worker => options[:max_worker] ? options[:max_worker] : MAX_WORKERS}
 
     application_specification = ApplicationSpecification.new(params)
 
