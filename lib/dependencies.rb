@@ -22,7 +22,7 @@ module Webroar
   class Dependency
   
     def initialize(name)
-      @name=name
+      @name = name
     end
   
     def name
@@ -30,18 +30,17 @@ module Webroar
     end
   
     def find(options)
-      name = @name
-      case (name)
-      when File.basename(Config::CONFIG['CC']), "make", Config::CONFIG['RUBY_INSTALL_NAME'], "starling"; flag = find_command(name)
-      when "libsqlite3.so"; flag = find_so(name, options)
-      when "sqlite3.h", "gnutls/gnutls.h"; flag = find_header_file(name, options)
+      case (@name)
+      when File.basename(Config::CONFIG['CC']), "make", Config::CONFIG['RUBY_INSTALL_NAME'], "starling"; flag = find_command(@name)
+      when "libsqlite3.so"; flag = find_so(@name, options)
+      when "sqlite3.h", "gnutls/gnutls.h"; flag = find_header_file(@name, options)
       when "ruby_headers"; flag = find_header_file("ruby.h", options)
-      when "openssl.so"; flag = find_openssl(name)
+      when "openssl.so"; flag = find_openssl(@name)
       when Config::CONFIG['LIBRUBY_SO']; flag = find_shared_lib()
-      when "rubygems"; flag = find_gem(name)
+      when "rubygems"; flag = find_gem(@name)
       when "openssl-ruby"; flag = find_gem("openssl")
       when "zlib-ruby"; flag = find_gem("zlib")
-      when "Xcode.app"; flag = find_xcode(name)
+      when "Xcode.app"; flag = find_xcode(@name)
 	  else flag = "\e[31mUnknown dependency\e[0m."
       end
       return flag
@@ -129,7 +128,8 @@ module Webroar
       return "\e[31mnot found\e[0m.\nUnable to find #{file} at #{dirs * ','}."
     end
 
-  end    
+  end
+  
   module Dependencies 
     GCC = Dependency.new(File.basename(Config::CONFIG['CC']))
     Gnutls = Dependency.new('gnutls/gnutls.h')

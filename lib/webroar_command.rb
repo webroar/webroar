@@ -21,15 +21,21 @@ ADMIN_PANEL_ROOT = File.join(WEBROAR_ROOT, 'src', 'admin_panel').freeze
 # Basic WebROaR commands
 class WebroarCommand
 
+  def initialize
+    @server_status = :down
+    @starling_status = :down
+    @analyzer_status = :down
+  end
+
   # Clear log files
   def clear()
     return unless CheckUser.check
     print "Clearing log files ..."
     log_file_pattern = File.join('','var','log','webroar','*.log')
     log_files = Dir.glob(log_file_pattern)
-	log_files.each do |file|
-	  File.truncate(file, 0) if File.exists?(file)
-	end
+	  log_files.each do |file|
+	    File.truncate(file, 0) if File.exists?(file)
+	  end
     puts " done."
   end
 
@@ -121,93 +127,105 @@ class WebroarCommand
 
   private
 
+  def check_server_status
+    pid = File.read(PIDFILE).chomp.to_i rescue nil
+    unless pid
+      system("#{WEBROAR_BIN_DIR}/webroar-head #{WEBROAR_ROOT}")
+    else
+      system("kill -0 #{pid}")
+      if $? == 0
+        puts " already running."
+        @server_status = :running
+      else
+        system("#{WEBROAR_BIN_DIR}/webroar-head #{WEBROAR_ROOT}")
+      end
+    end
+  end
+
+  def start_server
+    return true unless @server_status == :down
+    if $? == 0
+      @server_status = :up
+      filename = File.join(WEBROAR_ROOT, 'conf', 'config.yml')
+      apps_spec = YAML.load(File.open(filename))["Application Specification"]
+      sleep_time = (apps_spec ? 1 + apps_spec.size : 1)
+      sleep(sleep_time * 1.5)
+      puts "Head process started successfully."
+    else
+      puts "An error occurred while starting head process. Please refer '#{WEBROAR_LOG_FILE}' for details."
+      if @starling_status == :up
+        filename = File.join(WEBROAR_ROOT, 'conf', 'starling_server_config.yml')
+        pid_file = YAML.load(File.open(filename))["starling"]["pid_file"]
+        puts "Aborting startup sequence"
+        print "Stopping starling message queue server ..."
+        pid = File.read(pid_file).chomp.to_i rescue nil
+        kill_process(pid)
+      end
+      return false
+    end
+    return true
+  end
+
+  def start_analyzer
+    return if @starling_status == :down
+
+    filename = File.join(WEBROAR_ROOT, 'conf', 'server_internal_config.yml')
+    log_file = YAML.load(File.open(filename))["webroar_analyzer_script"]["log_file"]
+
+    print "Starting webroar-analyzer process ..."
+
+    pid_file = YAML.load(File.open(filename))["webroar_analyzer_script"]["pid_file"]
+    pid = File.read(pid_file).chomp.to_i rescue nil
+
+    if pid
+      system("kill -0 #{pid} 2>/dev/null")
+      if $? == 0
+        puts " already running."
+        @analyzer_status = :running
+      end
+    end
+
+    if @analyzer_status == :down
+      cmd = "webroar-analyzer >> #{log_file} 2>>#{log_file}"
+      system(cmd)
+      if $? == 0
+        puts " done."
+        @analyzer_status = :up
+      else
+        # one more try(if /var/log/webroar/ not exists) trying to open analyzer.log in current dir
+        cmd = "webroar-analyzer >> analyzer.log 2>>analyzer.log"
+        system(cmd)
+        if $? == 0
+          puts " done."
+          @analyzer_status = :up
+        else
+          puts " failed."
+          puts "'Analytics' and 'Exception Notification' features would not work. Please refer '#{log_file}' for details."
+          @analyzer_status = :down
+        end
+      end
+    end
+  end
+
   # Start the server
   def start_webroar
     puts "Initiating WebROaR startup sequence ..."
     if File.exist?(File.join(WEBROAR_BIN_DIR,"webroar-head")) && File.exist?(File.join(WEBROAR_BIN_DIR,"webroar-worker"))
-      starling_status = start_starling
-      server_status = :down
+      @starling_status = start_starling
+      
       puts "Starting webroar-head process ..."
-      pid_file = PIDFILE
-      pid = File.read(pid_file).chomp.to_i rescue nil
-      unless pid
-        system("#{WEBROAR_BIN_DIR}/webroar-head #{WEBROAR_ROOT}")
-      else
-        system("kill -0 #{pid}")
-        if $? == 0
-          puts " already running."
-          server_status = :running
-        else
-          system("#{WEBROAR_BIN_DIR}/webroar-head #{WEBROAR_ROOT}")
-        end
-      end
 
-      if server_status == :down
-        if $? == 0
-          filename = File.join(WEBROAR_ROOT, 'conf', 'config.yml')
-          apps_spec = YAML.load(File.open(filename))["Application Specification"]
-          sleep_time = 1
-          sleep_time += apps_spec.size if apps_spec
-          sleep(sleep_time*1.5)
-          puts "Head process started successfully."
-        else
-          puts "An error occurred while starting head process. Please refer '#{WEBROAR_LOG_FILE}' for details."
-          if starling_status == :up
-            filename = File.join(WEBROAR_ROOT, 'conf', 'starling_server_config.yml')
-            pid_file = YAML.load(File.open(filename))["starling"]["pid_file"]
-            puts "Aborting startup sequence"
-            print "Stopping starling message queue server ..."
-            pid = File.read(pid_file).chomp.to_i rescue nil
-            kill_process(pid)
-          end
-          return
-        end
-      end
+      check_server_status
+      return unless start_server
+      start_analyzer
 
-      analyzer_status = :down
-      if starling_status == :up or starling_status == :running
-        filename = File.join(WEBROAR_ROOT, 'conf', 'server_internal_config.yml')
-        log_file = YAML.load(File.open(filename))["webroar_analyzer_script"]["log_file"]
-        cmd = "webroar-analyzer >> #{log_file} 2>>#{log_file}"
-        print "Starting webroar-analyzer process ..."
-        pid_file = YAML.load(File.open(filename))["webroar_analyzer_script"]["pid_file"]
-        pid = File.read(pid_file).chomp.to_i rescue nil
-        if pid
-          system("kill -0 #{pid} 2>/dev/null")
-          if $? == 0
-            puts " already running."
-            analyzer_status = :running
-          end
-        end
-        if analyzer_status == :down
-          system(cmd)
-          if $? == 0
-            puts " done."
-            analyzer_status = :up
-          else
-            # one more try(if /var/log/webroar/ not exists) trying to open analyzer.log in current dir
-            cmd = "webroar-analyzer >> analyzer.log 2>>analyzer.log"
-            system(cmd)
-            if $? == 0
-              puts " done."
-              analyzer_status = :up
-            else
-              puts " failed."
-              puts "'Analytics' and 'Exception Notification' features would not work. Please refer '#{log_file}' for details."
-              analyzer_status = :down
-            end
-          end
-        end
-      end
-
-      if analyzer_status == :down
+      if @analyzer_status == :down
         puts "Server started but 'Analytics' and 'Exception Notification' features would not work."
-      elsif server_status == :running and analyzer_status == :running
+      elsif @server_status == :running and @analyzer_status == :running
         puts "Server already running."
       else
         puts "Server started successfully."
       end
-
     else
       puts "WebROaR is not installed on this machine. Please run *sudo webroar install* to install it."
     end
@@ -231,6 +249,7 @@ class WebroarCommand
 
     filename = File.join(WEBROAR_ROOT, 'conf', 'server_internal_config.yml')
     log_file = YAML.load(File.open(filename))["webroar_analyzer_script"]["log_file"]
+
     system("starling -f #{starling_conf_file} >> #{log_file} 2>>#{log_file}")
     if $? == 0
       puts " done."
@@ -257,12 +276,14 @@ class WebroarCommand
         puts "WebROaR is not running."
         return
       end
+
       print 'Stopping webroar-head ...'
       pid = File.read(PIDFILE).chomp.to_i rescue nil
       kill_process(pid)
 
       filename = File.join(WEBROAR_ROOT, 'conf', 'server_internal_config.yml')
       pid_file = YAML.load(File.open(filename))["webroar_analyzer_script"]["pid_file"]
+
       print "Stopping webroar-analyzer process ..."
       pid = File.read(pid_file).chomp.to_i rescue nil
       kill_process(pid)
@@ -323,7 +344,7 @@ class WebroarCommand
       stop_webroar
     when 'restart'
       restart_webroar
-	else puts "Operation not supported."
+	  else puts "Operation not supported."
     end
   end
 
