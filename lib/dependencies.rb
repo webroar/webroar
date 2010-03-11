@@ -23,6 +23,7 @@ module Webroar
   
     def initialize(name)
       @name = name
+      @options = nil
     end
   
     def name
@@ -30,40 +31,42 @@ module Webroar
     end
   
     def find(options)
+      @options = options
       case (@name)
-      when File.basename(Config::CONFIG['CC']), "make", Config::CONFIG['RUBY_INSTALL_NAME'], "starling"; flag = find_command(@name)
-      when "libsqlite3.so"; flag = find_so(@name, options)
-      when "sqlite3.h", "gnutls/gnutls.h"; flag = find_header_file(@name, options)
-      when "ruby_headers"; flag = find_header_file("ruby.h", options)
-      when "openssl.so"; flag = find_openssl(@name)
-      when Config::CONFIG['LIBRUBY_SO']; flag = find_shared_lib()
-      when "rubygems"; flag = find_gem(@name)
+      when File.basename(Config::CONFIG['CC']), "make", Config::CONFIG['RUBY_INSTALL_NAME'], "starling"; flag = find_command
+      when "libsqlite3.so"; flag = find_so
+      when "sqlite3.h", "gnutls/gnutls.h"; flag = find_header_file
+      when "ruby_headers"; flag = find_header_file("ruby.h")
+      when Config::CONFIG['LIBRUBY_SO']; flag = find_shared_lib
+      when "rubygems"; flag = find_gem
       when "openssl-ruby"; flag = find_gem("openssl")
       when "zlib-ruby"; flag = find_gem("zlib")
-      when "Xcode.app"; flag = find_xcode(@name)
-	  else flag = "\e[31mUnknown dependency\e[0m."
+      when "Xcode.app"; flag = find_xcode
+      else flag = "\e[31mUnknown dependency\e[0m."
       end
       return flag
     end
 
     private
 
-    def find_shared_lib()
+    def find_shared_lib
       if File.exist?(File.join(Config::CONFIG['libdir'],Config::CONFIG['LIBRUBY_SO']))
         flag = "\e[32mfound\e[0m  at #{Config::CONFIG['libdir']}."
       elsif Config::CONFIG['ENABLE_SHARED'] == 'yes'
         flag = "\e[32mfound\e[0m."
       else
-        flag="\e[31mnot found\e[0m.\nUnable to find #{Config::CONFIG['LIBRUBY_SO']} at #{Config::CONFIG['libdir']}."
+        flag = find_so(Config::CONFIG['LIBRUBY_SO'])
+#      else
+#        flag="\e[31mnot found\e[0m.\nUnable to find #{Config::CONFIG['LIBRUBY_SO']} at #{Config::CONFIG['libdir']}."
       end
       return flag
     end
 
-    def find_xcode(name)
+    def find_xcode(name = @name)
       check_file(["/Developer/Applications"], name)
     end
 
-    def find_gem(name)
+    def find_gem(name = @name)
       begin
         require 'rubygems'
         require name
@@ -74,24 +77,24 @@ module Webroar
       flag
     end
     
-    def find_command(name)
+    def find_command(name = @name)
       arr = ENV['PATH'].split(File::PATH_SEPARATOR)
       arr.delete("") if arr!= nil
       return "\e[31mnot found\e[0m.\nUnable to find #{name} from 'PATH'." if arr.nil? or arr.length == 0
       check_file(arr, name)
     end
 
-    def find_so(name, options)
+    def find_so(name = @name)
       arr = []
       arr += ENV['LD_LIBRARY_PATH'].split(File::PATH_SEPARATOR) if ENV['LD_LIBRARY_PATH']
       arr += ["/usr/lib"]
-      arr += options[:library_paths].gsub(' -L','').gsub("''",":").gsub("'",'').split(File::PATH_SEPARATOR) if options[:library_paths]
+      arr += @options[:library_paths].gsub(' -L','').gsub("''",":").gsub("'",'').split(File::PATH_SEPARATOR) if @options[:library_paths]
       arr.delete("")
 
       check_file(arr, name)
     end
 
-    def find_header_file(name, options)
+    def find_header_file(name = @name)
       arr = []
 
       begin
@@ -101,22 +104,10 @@ module Webroar
       end
 
       arr += ["/usr/include"]
-      arr += options[:include_paths].gsub(" -I",'').gsub("''",":").gsub("'",'').split(File::PATH_SEPARATOR) if options[:include_paths]
+      arr += @options[:include_paths].gsub(" -I",'').gsub("''",":").gsub("'",'').split(File::PATH_SEPARATOR) if @options[:include_paths]
       arr.delete("")
 
       check_file(arr, name)
-    end
-
-    def find_openssl(name)
-      begin
-        require 'rbconfig'
-        require 'mkmf'
-
-        check_file([Config::CONFIG['archdir'], Config::CONFIG['sitearchdir']], name)
-
-      rescue LoadError
-        return "\e[31mnot found\e[0m.\nUnable to find #{name} at #{[Config::CONFIG['archdir'], Config::CONFIG['sitearchdir']] * ','}."
-      end
     end
 
     def check_file(dirs, file)
