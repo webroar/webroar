@@ -362,7 +362,7 @@ class Installer
       return retval unless retval.nil?
     end
 
-    log_rotate_darwin if RUBY_PLATFORM =~ /darwin/
+    log_rotate_darwin(add) if RUBY_PLATFORM =~ /darwin/
       
     puts " done." unless add
     return nil if add
