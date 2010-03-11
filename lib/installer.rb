@@ -153,7 +153,8 @@ class Installer
       Dependencies::GCC,
       Dependencies::Make,
       Dependencies::Starling,
-      Dependencies::Xcode
+      Dependencies::Xcode,
+      Dependencies::Gnutls
     ]
   end
 
