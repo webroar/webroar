@@ -25,15 +25,6 @@
 
 #define TEST_LOG_FILE "test.log"  //Result is logged in this file
 
-/** Number of failed test cases */
-int ut_failed;
-
-/** Number of passed test cases */
-int ut_passed;
-
-/** Total number of test cases */
-int ut_total;
-
 /** Assertion functions */
 void ut_assert_fun(int test, char* val1, char* val2, const char* file_name, const char* func, int line);
 void ut_assert_int_fun(int test, int val1, int val2, const char* file_name, const char* func, int line);

@@ -66,9 +66,19 @@ task :build_tests do
     sh cmd
   }
   
+  
   tests_obj_files = FileList[File.join(TEST_OBJ_DIR,"*.o")]
-  out_file = File.join(UNIT_TEST_DIR, 'test_ext.so')
-  cmd = "#{COMPILER} #$libs #{tests_obj_files} -shared -o #{out_file}"
+  
+  if RUBY_PLATFORM =~ /darwin/
+    out_file = File.join(UNIT_TEST_DIR, 'test_ext.dylib')
+    lib_flags = $libs + $LIBS 
+    lib_flags += " #{ENV['library_flags']}" if ENV['library_flags']
+    cmd = "#{COMPILER} #$libs #{tests_obj_files} -dynamiclib -o #{out_file}"
+  else
+    out_file = File.join(UNIT_TEST_DIR, 'test_ext.so')
+    cmd = "#{COMPILER} #$libs #{tests_obj_files} -shared -o #{out_file}"
+  end
+  
   sh cmd
 end
 
@@ -87,9 +97,17 @@ task :unit_test do
     puts "Running test cases ..."
     puts ""
     $LOAD_PATH.unshift(UNIT_TEST_DIR)
-    require 'test_ext'
+    require 'dl'
+
+    if RUBY_PLATFORM =~ /darwin/
+      dl = DL::dlopen(File.join(UNIT_TEST_DIR,'test_ext.dylib'))
+    else
+      dl = DL::dlopen(File.join(UNIT_TEST_DIR,'test_ext.so'))
+    end
+
     Dir.chdir(UNIT_TEST_DIR)
-    Test::Test.run
+    run_test = dl.sym("run_test",'0')
+    run_test.call()
     puts "\nPlease refer 'test\\unit\\test.log' for the detailed report."
   else
     puts "Compilation error. Please refer 'testcases.log' for details."

@@ -23,6 +23,16 @@
 #include <stdio.h>
 #include "ut_test.h"
 
+/** Number of failed test cases */
+int ut_failed;
+
+/** Number of passed test cases */
+int ut_passed;
+
+/** Total number of test cases */
+int ut_total;
+
+
 /** Assertion for integer value */
 void ut_assert_int_fun(int test, int val1, int val2, const char* file_name, const char* func, int line)
 {

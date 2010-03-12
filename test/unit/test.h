@@ -23,6 +23,10 @@
 #ifndef TEST_H_
 #define TEST_H_
 
+extern int ut_failed;
+extern int ut_total;
+extern int ut_passed;
+
 /** SCGI unit test cases*/
 void test_scgi();
 
@@ -34,5 +38,8 @@ void test_queue();
 
 /** Util unit test cases*/
 void test_util();
+
+/** Run all tests **/
+void run_test();
 
 #endif /*TEST_H_*/

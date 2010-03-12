@@ -20,23 +20,16 @@
  *               C Extension to run Unit Test Cases
  *****************************************************************************/
 
-#include <ruby.h>
 #include <test.h>
 
-VALUE run()
-{
+void run_test(){
   test_scgi();
   test_yaml_parser();
   test_queue();
-  test_util();
+  test_util();  
 }
 
-Init_test_ext()
+void run()
 {
-  VALUE mTest;
-  VALUE cTest;
-
-  mTest = rb_define_module("Test");
-  cTest = rb_define_class_under(mTest, "Test", rb_cObject);
-  rb_define_singleton_method(cTest, "run", run, 0);
+  run_test();
 }
