@@ -687,6 +687,7 @@ exit 0"
 
   def compile_code(str)
     print "Compiling C source files ..."
+    system("rake clobber >>install.log 2>>install.log")
     @options[:debug_build] ? system("rake debug_build #{str} >>install.log 2>>install.log") : system("rake #{str} >>install.log 2>>install.log")
     unless $? == 0
       puts " failed."
