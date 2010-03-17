@@ -612,7 +612,7 @@ exit 0"
     FileUtils.copy(File.join(import_dir,"src","admin_panel","config","user.yml"), ADMIN_USER_FILE)
     FileUtils.copy(File.join(import_dir,"src","admin_panel","config","database.yml"), DB_CONFIG_FILE)
     configuration = YAML.load(File.open(DB_CONFIG_FILE))["production"]
-    if configuration['adapter'] == 'sqlite3' and !configuration['database'].start_with?('/')
+    if configuration['adapter'] == 'sqlite3' and configuration['database'][0,1] != "/"
       db = File.join(import_dir, "src", "admin_panel", configuration['database'])
       FileUtils.copy(db, File.join(ADMIN_PANEL_DIR, configuration['database'])) if File.exist?(db)
     end
