@@ -49,7 +49,7 @@ class App < ActiveRecord::Base
       reply, err_log = ctl.add
     rescue Exception => e
       #err_obj = e
-      reply = "An error occurred while sending 'start' request for application '#{app_name}'. Please refer the '/var/log/webroar/Admin_panel.production.log' file for details."
+      reply = "An error occurred while sending 'start' request for application '#{app_name}'. Please refer the '/var/log/webroar/#{app_name}.log' file for details."
     end
     #return reply, e
     return reply, err_log
@@ -63,7 +63,7 @@ class App < ActiveRecord::Base
     begin
       reply, err_log = ctl.delete
     rescue Exception => e
-      reply = "An error occurred while sending 'stop' request for application '#{app_name}'. Please refer the '/var/log/webroar/Admin_panel.production.log' file for details."
+      reply = "An error occurred while sending 'stop' request for application '#{app_name}'. Please refer the '/var/log/webroar/#{app_name}.log' file for details."
     end
     return reply, err_log
   end
@@ -76,7 +76,7 @@ class App < ActiveRecord::Base
     begin
       reply, err_log = ctl.restart
     rescue Exception => e
-      reply = "An error occurred while sending 'stop' request for application '#{app_name}'. Please refer the '/var/log/webroar/Admin_panel.production.log' file for details."
+      reply = "An error occurred while sending 'stop' request for application '#{app_name}'. Please refer the '/var/log/webroar/#{app_name}.log' file for details."
     end
     return reply, err_log
   end    
