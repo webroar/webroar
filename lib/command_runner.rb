@@ -167,19 +167,19 @@ HELP_ADD = %{
           Else set the relevant base URI with which you would like to access the application, e.g. '/app1' if you want the application to be accessible via http://yourserver:port/app1.
           If you would like to set a virtual host for your application e.g. www.company1.com, please specify it here. You can also host this application on a particular subdomain e.g. app1.company1.com. Wildcard '*' can also be used in defining the virtual host name, but it should only be used either at the start or the end. Prefix the virtual host name with tilde(~), if a wildcard is used in defining it. e.g. (i) ~*.server.com (ii) ~www.server.* (iii) ~*.server.*
     -D, --path
-          Path for the web application root directory.
+          Complete path for your application root directory: e.g. /home/someuser/webapps/app1
     -t, --type
-          Type of the application either rack or rails.
+          Type of the application either rack or rails (default: rails)
     -e, --environment
-          Environment in which you want to run the application.
+          Environment in which you want to run the application (default: production)
     -a, --[no-]analytics
-          Enable analytics to get detailed numbers about the run time performance of the application. his number gathering adds a very small overhead on your application.
+          Enable analytics to get detailed numbers about the run time performance of the application. This number gathering adds a very small overhead on your application
     -N, --min-workers
-          Minimum number of worker processes that should run for the deployed application.
+          Minimum number of worker processes that should run for this deployed application. Multiple worker instances help in processing a higher number of concurrent user requests simultaneously. The server would always ensure at least these many worker processes run for this application (default: 4)
     -x, --max-workers
-          Maximum number of worker processes that should run for the deployed application.
+          Maximum number of worker processes that should run for this deployed application. Multiple worker instances help in processing a higher number of concurrent user requests simultaneously. The server would ensure that maximum only these many worker processes run for this application (default: 8)
     -U, --run-as-user
-          Name of the user with whose privileges you would like to run the application. This user should have all the necessary permissions to get your web application working properly.
+          Name of the user with whose privileges you would like to run the application (root can be dangerous!). This user should have all the necessary permissions to get your web application working properly (e.g. write access on required files and directories etc)
 
   Summary:
     Add and start an application on the server.
