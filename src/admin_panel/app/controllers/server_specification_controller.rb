@@ -33,6 +33,7 @@ class ServerSpecificationController < ApplicationController
       'log_level' => info['Server Specification']['log_level'],
       'min_worker' => info['Server Specification']['min_worker'],
       'max_worker' => info['Server Specification']['max_worker'],
+      'access_log' => info['Server Specification']['access_log'],
       'SSL Specification' => ssl_specification]
     ServerSpecification.write(info, server_specification)
     redirect_to configuration_path
@@ -51,6 +52,7 @@ class ServerSpecificationController < ApplicationController
         'log_level' => info['Server Specification']['log_level'],
         'min_worker' => info['Server Specification']['min_worker'],
         'max_worker' => info['Server Specification']['max_worker'],
+        'access_log' => info['Server Specification']['access_log'],
         'SSL Specification' => ssl_specification]
       ServerSpecification.write(info, server_specification)
       flash[:error] = RESTART_SERVER_MESSAGE
