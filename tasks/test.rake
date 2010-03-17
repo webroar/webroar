@@ -97,17 +97,18 @@ task :unit_test do
     puts "Running test cases ..."
     puts ""
     $LOAD_PATH.unshift(UNIT_TEST_DIR)
-    require 'dl'
+    Dir.chdir(UNIT_TEST_DIR)
 
     if RUBY_PLATFORM =~ /darwin/
+      require 'dl'
       dl = DL::dlopen(File.join(UNIT_TEST_DIR,'test_ext.dylib'))
+      run_test = dl.sym("run_test",'0')
+      run_test.call()
     else
-      dl = DL::dlopen(File.join(UNIT_TEST_DIR,'test_ext.so'))
+      require 'test_ext'
+      Test::Test.run
     end
-
-    Dir.chdir(UNIT_TEST_DIR)
-    run_test = dl.sym("run_test",'0')
-    run_test.call()
+    
     puts "\nPlease refer 'test\\unit\\test.log' for the detailed report."
   else
     puts "Compilation error. Please refer 'testcases.log' for details."

@@ -20,6 +20,9 @@
  *               C Extension to run Unit Test Cases
  *****************************************************************************/
 
+#ifndef __APPLE__
+#include <ruby.h>
+#endif
 #include <test.h>
 
 void run_test(){
@@ -29,7 +32,18 @@ void run_test(){
   test_util();  
 }
 
-void run()
-{
+#ifndef __APPLE__
+VALUE run(){
   run_test();
 }
+
+Init_test_ext()
+{
+  VALUE mTest;
+  VALUE cTest;
+  
+  mTest = rb_define_module("Test");
+  cTest = rb_define_class_under(mTest, "Test", rb_cObject);
+  rb_define_singleton_method(cTest, "run", run, 0);
+}
+#endif
