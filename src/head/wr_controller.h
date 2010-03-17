@@ -64,6 +64,7 @@ struct wr_ctl_s {
   ev_io              w_read;      /* Control request watcher */
   wr_svr_t           *svr;    /* Pointer to wr_server_t */
   wr_wkr_t           *wkr;    /* Pointer to wr_processsor_t */
+  wr_app_t           *app;    /* Pointer to wr_app_t, would be used at time of freeing control object */
   char               msg[WR_MSG_SIZE];
   size_t             ctl_nbytes;
   wr_ctl_msg_type_t  type;

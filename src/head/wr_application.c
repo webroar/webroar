@@ -372,6 +372,10 @@ static int wr_app_insert(wr_svr_t* server, wr_app_conf_t* config, wr_ctl_t *ctl)
   app->svr = server;
   app->conf = config;
   app->ctl = ctl;
+  /* set application object in control, it would be used at time of freeing control object */
+  if(ctl) {
+    ctl->app = app;
+  }
   if(!is_static_server){
     wr_req_resolver_add(server, app, config);
     app->next = server->apps;
@@ -631,6 +635,8 @@ void wr_app_add_cb(wr_ctl_t *ctl, const wr_ctl_msg_t *ctl_msg) {
   }
   ctl->svr->err_msg[0] = 0;
   if(app) {
+    /* set application object in control, it would be used at time of freeing control object */
+    ctl->app = app;
     sprintf(ctl->svr->err_msg, "Application '%s' is already running.", ctl_msg->msg.app.app_name.str);
   }
   
@@ -671,8 +677,11 @@ void wr_app_reload_cb(wr_ctl_t *ctl, const wr_ctl_msg_t *ctl_msg) {
 
   // Find the application.
   while(app) {
-    if(strcmp(ctl_msg->msg.app.app_name.str, app->conf->name.str)==0)
+    if(strcmp(ctl_msg->msg.app.app_name.str, app->conf->name.str)==0){
+      /* set application object in control, it would be used at time of freeing control object */
+      ctl->app = app;
       break;
+    }
     app = app->next;
   }
 

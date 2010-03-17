@@ -470,6 +470,7 @@ wr_ctl_t* wr_ctl_new(wr_svr_t* server) {
   ctl->svr = server;
   ctl->w_read.active = 0;
   ctl->wkr = NULL;
+  ctl->app = NULL;
   ctl->ctl_nbytes = 0;
   //ctl->msg_size = 0;
   ctl->fd = -1;
@@ -521,6 +522,9 @@ void wr_ctl_free(wr_ctl_t* ctl) {
            app->msg_que->q_count > app->high_ratio ) ) {
         wr_app_wkr_add(app);
       }
+    }
+    if(ctl->app) {
+      ctl->app->ctl = NULL; 
     }
     free(ctl);
   }
