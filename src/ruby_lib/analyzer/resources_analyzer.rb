@@ -70,7 +70,7 @@ module Webroar
           @pids[@apps[@starling_server]] <<= starling_pid.to_i
           
           grep_str_head = 'webroar-head'
-          cmd = "ps -e | grep #{grep_str_head} | tail -1"
+          cmd = "ps -e -opid,comm | grep #{grep_str_head} | tail -1"
           pid = `#{cmd}`.split(' ')[0]
           if pid
             @pids[@apps[@webroar_head]] <<= pid.to_i
