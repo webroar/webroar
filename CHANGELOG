@@ -1,3 +1,50 @@
+v0.3.0 - 19-Mar-2010
+--------------------
+
+New Features
+~~~~~~~~~~~~
+
+* Support for Zero Downtime Application Upgrades.
+* Full support for adding/removing applications from command line. (Earlier 
+it was only possible through the Admin Panel.)
+* Full support for non interactive installation of the server.
+* Support for passing additional include and library paths for server 
+compilation.
+* Display error trace directly on the Admin Panel or the console if the 
+application start/stop/restart command fails.
+
+Fixes
+~~~~~
+
+* Moved Admin Panel to our vendor Rails to fix ActionPack 2.3.5 and Rack 
+dependency issue.
+* Fixed unit tests to make them run on Mac OS and Arch Linux.
+* Query optimizations on exception listing page of the Admin Panel.
+* Usability improvements on exception listing page of the Admin Panel -  
+Pagination and multiple selects.
+* Stopped sending email notifications for ignored exceptions.
+* Fixed overruling of the '--ssl-support' option while importing configuration 
+file from a previous installation.
+* Fixed service script generation issue for Arch Linux (Ticket #4).
+* Handled Memcache client's timeout error by overriding timeout value to 15 
+seconds when sending worker's PID (Ticket #14).
+* Handled application control signal connection breaking issue.
+* Fixed multiple host name resolving issue (Ticket #15).
+* Fixed the handling of static files with extensions in Upper Case.
+* Fixed flash crash issue when viewing URL graphs for the applications 
+having data for 40K or more requests.
+* Fixed overruling of access log setting while updating the SSL configuration.
+* Removed dependency of starling-starling gem on Github. The server now uses 
+starling gem on Gemcutter.
+* Removed application from server's in-memory list if all of it's workers  
+fail to connect back to the head.
+* Solved the Admin Panel menu options vanishing issue by setting color of the 
+links on the top menu bar.
+* Set default value of minimum and maximum numbers of workers to 4 and 8 
+respectively in wr_config.h
+* Code cleanup in Analyzer and 'lib' modules.
+
+
 v0.2.6 - 23-Dec-2009
 --------------------
 
