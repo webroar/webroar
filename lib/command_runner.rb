@@ -57,8 +57,8 @@ HELP_INSTALL =%{
     webroar install [options]
 
   Options:
-    -L                     Additional library path
-    -I                     Additional include path
+    -L                     Additional library paths to be used for linking of the server 
+    -I                     Additional include paths to be used for linking of the server
     -s, --ssl-support      Install the server with SSL support
     -d, --debug-build      Compile the server as a debug build to output extremely verbose logs 
 
@@ -179,7 +179,7 @@ HELP_ADD = %{
     -U, --run-as-user
           Name of the user with whose privileges you would like to run the application (root can be dangerous!). This user should have all the necessary permissions to get your web application working properly (e.g. write access on required files and directories etc)
 
-  The following parameters are optionals
+  The following parameters are optional
 
     -T, --type
           Type of the application either rack or rails (default: rails)
