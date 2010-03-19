@@ -234,7 +234,7 @@ better.)
 rubygems version or any other reason), you can install the following dependent
  gems individually first:
 
- calendar_date_select, rack, rake, rspec, sqlite3-ruby, starling-starling, will_paginate
+ calendar_date_select, rack, rake, rspec, sqlite3-ruby, starling, will_paginate
 
 - After successful installation of the webroar gem, any errors that occur
 during the setup are saved to the install.log created in the installed gem's 
