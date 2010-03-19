@@ -1,19 +1,17 @@
-WebROaR User Guide 
-==================
+= WebROaR User Guide =
 
-Introduction
--------------
+== Introduction ==
 
-http://webroar.in[WebROaR] is an application server that makes deployments of ruby web 
-applications extremely simple. It provides an integrated solution to view 
-the run time performance numbers and sends email notifications in case any 
+
+http://webroar.in[WebROaR] is an application server that makes deployments of 
+ruby web applications extremely simple. It provides an integrated solution to 
+view the run time performance numbers and sends email notifications in case any 
 exceptions occur in any of the deployed applications.
 
 It is 5 to 55% faster than all other comparable deployment stacks for 
 Ruby on Rails applications.
 
-Key Features
-~~~~~~~~~~~~
+=== Key Features ===
 
 * Maximum Performance. 
 * Simplified Deployment.
@@ -28,20 +26,19 @@ Key Features
  applications.
 * SSL support. 
 
-Supported Operating Systems
----------------------------
+== Supported Operating Systems ==
 
 WebROaR has been tested on Ubuntu 8.10/9.04/9.10, Debian 5 (64 Bit), Mac OS X 
-(v10.5 & v10.6), Arch Linux 2009.08 and Cent OS 5.2. Basically, it should be able to run on any
-*IX OS.  
+(v10.5 & v10.6), Arch Linux 2009.08 and Cent OS 5.2. Basically, it should be 
+able to run on any *IX OS.  
 
 Currently it does not support Microsoft(R) Windows.
 
-Install
---------
+== Install ==
 
-Prerequisites 
-~~~~~~~~~~~~~
+
+=== Prerequisites ===
+
 
 - ruby 1.8.x or 1.9.x 
 - ruby 1.8-dev or 1.9-dev 
@@ -65,13 +62,17 @@ If you are building ruby from source, please ensure you pass the flag
 
 ===============================
 
-Procedure
-~~~~~~~~~
+=== Procedure ===
 
-WebROaR can installed using the following commands:
+WebROaR can be installed through its gem or directly from its source code. One 
+can also use Capistrano to perform a non-interactive installation of the 
+server.
+
+==== Install using gem ====
+
+WebROaR can be installed using the following commands:
 
 ----
-gem sources -a http://gems.github.com
 sudo gem install webroar
 sudo webroar install
 ----
@@ -92,7 +93,9 @@ After restarting the server, admin panel would now also be accessible over SSL.
 *https://<yourservername>:<port>/admin-panel*
 ===============================
 
-Or if you like living in the fast lane, you can install the edge version giving
+==== Install from source code ====
+
+If you like living in the fast lane, you can install the edge version giving
 the following commands:
 
 ----
@@ -116,9 +119,111 @@ Configure further SSL options in the server's admin panel
 After restarting the server, admin panel would now also be accessible over SSL.
 *https://<yourservername>:<port>/admin-panel*
 ===============================
+
+==== Non-Interactive Install using Capistrano ====
+
+You can use following Capistrano script to install the edge version on a 
+remote machine
+
+. Create folder <dir>, move to <dir> folder using *cd <dir>*.
+. Apply command *capify .*
+. Replace the content of *config/deploy.rb* with the following script
++
+----
+
+set :application, "WebROaR"
+set :repository,  "git://github.com/webroar/webroar.git"
+
+set :scm, :git
+
+#############################################
+# WebROaR installation parameters           #
+#############################################
+# Instead of asking for admin user name, password and port you can directly set 
+# it from here.
+
+set :user, 'username'
+set :port, 22
+set(:password) { Capistrano::CLI.password_prompt("Enter ssh password for \
+#{user}: ") }
+set :use_sudo, false
+set :deploy_to, "path-to-deploy-webroar"
+set(:webroar_admin_username) { Capistrano::CLI.ui.ask("Please enter a username \
+for the administrator account of server's admin panel:") }
+set(:webroar_admin_password) { Capistrano::CLI.password_prompt("Please enter a \
+password(minimum 6 characters) for the administrator account of server's admin \
+panel:") }
+set(:webroar_port) { Capistrano::CLI.ui.ask("Enter server port \
+(default is 3000):") }
+set :webroar_import_configuration, true # set false to beging with fresh install
+set :webroar_ssl_support, false # set true to Build webroar with SSL support
+
+role :web, "server"         # Your HTTP server, Apache/etc
+role :app, "server"         # This may be the same as your `Web` server
+role :db,  "server", :primary => true # This is where Rails migrations will run
+
+############################################
+
+namespace :deploy do
+  # hook into capistrano's deploy task
+  after 'deploy:update_code', 'deploy:webroar:install'
   
-Troubleshooting
-~~~~~~~~~~~~~~~
+  task :finalize_update, :except => { :no_release => true } do
+    run "chmod -R g+w #{release_path}" if fetch(:group_writable, true)
+  end
+  
+  namespace :webroar do
+    
+    desc "Uninstall the webroar gem"
+    task :uninstall do
+      run "#{sudo} webroar uninstall; #{sudo} gem uninstall -ax webroar"    
+    end
+    
+    desc "Install the server"
+    task :install, :roles => :app do
+      run "cd #{release_path}; #{sudo} rake install #{'ssl=on' if \
+      webroar_ssl_support}", :pty=>true do |ch, stream, out|
+        next if out.chomp == ''
+        logger.important out, ch[:server]
+        case out
+          when / least/
+          raise Capistrano::Error, out
+          when />/
+          ch.send_data("#{webroar_import_configuration ? '1' : '2'}\n")
+          when / username/
+          ch.send_data("#{webroar_admin_username}\n")
+          when / password/
+          ch.send_data("#{webroar_admin_password}\n")
+          when / port/
+          ch.send_data("#{webroar_port}\n")
+        end
+      end
+    end
+    
+    
+    desc "Start, Stop and Restat the server"
+    %w(start stop restart).each do |name|
+      task name.to_sym,:roles => :app do
+        run "#{sudo} webroar #{name}"  #Manual Configuration required, this is best effort.
+      end
+    end
+    
+  end
+  
+end
+
+----
+. Set the variables in *config/deploy.rb* file.
+. To setup the fresh directory structure on the remote machine run 
+*cap deploy:setup*
+. To deploy the application for the first time run *cap deploy:cold*
+  (Steps 1-6 are to be followed only once to create directory setup on remote 
+  machine.)
+. Update the current version with the latest code from github using 
+*cap deploy:update*.
+
+=== Troubleshooting ===
+
 [IMPORTANT]
 It is suggested that rubygems software should be setup correctly 
 beforehand, and you should be successfully able to access and use the already 
@@ -140,8 +245,8 @@ in */var/log/webroar*. In the unfortunate event of the server crashing, a core
 dump file would be created in /tmp if 'gcore' is available on that machine.
 
 
-Setting up database for server admin panel
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+=== Setting up database for server admin panel ===
+
 
 The server's admin panel itself is a Ruby on Rails(TM) web application, and by 
 default uses sqlite as it's database. You can edit 
@@ -156,8 +261,7 @@ rake db:migrate
 *admin_panel* directory would be present under the server's rubygem 
 directory.
 
-Usage
-------
+== Usage ==
 
 Start/Stop/Restart WebROaR:
 
@@ -194,8 +298,9 @@ Please note that analytics data and exceptions are still captured by the
 server even when the admin panel is stopped.
 ===============================
 
-Deploying applications
-----------------------
+== Deploying applications ==
+
+=== Deploy using Admin Panel ===
 
 If the server got installed successfully, you should be able access it's admin
 panel using the link: + 
@@ -209,8 +314,117 @@ your choice accessing the *Configuration* link of the admin panel.
 You do *"not"* need to restart the server when you deploy a new application.
 The application starts up automatically after deployment.
 
-Rack applications (other than Rails)
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+=== Deploy using Capistrano ===
+
+WebROaR can be easily integrated with Capistrano using the following 
+instructions.
+
+After installing Capistrano, run the following command in your application's 
+root directory:
+
+----
+capify .
+----
+
+It would create *Capfile* and *config/deploy.rb* files.
+Modify *config/deploy.rb* file as shown below:
+
+----
+set :application, "myapp"
+
+set :scm,:none
+set :repository, "."
+
+set :copy_cache, "/tmp/my-app"
+set :copy_compression,:gzip
+set :deploy_via,:copy
+set :copy_exclude, [".git/*", "log/*", "Capfile", "config/deploy.rb", "*~", ".*"]
+
+set :password, 'password'
+set :use_sudo, false
+set :user, 'username'
+set :port, 22
+
+set :deploy_to, "path-to-your-web-app-directory/#{application}"
+
+################################
+# Parameters used to add application to the server
+################################
+set :resolver, "/#{application.gsub(' ','_')}"
+set :path, "#{deploy_to}/current"
+set :app_type, "rails"
+set :environment, "production"
+set :analytics, "--analytics" # ' ' (blank) to disable analytics
+set :min_workers, "4"
+set :max_workers, "8"
+set :run_as_user, "#{user}"
+################################
+
+role :app, "server"
+role :web, "server"
+role :db,  "server", :primary => true
+
+#role :db,  "your slave db-server here"
+
+namespace :deploy do
+
+  [:stop, :start, :restart].each do |action|
+    desc "#{action.to_s.capitalize} the application."
+    task action, :roles => :app do
+      run "#{sudo} webroar #{action.to_s} #{application.to_s}"
+    end
+  end
+
+  desc "Add application to the server"
+  task :add, :roles => :app do
+    run "#{sudo} webroar add '#{application}' --resolver'#{resolver}' \
+    --path'#{path}' -type'#{app_type}' -environment'#{environment}' #{analytics} \
+    --min-workers#{min_workers} --max-workers#{max_workers} \
+    --run-as-user'#{run_as_user}'"
+  end
+
+  desc "Remove application from the server"
+  task :remove, :roles => :app do
+    run "#{sudo} webroar remove '#{application}'"
+  end
+
+end
+
+after "deploy:update",  "deploy:restart"
+
+----
+
+Create the application directory structure by running setup command:
+
+----
+cap deploy:setup
+----
+
+Deploy the application using command:
+
+----
+cap deploy
+----
+
+Add the application to WebROaR:
+
+----
+cap deploy:add
+----
+
+Please note that the application needs to be added to the server only once.
+
+You can use the following commands for starting/stopping/restarting the 
+application while upgrading it in the future:
+
+----
+cap deploy:stop
+cap deploy:start
+cap deploy:restart
+----
+
+
+=== Rack applications (other than Rails) ===
 
 To deploy any Rack based application (other than Rails) the following are 
 required in it's root directory:
@@ -254,8 +468,7 @@ in WebROaR.
 - ENV[\'APP_ENV\'] - To get the application environment
 - ENV[\'APP_BASE_URI\'] - To get the baseuri
 
-Accessing run time statistics 
------------------------------
+== Accessing run time statistics ==
 
 For those applications whose Analytics are *Enabled* in their configuration,
 the following graphs are available under the *Analytics* link of the admin panel.
@@ -279,8 +492,7 @@ Currently, Analytics are only supported for Ruby on Rails(TM) applications.
 Also, after a specific request has been processed by the server, it takes 
 about a minute for it’s data to show up in the graphs.
 
-Exception Tracking and Notifications
-------------------------------------
+== Exception Tracking and Notifications ==
 
 Any exceptions that occur in any of the deployed application are captured by 
 the server. An email notification is also sent out immediately with details of 
@@ -294,18 +506,17 @@ Currently, this feature is only supported for Ruby on Rails(TM) applications.
 Also, it takes about a minute for an exception to show up in the Admin Panel 
 after it has occurred.
 
-Uninstall
----------
+== Uninstall ==
 
-If you didn't like the server, use the following commands in sequence to uninstall it. 
+If you didn't like the server, use the following commands in sequence to 
+uninstall it. 
 
 ----
 sudo webroar uninstall
 sudo gem uninstall webroar
 ----
 
-Test Suite
-----------
+== Test Suite ==
 
 If you are a programmer and wish to play around with the server's code, you 
 might like to use it's test suite to test the robustness of your changes.
@@ -326,4 +537,224 @@ tests:
 - Load Test II - Random sleep interval run
 - Build Tests
 
+== Command Line Options ==
+
+=== webroar help ===
+
+----
+  WebROaR - Ruby Application Server
+
+    Usage:
+      webroar -h/--help
+      webroar -v/--version
+      webroar command [argument] [options...]
+
+    Examples:
+      webroar install
+      webroar help
+
+    Further help:
+      webroar help commands      list all 'webroar' commands
+      webroar help <COMMAND>     show help on COMMAND
+----
+
+=== webroar help commands ===
+
+----
+    install            Install the server
+    uninstall          Uninstall the server
+
+    start [APPNAME]    Start the server or an application
+    stop [APPNAME]     Stop the server or an application
+    restart [APPNAME]  Restart the server or an application
+
+    add APPNAME        Deploy an application on server
+    remove APPNAME     Remove an application from server
+
+    test               Run the test suite
+    
+  For help on a particular command, use 'webroar help COMMAND'.
+----
+
+=== webroar install ===
+
+----
+  Usage:
+    webroar install [options]
+
+  Options:
+    -L                     Additional library paths to be used for linking of 
+                           the server
+    -I                     Additional include paths to be used for compiling of 
+                           the server
+    -s, --ssl-support      Install the server with SSL support
+    -d, --debug-build      Compile the server as a debug build to output 
+                           extremely verbose logs 
+
+  The following options would make the install non-interactive by suppressing 
+  the questions prompted by the installer
+    
+    -P, --port             Server port number
+    -i, --import           Import configuration, logs and admin panel data from 
+                           the previous installation
+        --no-import        Do not import configuration, logs and admin panel 
+                           data from the previous installation
+    -u, --username         Username for the administrator account of server's 
+                           admin panel
+    -p, --password         Password for the administrator account of server\'s 
+                           admin panel
+
+  Summary:
+    Install the server
+----
+
+=== webroar uninstall ===
+
+----
+  Usage:
+    webroar uninstall
+
+  Summary:
+    Uninstall the server
+----
+  
+=== webroar start ===
+
+----
+  Usage:
+    webroar start [APPNAME ...] 
+
+  Arguments:
+    APPNAME        Name of the application
+
+  Summary:
+    Start the server or an application 
+
+  Description:
+    'start' command without any arguments starts the server. One can start
+    multiple applications together by passing multiple names.
+----
+
+=== webroar stop ===
+
+----
+  Usage:
+    webroar stop [APPNAME ...] 
+
+  Arguments:
+    APPNAME        Name of the application
+
+  Summary:
+    Stop the server or an application 
+
+  Description:
+    'stop' command without any arguments stops the server. One can stop multiple
+    applications together by passing multiple names.
+----
+
+=== webroar restart ===
+
+----
+  Usage:
+    webroar restart [APPNAME ...] 
+
+  Arguments:
+    APPNAME        Name of the application
+
+  Summary:
+    Restart the server or an application 
+
+  Description:
+    'restart' command without any arguments restarts the server. One can restart
+    multiple applications together by passing multiple names.
+----
+
+=== webroar add ===
+
+----
+  Usage:
+    webroar add APPNAME -R ... -D ... -U ... [options]
+
+  Arguments:
+    APPNAME       Name of the application
+
+  Options:
+    -R, --resolver
+          Resolver to identify the application. Set it to '/' if you would like 
+          to run the application on the root domain. e.g. http://yourserver:port/.
+          Else set the relevant base URI with which you would like to access the 
+          application, e.g. '/app1' if you want the application to be accessible 
+          via http://yourserver:port/app1.
+          If you would like to set a virtual host for your application e.g. 
+          www.company1.com, please specify it here. You can also host this 
+          application on a particular subdomain e.g. app1.company1.com. 
+          Wildcard '*' can also be used in defining the virtual host name, 
+          but it should only be used either at the start or the end. Prefix the 
+          virtual host name with tilde(~), if a wildcard is used in defining it. 
+          e.g. (i) ~*.server.com (ii) ~www.server.* (iii) ~*.server.*
+    -D, --path
+          Complete path for your application root directory: e.g. 
+          /home/someuser/webapps/app1
+    -U, --run-as-user
+          Name of the user with whose privileges you would like to run the 
+          application (root can be dangerous!). This user should have all the 
+          necessary permissions to get your web application working properly 
+          (e.g. write access on required files and directories etc)
+
+  The following parameters are optional
+
+    -T, --type
+          Type of the application either rack or rails (default: rails)
+    -E, --environment
+          Environment in which you want to run the application 
+          (default: production)
+    -A, --analytics
+          Enable analytics to get detailed numbers about the run time 
+          performance of the application. This number gathering adds a very 
+          small overhead on your application
+    -N, --min-workers
+          Minimum number of worker processes that should run for this deployed 
+          application. Multiple worker instances help in processing a higher 
+          number of concurrent user requests simultaneously. The server would 
+          always ensure at least these many worker processes run for this 
+          application (default: 4)
+    -X, --max-workers
+          Maximum number of worker processes that should run for this deployed 
+          application. Multiple worker instances help in processing a higher 
+          number of concurrent user requests simultaneously. The server would 
+          ensure that maximum only these many worker processes run for this 
+          application (default: 8)
+
+  Summary:
+    Deploy (and start) a new application on the server.
+----
+
+=== webroar remove ===
+
+----
+  Usage:
+    webroar remove APPNAME
+
+  Arguments:
+    APPNAME        Name of the application
+
+  Summary:
+    Remove the specified application from the server.
+----
+
+=== webroar test ===
+
+----
+  Usage:
+    webroar test [options] 
+
+  Options:
+    -r, --report-dir DIR    Report directory
+    -d, --debug-build       Compile the server as a debug build to output 
+    extremely verbose logs
+    -l, --load-test         Also run the load tests
+
+  Summary:
+    Run the test suite
+----
 

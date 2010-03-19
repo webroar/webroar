@@ -3,8 +3,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-<meta name="generator" content="AsciiDoc 8.4.4" />
-<title>WebROaR User Guide</title>
+<meta name="generator" content="AsciiDoc 8.2.7" />
 <style type="text/css">
 /* Debug borders */
 p, li, dt, dd, div, pre, h1, h2, h3, h4, h5, h6 {
@@ -111,13 +110,11 @@ div#footer-badges {
   padding-bottom: 0.5em;
 }
 
-div#preamble {
-  margin-top: 1.5em;
-  margin-bottom: 1.5em;
-}
+div#preamble,
 div.tableblock, div.imageblock, div.exampleblock, div.verseblock,
 div.quoteblock, div.literalblock, div.listingblock, div.sidebarblock,
 div.admonitionblock {
+  margin-right: 10%;
   margin-top: 1.5em;
   margin-bottom: 1.5em;
 }
@@ -159,6 +156,9 @@ div.sidebarblock > div.content {
   padding: 0.5em;
 }
 
+div.listingblock {
+  margin-right: 0%;
+}
 div.listingblock > div.content {
   border: 1px solid silver;
   background: #f4f4f4;
@@ -167,7 +167,6 @@ div.listingblock > div.content {
 
 div.quoteblock {
   padding-left: 2.0em;
-  margin-right: 10%;
 }
 div.quoteblock > div.attribution {
   padding-top: 0.5em;
@@ -176,7 +175,6 @@ div.quoteblock > div.attribution {
 
 div.verseblock {
   padding-left: 2.0em;
-  margin-right: 10%;
 }
 div.verseblock > div.content {
   white-space: pre;
@@ -220,7 +218,6 @@ dt {
   margin-top: 0.5em;
   margin-bottom: 0;
   font-style: normal;
-  color: navy;
 }
 dd > *:first-child {
   margin-top: 0.1em;
@@ -229,27 +226,11 @@ dd > *:first-child {
 ul, ol {
     list-style-position: outside;
 }
-ol.arabic {
+div.olist > ol {
   list-style-type: decimal;
 }
-ol.loweralpha {
+div.olist2 > ol {
   list-style-type: lower-alpha;
-}
-ol.upperalpha {
-  list-style-type: upper-alpha;
-}
-ol.lowerroman {
-  list-style-type: lower-roman;
-}
-ol.upperroman {
-  list-style-type: upper-roman;
-}
-
-div.compact ul, div.compact ol,
-div.compact p, div.compact p,
-div.compact div, div.compact div {
-  margin-top: 0.1em;
-  margin-bottom: 0.1em;
 }
 
 div.tableblock > table {
@@ -262,52 +243,21 @@ thead {
 tfoot {
   font-weight: bold;
 }
-td > div.verse {
-  white-space: pre;
-}
-p.table {
-  margin-top: 0;
-}
-/* Because the table frame attribute is overriden by CSS in most browsers. */
-div.tableblock > table[frame="void"] {
-  border-style: none;
-}
-div.tableblock > table[frame="hsides"] {
-  border-left-style: none;
-  border-right-style: none;
-}
-div.tableblock > table[frame="vsides"] {
-  border-top-style: none;
-  border-bottom-style: none;
-}
 
-
-div.hdlist {
+div.hlist {
   margin-top: 0.8em;
   margin-bottom: 0.8em;
 }
-div.hdlist tr {
+div.hlist td {
   padding-bottom: 15px;
 }
-dt.hdlist1.strong, td.hdlist1.strong {
-  font-weight: bold;
-}
-td.hdlist1 {
+td.hlist1 {
   vertical-align: top;
   font-style: normal;
   padding-right: 0.8em;
-  color: navy;
 }
-td.hdlist2 {
+td.hlist2 {
   vertical-align: top;
-}
-div.hdlist.compact tr {
-  margin: 0;
-  padding-bottom: 0;
-}
-
-.comment {
-  background: yellow;
 }
 
 @media print {
@@ -380,10 +330,18 @@ div.exampleblock-content {
 
 /* IE6 sets dynamically generated links as visited. */
 div#toc a:visited { color: blue; }
+
+/* Because IE6 child selector is broken. */
+div.olist2 ol {
+  list-style-type: lower-alpha;
+}
+div.olist2 div.olist ol {
+  list-style-type: decimal;
+}
 </style>
 <script type="text/javascript">
 /*<![CDATA[*/
-window.onload = function(){generateToc(2)}
+window.onload = function(){generateToc(3)}
 /* Author: Mihai Bazon, September 2002
  * http://students.infoiasi.ro/~mishoo
  *
@@ -455,6 +413,7 @@ function generateToc(toclevels) {
 }
 /*]]>*/
 </script>
+<title>WebROaR User Guide</title>
 </head>
 <body>
 <div id="header">
@@ -466,14 +425,14 @@ function generateToc(toclevels) {
 </div>
 <h2 id="_introduction">1. Introduction</h2>
 <div class="sectionbody">
-<div class="paragraph"><p><a href="http://webroar.in">WebROaR</a> is an application server that makes deployments of ruby web
-applications extremely simple. It provides an integrated solution to view
-the run time performance numbers and sends email notifications in case any
+<div class="para"><p><a href="http://webroar.in">WebROaR</a> is an application server that makes deployments of
+ruby web applications extremely simple. It provides an integrated solution to
+view the run time performance numbers and sends email notifications in case any
 exceptions occur in any of the deployed applications.</p></div>
-<div class="paragraph"><p>It is 5 to 55% faster than all other comparable deployment stacks for
+<div class="para"><p>It is 5 to 55% faster than all other comparable deployment stacks for
 Ruby on Rails applications.</p></div>
 <h3 id="_key_features">1.1. Key Features</h3><div style="clear:left"></div>
-<div class="ulist"><ul>
+<div class="ilist"><ul>
 <li>
 <p>
 Maximum Performance.
@@ -526,15 +485,15 @@ SSL support.
 </div>
 <h2 id="_supported_operating_systems">2. Supported Operating Systems</h2>
 <div class="sectionbody">
-<div class="paragraph"><p>WebROaR has been tested on Ubuntu 8.10/9.04/9.10, Debian 5 (64 Bit), Mac OS X
-(v10.5 &amp; v10.6), Arch Linux 2009.08 and Cent OS 5.2. Basically, it should be able to run on any
-*IX OS.</p></div>
-<div class="paragraph"><p>Currently it does not support Microsoft&#174; Windows.</p></div>
+<div class="para"><p>WebROaR has been tested on Ubuntu 8.10/9.04/9.10, Debian 5 (64 Bit), Mac OS X
+(v10.5 &amp; v10.6), Arch Linux 2009.08 and Cent OS 5.2. Basically, it should be
+able to run on any *IX OS.</p></div>
+<div class="para"><p>Currently it does not support Microsoft&#174; Windows.</p></div>
 </div>
 <h2 id="_install">3. Install</h2>
 <div class="sectionbody">
 <h3 id="_prerequisites">3.1. Prerequisites</h3><div style="clear:left"></div>
-<div class="ulist"><ul>
+<div class="ilist"><ul>
 <li>
 <p>
 ruby 1.8.x or 1.9.x
@@ -593,19 +552,22 @@ gnutls-dev 2.4.1 or later (Only necessary in case SSL support is required)
 </td>
 <td class="content">
 <div class="title">Ruby Shared Library</div>
-<div class="paragraph"><p>The server needs the shared library - libruby.so to run the ruby web
+<div class="para"><p>The server needs the shared library - libruby.so to run the ruby web
 applications.</p></div>
-<div class="paragraph"><p>If you are building ruby from source, please ensure you pass the flag
-<strong>--enable-shared</strong> while executing its ./configure script.</p></div>
+<div class="para"><p>If you are building ruby from source, please ensure you pass the flag
+<strong>&#8212;enable-shared</strong> while executing its ./configure script.</p></div>
 </td>
 </tr></table>
 </div>
 <h3 id="_procedure">3.2. Procedure</h3><div style="clear:left"></div>
-<div class="paragraph"><p>WebROaR can installed using the following commands:</p></div>
+<div class="para"><p>WebROaR can be installed through its gem or directly from its source code. One
+can also use Capistrano to perform a non-interactive installation of the
+server.</p></div>
+<h4 id="_install_using_gem">3.2.1. Install using gem</h4>
+<div class="para"><p>WebROaR can be installed using the following commands:</p></div>
 <div class="listingblock">
 <div class="content">
-<pre><tt>gem sources -a http://gems.github.com
-sudo gem install webroar
+<pre><tt>sudo gem install webroar
 sudo webroar install</tt></pre>
 </div></div>
 <div class="admonitionblock">
@@ -615,20 +577,21 @@ sudo webroar install</tt></pre>
 </td>
 <td class="content">
 <div class="title">SSL Support</div>
-<div class="paragraph"><p>In case you would like to setup SSL support for the server, use the following
+<div class="para"><p>In case you would like to setup SSL support for the server, use the following
 command line switch with <strong>sudo webroar install</strong> command mentioned above.</p></div>
 <div class="listingblock">
 <div class="content">
 <pre><tt>sudo webroar install --ssl-support</tt></pre>
 </div></div>
-<div class="paragraph"><p>Configure further SSL options in the server&#8217;s admin panel
+<div class="para"><p>Configure further SSL options in the server's admin panel
         <strong>http://&lt;yourservername&gt;:&lt;port&gt;/admin-panel/configuration</strong></p></div>
-<div class="paragraph"><p>After restarting the server, admin panel would now also be accessible over SSL.
+<div class="para"><p>After restarting the server, admin panel would now also be accessible over SSL.
 <strong>https://&lt;yourservername&gt;:&lt;port&gt;/admin-panel</strong></p></div>
 </td>
 </tr></table>
 </div>
-<div class="paragraph"><p>Or if you like living in the fast lane, you can install the edge version giving
+<h4 id="_install_from_source_code">3.2.2. Install from source code</h4>
+<div class="para"><p>If you like living in the fast lane, you can install the edge version giving
 the following commands:</p></div>
 <div class="listingblock">
 <div class="content">
@@ -643,19 +606,147 @@ sudo rake install</tt></pre>
 </td>
 <td class="content">
 <div class="title">SSL Support</div>
-<div class="paragraph"><p>To build with SSL support, use the following additional switch with the
+<div class="para"><p>To build with SSL support, use the following additional switch with the
 <strong>sudo rake install</strong> command:</p></div>
 <div class="listingblock">
 <div class="content">
 <pre><tt>sudo rake install ssl=yes</tt></pre>
 </div></div>
-<div class="paragraph"><p>Configure further SSL options in the server&#8217;s admin panel
+<div class="para"><p>Configure further SSL options in the server's admin panel
         <strong>http://&lt;yourservername&gt;:&lt;port&gt;/admin-panel/configuration</strong></p></div>
-<div class="paragraph"><p>After restarting the server, admin panel would now also be accessible over SSL.
+<div class="para"><p>After restarting the server, admin panel would now also be accessible over SSL.
 <strong>https://&lt;yourservername&gt;:&lt;port&gt;/admin-panel</strong></p></div>
 </td>
 </tr></table>
 </div>
+<h4 id="_non_interactive_install_using_capistrano">3.2.3. Non-Interactive Install using Capistrano</h4>
+<div class="para"><p>You can use following Capistrano script to install the edge version on a
+remote machine</p></div>
+<div class="olist"><ol>
+<li>
+<p>
+Create folder &lt;dir&gt;, move to &lt;dir&gt; folder using <strong>cd &lt;dir&gt;</strong>.
+</p>
+</li>
+<li>
+<p>
+Apply command <strong>capify .</strong>
+</p>
+</li>
+<li>
+<p>
+Replace the content of <strong>config/deploy.rb</strong> with the following script
+</p>
+<div class="listingblock">
+<div class="content">
+<pre><tt>
+set :application, "WebROaR"
+set :repository,  "git://github.com/webroar/webroar.git"
+
+set :scm, :git
+
+#############################################
+# WebROaR installation parameters           #
+#############################################
+# Instead of asking for admin user name, password and port you can directly set
+# it from here.
+
+set :user, 'username'
+set :port, 22
+set(:password) { Capistrano::CLI.password_prompt("Enter ssh password for \
+#{user}: ") }
+set :use_sudo, false
+set :deploy_to, "path-to-deploy-webroar"
+set(:webroar_admin_username) { Capistrano::CLI.ui.ask("Please enter a username \
+for the administrator account of server's admin panel:") }
+set(:webroar_admin_password) { Capistrano::CLI.password_prompt("Please enter a \
+password(minimum 6 characters) for the administrator account of server's admin \
+panel:") }
+set(:webroar_port) { Capistrano::CLI.ui.ask("Enter server port \
+(default is 3000):") }
+set :webroar_import_configuration, true # set false to beging with fresh install
+set :webroar_ssl_support, false # set true to Build webroar with SSL support
+
+role :web, "server"         # Your HTTP server, Apache/etc
+role :app, "server"         # This may be the same as your `Web` server
+role :db,  "server", :primary =&gt; true # This is where Rails migrations will run
+
+############################################
+
+namespace :deploy do
+  # hook into capistrano's deploy task
+  after 'deploy:update_code', 'deploy:webroar:install'
+
+  task :finalize_update, :except =&gt; { :no_release =&gt; true } do
+    run "chmod -R g+w #{release_path}" if fetch(:group_writable, true)
+  end
+
+  namespace :webroar do
+
+    desc "Uninstall the webroar gem"
+    task :uninstall do
+      run "#{sudo} webroar uninstall; #{sudo} gem uninstall -ax webroar"
+    end
+
+    desc "Install the server"
+    task :install, :roles =&gt; :app do
+      run "cd #{release_path}; #{sudo} rake install #{'ssl=on' if \
+      webroar_ssl_support}", :pty=&gt;true do |ch, stream, out|
+        next if out.chomp == ''
+        logger.important out, ch[:server]
+        case out
+          when / least/
+          raise Capistrano::Error, out
+          when /&gt;/
+          ch.send_data("#{webroar_import_configuration ? '1' : '2'}\n")
+          when / username/
+          ch.send_data("#{webroar_admin_username}\n")
+          when / password/
+          ch.send_data("#{webroar_admin_password}\n")
+          when / port/
+          ch.send_data("#{webroar_port}\n")
+        end
+      end
+    end
+
+
+    desc "Start, Stop and Restat the server"
+    %w(start stop restart).each do |name|
+      task name.to_sym,:roles =&gt; :app do
+        run "#{sudo} webroar #{name}"  #Manual Configuration required, this is best effort.
+      end
+    end
+
+  end
+
+end</tt></pre>
+</div></div>
+</li>
+<li>
+<p>
+Set the variables in <strong>config/deploy.rb</strong> file.
+</p>
+</li>
+<li>
+<p>
+To setup the fresh directory structure on the remote machine run
+<strong>cap deploy:setup</strong>
+</p>
+</li>
+<li>
+<p>
+To deploy the application for the first time run <strong>cap deploy:cold</strong>
+  (Steps 1-6 are to be followed only once to create directory setup on remote
+  machine.)
+</p>
+</li>
+<li>
+<p>
+Update the current version with the latest code from github using
+<strong>cap deploy:update</strong>.
+</p>
+</li>
+</ol></div>
 <h3 id="_troubleshooting">3.3. Troubleshooting</h3><div style="clear:left"></div>
 <div class="admonitionblock">
 <table><tr>
@@ -668,7 +759,7 @@ installed gems. (If you use Ubuntu, you might be able to relate to this point
 better.)</td>
 </tr></table>
 </div>
-<div class="ulist"><ul>
+<div class="ilist"><ul>
 <li>
 <p>
 In case auto-installation of dependent gems fails (due to some prehistoric
@@ -683,7 +774,7 @@ rubygems version or any other reason), you can install the following dependent
 <li>
 <p>
 After successful installation of the webroar gem, any errors that occur
-during the setup are saved to the install.log created in the installed gem&#8217;s
+during the setup are saved to the install.log created in the installed gem's
 directory. This can be used to troubleshoot the issues, if any.
 </p>
 </li>
@@ -696,8 +787,8 @@ dump file would be created in /tmp if <em>gcore</em> is available on that machin
 </li>
 </ul></div>
 <h3 id="_setting_up_database_for_server_admin_panel">3.4. Setting up database for server admin panel</h3><div style="clear:left"></div>
-<div class="paragraph"><p>The server&#8217;s admin panel itself is a Ruby on Rails&#8482; web application, and by
-default uses sqlite as it&#8217;s database. You can edit
+<div class="para"><p>The server's admin panel itself is a Ruby on Rails&#8482; web application, and by
+default uses sqlite as it's database. You can edit
 <strong>admin_panel/config/database.yml</strong> to setup a database of your liking and
 follow it up by running these commands from the <strong>admin_panel</strong> directory.</p></div>
 <div class="listingblock">
@@ -705,19 +796,19 @@ follow it up by running these commands from the <strong>admin_panel</strong> dir
 <pre><tt>rake db:create
 rake db:migrate</tt></pre>
 </div></div>
-<div class="paragraph"><p><strong>admin_panel</strong> directory would be present under the server&#8217;s rubygem
+<div class="para"><p><strong>admin_panel</strong> directory would be present under the server's rubygem
 directory.</p></div>
 </div>
 <h2 id="_usage">4. Usage</h2>
 <div class="sectionbody">
-<div class="paragraph"><p>Start/Stop/Restart WebROaR:</p></div>
+<div class="para"><p>Start/Stop/Restart WebROaR:</p></div>
 <div class="listingblock">
 <div class="content">
 <pre><tt>sudo webroar start
 sudo webroar stop
 sudo webroar restart</tt></pre>
 </div></div>
-<div class="paragraph"><p>Start/Stop/Restart a deployed application:</p></div>
+<div class="para"><p>Start/Stop/Restart a deployed application:</p></div>
 <div class="listingblock">
 <div class="content">
 <pre><tt>sudo webroar start &lt;Application Name&gt;
@@ -730,18 +821,18 @@ sudo webroar restart &lt;Application Name&gt;</tt></pre>
 <img src="./images/icons/note.png" alt="Note" />
 </td>
 <td class="content">
-<div class="paragraph"><p>You can stop the admin panel application of the server any time, to conserve
+<div class="para"><p>You can stop the admin panel application of the server any time, to conserve
 resources and ensure better security.</p></div>
 <div class="listingblock">
 <div class="content">
 <pre><tt>sudo webroar stop "Admin Panel"</tt></pre>
 </div></div>
-<div class="paragraph"><p>To start it whenever you want, use the following command:</p></div>
+<div class="para"><p>To start it whenever you want, use the following command:</p></div>
 <div class="listingblock">
 <div class="content">
 <pre><tt>sudo webroar start "Admin Panel"</tt></pre>
 </div></div>
-<div class="paragraph"><p>Please note that analytics data and exceptions are still captured by the
+<div class="para"><p>Please note that analytics data and exceptions are still captured by the
 server even when the admin panel is stopped.</p></div>
 </td>
 </tr></table>
@@ -749,10 +840,11 @@ server even when the admin panel is stopped.</p></div>
 </div>
 <h2 id="_deploying_applications">5. Deploying applications</h2>
 <div class="sectionbody">
-<div class="paragraph"><p>If the server got installed successfully, you should be able access it&#8217;s admin
+<h3 id="_deploy_using_admin_panel">5.1. Deploy using Admin Panel</h3><div style="clear:left"></div>
+<div class="para"><p>If the server got installed successfully, you should be able access it's admin
 panel using the link:<br />
 <strong>http://&lt;yourservername&gt;:&lt;port&gt;/admin-panel</strong></p></div>
-<div class="paragraph"><p>You can log in with the administrator account username and password that you
+<div class="para"><p>You can log in with the administrator account username and password that you
 had entered during server installation. Deploy the ruby web application of
 your choice accessing the <strong>Configuration</strong> link of the admin panel.</p></div>
 <div class="admonitionblock">
@@ -764,10 +856,109 @@ your choice accessing the <strong>Configuration</strong> link of the admin panel
 The application starts up automatically after deployment.</td>
 </tr></table>
 </div>
-<h3 id="_rack_applications_other_than_rails">5.1. Rack applications (other than Rails)</h3><div style="clear:left"></div>
-<div class="paragraph"><p>To deploy any Rack based application (other than Rails) the following are
-required in it&#8217;s root directory:</p></div>
-<div class="ulist"><ul>
+<h3 id="_deploy_using_capistrano">5.2. Deploy using Capistrano</h3><div style="clear:left"></div>
+<div class="para"><p>WebROaR can be easily integrated with Capistrano using the following
+instructions.</p></div>
+<div class="para"><p>After installing Capistrano, run the following command in your application's
+root directory:</p></div>
+<div class="listingblock">
+<div class="content">
+<pre><tt>capify .</tt></pre>
+</div></div>
+<div class="para"><p>It would create <strong>Capfile</strong> and <strong>config/deploy.rb</strong> files.
+Modify <strong>config/deploy.rb</strong> file as shown below:</p></div>
+<div class="listingblock">
+<div class="content">
+<pre><tt>set :application, "myapp"
+
+set :scm,:none
+set :repository, "."
+
+set :copy_cache, "/tmp/my-app"
+set :copy_compression,:gzip
+set :deploy_via,:copy
+set :copy_exclude, [".git/*", "log/*", "Capfile", "config/deploy.rb", "*~", ".*"]
+
+set :password, 'password'
+set :use_sudo, false
+set :user, 'username'
+set :port, 22
+
+set :deploy_to, "path-to-your-web-app-directory/#{application}"
+
+################################
+# Parameters used to add application to the server
+################################
+set :resolver, "/#{application.gsub(' ','_')}"
+set :path, "#{deploy_to}/current"
+set :app_type, "rails"
+set :environment, "production"
+set :analytics, "--analytics" # ' ' (blank) to disable analytics
+set :min_workers, "4"
+set :max_workers, "8"
+set :run_as_user, "#{user}"
+################################
+
+role :app, "server"
+role :web, "server"
+role :db,  "server", :primary =&gt; true
+
+#role :db,  "your slave db-server here"
+
+namespace :deploy do
+
+  [:stop, :start, :restart].each do |action|
+    desc "#{action.to_s.capitalize} the application."
+    task action, :roles =&gt; :app do
+      run "#{sudo} webroar #{action.to_s} #{application.to_s}"
+    end
+  end
+
+  desc "Add application to the server"
+  task :add, :roles =&gt; :app do
+    run "#{sudo} webroar add '#{application}' --resolver'#{resolver}' \
+    --path'#{path}' -type'#{app_type}' -environment'#{environment}' #{analytics} \
+    --min-workers#{min_workers} --max-workers#{max_workers} \
+    --run-as-user'#{run_as_user}'"
+  end
+
+  desc "Remove application from the server"
+  task :remove, :roles =&gt; :app do
+    run "#{sudo} webroar remove '#{application}'"
+  end
+
+end
+
+after "deploy:update",  "deploy:restart"</tt></pre>
+</div></div>
+<div class="para"><p>Create the application directory structure by running setup command:</p></div>
+<div class="listingblock">
+<div class="content">
+<pre><tt>cap deploy:setup</tt></pre>
+</div></div>
+<div class="para"><p>Deploy the application using command:</p></div>
+<div class="listingblock">
+<div class="content">
+<pre><tt>cap deploy</tt></pre>
+</div></div>
+<div class="para"><p>Add the application to WebROaR:</p></div>
+<div class="listingblock">
+<div class="content">
+<pre><tt>cap deploy:add</tt></pre>
+</div></div>
+<div class="para"><p>Please note that the application needs to be added to the server only once.</p></div>
+<div class="para"><p>You can use the following commands for starting/stopping/restarting the
+application while upgrading it in the future:</p></div>
+<div class="listingblock">
+<div class="content">
+<pre><tt>cap deploy:stop
+cap deploy:start
+cap deploy:restart</tt></pre>
+</div></div>
+<h3 id="_rack_applications_other_than_rails">5.3. Rack applications (other than Rails)</h3><div style="clear:left"></div>
+<div class="para"><p>To deploy any Rack based application (other than Rails) the following are
+required in it's root directory:</p></div>
+<div class="ilist"><ul>
 <li>
 <p>
 <strong>public</strong> folder containing static files like images and stylesheets
@@ -780,8 +971,8 @@ contain the complete logic for initializing the application.
 </p>
 </li>
 </ul></div>
-<div class="paragraph"><p>Here are some examples of the Rackup files:</p></div>
-<div class="paragraph"><p><strong>Merb</strong></p></div>
+<div class="para"><p>Here are some examples of the Rackup files:</p></div>
+<div class="para"><p><strong>Merb</strong></p></div>
 <div class="listingblock">
 <div class="content">
 <pre><tt>  require 'rubygems'
@@ -794,7 +985,7 @@ contain the complete logic for initializing the application.
   Merb::BootLoader.run
   run Merb::Rack::Application.new</tt></pre>
 </div></div>
-<div class="paragraph"><p><strong>Sinatra</strong></p></div>
+<div class="para"><p><strong>Sinatra</strong></p></div>
 <div class="listingblock">
 <div class="content">
 <pre><tt>  require 'rubygems'
@@ -804,32 +995,32 @@ contain the complete logic for initializing the application.
   set :raise_errors, true
   run Sinatra::Application</tt></pre>
 </div></div>
-<div class="paragraph"><p>You can use following environment variables in <strong>config.ru</strong> to access the few
+<div class="para"><p>You can use following environment variables in <strong>config.ru</strong> to access the few
 application configuration parameters given at a time of application deployment
 in WebROaR.</p></div>
-<div class="ulist"><ul>
+<div class="ilist"><ul>
 <li>
 <p>
-ENV['APP_ROOT\'] - To get the application root
+ENV['APP_ROOT'] - To get the application root
 </p>
 </li>
 <li>
 <p>
-ENV['APP_ENV\'] - To get the application environment
+ENV['APP_ENV'] - To get the application environment
 </p>
 </li>
 <li>
 <p>
-ENV['APP_BASE_URI\'] - To get the baseuri
+ENV['APP_BASE_URI'] - To get the baseuri
 </p>
 </li>
 </ul></div>
 </div>
 <h2 id="_accessing_run_time_statistics">6. Accessing run time statistics</h2>
 <div class="sectionbody">
-<div class="paragraph"><p>For those applications whose Analytics are <strong>Enabled</strong> in their configuration,
+<div class="para"><p>For those applications whose Analytics are <strong>Enabled</strong> in their configuration,
 the following graphs are available under the <strong>Analytics</strong> link of the admin panel.</p></div>
-<div class="olist arabic"><ol class="arabic">
+<div class="olist"><ol>
 <li>
 <p>
 URL Breakdown
@@ -881,7 +1072,7 @@ Physical Memory Utilization
 </p>
 </li>
 </ol></div>
-<div class="paragraph"><p>Additionally, CPU and Physical Memory usage graphs for the entire server are
+<div class="para"><p>Additionally, CPU and Physical Memory usage graphs for the entire server are
 also available.</p></div>
 <div class="admonitionblock">
 <table><tr>
@@ -896,10 +1087,10 @@ about a minute for it’s data to show up in the graphs.</td>
 </div>
 <h2 id="_exception_tracking_and_notifications">7. Exception Tracking and Notifications</h2>
 <div class="sectionbody">
-<div class="paragraph"><p>Any exceptions that occur in any of the deployed application are captured by
+<div class="para"><p>Any exceptions that occur in any of the deployed application are captured by
 the server. An email notification is also sent out immediately with details of
 the exception, if the mail settings have been configured in the admin panel.</p></div>
-<div class="paragraph"><p>All the exceptions can be seen under the <strong>Exceptions</strong> link of the server admin
+<div class="para"><p>All the exceptions can be seen under the <strong>Exceptions</strong> link of the server admin
 panel.</p></div>
 <div class="admonitionblock">
 <table><tr>
@@ -914,7 +1105,8 @@ after it has occurred.</td>
 </div>
 <h2 id="_uninstall">8. Uninstall</h2>
 <div class="sectionbody">
-<div class="paragraph"><p>If you didn&#8217;t like the server, use the following commands in sequence to uninstall it.</p></div>
+<div class="para"><p>If you didn't like the server, use the following commands in sequence to
+uninstall it.</p></div>
 <div class="listingblock">
 <div class="content">
 <pre><tt>sudo webroar uninstall
@@ -923,16 +1115,16 @@ sudo gem uninstall webroar</tt></pre>
 </div>
 <h2 id="_test_suite">9. Test Suite</h2>
 <div class="sectionbody">
-<div class="paragraph"><p>If you are a programmer and wish to play around with the server&#8217;s code, you
-might like to use it&#8217;s test suite to test the robustness of your changes.</p></div>
-<div class="paragraph"><p>It can be run using the following command:</p></div>
+<div class="para"><p>If you are a programmer and wish to play around with the server's code, you
+might like to use it's test suite to test the robustness of your changes.</p></div>
+<div class="para"><p>It can be run using the following command:</p></div>
 <div class="listingblock">
 <div class="content">
 <pre><tt>sudo webroar test</tt></pre>
 </div></div>
-<div class="paragraph"><p>We execute this suite on our nightly builds and it currently has the following
+<div class="para"><p>We execute this suite on our nightly builds and it currently has the following
 tests:</p></div>
-<div class="ulist"><ul>
+<div class="ilist"><ul>
 <li>
 <p>
 Unit Tests
@@ -965,9 +1157,221 @@ Build Tests
 </li>
 </ul></div>
 </div>
+<h2 id="_command_line_options">10. Command Line Options</h2>
+<div class="sectionbody">
+<h3 id="_webroar_help">10.1. webroar help</h3><div style="clear:left"></div>
+<div class="listingblock">
+<div class="content">
+<pre><tt>  WebROaR - Ruby Application Server
+
+    Usage:
+      webroar -h/--help
+      webroar -v/--version
+      webroar command [argument] [options...]
+
+    Examples:
+      webroar install
+      webroar help
+
+    Further help:
+      webroar help commands      list all 'webroar' commands
+      webroar help &lt;COMMAND&gt;     show help on COMMAND</tt></pre>
+</div></div>
+<h3 id="_webroar_help_commands">10.2. webroar help commands</h3><div style="clear:left"></div>
+<div class="listingblock">
+<div class="content">
+<pre><tt>    install            Install the server
+    uninstall          Uninstall the server
+
+    start [APPNAME]    Start the server or an application
+    stop [APPNAME]     Stop the server or an application
+    restart [APPNAME]  Restart the server or an application
+
+    add APPNAME        Deploy an application on server
+    remove APPNAME     Remove an application from server
+
+    test               Run the test suite
+
+  For help on a particular command, use 'webroar help COMMAND'.</tt></pre>
+</div></div>
+<h3 id="_webroar_install">10.3. webroar install</h3><div style="clear:left"></div>
+<div class="listingblock">
+<div class="content">
+<pre><tt>  Usage:
+    webroar install [options]
+
+  Options:
+    -L                     Additional library paths to be used for linking of
+                           the server
+    -I                     Additional include paths to be used for compiling of
+                           the server
+    -s, --ssl-support      Install the server with SSL support
+    -d, --debug-build      Compile the server as a debug build to output
+                           extremely verbose logs
+
+  The following options would make the install non-interactive by suppressing
+  the questions prompted by the installer
+
+    -P, --port             Server port number
+    -i, --import           Import configuration, logs and admin panel data from
+                           the previous installation
+        --no-import        Do not import configuration, logs and admin panel
+                           data from the previous installation
+    -u, --username         Username for the administrator account of server's
+                           admin panel
+    -p, --password         Password for the administrator account of server\'s
+                           admin panel
+
+  Summary:
+    Install the server</tt></pre>
+</div></div>
+<h3 id="_webroar_uninstall">10.4. webroar uninstall</h3><div style="clear:left"></div>
+<div class="listingblock">
+<div class="content">
+<pre><tt>  Usage:
+    webroar uninstall
+
+  Summary:
+    Uninstall the server</tt></pre>
+</div></div>
+<h3 id="_webroar_start">10.5. webroar start</h3><div style="clear:left"></div>
+<div class="listingblock">
+<div class="content">
+<pre><tt>  Usage:
+    webroar start [APPNAME ...]
+
+  Arguments:
+    APPNAME        Name of the application
+
+  Summary:
+    Start the server or an application
+
+  Description:
+    'start' command without any arguments starts the server. One can start
+    multiple applications together by passing multiple names.</tt></pre>
+</div></div>
+<h3 id="_webroar_stop">10.6. webroar stop</h3><div style="clear:left"></div>
+<div class="listingblock">
+<div class="content">
+<pre><tt>  Usage:
+    webroar stop [APPNAME ...]
+
+  Arguments:
+    APPNAME        Name of the application
+
+  Summary:
+    Stop the server or an application
+
+  Description:
+    'stop' command without any arguments stops the server. One can stop multiple
+    applications together by passing multiple names.</tt></pre>
+</div></div>
+<h3 id="_webroar_restart">10.7. webroar restart</h3><div style="clear:left"></div>
+<div class="listingblock">
+<div class="content">
+<pre><tt>  Usage:
+    webroar restart [APPNAME ...]
+
+  Arguments:
+    APPNAME        Name of the application
+
+  Summary:
+    Restart the server or an application
+
+  Description:
+    'restart' command without any arguments restarts the server. One can restart
+    multiple applications together by passing multiple names.</tt></pre>
+</div></div>
+<h3 id="_webroar_add">10.8. webroar add</h3><div style="clear:left"></div>
+<div class="listingblock">
+<div class="content">
+<pre><tt>  Usage:
+    webroar add APPNAME -R ... -D ... -U ... [options]
+
+  Arguments:
+    APPNAME       Name of the application
+
+  Options:
+    -R, --resolver
+          Resolver to identify the application. Set it to '/' if you would like
+          to run the application on the root domain. e.g. http://yourserver:port/.
+          Else set the relevant base URI with which you would like to access the
+          application, e.g. '/app1' if you want the application to be accessible
+          via http://yourserver:port/app1.
+          If you would like to set a virtual host for your application e.g.
+          www.company1.com, please specify it here. You can also host this
+          application on a particular subdomain e.g. app1.company1.com.
+          Wildcard '*' can also be used in defining the virtual host name,
+          but it should only be used either at the start or the end. Prefix the
+          virtual host name with tilde(~), if a wildcard is used in defining it.
+          e.g. (i) ~*.server.com (ii) ~www.server.* (iii) ~*.server.*
+    -D, --path
+          Complete path for your application root directory: e.g.
+          /home/someuser/webapps/app1
+    -U, --run-as-user
+          Name of the user with whose privileges you would like to run the
+          application (root can be dangerous!). This user should have all the
+          necessary permissions to get your web application working properly
+          (e.g. write access on required files and directories etc)
+
+  The following parameters are optional
+
+    -T, --type
+          Type of the application either rack or rails (default: rails)
+    -E, --environment
+          Environment in which you want to run the application
+          (default: production)
+    -A, --analytics
+          Enable analytics to get detailed numbers about the run time
+          performance of the application. This number gathering adds a very
+          small overhead on your application
+    -N, --min-workers
+          Minimum number of worker processes that should run for this deployed
+          application. Multiple worker instances help in processing a higher
+          number of concurrent user requests simultaneously. The server would
+          always ensure at least these many worker processes run for this
+          application (default: 4)
+    -X, --max-workers
+          Maximum number of worker processes that should run for this deployed
+          application. Multiple worker instances help in processing a higher
+          number of concurrent user requests simultaneously. The server would
+          ensure that maximum only these many worker processes run for this
+          application (default: 8)
+
+  Summary:
+    Deploy (and start) a new application on the server.</tt></pre>
+</div></div>
+<h3 id="_webroar_remove">10.9. webroar remove</h3><div style="clear:left"></div>
+<div class="listingblock">
+<div class="content">
+<pre><tt>  Usage:
+    webroar remove APPNAME
+
+  Arguments:
+    APPNAME        Name of the application
+
+  Summary:
+    Remove the specified application from the server.</tt></pre>
+</div></div>
+<h3 id="_webroar_test">10.10. webroar test</h3><div style="clear:left"></div>
+<div class="listingblock">
+<div class="content">
+<pre><tt>  Usage:
+    webroar test [options]
+
+  Options:
+    -r, --report-dir DIR    Report directory
+    -d, --debug-build       Compile the server as a debug build to output
+    extremely verbose logs
+    -l, --load-test         Also run the load tests
+
+  Summary:
+    Run the test suite</tt></pre>
+</div></div>
+</div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2010-02-23 20:33:00 IST
+Last updated 2010-03-19 23:52:38 IST
 </div>
 </div>
 </body>
