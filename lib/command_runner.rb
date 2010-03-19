@@ -19,7 +19,7 @@
 require 'optparse'
 
 HELP =%{
-  WebROaR is a ruby application server. This is a basic help message.
+  WebROaR - Ruby Application Server
 
     Usage:
       webroar -h/--help
@@ -36,34 +36,39 @@ HELP =%{
 }
 
 HELP_COMMAND =%{
-  WebROaR commands are:
-
-    add APPNAME        Add an application on server
     install            Install the server
-    remove APPNAME     Remove an application from server
-    restart [APPNAME]  Restart the server or an application
+    uninstall          Uninstall the server
+
     start [APPNAME]    Start the server or an application
     stop [APPNAME]     Stop the server or an application
+    restart [APPNAME]  Restart the server or an application
+
+    add APPNAME        Deploy an application on server
+    remove APPNAME     Remove an application from server
+
     test               Run the test suite
-    uninstall          Uninstall the server
+    
 
   For help on a particular command, use 'webroar help COMMAND'.
   }
 
 HELP_INSTALL =%{
-
   Usage:
     webroar install [options]
 
   Options:
-    -d, --debug-build      Compile the server as a debug build to output extremely verbose logs 
-    -i, --[no-]import      Import configuration, logs and admin panel data from the previous installation
-    -p, --password         Password for the administrator account of server\'s admin panel
-    -P, --port             Server port number
-    -s, --ssl-support      Install the server with SSL support
-    -u, --username         Username for the administrator account of server's admin panel
     -L                     Additional library path
     -I                     Additional include path
+    -s, --ssl-support      Install the server with SSL support
+    -d, --debug-build      Compile the server as a debug build to output extremely verbose logs 
+
+  The following options would make the install non-interactive by suppressing the questions prompted by the installer
+    
+    -P, --port             Server port number
+    -i, --import           Import configuration, logs and admin panel data from the previous installation
+        --no-import        Do not import configuration, logs and admin panel data from the previous installation
+    -u, --username         Username for the administrator account of server's admin panel
+    -p, --password         Password for the administrator account of server\'s admin panel
 
   Summary:
     Install the server
@@ -93,7 +98,7 @@ HELP_START =%{
     webroar start [APPNAME ...] 
 
   Arguments:
-    APPNAME        Name of the application to start 
+    APPNAME        Name of the application
 
   Summary:
     Start the server or an application 
@@ -108,7 +113,7 @@ HELP_STOP =%{
     webroar stop [APPNAME ...] 
 
   Arguments:
-    APPNAME        Name of the application to stop 
+    APPNAME        Name of the application
 
   Summary:
     Stop the server or an application 
@@ -123,7 +128,7 @@ HELP_RESTART =%{
     webroar restart [APPNAME ...] 
 
   Arguments:
-    APPNAME        Name of the application to restart 
+    APPNAME        Name of the application
 
   Summary:
     Restart the server or an application 
@@ -138,9 +143,9 @@ HELP_TEST =%{
     webroar test [options] 
 
   Options:
+    -r, --report-dir DIR    Report directory
     -d, --debug-build       Compile the server as a debug build to output extremely verbose logs
     -l, --load-test         Also run the load tests
-    -r, --report-dir DIR    Report directory 
 
   Summary:
     Run the test suite
@@ -151,15 +156,18 @@ HELP_REMOVE = %{
     webroar remove APPNAME
 
   Arguments:
-    APPNAME        Name of the application to remove
+    APPNAME        Name of the application
 
   Summary:
-    Remove the applicaiton from the server.
+    Remove the specified application from the server.
 }
 
 HELP_ADD = %{
   Usage:
-    webroar add APPNAME [options]
+    webroar add APPNAME -R ... -D ... -U ... [options]
+
+  Arguments:
+    APPNAME       Name of the application
 
   Options:
     -R, --resolver
@@ -168,21 +176,24 @@ HELP_ADD = %{
           If you would like to set a virtual host for your application e.g. www.company1.com, please specify it here. You can also host this application on a particular subdomain e.g. app1.company1.com. Wildcard '*' can also be used in defining the virtual host name, but it should only be used either at the start or the end. Prefix the virtual host name with tilde(~), if a wildcard is used in defining it. e.g. (i) ~*.server.com (ii) ~www.server.* (iii) ~*.server.*
     -D, --path
           Complete path for your application root directory: e.g. /home/someuser/webapps/app1
-    -t, --type
-          Type of the application either rack or rails (default: rails)
-    -e, --environment
-          Environment in which you want to run the application (default: production)
-    -a, --[no-]analytics
-          Enable analytics to get detailed numbers about the run time performance of the application. This number gathering adds a very small overhead on your application
-    -N, --min-workers
-          Minimum number of worker processes that should run for this deployed application. Multiple worker instances help in processing a higher number of concurrent user requests simultaneously. The server would always ensure at least these many worker processes run for this application (default: 4)
-    -x, --max-workers
-          Maximum number of worker processes that should run for this deployed application. Multiple worker instances help in processing a higher number of concurrent user requests simultaneously. The server would ensure that maximum only these many worker processes run for this application (default: 8)
     -U, --run-as-user
           Name of the user with whose privileges you would like to run the application (root can be dangerous!). This user should have all the necessary permissions to get your web application working properly (e.g. write access on required files and directories etc)
 
+  The following parameters are optionals
+
+    -T, --type
+          Type of the application either rack or rails (default: rails)
+    -E, --environment
+          Environment in which you want to run the application (default: production)
+    -A, --analytics
+          Enable analytics to get detailed numbers about the run time performance of the application. This number gathering adds a very small overhead on your application
+    -N, --min-workers
+          Minimum number of worker processes that should run for this deployed application. Multiple worker instances help in processing a higher number of concurrent user requests simultaneously. The server would always ensure at least these many worker processes run for this application (default: 4)
+    -X, --max-workers
+          Maximum number of worker processes that should run for this deployed application. Multiple worker instances help in processing a higher number of concurrent user requests simultaneously. The server would ensure that maximum only these many worker processes run for this application (default: 8)
+
   Summary:
-    Add and start an application on the server.
+    Deploy (and start) a new application on the server.
 }
 
 class CommandRunner
@@ -241,8 +252,7 @@ class CommandRunner
     opts.on( '-d', '--debug-build', 'Compile with debug mode') { @options[:debug_build] = true }
     opts.on( '-n', '--no-report', 'Do not generate test report') { @options[:no_report] = true }
     opts.on( '-l', '--load-test', 'Run load test') { @options[:load_test] = true }
-    opts.on( '-a', '--analytics', 'Enable the application analytics') { @options[:analytics] = 'Enabled' }
-    opts.on( '--no-analytics', 'Disable the application analytics') { @options[:analytics] = 'Disabled' }
+    opts.on( '-A', '--analytics', 'Enable the application analytics') { @options[:analytics] = 'Enabled' }
     opts.on( '-i', '--import', 'Import configuration, logs and admin panel data from the previous installation') { @options[:import] = true }
     opts.on( '--no-import', 'Do not import configuration, logs and admin panel data from the previous installation') { @options[:import] = false }
 
@@ -275,11 +285,11 @@ class CommandRunner
       @options[:path] = value.lstrip.gsub(/^=/,"")
     end
 
-    opts.on( '-t', '--type APPTYPE', 'Type of the application either rack or rails') do |value|
+    opts.on( '-T', '--type APPTYPE', 'Type of the application either rack or rails') do |value|
       @options[:type1] = value.lstrip.gsub(/^=/,"").capitalize
     end
 
-    opts.on( '-e', '--environment ENV', 'Environment in which you want to run the application') do |value|
+    opts.on( '-E', '--environment ENV', 'Environment in which you want to run the application') do |value|
       @options[:environment] = value.lstrip.gsub(/^=/,"")
     end
 
@@ -287,7 +297,7 @@ class CommandRunner
       @options[:min_worker] = value.lstrip.gsub(/^=/,"")
     end
 
-    opts.on( '-x', '--max-workers WORKER', 'Maximum number of worker processes that should run for the deployed application.') do |value|
+    opts.on( '-X', '--max-workers WORKER', 'Maximum number of worker processes that should run for the deployed application.') do |value|
       @options[:max_worker] = value.lstrip.gsub(/^=/,"")
     end
 
