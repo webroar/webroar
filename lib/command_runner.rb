@@ -206,7 +206,7 @@ class CommandRunner
 
   def run
 
-    parse_args
+    return unless parse_args
     
     if ARGV.length == 0
       puts HELP
@@ -258,7 +258,7 @@ class CommandRunner
 
     opts.on( '-v', '--version', 'Version information') do
       Installer.new.version
-      return
+      return false
     end
 
     opts.on( '-u', '--username USERNAME', 'Username for the administrator account of server\'s admin panel') do |value|
@@ -319,8 +319,10 @@ class CommandRunner
       optparse.parse!
     rescue OptionParser::ParseError => err
       puts "#{err}. See 'webroar --help'."
-      return
+      return false
     end
+
+    return true
 
   end
 
