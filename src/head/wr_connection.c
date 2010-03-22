@@ -318,7 +318,7 @@ void wr_conn_err_resp(wr_conn_t *conn, wr_resp_status_t resp_code) {
     } else if(req->app) {
       // Remove req from application message list
       LOG_DEBUG(DEBUG,"Request is inserted into Application message queue.");
-      wr_queue_remove(conn->req->app->msg_que, conn->req);
+      wr_queue_remove(conn->req->app->q_messages, conn->req);
       wr_req_free(req);
     } else {
       LOG_DEBUG(DEBUG,"Request is still in parsing phase.");

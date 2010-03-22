@@ -49,7 +49,7 @@ int wr_req_resolve_static_content(wr_req_t *req){
   int len;
   wr_str_t decoded_req_path;
 
-  if(req->app->svr->static_app->wkr_que->q_count <= 0){
+  if(WR_QUEUE_SIZE(req->app->svr->static_app->q_workers) <= 0){
     LOG_ERROR(SEVERE,"Static content server is down.")
     return -1;
   }
@@ -296,7 +296,7 @@ int wr_req_resolve_http_req(wr_svr_t *server, wr_req_t *req) {
     app = server->default_app;
   }
 
-  if(app && app->wkr_que->q_count > 0) {
+  if(app && WR_QUEUE_SIZE(app->q_workers) > 0) {
 //    int rv = 0;
     req->app = app;
     wr_req_resolve_static_content(req);

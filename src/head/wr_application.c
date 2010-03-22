@@ -23,19 +23,37 @@ static unsigned int worker_count = 0;
 
 /************** Private Functions ******************/
 
-static inline int wr_app_fetch_wkr_pid(wr_app_t *app) {
-  int pid = app->last_wkr_pid[0], i;
-
-  for(i = 0 ; i < (app->pending_wkr-1) ; i ++) {
-    app->last_wkr_pid[i] = app->last_wkr_pid[i+1];
+// Check whether application already exist
+static inline wr_app_t* wr_app_exist(wr_svr_t *server, const char *app_name){
+  wr_app_t* app = server->apps, *tmp_app = NULL;
+  
+  while(app) {
+    if(strcmp(app_name, app->conf->name.str)==0)
+      return app;
+    tmp_app = app;
+    app = app->next;
   }
-  app->last_wkr_pid[i] = 0;
+  
+  if(strcmp(app_name, WR_STATIC_FILE_SERVER_NAME) == 0){
+    return server->static_app;
+  }
+  
+  return NULL;
+}
 
-  return pid;
+// Check whether pending worker exist
+static inline wr_pending_wkr_t* wr_pending_worker_exist(wr_app_t *app, const int pid){
+  int i;
+  for(i = 0 ; i < WR_QUEUE_SIZE(app->q_pending_workers); i++){
+    wr_pending_wkr_t* pending = wr_queue_fetch(app->q_pending_workers);
+    if(pending && *pending == pid) return pending;
+    wr_queue_insert(app->q_pending_workers, pending);
+  }
+  return NULL;
 }
 
 /** Callback function to add worker to application */
-void wr_app_wrk_add_cb(struct ev_loop *loop, ev_timer *w, int revents) {
+void wr_app_wkr_add_cb(struct ev_loop *loop, ev_timer *w, int revents) {
   LOG_FUNCTION
   wr_app_t* app = (wr_app_t*) w->data;
   ev_timer_stop(loop, &app->t_add);
@@ -47,64 +65,86 @@ void wr_app_wrk_add_cb(struct ev_loop *loop, ev_timer *w, int revents) {
 }
 
 /** Callback function to add worker timeout */
-void wr_app_wrk_add_timeout_cb(struct ev_loop *loop, ev_timer *w, int revents) {
+void wr_app_wkr_add_timeout_cb(struct ev_loop *loop, ev_timer *w, int revents) {
   LOG_FUNCTION
   wr_app_t* app = (wr_app_t*) w->data;
   char err_msg[512];
   int err_msg_len = 0;
+  int pid = 0;
   
-  // Stop add timeout timer
+  // Stop add timeout timer and increament timeout counter
   ev_timer_stop(loop, &app->t_add_timeout);
+  app->timeout_counter ++;
 
-  // Decreament active worker count
-  if(app->pending_wkr > 0) {
-    // Kill worker
-    int pid = wr_app_fetch_wkr_pid(app);
-    LOG_INFO("wr_app_wrk_add_timeout_cb: killing worker, pid = %d", pid);
+  // Kill oldest pending worker
+  if(WR_QUEUE_SIZE(app->q_pending_workers) > 0) {
+    wr_pending_wkr_t *pending = wr_queue_fetch(app->q_pending_workers);
+    if(pending){
+      pid = *pending;
+      free(pending);
+    } 
+    LOG_INFO("wr_app_wkr_add_timeout_cb: killing worker, pid = %d", pid);
     if(pid > 0)
       kill(pid ,SIGKILL);
-    LOG_DEBUG(DEBUG,"app->pending_wkr = %d", app->pending_wkr);
-    app->pending_wkr --;
-    if(app->pending_wkr > 0) {
+    LOG_DEBUG(DEBUG,"app->pending_wkr = %d", WR_QUEUE_SIZE(app->q_pending_workers));
+    if(WR_QUEUE_SIZE(app->q_pending_workers) > 0) {
       ev_timer_again(loop, &app->t_add_timeout);
     }
 
     // Update high load ratio
     app->high_ratio = TOTAL_WORKER_COUNT(app) * WR_MAX_REQ_RATIO;
   }
-
-  //TODO: Check minimum no. of workers and, create worker if needed.
-  // Also, do not OK if some worker were failed to connect.
-  // For timebeing sending OK even if some worker failed to connect.
-  if(app->in_use == FALSE && app->ctl && app->pending_wkr == 0) {
+  
+  // If application restarted, rollback all the changes.
+  if(app->state == WR_APP_RESTART){
+    app->state = WR_APP_ACTIVE;
+    // Send error response
     LOG_DEBUG(DEBUG,"Some problem occurred while starting Application %s.", app->conf->name.str);
-    scgi_header_add(app->ctl->scgi, "STATUS", strlen("STATUS"), "ERROR", strlen("ERROR"));
-    err_msg_len = sprintf(err_msg,"The application could not be started due to the following error. Please refer '/var/log/webroar/%s.log' and the application log file for more details.", app->conf->name.str);
-    scgi_body_add(app->ctl->scgi, err_msg, err_msg_len);
-    wr_ctl_resp_write(app->ctl);
-    app->ctl = NULL;
-    if(app->restarted == TRUE){
-      app->old_workers = 0;
-      app->add_workers = 0;
-      app->restarted = FALSE;
+    if(app->ctl){
+      scgi_header_add(app->ctl->scgi, "STATUS", strlen("STATUS"), "ERROR", strlen("ERROR"));
+      err_msg_len = sprintf(err_msg,"The application could not be started due to the following error. Please refer '/var/log/webroar/%s.log' and the application log file for more details.", app->conf->name.str);
+      scgi_body_add(app->ctl->scgi, err_msg, err_msg_len);
+      wr_ctl_resp_write(app->ctl); 
     }
-    //Remove application from the server application list, otherwise it won't allow to add the application with same name, unless stopping it    
-    wr_app_remove(app->svr, app->conf->name.str);
-  } else if(app->in_use == TRUE && (TOTAL_WORKER_COUNT(app) < app->conf->min_worker || app->add_workers)) {
-    wr_app_wkr_add(app);
+    app->timeout_counter = 0;
+    app->ctl = NULL;
+    return;
+  }else if(app->state == WR_APP_NEW){
+    // Try out upto MAX timeout count
+/*
+    if(WR_QUEUE_SIZE(app->q_pending_workers) == 0 && app->timeout_counter < WR_MAX_ADD_TIMEOUT_COUNTER){
+      wr_app_wkr_add(app);
+    }else{
+*/
+    if(WR_QUEUE_SIZE(app->q_pending_workers) == 0){
+      // Send error response
+      LOG_DEBUG(DEBUG,"Some problem occurred while starting Application %s.", app->conf->name.str);
+      if(app->ctl){
+        scgi_header_add(app->ctl->scgi, "STATUS", strlen("STATUS"), "ERROR", strlen("ERROR"));
+        err_msg_len = sprintf(err_msg,"The application could not be started due to the following error. Please refer '/var/log/webroar/%s.log' and the application log file for more details.", app->conf->name.str);
+        scgi_body_add(app->ctl->scgi, err_msg, err_msg_len);
+        wr_ctl_resp_write(app->ctl);        
+      }
+      app->timeout_counter = 0;
+      app->ctl = NULL;
+      wr_app_remove(app->svr, app->conf->name.str);
+    }
+    return;
   }
+  
+  wr_app_wkr_balance(app);
 }
 
 /** Callback function to remove worker from application */
-void wr_app_wrk_remove_cb(struct ev_loop *loop, ev_timer *w, int revents) {
+void wr_app_wkr_remove_cb(struct ev_loop *loop, ev_timer *w, int revents) {
   LOG_FUNCTION
   wr_app_t* app = (wr_app_t*) w->data;
 
   ev_timer_stop(loop, &app->t_remove);
 
-  // Following variable helps in removing unncecessary call to wr_app_wrk_remove_cb
-  int forecasted_count=app->wkr_que->q_count;
-  // Its a known bug - At any time app->active_worker should equals to app->wkr_que->q_count
+  // Following variable helps in removing unncecessary call to wr_app_wkr_remove_cb
+  int forecasted_count=app->q_workers->q_count;
+  // Its a known bug - At any time app->active_worker should equals to app->q_workers->q_count
   // Scenario: We are forking new worker due to high load and also increasing active worker count.
   // It took some time to get register with Head, and actual queue count incremented after Head
   // register the newly created worker. Now, mean while load goes down, and we are ready to remove the
@@ -117,15 +157,15 @@ void wr_app_wrk_remove_cb(struct ev_loop *loop, ev_timer *w, int revents) {
   // when new worker is actually get registered with Head also, we reset active worker with
   // application worker queue count, whenever worker is actually removed.
   // TODO: Handle above bug properly.
-  LOG_DEBUG(DEBUG,"Pending_wkr = %d, app->wkr_que->q_count = %d",
-            app->pending_wkr, app->wkr_que->q_count);
-  if(app->wkr_que->q_count > app->conf->min_worker) {
+  LOG_DEBUG(DEBUG,"Pending_wkr = %d, app->q_workers->q_count = %d",
+            WR_QUEUE_SIZE(app->q_pending_workers), WR_QUEUE_SIZE(app->q_workers));
+  if(app->q_workers->q_count > app->conf->min_worker) {
     char cmd[WR_LONG_LONG_STR_LEN];
     char pid_list[WR_LONG_LONG_STR_LEN], pid_c[WR_SHORT_STR_LEN];
     int i,index;
     i = 0;
-    index = (app->wkr_que->q_front + i) % app->wkr_que->q_max_size;
-    wr_wkr_t *tmp_worker = (wr_wkr_t*)app->wkr_que->q_elements[index];
+    index = (app->q_workers->q_front + i) % app->q_workers->q_max_size;
+    wr_wkr_t *tmp_worker = (wr_wkr_t*)app->q_workers->q_elements[index];
     
     
     // Get pid of the worker consuming more resident memory
@@ -147,9 +187,9 @@ void wr_app_wrk_remove_cb(struct ev_loop *loop, ev_timer *w, int revents) {
     sprintf(pid_c,"%d",tmp_worker->pid);
     strcpy(pid_list, pid_c);
     i++;
-    for(;i < app->wkr_que->q_count ; i++) {
-      index = (app->wkr_que->q_front + i) % app->wkr_que->q_max_size;
-      tmp_worker = (wr_wkr_t*)app->wkr_que->q_elements[index];
+    for(;i < app->q_workers->q_count ; i++) {
+      index = (app->q_workers->q_front + i) % app->q_workers->q_max_size;
+      tmp_worker = (wr_wkr_t*)app->q_workers->q_elements[index];
       sprintf(pid_c,",%d", tmp_worker->pid);
       strcat(pid_list, pid_c);
     }
@@ -168,12 +208,12 @@ void wr_app_wrk_remove_cb(struct ev_loop *loop, ev_timer *w, int revents) {
       int flag = 1;
 
       // Check for worker in list of free workers. If found remove it.
-      if(app->free_wkr_que->q_count > 0) {
+      if(app->q_free_workers->q_count > 0) {
         LOG_DEBUG(DEBUG,", pid = %d find in free worker", pid);
         //int i, index;
-        for( i = 0; i < app->free_wkr_que->q_count ; i++) {
-          index = (app->free_wkr_que->q_front + i) % app->free_wkr_que->q_max_size;
-          tmp_worker = (wr_wkr_t*)app->free_wkr_que->q_elements[index];
+        for( i = 0; i < app->q_free_workers->q_count ; i++) {
+          index = (app->q_free_workers->q_front + i) % app->q_free_workers->q_max_size;
+          tmp_worker = (wr_wkr_t*)app->q_free_workers->q_elements[index];
           if(tmp_worker->pid == pid) {
             LOG_DEBUG(DEBUG,"Removing from free worker id=%d", tmp_worker->id);
             forecasted_count--;
@@ -187,12 +227,12 @@ void wr_app_wrk_remove_cb(struct ev_loop *loop, ev_timer *w, int revents) {
 
       // Check for worker in the list of all the worker. If found mark it as in-active.
       // In-active worker will be removed once current request is processed.
-      if(flag && app->wkr_que->q_count > 0) {
+      if(flag && app->q_workers->q_count > 0) {
         LOG_DEBUG(DEBUG,"pid = %d find in active worker", pid);
         //int i, index;
-        for( i = 0; i < app->wkr_que->q_count ; i++) {
-          index = (app->wkr_que->q_front + i) % app->wkr_que->q_max_size;
-          tmp_worker = (wr_wkr_t*)app->wkr_que->q_elements[index];
+        for( i = 0; i < app->q_workers->q_count ; i++) {
+          index = (app->q_workers->q_front + i) % app->q_workers->q_max_size;
+          tmp_worker = (wr_wkr_t*)app->q_workers->q_elements[index];
           if(tmp_worker->pid == pid) {
             forecasted_count--;
             LOG_DEBUG(DEBUG,"Remove active status id = %d", tmp_worker->id);
@@ -217,7 +257,6 @@ static inline int wr_app_reload(wr_app_t *app){
   wr_app_conf_t *app_conf;
   short count;
 
-  app->restarted = FALSE;
   // Remove an old application from the resolver list.
   wr_req_resolver_remove(app->svr, app);
 
@@ -227,10 +266,13 @@ static inline int wr_app_reload(wr_app_t *app){
                    app->svr->err_msg);
   if(app_conf == NULL){
     LOG_DEBUG(WARN, "Error: %s",app->svr->err_msg);
-    scgi_body_add(app->ctl->scgi, app->svr->err_msg, strlen(app->svr->err_msg));
-    scgi_header_add(app->ctl->scgi, "STATUS", strlen("STATUS"), "ERROR", strlen("ERROR"));
-    wr_ctl_resp_write(app->ctl);
-    return -1;
+    if(app->ctl){
+      scgi_body_add(app->ctl->scgi, app->svr->err_msg, strlen(app->svr->err_msg));
+      scgi_header_add(app->ctl->scgi, "STATUS", strlen("STATUS"), "ERROR", strlen("ERROR"));
+      wr_ctl_resp_write(app->ctl);
+    }
+    app->state = WR_APP_ACTIVE;
+    return FALSE;
   }
 
   // Remove old application specification.
@@ -244,29 +286,24 @@ static inline int wr_app_reload(wr_app_t *app){
   // Remove workers based on following logic:
   // If all the workers are free keep a single worker to process the requests and remove all others.
   // Else remove all the free workers.
-  count = (app->free_wkr_que->q_count == app->wkr_que->q_count ? 1 :0 );
 
-  LOG_DEBUG(DEBUG,"Free workers queue count is %d. Active worker count is %d.", WR_QUEUE_SIZE(app->free_wkr_que), WR_QUEUE_SIZE(app->wkr_que));
-  LOG_DEBUG(DEBUG,"The %d worker(s) to be removed from free workers list.", WR_QUEUE_SIZE(app->free_wkr_que) - count);
-  while(WR_QUEUE_SIZE(app->free_wkr_que) > count){
-    worker = (wr_wkr_t*)wr_queue_fetch(app->free_wkr_que);
+  LOG_DEBUG(DEBUG,"Free workers queue count is %d. Active worker count is %d.", WR_QUEUE_SIZE(app->q_free_workers), WR_QUEUE_SIZE(app->q_workers));
+  while(WR_QUEUE_SIZE(app->q_free_workers) > 0){
+    worker = (wr_wkr_t*)wr_queue_fetch(app->q_free_workers);
     // The worker is already removed from free workers list so do not pass the flag.
     wr_wkr_remove(worker, 0);
   }
 
-  // Set the number of workers to be removed.
-  app->old_workers = WR_QUEUE_SIZE(app->wkr_que);
-  // Set the number of workers to be added.
-  app->add_workers = app->conf->min_worker;
   // Mark all existing workers to OLD worker.
-  for(count = 0; count < app->old_workers ; count++) {
-    worker = (wr_wkr_t*)wr_queue_fetch(app->wkr_que);
-    wr_queue_insert(app->wkr_que, worker);
+  for(count = 0; count < WR_QUEUE_SIZE(app->q_workers) ; count++) {
+    worker = (wr_wkr_t*)wr_queue_fetch(app->q_workers);
+    wr_queue_insert(app->q_workers, worker);
     worker->state |= WR_WKR_OLD;
+    worker->state -= WR_WKR_ACTIVE;
   } 
 
-  LOG_DEBUG(DEBUG,"Number of old and add workers are %d and %d respectively", app->old_workers, app->add_workers);
-  return 0;
+  app->state = WR_APP_RESTARTING;
+  return TRUE;
 }
 
 /*************** Application function definition *********/
@@ -277,31 +314,30 @@ void wr_app_free(wr_app_t* app) {
   wr_app_t* tmp_app;
   wr_wkr_t* worker;
 
-  //wr_application_print(app);
-
   while(app) {
     tmp_app = app->next;
-    app->in_use = FALSE;
+    app->state = WR_APP_DESTROY;
     LOG_DEBUG(4,"Destroying application %s...", app->conf->name.str);
-    LOG_DEBUG(DEBUG,"Worker count = %d", WR_QUEUE_SIZE(app->wkr_que));
+    LOG_DEBUG(DEBUG,"Worker count = %d", WR_QUEUE_SIZE(app->q_workers));
     //Destroy workers
-    while(worker = (wr_wkr_t*)wr_queue_fetch(app->wkr_que)) {
+    while(worker = (wr_wkr_t*)wr_queue_fetch(app->q_workers)) {
       if(app->svr->is_running==0)
         worker->state |= WR_WKR_HANG;
       wr_wkr_free(worker);
     }
 
-    wr_queue_free(app->free_wkr_que);
-    wr_queue_free(app->wkr_que);
+    wr_queue_free(app->q_free_workers);
+    wr_queue_free(app->q_workers);
+    wr_queue_free(app->q_pending_workers);
 
     wr_req_t *req;
-    WR_QUEUE_FETCH(app->msg_que, req)  ;
+    WR_QUEUE_FETCH(app->q_messages, req)  ;
     while(req) {
       wr_conn_err_resp(req->conn, WR_HTTP_STATUS_500);
-      WR_QUEUE_FETCH(app->msg_que, req)  ;
+      WR_QUEUE_FETCH(app->q_messages, req)  ;
     }
 
-    wr_queue_free(app->msg_que);
+    wr_queue_free(app->q_messages);
 
     wr_req_resolver_remove(app->svr, app);
 
@@ -324,225 +360,159 @@ void wr_app_print(wr_app_t*app) {
 
 /** Create worker for application */
 int wr_app_wkr_add(wr_app_t *app) {
-  if(app->pending_wkr < WR_MAX_PENDING_WKR) {
+  if(WR_QUEUE_SIZE(app->q_pending_workers) < WR_QUEUE_MAX_SIZE(app->q_pending_workers)) {
     int retval = wr_wkr_create(app->svr, app->conf);
     if(retval > 0){
-      app->pending_wkr++;
+      wr_pending_wkr_t *pending = wr_malloc(wr_pending_wkr_t);
+      *pending = retval;
+      wr_queue_insert(app->q_pending_workers, pending);
       app->high_ratio = TOTAL_WORKER_COUNT(app) * WR_MAX_REQ_RATIO;
-      app->last_wkr_pid[app->pending_wkr-1] = retval;
       ev_timer_again(app->svr->ebb_svr.loop, &app->t_add_timeout);
       LOG_INFO("PID of created worker = %d, Rails application=%s",
-             app->last_wkr_pid[app->pending_wkr-1],app->conf->path.str);
-      return 0;
+               retval, app->conf->path.str);
+      return TRUE;
     }else{
       LOG_ERROR(SEVERE,"Could not fork process to start new worker.");
     }
   }
-  return -1;
+  return FALSE;
 }
 
 /** Insert application based on application configuration */
 static int wr_app_insert(wr_svr_t* server, wr_app_conf_t* config, wr_ctl_t *ctl) {
   LOG_FUNCTION
   wr_app_t* app = wr_malloc(wr_app_t);
-  short is_static_server = 0;
 
   if(!app) {
     LOG_ERROR(WARN, "%s() application object allocation failed. Returning ...", __FUNCTION__);
-    return -1;
+    return FALSE;
   }
 
-  if(strcmp(config->name.str, WR_STATIC_FILE_SERVER_NAME) == 0){
-    is_static_server = 1;
-  }
+  // Queue size is WR_ALLOWED_MAX_WORKERS + 1 to accommodate temporary extra 
+  // worker, created during application restart 
+  app->q_free_workers     = wr_queue_new(WR_ALLOWED_MAX_WORKERS + 1);
+  app->q_workers         = wr_queue_new(WR_ALLOWED_MAX_WORKERS + 1);
+  app->q_pending_workers = wr_queue_new(WR_MAX_PENDING_WKR);
 
-  // Queue size is WR_ALLOWED_MAX_WORKERS + 1 to accommodate temporary extra worker, created during application restart 
-  app->free_wkr_que = wr_queue_new(WR_ALLOWED_MAX_WORKERS + 1);
-  app->wkr_que = wr_queue_new(WR_ALLOWED_MAX_WORKERS + 1);
-  app->msg_que = wr_queue_new(WR_MSG_QUE_SIZE);
+  app->q_messages        = wr_queue_new(WR_MSG_QUE_SIZE);
 
-  if(  app->wkr_que == NULL ||
-       app->free_wkr_que == NULL ||
-       app->msg_que == NULL) {
+  if(app->q_workers == NULL || app->q_pending_workers == NULL ||
+     app->q_free_workers == NULL || app->q_messages == NULL) {
     free(app);
     app = NULL;
     LOG_ERROR(WARN, "application object initialization failed. Returning ...");
-    return -1;
+    return FALSE;
   }
+  
   app->svr = server;
   app->conf = config;
   app->ctl = ctl;
+  app->state = WR_APP_NEW;
+  app->timeout_counter = 0;
+  app->high_ratio = 0;
+  app->t_add.data = app->t_remove.data = app->t_add_timeout.data = app;
+  
   /* set application object in control, it would be used at time of freeing control object */
-  if(ctl) {
-    ctl->app = app;
-  }
-  if(!is_static_server){
+  if(ctl)    ctl->app = app;
+  
+  if(strcmp(config->name.str, WR_STATIC_FILE_SERVER_NAME) == 0){
+    app->next = NULL;
+    server->static_app = app;
+  }else{
     wr_req_resolver_add(server, app, config);
     app->next = server->apps;
     server->apps = app;
-  }else{
-    app->next = NULL;
-    server->static_app = app;
   }
 
-  app->t_add.data = app->t_remove.data = app->t_add_timeout.data = app;
+  ev_timer_init (&app->t_add, wr_app_wkr_add_cb, 0., WR_HIGH_LOAD_LIMIT);
+  ev_timer_init (&app->t_remove, wr_app_wkr_remove_cb, 0., WR_LOW_LOAD_LIMIT);
+  ev_timer_init (&app->t_add_timeout, wr_app_wkr_add_timeout_cb, 0., WR_WKR_ADD_TIMEOUT);
 
-  ev_timer_init (&app->t_add, wr_app_wrk_add_cb, 0., WR_HIGH_LOAD_LIMIT);
-  ev_timer_init (&app->t_remove, wr_app_wrk_remove_cb, 0., WR_LOW_LOAD_LIMIT);
-  ev_timer_init (&app->t_add_timeout, wr_app_wrk_add_timeout_cb, 0., WR_WKR_ADD_TIMEOUT);
-
-  //app->next = server->apps;
-  //server->apps = app;
   LOG_DEBUG(4,"%s() Application Added:%s", __FUNCTION__, config->name.str);
 
-  app->pending_wkr = 0;
-  app->in_use = FALSE;
-  app->restarted = FALSE;
-  app->old_workers = 0;
-  app->add_workers = 0;
-
-  int i;
-  for(i = 0; i < WR_MAX_PENDING_WKR ; i ++) {
-    app->last_wkr_pid[i] = 0;
-  }
-
-  /** Creating workers */
-  for(i=0; i < config->min_worker;  i++) {
-    //Create a new Worker
-    wr_app_wkr_add(app);
-    //      int pid = wr_wkr_create(server, config);
-    //      LOG_DEBUG(DEBUG,"Rails application=%s", config->path.str);
-    //      LOG_DEBUG(4,"PID of created process is %i",pid);
-  }
-
-  //app->high_ratio = TOTAL_WORKER_COUNT(app) * WR_MAX_REQ_RATIO;
-  app->low_ratio = TOTAL_WORKER_COUNT(app) * WR_MIN_REQ_RATIO;
-  return 0;
+  wr_app_wkr_balance(app);
+  
+  return TRUE;
 }
 
-/** Worker added to application callback */
-void wr_app_wkr_added_cb(wr_app_t *app){
-  LOG_FUNCTION
-  wr_wkr_t *worker;
-
-  // Decrease the add workers count.
-  if(app->add_workers){
-    LOG_DEBUG(DEBUG, "Number of add workers is %d.", app->add_workers);
-    app->add_workers --;
+/** Balance number of workers */
+void wr_app_wkr_balance(wr_app_t *app){
+  // Maintain minimum number of workers
+  //while(TOTAL_WORKER_COUNT(app) < app->conf->min_worker && app->timeout_counter < WR_MAX_ADD_TIMEOUT_COUNTER){
+  while(TOTAL_WORKER_COUNT(app) < app->conf->min_worker){
+    if(wr_app_wkr_add(app) == FALSE)   break;
+    app->low_ratio = TOTAL_WORKER_COUNT(app) * WR_MIN_REQ_RATIO;
   }
 
-  // Add a worker if required.
-  if(app->add_workers){
-    LOG_DEBUG(DEBUG,"Add a worker to a reloaded application.");
+  if(WR_QUEUE_SIZE(app->q_workers) >= app->conf->min_worker && app->state == WR_APP_RESTART)
+    app->state == WR_APP_ACTIVE;
+  
+  // Create worker if application is high loaded
+/*
+  if(TOTAL_WORKER_COUNT(app) < app->conf->max_worker && WR_QUEUE_SIZE(app->q_messages) > app->high_ratio){
     wr_app_wkr_add(app);
-  }else{
-    if(app->old_workers){
-      short count, i;
-      // Remove all the old workers, if there is no more workers to add.
-      LOG_DEBUG(DEBUG, "Number of old workers is %d.", app->old_workers);
-      count = WR_QUEUE_SIZE(app->wkr_que);
-      for( i = 0 ; i < count ; i ++){
-        worker = (wr_wkr_t*) wr_queue_fetch(app->wkr_que);
-        wr_queue_insert(app->wkr_que, worker);
-        if(worker->state & WR_WKR_OLD){
-          // Pass flag to remove worker from the worker free list.
-          wr_wkr_remove(worker, 1);
-          app->old_workers --;
-        }
-      }
-      app->old_workers = 0;
-    }
-
-    // Add worker if total number of worker is less than minimum number of workes.
-    if(TOTAL_WORKER_COUNT(app) < app->conf->min_worker){
-      LOG_DEBUG(DEBUG, "Application does not have minimum number of workes.");
-      wr_app_wkr_add(app);
-    }
-    return;
   }
-
-  // Remove old worker.
-  if(app->old_workers){
-    short count, i;
-    LOG_DEBUG(DEBUG, "Number of old workers is %d.", app->old_workers);
-    count = WR_QUEUE_SIZE(app->wkr_que);
-    for( i = 0 ; i < count ; i ++){
-      worker = (wr_wkr_t*) wr_queue_fetch(app->wkr_que);
-      wr_queue_insert(app->wkr_que, worker);
-      LOG_DEBUG(DEBUG,"Worker PID is %d and state is %d.", worker->pid, worker->state);
-      if(worker->state & WR_WKR_OLD){
-        // Pass flag to remove worker from the worker free list.
-        wr_wkr_remove(worker, 1);
-        app->old_workers --;
-        break;
-      }
-    }
-  }
+*/
 }
 
 /** Add newly created worker to application */
-int wr_app_wrk_insert(wr_svr_t *server, wr_wkr_t *worker,const wr_ctl_msg_t *ctl_msg) {
+int wr_app_wkr_insert(wr_svr_t *server, wr_wkr_t *worker,const wr_ctl_msg_t *ctl_msg) {
   LOG_FUNCTION
-  wr_app_t* app = server->apps;
   const char* app_name = ctl_msg->msg.wkr.app_name.str;
+  wr_app_t* app = wr_app_exist(server, app_name);
   
-  if(strcmp(app_name, WR_STATIC_FILE_SERVER_NAME) == 0){
-    app = server->static_app;
+  if(app == NULL){
+    LOG_ERROR(SEVERE, "Either queue is full or Baseuri is not matched");
+    scgi_body_add(worker->ctl->scgi, "Either queue is full or Baseuri is not matched.",
+                  strlen("Either queue is full or Baseuri is not matched."));
+    return -1;
   }
 
-  while(app) {
-    LOG_DEBUG(DEBUG,"app->a_config->max_worker = %d, app->wkr_que->q_count =%d", app->conf->max_worker, WR_QUEUE_SIZE(app->wkr_que));
-    LOG_DEBUG(DEBUG, "Application name = %s, Application->config->name =%s", app_name, app->conf->name.str );
-    if((app->conf->max_worker > WR_QUEUE_SIZE(app->wkr_que) || app->restarted == TRUE || app->add_workers > 0)
-        && strcmp(app_name, app->conf->name.str) == 0) {
-      int i;
-      for(i = 0; i < app->pending_wkr ; i++) {
-        if(app->last_wkr_pid[i] == worker->pid)
-          break;
-      }
+  LOG_DEBUG(DEBUG,"app->a_config->max_worker = %d, app->q_workers->q_count =%d", app->conf->max_worker, WR_QUEUE_SIZE(app->q_workers));
+  LOG_DEBUG(DEBUG, "Application name = %s, Application->config->name =%s", app_name, app->conf->name.str );
+  
+  if(app->conf->max_worker > WR_QUEUE_SIZE(app->q_workers) || app->state == WR_APP_RESTART) {
+    wr_pending_wkr_t *pending = wr_pending_worker_exist(app, worker->pid);
+    
+    if(pending == NULL){
+      scgi_body_add(worker->ctl->scgi, "Either worker add timeout or worker PID does not match.",
+                    strlen("Either worker add timeout or worker PID does not match."));
+      return -1;      
+    }
 
-      if(i == app->pending_wkr) {
-        scgi_body_add(worker->ctl->scgi, "Either worker add timeout or worker PID does not match.",
-                              strlen("Either worker add timeout or worker PID does not match."));
-        return -1;
-      }
+    worker->id = ++worker_count;
+    worker->app = app;
+    if(!(worker->state & WR_WKR_ACTIVE))      worker->state += WR_WKR_ACTIVE;
 
-      for(; i < app->pending_wkr ; i++) {
-        app->last_wkr_pid[i] = app->last_wkr_pid[i+1];
-      }
-      app->last_wkr_pid[i] = 0;
-      app->pending_wkr --;
-
-
-      worker->id = ++worker_count;
-      worker->app = app;
+    app->timeout_counter = 0;
       
-      if(app->pending_wkr <= 0)
-        ev_timer_stop(app->svr->ebb_svr.loop, &app->t_add_timeout);
-      if(!(worker->state& WR_WKR_ACTIVE))
-        worker->state += WR_WKR_ACTIVE;
+    if(WR_QUEUE_SIZE(app->q_pending_workers) <= 0)
+      ev_timer_stop(app->svr->ebb_svr.loop, &app->t_add_timeout);
 
-      if(app->in_use == FALSE) {
-        app->in_use = TRUE;
-        if(app->ctl) {
-          LOG_DEBUG(DEBUG,"Send OK status");
-          scgi_header_add(app->ctl->scgi, "STATUS", strlen("STATUS"), "OK", strlen("OK"));
-          wr_ctl_resp_write(app->ctl);
-          app->ctl = NULL;
-        }
+    if(app->state == WR_APP_RESTART){
+      if(wr_app_reload(app) == FALSE) return -1;
+      if(app->ctl) {
+        LOG_DEBUG(DEBUG,"Send OK status");
+        scgi_header_add(app->ctl->scgi, "STATUS", strlen("STATUS"), "OK", strlen("OK"));
+        wr_ctl_resp_write(app->ctl);
+        app->ctl = NULL;
       }
-
-      if(app->restarted == TRUE){
-        return wr_app_reload(app);
-      }
-
       return 0;
     }
-    app = app->next;
+    
+    if(app->state == WR_APP_NEW){
+      if(app->ctl) {
+        LOG_DEBUG(DEBUG,"Send OK status");
+        scgi_header_add(app->ctl->scgi, "STATUS", strlen("STATUS"), "OK", strlen("OK"));
+        wr_ctl_resp_write(app->ctl);
+        app->ctl = NULL;
+      }
+      
+      app->state = WR_APP_ACTIVE;
+    }
+    return 0;
   }
-  LOG_ERROR(SEVERE, "Either queue is full or Baseuri is not matched");
-  scgi_body_add(worker->ctl->scgi, "Either queue is full or Baseuri is not matched.",
-                        strlen("Either queue is full or Baseuri is not matched."));
+  
   return -1;
 }
 
@@ -580,7 +550,7 @@ int wr_app_remove(wr_svr_t* server, const char* app_name) {
 /** Check load balance to add the worker */
 void wr_app_chk_load_to_add_wkr(wr_app_t *app) {
   if(TOTAL_WORKER_COUNT(app) < app->conf->max_worker) {
-    if(app->msg_que->q_count > app->high_ratio) {
+    if(app->q_messages->q_count > app->high_ratio) {
       if(!ev_is_active(&app->t_add)) {
         LOG_DEBUG(DEBUG,"%s() Timer set", __FUNCTION__);
         ev_timer_again(app->svr->ebb_svr.loop, &app->t_add);
@@ -595,8 +565,8 @@ void wr_app_chk_load_to_add_wkr(wr_app_t *app) {
 /** Check load balance to remove the worker */
 void wr_app_chk_load_to_remove_wkr(wr_app_t *app) {
   //Check load
-  if(WR_QUEUE_SIZE(app->wkr_que) > app->conf->min_worker) {
-    if(app->msg_que->q_count < app->low_ratio) {
+  if(WR_QUEUE_SIZE(app->q_workers) > app->conf->min_worker) {
+    if(app->q_messages->q_count < app->low_ratio) {
       if(!ev_is_active(&app->t_remove)) {
         LOG_DEBUG(DEBUG,"%s() Timer set", __FUNCTION__);
         ev_timer_again(app->svr->ebb_svr.loop, &app->t_remove);
@@ -619,34 +589,27 @@ void wr_app_init(wr_svr_t *server) {
   }
 }
 
-/** Allication add callback */
+/** Apllication add callback */
+/* Deploy an application on the server */
 void wr_app_add_cb(wr_ctl_t *ctl, const wr_ctl_msg_t *ctl_msg) {
   LOG_FUNCTION
 
   wr_svr_t* server = ctl->svr;
   wr_app_conf_t* app_conf = NULL;
-  wr_app_t* app = server->apps, *tmp_app = NULL;
-    
-  while(app) {
-    if(strcmp(ctl_msg->msg.app.app_name.str, app->conf->name.str)==0)
-      break;
-    tmp_app = app;
-    app = app->next;
-  }
-  ctl->svr->err_msg[0] = 0;
-  if(app) {
-    /* set application object in control, it would be used at time of freeing control object */
-    ctl->app = app;
-    sprintf(ctl->svr->err_msg, "Application '%s' is already running.", ctl_msg->msg.app.app_name.str);
-  }
+  wr_app_t* app = wr_app_exist(server, ctl_msg->msg.app.app_name.str);
   
-  if(!app && ctl && ctl->svr && ctl->svr->conf) {
-    app_conf = wr_conf_app_read(ctl->svr->conf,
+  // Reset the error message
+  ctl->svr->err_msg[0] = 0;
+  if(app){
+     /* set application object in control, it would be used at time of freeing control object */
+     ctl->app = app;
+     sprintf(ctl->svr->err_msg, "Application '%s' is already running.", ctl_msg->msg.app.app_name.str); 
+  }else if(ctl && server && server->conf) {
+    app_conf = wr_conf_app_read(server->conf,
                            ctl_msg->msg.app.app_name.str,
                            ctl->svr->err_msg);
     if(app_conf!=NULL) {
-      if(wr_app_insert(ctl->svr, app_conf, ctl) >= 0)
-        return;
+      if(wr_app_insert(ctl->svr, app_conf, ctl) == TRUE)        return;
     } else if(ctl->svr->err_msg[0] == 0) {
       sprintf(ctl->svr->err_msg, "Application '%s' is not found.", ctl_msg->msg.app.app_name.str);
     }
@@ -670,25 +633,17 @@ void wr_app_remove_cb(wr_ctl_t *ctl, const wr_ctl_msg_t *ctl_msg) {
 }
 
 /** Allication reload callback */
-void wr_app_reload_cb(wr_ctl_t *ctl, const wr_ctl_msg_t *ctl_msg) {
+void wr_app_reload_cb(wr_ctl_t *ctl, const wr_ctl_msg_t *ctl_msg){
   LOG_FUNCTION
-  wr_app_t *app = ctl->svr->apps;
   wr_app_conf_t* app_config = NULL;
-
-  // Find the application.
-  while(app) {
-    if(strcmp(ctl_msg->msg.app.app_name.str, app->conf->name.str)==0){
-      /* set application object in control, it would be used at time of freeing control object */
-      ctl->app = app;
-      break;
-    }
-    app = app->next;
-  }
+  wr_app_t *app = wr_app_exist(ctl->svr, ctl_msg->msg.app.app_name.str);
 
   // Read new application configuration.
   app_config = wr_conf_app_update(ctl->svr->conf,
-                         ctl_msg->msg.app.app_name.str,
-                         ctl->svr->err_msg);
+                                  ctl_msg->msg.app.app_name.str,
+                                  ctl->svr->err_msg);
+
+  LOG_INFO("Reload the application %s", ctl_msg->msg.app.app_name.str);
   // Report error on not getting the application configuration.
   if(app_config == NULL){
     LOG_ERROR(WARN, "Error: %s",ctl->svr->err_msg);
@@ -702,26 +657,26 @@ void wr_app_reload_cb(wr_ctl_t *ctl, const wr_ctl_msg_t *ctl_msg) {
     }
     return;
   }
-
-  if(app) {
+  
+  if(app){
     int i;
     wr_app_conf_t *tmp_app_conf = app->conf;
     // Set variables to restart the application.
     LOG_DEBUG(DEBUG,"Set variables to restart an existing application.");
     app->conf = app_config;
-    app->in_use = FALSE;
-    app->restarted = TRUE;
-    app->pending_wkr = 0;
-    for(i = 0; i < WR_MAX_PENDING_WKR ; i ++) {
-      app->last_wkr_pid[i] = 0;
+    app->state = WR_APP_RESTART;
+    while(WR_QUEUE_SIZE(app->q_pending_workers) > 0){
+      wr_pending_wkr_t* pending = wr_queue_fetch(app->q_pending_workers);
+      free(pending);
     }
+
     app->ctl = ctl;
     LOG_DEBUG(4,"%s() Application Added:%s", __FUNCTION__, app->conf->name.str);
-
+    
     // Add single worker with updated application.
     LOG_DEBUG(DEBUG, "Add first worker on application restart.");
     wr_app_wkr_add(app);
-
+    
     // Replace the application configuration with older configuration object.
     wr_conf_app_replace(app->svr->conf, tmp_app_conf);
     app->conf = tmp_app_conf;
@@ -731,13 +686,13 @@ void wr_app_reload_cb(wr_ctl_t *ctl, const wr_ctl_msg_t *ctl_msg) {
     LOG_ERROR(WARN,"Aapplication %s didn't found in list", ctl_msg->msg.app.app_name.str);
     sprintf(ctl->svr->err_msg, "Application '%s' is not found.", ctl_msg->msg.app.app_name.str);
     scgi_body_add(ctl->scgi,
-                          "Couldn't remove application. But trying to start application.",
-                          strlen("Couldn't remove application. But trying to start application."));
-    if(wr_app_insert(ctl->svr, app_config, ctl) == 0)
-      return;
+                  "Couldn't remove application. But trying to start application.",
+                  strlen("Couldn't remove application. But trying to start application."));
+    if(wr_app_insert(ctl->svr, app_config, ctl) == TRUE)     return;
   }
 
   // Return ERROR status.
   scgi_header_add(ctl->scgi, "STATUS", strlen("STATUS"), "ERROR", strlen("ERROR"));
   wr_ctl_resp_write(ctl);
 }
+  

@@ -472,7 +472,7 @@ void wr_req_complete_cb(ebb_request * request) {
   // ebb_request parsing completed, send call back to Server
   if(req->app){
     int rv;
-    WR_QUEUE_INSERT(req->app->msg_que, req, rv)
+    WR_QUEUE_INSERT(req->app->q_messages, req, rv)
     if(rv == 0){
       wr_wkr_dispatch_req(req);
       return;

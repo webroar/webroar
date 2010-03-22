@@ -517,10 +517,8 @@ void wr_ctl_free(wr_ctl_t* ctl) {
         wr_wkr_free(ctl->wkr);
 
       //create new worker if required
-      if(app && app->in_use &&
-          (TOTAL_WORKER_COUNT(app) < app->conf->min_worker ||
-           app->msg_que->q_count > app->high_ratio ) ) {
-        wr_app_wkr_add(app);
+      if(app && app->state == WR_APP_ACTIVE){
+        wr_app_wkr_balance(app);
       }
     }
     if(ctl->app) {

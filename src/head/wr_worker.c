@@ -42,12 +42,12 @@ static inline void wr_wrk_allocate(wr_wkr_t* worker) {
   wr_svr_t* server = app->svr;
   int retval;
   //do we need high load ratio check here?
-  if(app && app->msg_que->q_count > 0) {
+  if(app && app->q_messages->q_count > 0) {
     //There is pending request
-    WR_QUEUE_FETCH(app->msg_que, req)  ;
+    WR_QUEUE_FETCH(app->q_messages, req)  ;
 
     if(req == NULL) {
-      WR_QUEUE_INSERT(app->free_wkr_que, worker, retval)  ;
+      WR_QUEUE_INSERT(app->q_free_workers, worker, retval)  ;
     } else {
       LOG_DEBUG(4,"Allocate worker %d to req id %d", worker->id , req->id);
       req->wkr = worker;
@@ -59,7 +59,7 @@ static inline void wr_wrk_allocate(wr_wkr_t* worker) {
   } else if(app) {
     //No any pending request. Add Worker to free worker list
     LOG_DEBUG(4,"Message queue is empty");
-    WR_QUEUE_INSERT(app->free_wkr_que, worker, retval)  ;
+    WR_QUEUE_INSERT(app->q_free_workers, worker, retval)  ;
   } else {
     //Remove worker
     LOG_ERROR(SEVERE,"wr_wrk_allocate: Remove worker with pid %d.", worker->pid);
@@ -366,7 +366,7 @@ static inline void wr_wkr_recreate(wr_wkr_t *worker) {
   wr_wkr_remove(worker, 0);
   //create new worker if required
   if(TOTAL_WORKER_COUNT(app) < app->conf->min_worker ||
-      app->msg_que->q_count > app->high_ratio) {
+      app->q_messages->q_count > app->high_ratio) {
     wr_app_wkr_add(app);
   }
 }
@@ -504,19 +504,19 @@ int wr_wkr_remove(wr_wkr_t *worker, int flag) {
     worker->state -= WR_WKR_ACTIVE;
 
   if(app) {
-    LOG_INFO("Removing worker %d with pid %d...app->wkr_que->q_count=%d, q_front=%d, q_rear=%d app=%s",
-             worker->id, worker->pid,app->wkr_que->q_count,app->wkr_que->q_front,app->wkr_que->q_rear,
+    LOG_INFO("Removing worker %d with pid %d...app->q_workers->q_count=%d, q_front=%d, q_rear=%d app=%s",
+             worker->id, worker->pid,app->q_workers->q_count,app->q_workers->q_front,app->q_workers->q_rear,
              app->conf->name.str);
   } else {
     LOG_INFO("Removing worker %d with pid %d", worker->id, worker->pid);
   }
 
-  if(app && wr_queue_remove(app->wkr_que, worker) == 0) {
+  if(app && wr_queue_remove(app->q_workers, worker) == 0) {
     app->high_ratio = TOTAL_WORKER_COUNT(app) * WR_MAX_REQ_RATIO;
-    app->low_ratio = WR_QUEUE_SIZE(app->wkr_que) * WR_MIN_REQ_RATIO;
+    app->low_ratio = WR_QUEUE_SIZE(app->q_workers) * WR_MIN_REQ_RATIO;
 
     if(flag) {
-      wr_queue_remove(app->free_wkr_que, worker);
+      wr_queue_remove(app->q_free_workers, worker);
     }
     wr_wkr_free(worker);
     return 0;
@@ -679,7 +679,7 @@ int wr_wkr_connect(wr_ctl_t *ctl, const wr_ctl_msg_t *ctl_msg) {
   worker->state += WR_WKR_CONNECTING;
 
   // Insert newly added Worker to application list*/
-  if(wr_app_wrk_insert(server, worker, ctl_msg)!=0) {
+  if(wr_app_wkr_insert(server, worker, ctl_msg)!=0) {
     LOG_INFO("No more workers required.");
     free(worker);
     return -1;
@@ -765,14 +765,14 @@ int wr_wkr_connect(wr_ctl_t *ctl, const wr_ctl_msg_t *ctl_msg) {
     return -1;
   }
 
-  if(wr_queue_insert(worker->app->wkr_que, worker) < 0){
+  if(wr_queue_insert(worker->app->q_workers, worker) < 0){
     LOG_ERROR(WARN,"Worker queue is full.");
     worker->app->high_ratio = TOTAL_WORKER_COUNT(worker->app) * WR_MAX_REQ_RATIO;
     return -1;
   }
 
   //Setting low load ratio for application, refer "wr_worker_remove_cb" in wr_server.c for details.
-  worker->app->low_ratio = worker->app->wkr_que->q_count * WR_MIN_REQ_RATIO;
+  worker->app->low_ratio = worker->app->q_workers->q_count * WR_MIN_REQ_RATIO;
   ctl->wkr = worker;
   LOG_DEBUG(DEBUG,"Added Worker %d",worker->id);
 
@@ -783,7 +783,8 @@ int wr_wkr_connect(wr_ctl_t *ctl, const wr_ctl_msg_t *ctl_msg) {
   wr_wrk_allocate(worker);
   LOG_DEBUG(5,"Successfully connected to worker");
   LOG_DEBUG(DEBUG,"Allocated task to newly added worker %d",worker->id);
-  wr_app_wkr_added_cb(worker->app);
+  wr_app_wkr_balance(worker->app);
+  //wr_app_wkr_added_cb(worker->app);
 
   return 0;
 }
@@ -837,9 +838,7 @@ void wr_wkr_remove_cb(wr_ctl_t *ctl, const wr_ctl_msg_t *ctl_msg) {
   wr_ctl_resp_write(ctl);
 
   // Create new worker if required
-  if(app && app->in_use && TOTAL_WORKER_COUNT(app) < app->conf->min_worker) {
-    wr_app_wkr_add(app);
-  }
+  if(app && app->state == WR_APP_ACTIVE)   wr_app_wkr_balance(app);
 }
 
 /** Worker ping callback */

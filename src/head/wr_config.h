@@ -29,6 +29,9 @@
 // Maximum value allowed for number of workers
 #define WR_ALLOWED_MAX_WORKERS 20
 
+#define WR_MAX_PENDING_WKR 10
+#define WR_MAX_ADD_TIMEOUT_COUNTER 3 
+
 #ifdef HAVE_GNUTLS
 // Default SSL listining port
 #define WR_DEFAULT_SSL_PORT 443
@@ -155,5 +158,8 @@
 #endif
 
 #define WR_MAX_HOST_NAMES 16
+
+#define TRUE  1
+#define FALSE 0
 
 #endif /*WR_CONFIG_H_*/

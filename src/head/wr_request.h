@@ -67,9 +67,9 @@ ebb_request* wr_new_req_cb(ebb_connection*);
 /** Dispatch a pending message to free worker */
 #define WR_APP_MSG_DISPATCH(app, req, worker) \
   void *_w=NULL,*_r=NULL;\
-  if(app->msg_que->q_count > 0 && app->free_wkr_que->q_count > 0){\
-    WR_QUEUE_FETCH(app->free_wkr_que, _w)\
-    WR_QUEUE_FETCH(app->msg_que, _r)}\
+  if(app->q_messages->q_count > 0 && app->q_free_workers->q_count > 0){\
+    WR_QUEUE_FETCH(app->q_free_workers, _w)\
+    WR_QUEUE_FETCH(app->q_messages, _r)}\
   req = (wr_req_t*) _r;\
   worker = (wr_wkr_t*) _w;
 
