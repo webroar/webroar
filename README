@@ -31,8 +31,8 @@ Supported Operating Systems
 ---------------------------
 
 WebROaR has been tested on Ubuntu 8.10/9.04/9.10, Debian 5 (64 Bit), Mac OS X 
-(v10.5 & v10.6), Arch Linux 2009.08 and Cent OS 5.2. Basically, it should be able to run on any
-*IX OS. 
+(v10.5 & v10.6), Arch Linux 2009.08 and Cent OS 5.2. Basically, it should be 
+able to run on any *IX OS. 
 
 Currently it does not support Microsoft(R) Windows.
 
@@ -70,10 +70,25 @@ Procedure
 WebROaR can installed using the following commands:
 
 ----
-gem sources -a http://gems.github.com
 sudo gem install webroar
 sudo webroar install
 ----
+
+[NOTE] 
+.SSL Support
+===============================
+In case you would like to setup SSL support for the server, use the following
+command line switch with *sudo webroar install* command mentioned above.
+----
+sudo webroar install --ssl-support
+----
+
+Configure further SSL options in the server's admin panel
+  *http://<yourservername>:<port>/admin-panel/configuration*
+
+After restarting the server, admin panel would now also be accessible over SSL.
+*https://<yourservername>:<port>/admin-panel*
+===============================
 
 Or if you like living in the fast lane, you can install the edge version giving
 the following commands:
@@ -84,3 +99,18 @@ cd webroar
 sudo rake install
 ----
 
+[NOTE]
+.SSL Support
+===============================
+To build with SSL support, use the following additional switch with the 
+*sudo rake install* command:
+----
+sudo rake install ssl=yes
+----
+
+Configure further SSL options in the server's admin panel
+  *http://<yourservername>:<port>/admin-panel/configuration*
+
+After restarting the server, admin panel would now also be accessible over SSL.
+*https://<yourservername>:<port>/admin-panel*
+===============================
