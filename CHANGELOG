@@ -1,3 +1,13 @@
+V0.3.1 - 22-Mar-2010
+--------------------
+
+* Refactored and improved the code for handling restarts of an application.
+* Corrected output emitted for version command.
+* Fixed the incorrect server version being sent in the HTTP Response Headers.
+* Updated description of the gem.
+* Minor updates in the README and User Guide.
+
+
 v0.3.0 - 19-Mar-2010
 --------------------
 
