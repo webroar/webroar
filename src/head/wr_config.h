@@ -87,7 +87,7 @@
 // File to store Server process id
 #define WR_PID_FILE  "/var/run/webroar.pid"
 #define WR_SERVER "WebROaR"
-#define WR_VERSION "0.3.1"
+#define WR_VERSION "0.3.2"
 #define WR_MIME_TYPE_PATH "/conf/mime_type.yml"
 #define WR_CONF_PATH "/conf/config.yml"
 #define WR_SERVER_INTERNAL_CONF_PATH "/conf/server_internal_config.yml"
