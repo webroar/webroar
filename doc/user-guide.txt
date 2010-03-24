@@ -24,6 +24,7 @@ Ruby on Rails applications.
 * Provides run time performance data for the deployed applications. 
 * Generates notifications in case any exceptions occur in any of the deployed
  applications.
+* Zero Downtime Application Upgrades.
 * SSL support. 
 
 == Supported Operating Systems ==
