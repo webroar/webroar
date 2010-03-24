@@ -49,15 +49,15 @@ along with WebROaR.  If not, see <http://www.gnu.org/licenses/>.
 <% end -%>
     <tr>
     	<td colspan = 6>
-    		Take Action:
+    		<b>Take Action:</b>
 				<% unless current_status == OPEN_EXCEPTION %>
-				  <%=link_to_remote 'Reopen', :condition => "checkMarked()", :url => {:controller => 'exceptions', :action => 'change_status', :status_name => "open", :current_status => status_name, :app_name => @application_name, :page => @exceptions.current_page }, :submit => 'form_exception_list', :method => :put  %>
+				  <b><%=link_to_remote 'Reopen', :condition => "checkMarked()", :url => {:controller => 'exceptions', :action => 'change_status', :status_name => "open", :current_status => status_name, :app_name => @application_name, :page => @exceptions.current_page }, :submit => 'form_exception_list', :method => :put  %></b>
 				<% end %>
 				<% unless current_status == CLOSED_EXCEPTION %> 
-				  <%=link_to_remote 'Close', :condition => "checkMarked()", :url => {:controller => 'exceptions', :action => 'change_status', :status_name => "close", :current_status => status_name, :app_name => @application_name, :page => @exceptions.current_page }, :submit => 'form_exception_list', :method => :put  %>
+				  <b><%=link_to_remote 'Close', :condition => "checkMarked()", :url => {:controller => 'exceptions', :action => 'change_status', :status_name => "close", :current_status => status_name, :app_name => @application_name, :page => @exceptions.current_page }, :submit => 'form_exception_list', :method => :put  %></b>
 			  <% end %>
 				<% unless current_status == IGNORED_EXCEPTION %>
-				<%=link_to_remote 'Ignore', :condition => "checkMarked()", :url => {:controller => 'exceptions', :action => 'change_status', :status_name => "ignore", :current_status => status_name, :app_name => @application_name, :page => @exceptions.current_page }, :submit => 'form_exception_list', :method => :put  %>
+				<b><%=link_to_remote 'Ignore', :condition => "checkMarked()", :url => {:controller => 'exceptions', :action => 'change_status', :status_name => "ignore", :current_status => status_name, :app_name => @application_name, :page => @exceptions.current_page }, :submit => 'form_exception_list', :method => :put  %></b>
 				<% end %>
 				<%#=link_to_remote 'Delete', :condition => "checkMarked('delete')", :url => {:controller => 'exceptions', :action => 'change_status', :status_name => "delete", :current_status => status_name, :app_name => @application_name, :page => @exceptions.current_page }, :submit => 'form_exception_list', :method => :put  %>
     	</td>
