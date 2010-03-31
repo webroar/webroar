@@ -260,9 +260,6 @@ static void wr_ctl_msg_read_cb(struct ev_loop *loop, struct ev_io *w, int revent
 
   if(bytesRead <= 0 && ctl && ctl->svr && ctl->svr->is_running) {
     LOG_ERROR(WARN,"Error receiving contol message port or socket path:%s, fd = %d, bytesRead=%d",strerror(errno), w->fd, bytesRead);
-    if(ctl->wkr) {
-      ctl->wkr->state += (WR_WKR_ERROR + WR_WKR_HANG);
-    }
     wr_ctl_free(ctl);
     return;
   }
@@ -490,31 +487,10 @@ void wr_ctl_free(wr_ctl_t* ctl) {
       ev_io_stop(ctl->svr->ebb_svr.loop, &ctl->w_read);
     }
     if(ctl->wkr) {
-      wr_wkr_t *worker = ctl->wkr;
-      // Need to stop ev_io so that all the pending call related to worker turns out to void
-      if(worker->watcher.active != 0) {
-        ev_io_stop(worker->ctl->svr->ebb_svr.loop, &worker->watcher);
-      }
-      worker->ctl = NULL;
-      //if head is waiting for PING reply, and worker got killed inbetween, we need to stop time watcher
-      ev_timer_stop(worker->loop, &worker->t_wait);
-      //wr_recreate_worker(worker);
-      wr_req_t * req = worker->req;
-      //we are killing worker in mid of some processing, render 500 to corresponding req
-      if(req) {
-        LOG_ERROR(SEVERE,"Worker %d Hangup. Killing it. Req id = %d, Connection id = %d, Request Path is %s",
-                  worker->id,
-                  req->id, req->conn->id, req->req_uri.str);
-        req->resp_buf_len = 0;
-        wr_conn_err_resp(req->conn, WR_HTTP_STATUS_500);
-
-      }
-      wr_app_t *app = worker->app;
-      LOG_ERROR(SEVERE,"wr_ctl_free: Remove worker with pid %d.", ctl->wkr->pid);
-      if(ctl->wkr->state & WR_WKR_ACTIVE)
-        wr_wkr_remove(ctl->wkr, 1);
-      else
-        wr_wkr_free(ctl->wkr);
+      wr_app_t *app = ctl->wkr->app;
+      ctl->wkr->state = WKR_STATE_ERROR;
+      ctl->wkr->ctl = NULL;
+      wr_wkr_free(ctl->wkr);
 
       //create new worker if required
       if(app && app->state == WR_APP_ACTIVE){

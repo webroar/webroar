@@ -217,7 +217,8 @@ void wr_app_wkr_remove_cb(struct ev_loop *loop, ev_timer *w, int revents) {
           if(tmp_worker->pid == pid) {
             LOG_DEBUG(DEBUG,"Removing from free worker id=%d", tmp_worker->id);
             forecasted_count--;
-            wr_wkr_remove(tmp_worker, 1);
+            tmp_worker->state = WKR_STATE_ERROR;
+            wr_wkr_free(tmp_worker);
             LOG_DEBUG(DEBUG,"Worker removed from free worker.");
             flag = 0;
             break;
@@ -236,8 +237,7 @@ void wr_app_wkr_remove_cb(struct ev_loop *loop, ev_timer *w, int revents) {
           if(tmp_worker->pid == pid) {
             forecasted_count--;
             LOG_DEBUG(DEBUG,"Remove active status id = %d", tmp_worker->id);
-            if(tmp_worker->state & WR_WKR_ACTIVE)
-              tmp_worker->state -= WR_WKR_ACTIVE;
+            tmp_worker->state = WKR_STATE_EXPIRED;
             break;
           }
         }
@@ -291,15 +291,15 @@ static inline int wr_app_reload(wr_app_t *app){
   while(WR_QUEUE_SIZE(app->q_free_workers) > 0){
     worker = (wr_wkr_t*)wr_queue_fetch(app->q_free_workers);
     // The worker is already removed from free workers list so do not pass the flag.
-    wr_wkr_remove(worker, 0);
+    worker->state = WKR_STATE_ERROR;
+    wr_wkr_free(worker);
   }
 
   // Mark all existing workers to OLD worker.
   for(count = 0; count < WR_QUEUE_SIZE(app->q_workers) ; count++) {
     worker = (wr_wkr_t*)wr_queue_fetch(app->q_workers);
     wr_queue_insert(app->q_workers, worker);
-    worker->state |= WR_WKR_OLD;
-    worker->state -= WR_WKR_ACTIVE;
+    worker->state = WKR_STATE_EXPIRED;
   } 
 
   app->state = WR_APP_RESTARTING;
@@ -321,8 +321,8 @@ void wr_app_free(wr_app_t* app) {
     LOG_DEBUG(DEBUG,"Worker count = %d", WR_QUEUE_SIZE(app->q_workers));
     //Destroy workers
     while(worker = (wr_wkr_t*)wr_queue_fetch(app->q_workers)) {
-      if(app->svr->is_running==0)
-        worker->state |= WR_WKR_HANG;
+      if(app->svr->is_running == 0)
+        worker->state = WKR_STATE_ERROR;
       wr_wkr_free(worker);
     }
 
@@ -445,7 +445,7 @@ void wr_app_wkr_balance(wr_app_t *app){
   }
 
   if(WR_QUEUE_SIZE(app->q_workers) >= app->conf->min_worker && app->state == WR_APP_RESTART)
-    app->state == WR_APP_ACTIVE;
+    app->state = WR_APP_ACTIVE;
   
   // Create worker if application is high loaded
 /*
@@ -482,8 +482,7 @@ int wr_app_wkr_insert(wr_svr_t *server, wr_wkr_t *worker,const wr_ctl_msg_t *ctl
 
     worker->id = ++worker_count;
     worker->app = app;
-    if(!(worker->state & WR_WKR_ACTIVE))      worker->state += WR_WKR_ACTIVE;
-
+    
     app->timeout_counter = 0;
       
     if(WR_QUEUE_SIZE(app->q_pending_workers) <= 0)

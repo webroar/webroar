@@ -25,6 +25,34 @@
 
 /** Worker states */
 typedef enum{
+  WKR_STATE_CONNECTING = 100,
+  WKR_STATE_ACTIVE = 200,
+  WKR_STATE_INACTIVE = 201,
+  WKR_STATE_PINGING = 202,
+  WKR_STATE_EXPIRED = 203,
+  WKR_STATE_ERROR = 401,
+  WKR_STATE_TIMEDOUT = 402,
+  WKR_STATE_ERROR_ACK = 403,
+  WKR_STATE_HANGUP = 404,
+  WKR_STATE_DISCONNECTING = 501
+}wr_wkr_state_t;
+
+/** Worker actions */
+typedef enum{
+  WKR_ACTION_ADD,
+  WKR_ACTION_ADD_TIMEOUT,
+  WKR_ACTION_ADD_ERROR,
+  WKR_ACTION_REMOVE,
+  WKR_ACTION_PING,
+  WKR_ACTION_PING_TIMEOUT,
+  WKR_ACTION_PING_REPLAY,
+  WKR_ACTION_REQ_PROCESSED,
+  WKR_ACTION_REQ_PROCESSING,
+  WKR_ACTION_ERROR
+}wr_wkr_action_t;
+
+/** Worker states */
+/*typedef enum{
   WR_WKR_CLEAR = 0,
   WR_WKR_ACTIVE = 1,    //worker is active to service an application
   WR_WKR_ERROR = 2,
@@ -35,14 +63,14 @@ typedef enum{
   WR_WKR_PING_REPLIED = 64,    //PING replied, indicating worker is live
   WR_WKR_HANG = 128,
   WR_WKR_OLD = 256
-}wr_wkr_state_t;
+}wr_wkr_state_t;*/
 
 /** Worker structure */
 struct wr_wkr_s {
-  wr_u_short    id;    /**< Worker index/id */
-  int        state;      /**< Worker state */
-  wr_u_short    pid;    /**< Worker id */
-  struct ev_loop   *loop;
+  wr_u_short      id;    /**< Worker index/id */
+  wr_wkr_state_t  state;      /**< Worker state */
+  wr_u_short      pid;    /**< Worker id */
+  struct ev_loop  *loop;
 
   int         fd;      /**< Socket fd */
   ev_io       watcher;  /**< watcher */
@@ -50,7 +78,7 @@ struct wr_wkr_s {
   ev_timer     t_wait;   /**< idle watcher for worker */
   wr_u_short   trials_done;  /**< Number of time we want to send PING before killing */
 
-  wr_ctl_t      *ctl;      /**< Pointer to control structure */
+  wr_ctl_t    *ctl;      /**< Pointer to control structure */
   wr_req_t    *req;
   wr_app_t    *app;  /**< Application pointer*/
 };
