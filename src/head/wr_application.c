@@ -64,69 +64,92 @@ void wr_app_wkr_add_cb(struct ev_loop *loop, ev_timer *w, int revents) {
   }
 }
 
+/** Set flag to TRUE to kill single pending worker */
+static void wr_app_kill_pending_wkr(wr_app_t* app, const int flag){
+  int pid = 0;
+  wr_pending_wkr_t *pending;
+
+  while(WR_QUEUE_SIZE(app->q_pending_workers) > 0) {
+    pending = wr_queue_fetch(app->q_pending_workers);
+    if(pending){
+      pid = *pending;
+      free(pending);
+    }
+    LOG_INFO("wr_app_kill_pending_wkr: killing worker, pid = %d", pid);
+    if(pid > 0)
+      kill(pid ,SIGKILL);
+    if(flag) break;
+  }
+  app->high_ratio = TOTAL_WORKER_COUNT(app) * WR_MAX_REQ_RATIO;
+}
+
+static void wr_app_add_error_msg(wr_app_t* app){
+  int err_msg_len = 0;
+  char err_msg[512];
+
+  LOG_DEBUG(DEBUG,"Some problem occurred while starting Application %s.", app->conf->name.str);
+  if(app->ctl){
+    scgi_header_add(app->ctl->scgi, "STATUS", strlen("STATUS"), "ERROR", strlen("ERROR"));
+    err_msg_len = sprintf(err_msg,"The application could not be started due to the following error. Please refer '/var/log/webroar/%s.log' and the application log file for more details.", app->conf->name.str);
+    scgi_body_add(app->ctl->scgi, err_msg, err_msg_len);
+    wr_ctl_resp_write(app->ctl);        
+  }
+  app->timeout_counter = 0;
+  app->ctl = NULL; 
+}
+
 /** Callback function to add worker timeout */
 void wr_app_wkr_add_timeout_cb(struct ev_loop *loop, ev_timer *w, int revents) {
   LOG_FUNCTION
   wr_app_t* app = (wr_app_t*) w->data;
-  char err_msg[512];
-  int err_msg_len = 0;
-  int pid = 0;
   
+  LOG_ERROR(SEVERE,"wr_app_wkr_add_timeout_cb");
+
+/*
+  if(app->state == WR_APP_NEW){
+    // Send error response
+    wr_app_add_error_msg(app);
+    wr_app_remove(app->svr, app->conf->name.str);
+    return;
+  }
+*/
+
   // Stop add timeout timer and increament timeout counter
   ev_timer_stop(loop, &app->t_add_timeout);
   app->timeout_counter ++;
 
-  // Kill oldest pending worker
-  if(WR_QUEUE_SIZE(app->q_pending_workers) > 0) {
-    wr_pending_wkr_t *pending = wr_queue_fetch(app->q_pending_workers);
-    if(pending){
-      pid = *pending;
-      free(pending);
-    } 
-    LOG_INFO("wr_app_wkr_add_timeout_cb: killing worker, pid = %d", pid);
-    if(pid > 0)
-      kill(pid ,SIGKILL);
-    LOG_DEBUG(DEBUG,"app->pending_wkr = %d", WR_QUEUE_SIZE(app->q_pending_workers));
-    if(WR_QUEUE_SIZE(app->q_pending_workers) > 0) {
-      ev_timer_again(loop, &app->t_add_timeout);
-    }
+  if(app->timeout_counter > WR_MAX_ADD_TIMEOUT_COUNTER){
+    LOG_ERROR(SEVERE,"Reset worker timeout counter for %s.", app->conf->name.str);
+    app->timeout_counter = 0;
+    return;
+  }else if(app->timeout_counter == WR_MAX_ADD_TIMEOUT_COUNTER){
+    LOG_ERROR(SEVERE,"worker timeout counter for %s exceeds limit.", app->conf->name.str);
 
-    // Update high load ratio
-    app->high_ratio = TOTAL_WORKER_COUNT(app) * WR_MAX_REQ_RATIO;
+    app->timeout_counter ++;
+
+    wr_app_kill_pending_wkr(app, FALSE);
+
+    app->t_add_timeout.repeat = WR_WKR_ADD_WAIT_TIME;
+    ev_timer_again(loop, &app->t_add_timeout);
+  }
+
+  // Kill oldest pending worker
+  wr_app_kill_pending_wkr(app, TRUE);
+
+  if(WR_QUEUE_SIZE(app->q_pending_workers) > 0) {
+    ev_timer_again(loop, &app->t_add_timeout);
   }
   
   // If application restarted, rollback all the changes.
   if(app->state == WR_APP_RESTART){
     app->state = WR_APP_ACTIVE;
     // Send error response
-    LOG_DEBUG(DEBUG,"Some problem occurred while starting Application %s.", app->conf->name.str);
-    if(app->ctl){
-      scgi_header_add(app->ctl->scgi, "STATUS", strlen("STATUS"), "ERROR", strlen("ERROR"));
-      err_msg_len = sprintf(err_msg,"The application could not be started due to the following error. Please refer '/var/log/webroar/%s.log' and the application log file for more details.", app->conf->name.str);
-      scgi_body_add(app->ctl->scgi, err_msg, err_msg_len);
-      wr_ctl_resp_write(app->ctl); 
-    }
-    app->timeout_counter = 0;
-    app->ctl = NULL;
+    wr_app_add_error_msg(app);
     return;
   }else if(app->state == WR_APP_NEW){
-    // Try out upto MAX timeout count
-/*
-    if(WR_QUEUE_SIZE(app->q_pending_workers) == 0 && app->timeout_counter < WR_MAX_ADD_TIMEOUT_COUNTER){
-      wr_app_wkr_add(app);
-    }else{
-*/
     if(WR_QUEUE_SIZE(app->q_pending_workers) == 0){
       // Send error response
-      LOG_DEBUG(DEBUG,"Some problem occurred while starting Application %s.", app->conf->name.str);
-      if(app->ctl){
-        scgi_header_add(app->ctl->scgi, "STATUS", strlen("STATUS"), "ERROR", strlen("ERROR"));
-        err_msg_len = sprintf(err_msg,"The application could not be started due to the following error. Please refer '/var/log/webroar/%s.log' and the application log file for more details.", app->conf->name.str);
-        scgi_body_add(app->ctl->scgi, err_msg, err_msg_len);
-        wr_ctl_resp_write(app->ctl);        
-      }
-      app->timeout_counter = 0;
-      app->ctl = NULL;
+      wr_app_add_error_msg(app);
       wr_app_remove(app->svr, app->conf->name.str);
     }
     return;
@@ -361,6 +384,11 @@ void wr_app_print(wr_app_t*app) {
 /** Create worker for application */
 int wr_app_wkr_add(wr_app_t *app) {
   if(WR_QUEUE_SIZE(app->q_pending_workers) < WR_QUEUE_MAX_SIZE(app->q_pending_workers)) {
+    if(app->timeout_counter >= WR_MAX_ADD_TIMEOUT_COUNTER){
+      LOG_ERROR(SEVERE, "Could not fork worker because previous %d workers got timed out.",
+              WR_MAX_ADD_TIMEOUT_COUNTER);
+      return FALSE;
+    }
     int retval = wr_wkr_create(app->svr, app->conf);
     if(retval > 0){
       wr_pending_wkr_t *pending = wr_malloc(wr_pending_wkr_t);
@@ -664,6 +692,7 @@ void wr_app_reload_cb(wr_ctl_t *ctl, const wr_ctl_msg_t *ctl_msg){
     LOG_DEBUG(DEBUG,"Set variables to restart an existing application.");
     app->conf = app_config;
     app->state = WR_APP_RESTART;
+    app->timeout_counter = 0;
     while(WR_QUEUE_SIZE(app->q_pending_workers) > 0){
       wr_pending_wkr_t* pending = wr_queue_fetch(app->q_pending_workers);
       free(pending);

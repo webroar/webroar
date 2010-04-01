@@ -30,7 +30,8 @@
 #define WR_ALLOWED_MAX_WORKERS 20
 
 #define WR_MAX_PENDING_WKR 10
-#define WR_MAX_ADD_TIMEOUT_COUNTER 3 
+#define WR_MAX_ADD_TIMEOUT_COUNTER 3
+#define WR_WKR_ADD_WAIT_TIME 1800
 
 #ifdef HAVE_GNUTLS
 // Default SSL listining port
