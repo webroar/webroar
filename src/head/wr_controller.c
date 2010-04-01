@@ -31,10 +31,17 @@
  *         USD: {YES/NO}
  *         PORT: <port> or SOCK_PATH: <sock_path>
  *         PID: <pid>
- * 2) Remove Worker
+ * 2) Error on adding worker
+ *         COMPONENT: WORKER
+ *         METHOD: ERROR
+ *         APPLICATION: /<baseuri>
+ *         USD: {YES/NO}
+ *         PORT: <port> or SOCK_PATH: <sock_path>
+ *         PID: <pid>
+ * 3) Remove Worker
  *         COMPONENT: WORKER
  *         METHOD: REMOVE
- * 3) Add Application
+ * 4) Add Application
  *         COMPONENT: APPLICATION
  *         METHOD: ADD
  *         APP_NAME: <application name>
@@ -45,7 +52,7 @@
  *         APP_LOG_LEVEL: <logging level> (optional)
  *         APP_MIN_WORKER: <min workers> (optional)
  *         APP_MAX_WORKER: <max workers> (optional)
- * 4) Remove Application
+ * 5) Remove Application
  *         COMPONENT: APPLICATION
  *         METHOD: ADD
  **/
@@ -71,8 +78,9 @@ static inline wr_ctl_msg_t* wr_ctl_msg_validate(scgi_t* request, wr_ctl_t* ctl) 
       strcpy(error,"METHOD missing.");
       goto ctl_msg_err;
     }
-    scgi_header_add(ctl->scgi, "METHOD", strlen("METHOD"), val, strlen(val));
 
+    scgi_header_add(ctl->scgi, "METHOD", strlen("METHOD"), val, strlen(val));
+    
     ctl_msg->msg.app.app_name.str = (char*) scgi_header_value_get(request,"APP_NAME");
     if(ctl_msg->msg.app.app_name.str == NULL) {
       strcpy(error,"Application name is missing.");
@@ -86,7 +94,7 @@ static inline wr_ctl_msg_t* wr_ctl_msg_validate(scgi_t* request, wr_ctl_t* ctl) 
       ctl->type = WR_CTL_MSG_APPLICATION_REMOVE;
     } else if(strcmp(val,"RELOAD")==0) {
       ctl->type = WR_CTL_MSG_APPLICATION_RELOAD;
-    } else {
+    }else {
       strcpy(error,"Invalid METHOD.");
       goto ctl_msg_err;
     }
@@ -96,7 +104,13 @@ static inline wr_ctl_msg_t* wr_ctl_msg_validate(scgi_t* request, wr_ctl_t* ctl) 
       strcpy(error,"METHOD missing.");
       goto ctl_msg_err;
     }
-    scgi_header_add(ctl->scgi, "METHOD", strlen("METHOD"), val, strlen(val));
+
+    if(strcmp(val,"ERROR")==0) {
+      scgi_header_add(ctl->scgi, "METHOD", strlen("METHOD"), "ACK", strlen("ACK"));
+    }else{
+      scgi_header_add(ctl->scgi, "METHOD", strlen("METHOD"), val, strlen(val));
+    }
+    
     // Worker Add
     if(strcmp(val,"ADD")==0) {
       ctl->type = WR_CTL_MSG_WORKER_ADD;
@@ -118,7 +132,21 @@ static inline wr_ctl_msg_t* wr_ctl_msg_validate(scgi_t* request, wr_ctl_t* ctl) 
       ctl->type = WR_CTL_MSG_WORKER_REMOVE;
     } else if(strcmp(val,"PING") == 0) {
       ctl->type = WR_CTL_MSG_WORKER_PING;
-    } else {
+    } else if(strcmp(val,"ERROR") == 0) {
+      ctl->type = WR_CTL_MSG_WORKER_ADD_ERROR;
+      ctl_msg->msg.wkr.app_name.str  =   (char*) scgi_header_value_get(request,"APPLICATION");
+      ctl_msg->msg.wkr.pid.str =   (char*) scgi_header_value_get(request,"PID");
+      ctl_msg->msg.wkr.port.str  =   (char*) scgi_header_value_get(request,"PORT");
+      ctl_msg->msg.wkr.sock_path.str  =   (char*) scgi_header_value_get(request,"SOCK_PATH");
+      ctl_msg->msg.wkr.uds.str  =   (char*) scgi_header_value_get(request,"UDS");
+
+      if(ctl_msg->msg.wkr.app_name.str == NULL ||
+          ctl_msg->msg.wkr.pid.str == NULL ||
+          ctl_msg->msg.wkr.uds.str == NULL) {
+        strcpy(error,"Missing some headers.");
+        goto ctl_msg_err;
+      }
+    }else {
       strcpy(error,"Invalid METHOD.");
       goto ctl_msg_err;
     }
@@ -195,7 +223,6 @@ static inline void wr_ctl_msg_process(scgi_t* request,  wr_ctl_t* ctl) {
     break;
   case WR_CTL_MSG_APPLICATION_RELOAD:
     LOG_DEBUG(DEBUG,"WR_CTL_MSG_APPLICATION_RELOAD");
-    //    wr_ctl_msg_app_reload(ctl_msg, ctl);
     if(ctl->svr && ctl->svr->on_app_reload)
       ctl->svr->on_app_reload(ctl, ctl_msg);
     else
@@ -203,9 +230,15 @@ static inline void wr_ctl_msg_process(scgi_t* request,  wr_ctl_t* ctl) {
     break;
   case WR_CTL_MSG_WORKER_ADD:
     LOG_DEBUG(DEBUG,"WR_CTL_MSG_WORKER_ADD");
-    //    wr_ctl_msg_wkr_add(ctl_msg, ctl);
     if(ctl->svr && ctl->svr->on_wkr_add)
       ctl->svr->on_wkr_add(ctl, ctl_msg);
+    else
+      flag =1;
+    break;
+  case WR_CTL_MSG_WORKER_ADD_ERROR:
+    LOG_DEBUG(DEBUG,"WR_CTL_MSG_WORKER_ADD_ERROR");
+    if(ctl->svr && ctl->svr->on_wkr_add_error)
+      ctl->svr->on_wkr_add_error(ctl, ctl_msg);
     else
       flag =1;
     break;

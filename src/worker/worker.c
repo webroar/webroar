@@ -279,13 +279,15 @@ static inline int connect_unix_socket(wkr_t* w) {
 /** Connect worket to Head */
 int worker_connect(wkr_t* w) {
   LOG_FUNCTION
+  int retval;
   if(w->is_uds == 1) {
-    if(connect_unix_socket(w) >= 0)
-      return send_ack_on_unix_socket(w);
-  } else {
-    if(connect_internet_socket(w) >=0)
-      return send_ack_on_internet_socket(w);
+    retval = connect_unix_socket(w);
+  }else{
+    retval = connect_internet_socket(w);
   }
+
+  if(retval >= 0 ) return send_ack_ctl_msg(w);
+  
   return -1;
 }
 
@@ -332,5 +334,5 @@ void worker_accept_requests(wkr_t* w) {
   w->w_accept.data = w;
   ev_io_init(&(w->w_accept), request_accept_cb, w->listen_fd, EV_READ);
   ev_io_start(w->loop,&(w->w_accept));
-  wkr_tmp_free(&w->tmp);
+  //wkr_tmp_free(&w->tmp);
 }

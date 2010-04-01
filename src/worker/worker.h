@@ -60,14 +60,16 @@ struct wkr_ctl_s {
   size_t    msg_size;
   size_t    bytes_read;
   ev_io     w_write;
+  ev_timer  t_ack;
   //size_t    bytes_write;
   scgi_t*      scgi;
+  int       error;
 };
 
 wkr_ctl_t* wkr_ctl_new();
 void wkr_ctl_free(wkr_ctl_t**);
-int send_ack_on_internet_socket(wkr_t* w);
-int send_ack_on_unix_socket(wkr_t* w);
+int send_ack_ctl_msg(wkr_t* w);
+int send_err_ctl_msg(wkr_t* w);
 
 /********** Worker structure *********/
 struct wkr_s {

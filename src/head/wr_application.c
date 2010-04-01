@@ -483,6 +483,35 @@ void wr_app_wkr_balance(wr_app_t *app){
 */
 }
 
+/** Got worker add error */
+int wr_app_wkr_error(wr_svr_t *server, const wr_ctl_msg_t *ctl_msg) {
+  LOG_FUNCTION
+  const char* app_name = ctl_msg->msg.wkr.app_name.str;
+  wr_app_t* app = wr_app_exist(server, app_name);
+  
+  if(app == NULL){
+    return -1;
+  }
+  
+  if(app->state == WR_APP_RESTART){
+    app->state = WR_APP_ACTIVE;
+    // Send error response
+    wr_app_add_error_msg(app);
+  }else if(app->state == WR_APP_NEW){
+    // Send error response
+    wr_app_add_error_msg(app);
+    wr_app_remove(app->svr, app->conf->name.str);
+  }else{
+    wr_pending_wkr_t *pending = wr_pending_worker_exist(app, atoi(ctl_msg->msg.wkr.pid.str));
+    if(pending != NULL)     free(pending);
+    app->timeout_counter = 0;
+      
+    if(WR_QUEUE_SIZE(app->q_pending_workers) <= 0)
+      ev_timer_stop(app->svr->ebb_svr.loop, &app->t_add_timeout);
+  }
+  return 0;
+}
+
 /** Add newly created worker to application */
 int wr_app_wkr_insert(wr_svr_t *server, wr_wkr_t *worker,const wr_ctl_msg_t *ctl_msg) {
   LOG_FUNCTION
@@ -506,6 +535,8 @@ int wr_app_wkr_insert(wr_svr_t *server, wr_wkr_t *worker,const wr_ctl_msg_t *ctl
       scgi_body_add(worker->ctl->scgi, "Either worker add timeout or worker PID does not match.",
                     strlen("Either worker add timeout or worker PID does not match."));
       return -1;      
+    }else{
+      free(pending);
     }
 
     worker->id = ++worker_count;

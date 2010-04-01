@@ -152,6 +152,7 @@ int wr_svr_init(wr_svr_t** server, wr_conf_t *conf) {
   (*server)->on_app_remove = wr_app_remove_cb;
   (*server)->on_app_reload = wr_app_reload_cb;
   (*server)->on_wkr_add = wr_wkr_add_cb;
+  (*server)->on_wkr_add_error = wr_wkr_add_error_cb;
   (*server)->on_wkr_remove = wr_wkr_remove_cb;
   (*server)->on_wkr_ping = wr_wkr_ping_cb;
   (*server)->default_app = (*server)->static_app = NULL;

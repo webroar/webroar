@@ -870,6 +870,14 @@ void wr_wkr_add_cb(wr_ctl_t *ctl, const wr_ctl_msg_t *ctl_msg) {
   wr_ctl_resp_write(ctl);
 }
 
+/** Worker Add error callback */
+void wr_wkr_add_error_cb(wr_ctl_t *ctl, const wr_ctl_msg_t *ctl_msg){
+  LOG_FUNCTION
+  wr_app_wkr_error(ctl->svr, ctl_msg);
+  scgi_header_add(ctl->scgi, "STATUS", strlen("STATUS"), "OK", strlen("OK"));
+  wr_ctl_resp_write(ctl);
+}
+
 /** Worker remove callback */
 void wr_wkr_remove_cb(wr_ctl_t *ctl, const wr_ctl_msg_t *ctl_msg) {
   LOG_FUNCTION

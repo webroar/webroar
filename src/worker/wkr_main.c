@@ -280,8 +280,15 @@ void idle_cb (struct ev_loop *loop, struct ev_idle *w, int revents) {
   } 
 }
 
+static void send_error(){
+  if(worker){
+    worker->ctl->error = TRUE;
+    return send_err_ctl_msg(worker);
+  }
+  cleanup();
+}
+
 int main(int argc, char **argv) {
-  int retval = 0;
   wkr_t* w = NULL;
 
   if(argc == 1) {
@@ -302,28 +309,38 @@ int main(int argc, char **argv) {
   loop = ev_default_loop (0);
 
   w = worker_new(loop, tmp);
-  if(w==NULL)
-    goto err;
+  if(w==NULL){
+    send_error();
+    return -1;
+  }
+
   worker = w;  
   
   LOG_DEBUG(DEBUG,"control path = %s, Application baseuri = %s",
             w->tmp->ctl_path.str,  w->tmp->resolver.str);
 
-  if((retval = drop_privileges(w))!=0) {
-    goto err;
-  }
+  if(drop_privileges(w)!=0) {
+    send_error();
+  }else{
 
-  w->http = http_new(w);
-  if(w->http == NULL) {
-    LOG_ERROR(SEVERE,"unable to load application.");
-    goto err;
-  }
+    w->http = http_new(w);
+    if(w->http == NULL) {
+      LOG_ERROR(SEVERE,"unable to load application.");
+      send_error();
+    }else if(worker_connect(w) < 0) {
+      LOG_ERROR(WARN,"Error Initializing Workers.");
+      send_error();
+    }else{
+      worker_accept_requests(w);
+      LOG_INFO("Worker ready for serving requests.");
 
-  retval = worker_connect(w);
-  if(retval<0) {
-    LOG_ERROR(WARN,"Error Initializing Workers.");
-    retval = -1;
-    goto err;
+      if(!w->http->is_static){
+        ev_idle_init (&idle_watcher, idle_cb);
+        start_idle_watcher();
+      }
+      LOG_INFO("Successfully loaded rack application=%s with environment=%s",
+           w->tmp->path.str,   w->tmp->env.str);
+    }
   }
 
   //loading adapter according to application type
@@ -333,26 +350,27 @@ int main(int argc, char **argv) {
             w->tmp->path.str,  w->tmp->name.str, w->tmp->type.str,
             w->tmp->env.str, w->tmp->resolver.str, w->tmp->profiler);
 
-  LOG_INFO("Successfully loaded rack application=%s with environment=%s",
-           w->tmp->path.str,   w->tmp->env.str);
+  wkr_tmp_free(&w->tmp);
 
   //TODO: Windows Portability?
   signal(SIGHUP, sigproc); /* catch hangup signal */
   signal(SIGINT, sigproc);
   signal(SIGTERM, sigproc);
-//  signal(SIGCHLD, SIG_IGN);
+  //  signal(SIGCHLD, SIG_IGN);
   signal(SIGTSTP, SIG_IGN);
   signal(SIGTTOU, SIG_IGN);
-  signal(SIGTTIN, SIG_IGN);  
+  signal(SIGTTIN, SIG_IGN);
   signal(SIGPIPE, SIG_IGN);
 
-  worker_accept_requests(w);
-  LOG_INFO("Worker ready for serving requests.");
+/*
+    worker_accept_requests(w);
+    LOG_INFO("Worker ready for serving requests.");
 
-  if(!w->http->is_static){
-    ev_idle_init (&idle_watcher, idle_cb);
-    start_idle_watcher();
-  }
+    if(!w->http->is_static){
+      ev_idle_init (&idle_watcher, idle_cb);
+      start_idle_watcher();
+    }
+*/
 
   while(is_alive ==1) {
     /* TODO: wrapping ev_loop() between TARP_* macros didn't worked in Ruby 1.9 */
@@ -361,7 +379,6 @@ int main(int argc, char **argv) {
     //TRAP_END;
   }
 
-err:
   cleanup();
-  return retval;
+  return 0;
 }

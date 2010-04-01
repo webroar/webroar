@@ -101,6 +101,8 @@ void wr_wkr_dispatch_req(wr_req_t*);
 void wr_wkr_add_cb(wr_ctl_t*, const wr_ctl_msg_t*);
 /** Worker remove callback */
 void wr_wkr_remove_cb(wr_ctl_t*, const wr_ctl_msg_t*);
+/** Worker Add error callback */
+void wr_wkr_add_error_cb(wr_ctl_t*, const wr_ctl_msg_t*);
 /** Worker ping callback */
 void wr_wkr_ping_cb(wr_ctl_t*, const wr_ctl_msg_t*);
 

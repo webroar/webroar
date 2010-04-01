@@ -77,6 +77,8 @@ void wr_app_chk_load_to_add_wkr(wr_app_t*);
 void wr_app_chk_load_to_remove_wkr(wr_app_t*);
 /** Add newly created worker to application */
 int wr_app_wkr_insert(wr_svr_t *, wr_wkr_t*, const wr_ctl_msg_t*);
+/** Got worker add error */
+int wr_app_wkr_error(wr_svr_t *, const wr_ctl_msg_t*);
 /** Remove application from application list */
 int wr_app_remove(wr_svr_t*, const char* app_name);
 /** Initialize the applications */
