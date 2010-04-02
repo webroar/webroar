@@ -627,11 +627,13 @@ void wr_wkr_free(wr_wkr_t *worker) {
       scgi_send(scgi, worker->ctl->fd);
       scgi_free(scgi);
     } else {
-      kill(worker->pid, SIGKILL);
+      kill(worker->pid, SIGHUP);
     }
     worker->pid = 0;
-  }else{
+  }else if(worker->state == WKR_STATE_HANGUP){
     kill(worker->pid, SIGKILL);
+  }else{
+    kill(worker->pid, SIGHUP);
   }
 
   if(worker->ctl) {

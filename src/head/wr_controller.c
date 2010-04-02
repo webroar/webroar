@@ -183,7 +183,7 @@ static void wr_ctl_msg_write_cb(struct ev_loop *loop, struct ev_io *w, int reven
     ev_io_stop(loop, w);
     scgi_free(ctl->scgi);
     ctl->scgi = NULL;
-    if(ctl->type == WR_CTL_MSG_TYPE_ERROR) {
+    if(ctl->type == WR_CTL_MSG_TYPE_ERROR || ctl->type == WR_CTL_MSG_WORKER_ADD_ERROR) {
       wr_ctl_free(ctl);
     }
     /*if(control->type == WR_CTL_MSG_WORKER_PING){
@@ -244,7 +244,6 @@ static inline void wr_ctl_msg_process(scgi_t* request,  wr_ctl_t* ctl) {
     break;
   case WR_CTL_MSG_WORKER_REMOVE:
     LOG_DEBUG(DEBUG,"WR_CTL_MSG_WORKER_REMOVE");
-    //    wr_ctl_msg_wkr_remove(ctl_msg, ctl);
     if(ctl->svr && ctl->svr->on_wkr_remove)
       ctl->svr->on_wkr_remove(ctl, ctl_msg);
     else
@@ -252,8 +251,6 @@ static inline void wr_ctl_msg_process(scgi_t* request,  wr_ctl_t* ctl) {
     break;
   case WR_CTL_MSG_WORKER_PING:
     LOG_DEBUG(DEBUG,"WR_CTL_MSG_WORKER_PING");
-    //    scgi_free(ctl_msg->resp);
-    //    wr_wkr_ping_reply(ctl->wkr);
     if(ctl->svr && ctl->svr->on_wkr_ping)
       ctl->svr->on_wkr_ping(ctl, ctl_msg);
     else
