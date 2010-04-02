@@ -133,6 +133,7 @@ static void set_expires_time(char *ext, long int expires) {
     static_file_t *e = map[index];
     while (e) {
       if (strcmp(e->ext, tmp_ext) == 0) {
+        //HTTP/1.1 servers SHOULD NOT send Expires dates more than one year in the future. 
         e->expires = expires;
         break;
       }
@@ -310,11 +311,11 @@ void http_resp_200(http_t *h, const char *path, struct stat *buf) {
   if (ext->expires > 0) {
     t += ext->expires;
     time_to_httpdate(t, expire_date, WR_STR_LEN);
-    len = sprintf(str, "HTTP/1.1 200 OK\r\nDate: %s\r\nServer: %s-%s\r\nLast-Modified: %s\r\nExpires: %s\r\nCache-Control: max-age=%ld, public\r\nConnection: %s\r\nContent-Type: %s\r\nContent-Length: %d\r\n\r\n",
-            current_date, WR_SERVER, WR_VERSION, modify_date, expire_date, ext->expires,
+    len = sprintf(str, "HTTP/1.1 200 OK\r\nDate: %s\r\nServer: %s-%s\r\nLast-Modified: %s\r\nExpires: %s\r\nConnection: %s\r\nContent-Type: %s\r\nContent-Length: %d\r\n\r\n",
+            current_date, WR_SERVER, WR_VERSION, modify_date, expire_date,
             (conn_header ? conn_header : CONNECTION_CLOSE), ext->mime_type, buf->st_size);
   }else {
-    len = sprintf(str, "HTTP/1.1 200 OK\r\nDate: %s\r\nServer: %s-%s\r\nLast-Modified: %s\r\nCache-Control: no-cache\r\nConnection: %s\r\nContent-Type: %s\r\nContent-Length: %d\r\n\r\n",
+    len = sprintf(str, "HTTP/1.1 200 OK\r\nDate: %s\r\nServer: %s-%s\r\nLast-Modified: %s\r\nConnection: %s\r\nContent-Type: %s\r\nContent-Length: %d\r\n\r\n",
              current_date, WR_SERVER, WR_VERSION, modify_date,
             (conn_header ? conn_header : CONNECTION_CLOSE), ext->mime_type, buf->st_size);
   }
@@ -342,11 +343,11 @@ void http_resp_304(http_t *h, const char *path, struct stat *buf) {
   if (ext->expires > 0) {
     t = t + ext->expires;
     time_to_httpdate(t, expire_date, WR_STR_LEN);
-    len = sprintf(str, "HTTP/1.1 304 Not Modified\r\nDate: %s\r\nServer: %s-%s\r\nExpires: %s\r\nCache-Control: max-age=%ld, public\r\nConnection: %s\r\n\r\n",
-            current_date, WR_SERVER, WR_VERSION, expire_date, ext->expires,
+    len = sprintf(str, "HTTP/1.1 304 Not Modified\r\nDate: %s\r\nServer: %s-%s\r\nExpires: %s\r\nConnection: %s\r\n\r\n",
+            current_date, WR_SERVER, WR_VERSION, expire_date, 
             (conn_header ? conn_header : CONNECTION_CLOSE));
   }else {
-    len = sprintf(str, "HTTP/1.1 304 Not Modified\r\nDate: %s\r\nServer: %s-%s\r\nCache-Control: no-cache\r\nConnection: %s\r\n\r\n",
+    len = sprintf(str, "HTTP/1.1 304 Not Modified\r\nDate: %s\r\nServer: %s-%s\r\nConnection: %s\r\n\r\n",
             current_date, WR_SERVER, WR_VERSION, (conn_header ? conn_header : CONNECTION_CLOSE));
   }
 
