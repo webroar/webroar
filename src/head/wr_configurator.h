@@ -82,8 +82,8 @@ typedef struct {
   LOG_SEVERITY   log_level;  /**< Logging level */
   //If WR_CONF_UDS is 1 'contol_sock_path' has UDS sock path
   //If WR_CONF_UDS is 0 'port' has Internet socket port
-  wr_u_short    ctl_port;          /**< Server control port*/
-  wr_str_t      sock_path;    /**< Server control socket path in case of UNIX domain socket*/
+//  wr_u_short    ctl_port;          /**< Server control port*/
+//  wr_str_t      sock_path;    /**< Server control socket path in case of UNIX domain socket*/
 #ifdef HAVE_GNUTLS
 
   wr_str_t      certificate;    /**< Certificate path */

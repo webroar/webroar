@@ -110,8 +110,8 @@ static inline wr_conf_t* wr_conf_new() {
   conf->server->max_worker = WR_MAX_WKR;
   conf->server->log_level = SEVERE;
   conf->server->flag = 0;
-  conf->server->ctl_port = 0;
-  wr_string_null(conf->server->sock_path);
+//  conf->server->ctl_port = 0;
+//  wr_string_null(conf->server->sock_path);
 #ifdef HAVE_GNUTLS
 
   wr_string_null(conf->server->certificate);
@@ -1108,7 +1108,7 @@ void wr_conf_free(wr_conf_t* conf) {
   LOG_FUNCTION
   //Destroy server_configuration
   if(conf->server) {
-    wr_string_free(conf->server->sock_path);
+//    wr_string_free(conf->server->sock_path);
 #ifdef HAVE_GNUTLS
 
     wr_string_free(conf->server->certificate);
