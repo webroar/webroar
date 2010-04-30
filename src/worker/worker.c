@@ -51,6 +51,7 @@ wkr_tmp_t* wkr_tmp_new() {
   wr_string_null(tmp->root_path);
   wr_string_null(tmp->ctl_path);
   wr_string_null(tmp->log_file);
+  tmp->env_var = NULL;
 
   //  tmp->path = tmp->env = tmp->type = tmp->name =
   //  tmp->resolver = tmp->ruby_path = tmp->script_path =
@@ -80,6 +81,7 @@ void wkr_tmp_free(wkr_tmp_t** t) {
     wr_string_free(tmp->root_path);
     wr_string_free(tmp->ctl_path);
     wr_string_free(tmp->log_file);
+    wr_string_list_free(tmp->env_var);
 
     //    if(tmp->path)      free(tmp->path);
     //    if(tmp->env)        free(tmp->env);

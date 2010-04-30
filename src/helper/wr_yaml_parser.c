@@ -247,3 +247,32 @@ node_t* yaml_parse(const char*file_name) {
     return NULL;
   }
 }
+
+/** Validate YAML tokens */
+char* wr_validate_string(const char* str) {
+  int count, len, is_blank, is_comment;
+
+  if(str == NULL)
+    return NULL;
+
+  //Set flags
+  is_blank = 1;
+  is_comment = 0;
+  len = strlen(str);
+  for(count = 0; count < len ; count++) {
+    //check for blank value
+    if(str[count] != ' ') {
+      is_blank = 0;
+    }
+    //check for comment '#' character
+    if(str[count] == '#') {
+      is_comment = 1;
+      break;
+    }
+  }
+  if(is_comment || is_blank) {
+    LOG_ERROR(SEVERE,"Invalid token.");
+    return NULL;
+  }
+  return (char*)str;
+}

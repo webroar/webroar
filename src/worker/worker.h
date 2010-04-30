@@ -42,6 +42,7 @@ struct wkr_tmp_s {
   char    profiler;      /**< Analytics flag */
   wr_str_t ctl_path;    /**< Server control path/port */
   wr_str_t log_file;         /**< Log file name */
+  wr_str_list_t *env_var;   /**< Environment variable array */
   short   gid;              /**< Process group id */
   short   uid;              /**< Process user id */
   short    keep_alive;      /**< HTTP connection keep alive flag */

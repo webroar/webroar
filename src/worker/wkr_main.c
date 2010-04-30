@@ -288,6 +288,60 @@ static void send_error(){
   cleanup();
 }
 
+#define SET_ENVIRONMENT_VARIABLE "Environment Variable/set_env"
+#define WR_CONF_APP_SPEC           "Application Specification"
+#define WR_CONF_APP_NAME           "name"
+
+int manipulate_environment_variable(wkr_tmp_t *tmp) {
+  LOG_FUNCTION
+  node_t *root = NULL, *env_var = NULL, *app_nodes = NULL;
+  char file_name[512];
+  char *str, *root_path, *app_name;
+  int rv = 0;  
+
+  root_path = tmp->root_path.str;
+  app_name = tmp->name.str;
+  
+  sprintf(file_name, "%s%s", root_path, WR_CONF_PATH);
+  root = yaml_parse(file_name);
+  if (root == NULL) {
+    LOG_ERROR(SEVERE, "Could not read config.yml file");
+    return -1;
+  }
+  
+  app_nodes = get_nodes(root, WR_CONF_APP_SPEC);
+  
+  // Iterate application nodes
+  while(app_nodes) {
+    if(app_nodes->child) {
+      str = wr_validate_string(get_node_value(app_nodes->child, WR_CONF_APP_NAME));
+      // Compare application name
+      if(str && strcmp(str, app_name)==0) {        
+        break;
+      }
+    }
+    app_nodes = NODE_NEXT(app_nodes);
+  }
+  
+  if(!app_nodes || !app_nodes->child) 
+    return -1;
+  
+  tmp->env_var = wr_string_list_new();  
+  env_var = get_nodes(app_nodes->child , SET_ENVIRONMENT_VARIABLE);
+  while(env_var) {
+    str = wr_validate_string(NODE_VALUE(env_var));
+    if (str) {
+      // TODO: see the security concerns      
+      wr_string_list_add(tmp->env_var, str, strlen(str));
+      rv = putenv(tmp->env_var->rear->str.str);
+      if (rv != 0) {
+        LOG_ERROR(WARN, "putenv() failed, errno = %d, description = %s", errno, strerror(errno)); 
+      } 
+    }
+    env_var = NODE_NEXT(env_var);   
+  }
+}
+
 int main(int argc, char **argv) {
   wkr_t* w = NULL;
 
@@ -321,8 +375,8 @@ int main(int argc, char **argv) {
 
   if(drop_privileges(w)!=0) {
     send_error();
-  }else{
-
+  } else {
+    manipulate_environment_variable(tmp);
     w->http = http_new(w);
     if(w->http == NULL) {
       LOG_ERROR(SEVERE,"unable to load application.");
@@ -333,7 +387,7 @@ int main(int argc, char **argv) {
     }else{
       worker_accept_requests(w);
       LOG_INFO("Worker ready for serving requests.");
-
+        
       if(!w->http->is_static){
         ev_idle_init (&idle_watcher, idle_cb);
         start_idle_watcher();

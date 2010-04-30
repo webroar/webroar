@@ -30,6 +30,7 @@
 
 #include <stdio.h>
 #include <string.h>
+#include <wr_logger.h>
 
 /** Macro definitions */
 #define NODE_NEXT(node) node->next_result
@@ -63,5 +64,6 @@ node_t* yaml_parse(const char*);
 node_t* get_nodes(node_t *root, char* xpath);
 char* get_node_value(node_t *root, char* xpath);
 void node_free(node_t* node);
+char* wr_validate_string(const char* str);
 
 #endif /*WR_YAML_PARSER_H_*/
