@@ -518,7 +518,6 @@ int wr_wkr_create(wr_svr_t *server, wr_app_conf_t *app_conf) {
                "-n", app_conf->name.str,
                "-p", (app_conf->analytics? "y" : "n"),
                "-r", worker->baseuri.str,
-               "-b", server->conf->ruby_lib_path.str,
                "-o", server->conf->wr_root_path.str,
                "-k", (WR_SVR_KEEP_ALIVE? "y" : "n"),
                "-l", worker->log_level,

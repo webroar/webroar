@@ -29,7 +29,7 @@ typedef struct static_file_s{
 }static_file_t;
 
 /* Initialize extension and mime-type map */
-int static_module_init(char *root_path);
+int static_module_init();
 
 /* Free extension and mime-type map */
 void static_module_free();

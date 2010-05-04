@@ -34,6 +34,8 @@
 #include <sys/un.h>
 #include <ev.c>
 
+extern config_t *Config;
+
 wkr_tmp_t* wkr_tmp_new() {
   LOG_FUNCTION
   wkr_tmp_t *tmp = wr_malloc(wkr_tmp_t);
@@ -46,16 +48,10 @@ wkr_tmp_t* wkr_tmp_new() {
   wr_string_null(tmp->type);
   wr_string_null(tmp->name);
   wr_string_null(tmp->resolver);
-  wr_string_null(tmp->ruby_path);
-  wr_string_null(tmp->script_path);
   wr_string_null(tmp->root_path);
   wr_string_null(tmp->ctl_path);
   wr_string_null(tmp->log_file);
   tmp->env_var = NULL;
-
-  //  tmp->path = tmp->env = tmp->type = tmp->name =
-  //  tmp->resolver = tmp->ruby_path = tmp->script_path =
-  //  tmp->root_path = tmp->ctl_path = tmp->log_file = NULL;
 
   tmp->profiler = 'n';
   tmp->gid = tmp->uid = 0;
@@ -76,23 +72,10 @@ void wkr_tmp_free(wkr_tmp_t** t) {
     wr_string_free(tmp->type);
     wr_string_free(tmp->name);
     wr_string_free(tmp->resolver);
-    wr_string_free(tmp->ruby_path);
-    wr_string_free(tmp->script_path);
     wr_string_free(tmp->root_path);
     wr_string_free(tmp->ctl_path);
     wr_string_free(tmp->log_file);
     wr_string_list_free(tmp->env_var);
-
-    //    if(tmp->path)      free(tmp->path);
-    //    if(tmp->env)        free(tmp->env);
-    //    if(tmp->type)      free(tmp->type);
-    //    if(tmp->name)      free(tmp->name);
-    //    if(tmp->resolver)    free(tmp->resolver);
-    //    if(tmp->ruby_path)  free(tmp->ruby_path);
-    //    if(tmp->script_path)  free(tmp->script_path);
-    //    if(tmp->root_path)  free(tmp->root_path);
-    //    if(tmp->ctl_path)    free(tmp->ctl_path);
-    //    if(tmp->log_file)    free(tmp->log_file);
 
     free(tmp);
   }
@@ -159,7 +142,6 @@ void worker_free(wkr_t **wrk) {
       close(w->req_fd);
     if(w->listen_fd > 0)
       close(w->listen_fd);
-    //    if(w->sock_path){
     if(w->sock_path.str) {
       // Set root privilege to remove socket file.
       //      if(setegid(0)!=0){
@@ -170,8 +152,6 @@ void worker_free(wkr_t **wrk) {
       //      }
       unlink(w->sock_path.str);
       wr_string_free(w->sock_path);
-      //      unlink(w->sock_path);
-      //      free(w->sock_path);
     }
     ev_io_stop(w->loop, &(w->w_accept));
     ev_io_stop(w->loop, &(w->ctl->w_read));
@@ -243,19 +223,14 @@ static inline int connect_unix_socket(wkr_t* w) {
   memset(&addr, 0, sizeof(addr));
   /* Preparing socket path unique to this worker*/
   w->sock_path.str = (char*) malloc(sizeof(char)*50);
-  w->sock_path.len = sprintf(w->sock_path.str, "%s_%d",WR_WKR_SOCK_PATH,getpid());
+  w->sock_path.len = sprintf(w->sock_path.str, "%s_%d", Config->Worker.sock_path.str, getpid());
 
-  //  w->sock_path = wr_malloc_CHAR(50);
-  //  sprintf(w->sock_path, "%s_%d",WR_WKR_SOCK_PATH,getpid());
-
-  //  LOG_DEBUG(DEBUG,"connect_unix_socket() socket name is %s",w->sock_path);
   LOG_DEBUG(DEBUG,"connect_unix_socket() socket name is %s",w->sock_path.str);
 
   addr.sun_family = AF_UNIX;
   //strcpy(addr.sun_path,w->sock_path);
   strcpy(addr.sun_path,w->sock_path.str);
   unlink(addr.sun_path);
-  //  LOG_DEBUG(DEBUG,"connect_unix_socket() Binding worker at socket path %s",w->sock_path);
   LOG_DEBUG(DEBUG,"connect_unix_socket() Binding worker at socket path %s",w->sock_path.str);
 
   int len = sizeof(addr.sun_family) + strlen(addr.sun_path);

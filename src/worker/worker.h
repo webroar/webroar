@@ -36,8 +36,6 @@ struct wkr_tmp_s {
   wr_str_t type;      /**< Application type */
   wr_str_t name;      /**< Application name */
   wr_str_t resolver;    /**< Application baseuri */
-  wr_str_t ruby_path;  /**< Ruby library path */
-  wr_str_t script_path;  /**< webroar.rb script path */
   wr_str_t root_path;    /**< WebROaR root path */
   char    profiler;      /**< Analytics flag */
   wr_str_t ctl_path;    /**< Server control path/port */
@@ -57,7 +55,7 @@ void wkr_tmp_free(wkr_tmp_t**);
 struct wkr_ctl_s {
   int       fd;
   ev_io      w_read;
-  char      msg[WR_MSG_SIZE];
+  char      msg[STR_SIZE1KB];
   size_t    msg_size;
   size_t    bytes_read;
   ev_io     w_write;
@@ -75,20 +73,20 @@ int send_err_ctl_msg(wkr_t* w);
 /********** Worker structure *********/
 struct wkr_s {
   /** Listen request from Head */
-  int       listen_fd;
-  int       listen_port;
-  wr_str_t   sock_path;
-  ev_io     w_accept;
+  int           listen_fd;
+  int           listen_port;
+  wr_str_t      sock_path;
+  ev_io         w_accept;
   struct ev_loop      *loop;
 
   /** Request */
-  int             req_fd;  /**< Socket fd */
-  ev_io           w_req;  /**< watcher */
-  short          is_uds;
+  int           req_fd;  /**< Socket fd */
+  ev_io         w_req;  /**< watcher */
+  short         is_uds;
 
-  wkr_ctl_t    *ctl;
-  wkr_tmp_t    *tmp;
-  http_t      *http;
+  wkr_ctl_t     *ctl;
+  wkr_tmp_t     *tmp;
+  http_t        *http;
 };
 
 wkr_t* worker_new(struct ev_loop *, wkr_tmp_t*);

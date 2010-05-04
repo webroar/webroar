@@ -27,7 +27,8 @@
 #include <sys/prctl.h>
 #endif
 
-static wkr_t       *worker = NULL;
+static wkr_t        *worker = NULL;
+config_t            *Config = NULL;
 
 struct               ev_loop *loop;    // Event loop
 struct               ev_idle idle_watcher;
@@ -88,6 +89,7 @@ void cleanup() {
   ev_unloop(loop,EVUNLOOP_ALL);
   //TODO: send worker stopping signal
   worker_free(&worker);
+  wr_worker_config_free(Config);
   LOG_INFO("Worker stopped and exiting gracefully.");
   close_logger();
   exit(0);
@@ -95,10 +97,10 @@ void cleanup() {
  
 /** Handle segmentation fault */
 void crash_handler(int sig) {
-  void *array[WR_STACKTRACE_SIZE];
+  void *array[Config->Worker.stack_tace];
   size_t size;
   char **bt_symbols;
-  char bt_string[WR_STACKTRACE_SIZE * WR_LONG_STR_LEN * 2];
+  char bt_string[Config->Worker.stack_tace * STR_SIZE256];
   int i;
   
   LOG_ERROR(FATAL, "Got %d signal, trying to create core file.", sig);
@@ -129,7 +131,7 @@ void crash_handler(int sig) {
   }
   sleep(5);
   // get void*'s for all entries on the stack
-  size = backtrace(array, WR_STACKTRACE_SIZE);
+  size = backtrace(array, Config->Worker.stack_tace);
   bt_symbols = backtrace_symbols(array, size);
   strcpy(bt_string, "\n");
   for(i = 0; i < size; i++) {
@@ -154,18 +156,13 @@ static inline wkr_tmp_t* parse_args(int argc, char **argv) {
   if(tmp == NULL)
     return NULL;
 
-  while ( (option=getopt(argc,argv,"a:b:e:l:f:g:u:c:i:t:n:o:p:r:k:")) != -1 ) {
+  while ( (option=getopt(argc,argv,"a:e:l:f:g:u:c:i:t:n:o:p:r:k:")) != -1 ) {
     str = optarg;
     len = strlen(str);
     switch ( option ) {
     case 'a':  // Application Path
       wr_string_new(tmp->path, str, len);
       app_path_flag = 1;
-      break;
-    case 'b':  // Ruby library path
-      wr_string_new(tmp->ruby_path, str, len);
-      tmp->script_path.str = (char*) malloc(sizeof(char)*(tmp->ruby_path.len + 32));
-      tmp->script_path.len = sprintf(tmp->script_path.str, "%s%swebroar_app_loader.rb", tmp->ruby_path.str, WR_PATH_SEPARATOR);
       break;
     case 'e':  // Application environment
       wr_string_new(tmp->env, str, len);
@@ -221,8 +218,10 @@ static inline wkr_tmp_t* parse_args(int argc, char **argv) {
     }
   }
 
+  Config = wr_worker_config_init(tmp->root_path.str);
+  
   if(tmp->log_file.str){
-    initialize_logger(tmp->log_file.str, WR_SERVER, WR_VERSION);
+    initialize_logger(tmp->log_file.str, Config->Worker.Server.name.str, Config->Worker.Server.version.str);
     redirect_standard_io();
 #ifdef L_DEBUG
       set_log_severity(DEBUG);
@@ -233,13 +232,15 @@ static inline wkr_tmp_t* parse_args(int argc, char **argv) {
     perror("Log file is not specified.");
   }
 
-  if (invalid_arg_flag > 0 || app_path_flag == 0) {
+  if (invalid_arg_flag > 0 || app_path_flag == 0 || tmp->root_path.str == NULL || Config == NULL) {
     print_usage(argv[0]);
-    LOG_ERROR(SEVERE, "Either argument is invalid or application path is not passed.");
+    LOG_ERROR(SEVERE, "Either argument is invalid or application/root path is not passed.");
     wkr_tmp_free(&tmp);
+    wr_worker_config_free(Config);
     return NULL;
   }
-  if(strcmp(tmp->name.str, WR_STATIC_FILE_SERVER_NAME) == 0){
+  
+  if(strcmp(tmp->name.str, Config->Worker.static_server.str) == 0){
     tmp->is_static = 1;
   }
   return tmp;
@@ -364,6 +365,7 @@ int main(int argc, char **argv) {
 
   w = worker_new(loop, tmp);
   if(w==NULL){
+    wr_worker_config_free(Config);
     send_error();
     return -1;
   }
@@ -398,8 +400,7 @@ int main(int argc, char **argv) {
   }
 
   //loading adapter according to application type
-  LOG_DEBUG(DEBUG,"ruby lib = %s and webroar_root = %s",
-            w->tmp->ruby_path.str, w->tmp->root_path.str);
+  LOG_DEBUG(DEBUG,"webroar_root = %s", w->tmp->root_path.str);
   LOG_DEBUG(DEBUG,"path = %s, name = %s, type = %s, environment = %s, baseuri = %s, analytics = %c",
             w->tmp->path.str,  w->tmp->name.str, w->tmp->type.str,
             w->tmp->env.str, w->tmp->resolver.str, w->tmp->profiler);

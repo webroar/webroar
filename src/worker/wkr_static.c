@@ -27,6 +27,8 @@
 #include <string.h>
 #include <fcntl.h>
 
+extern config_t *Config;
+
 #define MAP_SIZE 36
 #define DEFAULT_EXPIRES "Headers/expires"
 #define EXPIRES_BY_TYPE "Headers/expires_by_type"
@@ -109,7 +111,7 @@ static char* get_file_ext(const char *path) {
 /** Set expires time based on file type */
 static void set_expires_time(char *ext, long int expires) {
   int index;
-  char tmp_ext[WR_STR_LEN], *p;
+  char tmp_ext[STR_SIZE64], *p;
   strcpy(tmp_ext, ext);
   p = tmp_ext;
   while(*p){
@@ -142,7 +144,7 @@ static void set_expires_time(char *ext, long int expires) {
 /* Get mime-type */
 static static_file_t* get_mime_type(const char *path) {
   char *ext = get_file_ext(path);
-  char tmp_ext[WR_STR_LEN], *p;
+  char tmp_ext[STR_SIZE64], *p;
   strcpy(tmp_ext, ext);
   p = tmp_ext;
   while(*p){
@@ -294,7 +296,7 @@ static void set_expires_by_type(node_t *root) {
 
 void http_resp_200(http_t *h, const char *path, struct stat *buf) {
   LOG_FUNCTION
-  char str[WR_LONG_LONG_STR_LEN], expire_date[WR_STR_LEN] = "", current_date[WR_STR_LEN] = "", modify_date[WR_STR_LEN] = "";
+  char str[STR_SIZE512], expire_date[STR_SIZE64] = "", current_date[STR_SIZE64] = "", modify_date[STR_SIZE64] = "";
   int len;
   time_t t;
   
@@ -302,18 +304,18 @@ void http_resp_200(http_t *h, const char *path, struct stat *buf) {
   LOG_DEBUG(DEBUG,"File extension = %s, mimetype = %s, expires = %d ", ext->ext, ext->mime_type, ext->expires);
   const char *conn_header = scgi_header_value_get(h->req->scgi, HTTP_HEADER_CONNECTION);
   
-  t = get_time(current_date, WR_STR_LEN);
-  time_to_httpdate(buf->st_mtime, modify_date, WR_STR_LEN);
+  t = get_time(current_date, STR_SIZE64);
+  time_to_httpdate(buf->st_mtime, modify_date, STR_SIZE64);
 
   if (ext->expires > 0) {
     t += ext->expires;
-    time_to_httpdate(t, expire_date, WR_STR_LEN);
+    time_to_httpdate(t, expire_date, STR_SIZE64);
     len = sprintf(str, "HTTP/1.1 200 OK\r\nDate: %s\r\nServer: %s-%s\r\nLast-Modified: %s\r\nExpires: %s\r\nConnection: %s\r\nContent-Type: %s\r\nContent-Length: %d\r\n\r\n",
-            current_date, WR_SERVER, WR_VERSION, modify_date, expire_date,
+            current_date, Config->Worker.Server.name.str, Config->Worker.Server.version.str, modify_date, expire_date,
             (conn_header ? conn_header : CONNECTION_CLOSE), ext->mime_type, buf->st_size);
   }else {
     len = sprintf(str, "HTTP/1.1 200 OK\r\nDate: %s\r\nServer: %s-%s\r\nLast-Modified: %s\r\nConnection: %s\r\nContent-Type: %s\r\nContent-Length: %d\r\n\r\n",
-             current_date, WR_SERVER, WR_VERSION, modify_date,
+             current_date, Config->Worker.Server.name.str, Config->Worker.Server.version.str, modify_date,
             (conn_header ? conn_header : CONNECTION_CLOSE), ext->mime_type, buf->st_size);
   }
 
@@ -329,23 +331,23 @@ void http_resp_200(http_t *h, const char *path, struct stat *buf) {
 
 void http_resp_304(http_t *h, const char *path, struct stat *buf) {
   LOG_FUNCTION
-  char str[WR_LONG_LONG_STR_LEN], expire_date[WR_STR_LEN] = "", current_date[WR_STR_LEN] = "";
+  char str[STR_SIZE512], expire_date[STR_SIZE64] = "", current_date[STR_SIZE64] = "";
   int len;
   time_t t;
   static_file_t *ext = get_mime_type(path);
   LOG_DEBUG(DEBUG,"File extension = %s, mimetype = %s, expires = %d ", ext->ext, ext->mime_type, ext->expires);
   const char *conn_header = scgi_header_value_get(h->req->scgi, HTTP_HEADER_CONNECTION);
 
-  t = get_time(current_date, WR_STR_LEN);
+  t = get_time(current_date, STR_SIZE64);
   if (ext->expires > 0) {
     t = t + ext->expires;
-    time_to_httpdate(t, expire_date, WR_STR_LEN);
+    time_to_httpdate(t, expire_date, STR_SIZE64);
     len = sprintf(str, "HTTP/1.1 304 Not Modified\r\nDate: %s\r\nServer: %s-%s\r\nExpires: %s\r\nConnection: %s\r\n\r\n",
-            current_date, WR_SERVER, WR_VERSION, expire_date, 
+            current_date, Config->Worker.Server.name.str, Config->Worker.Server.version.str, expire_date, 
             (conn_header ? conn_header : CONNECTION_CLOSE));
   }else {
     len = sprintf(str, "HTTP/1.1 304 Not Modified\r\nDate: %s\r\nServer: %s-%s\r\nConnection: %s\r\n\r\n",
-            current_date, WR_SERVER, WR_VERSION, (conn_header ? conn_header : CONNECTION_CLOSE));
+            current_date, Config->Worker.Server.name.str, Config->Worker.Server.version.str, (conn_header ? conn_header : CONNECTION_CLOSE));
   }
 
   wr_string_new(h->resp->header, str, len);
@@ -354,20 +356,20 @@ void http_resp_304(http_t *h, const char *path, struct stat *buf) {
 
 void http_resp_403(http_t *h, const char *path, struct stat *buf) {
   LOG_FUNCTION
-  char str[WR_LONG_LONG_STR_LEN], current_date[WR_STR_LEN];
+  char str[STR_SIZE512], current_date[STR_SIZE64];
   const char *conn_header = scgi_header_value_get(h->req->scgi, HTTP_HEADER_CONNECTION);
   int len;
 
-  get_time(current_date, WR_STR_LEN);
+  get_time(current_date, STR_SIZE64);
   
   len = sprintf(str, HTTP_RESP_ERR_BODY,
           http_status[HTTP_STATUS_403].phrase, http_status[HTTP_STATUS_403].phrase + 4,
-          http_status[HTTP_STATUS_403].message, WR_SERVER, WR_VERSION);
+          http_status[HTTP_STATUS_403].message, Config->Worker.Server.name.str, Config->Worker.Server.version.str);
   wr_buffer_create(h->resp->resp_body, len);
   wr_buffer_add(h->resp->resp_body, str, len);
 
   len = sprintf(str, HTTP_RESP_ERR_HEADERS,
-          current_date, http_status[HTTP_STATUS_403].phrase, WR_SERVER, WR_VERSION,
+          current_date, http_status[HTTP_STATUS_403].phrase, Config->Worker.Server.name.str, Config->Worker.Server.version.str,
           (conn_header ? conn_header : CONNECTION_CLOSE), len);
   wr_string_new(h->resp->header, str, len);
   h->resp->resp_code = http_status[HTTP_STATUS_403].code;
@@ -375,32 +377,32 @@ void http_resp_403(http_t *h, const char *path, struct stat *buf) {
 
 void http_resp_404(http_t *h, const char *path, struct stat *buf) {
   LOG_FUNCTION
-  char str[WR_LONG_LONG_STR_LEN], current_date[WR_STR_LEN];
+  char str[STR_SIZE512], current_date[STR_SIZE64];
   const char *conn_header = scgi_header_value_get(h->req->scgi, HTTP_HEADER_CONNECTION);
   int len;
   
-  get_time(current_date, WR_STR_LEN);
+  get_time(current_date, STR_SIZE64);
 
   len = sprintf(str, HTTP_RESP_ERR_BODY,
           http_status[HTTP_STATUS_404].phrase, http_status[HTTP_STATUS_404].phrase + 4,
-          http_status[HTTP_STATUS_404].message, WR_SERVER, WR_VERSION);
+          http_status[HTTP_STATUS_404].message, Config->Worker.Server.name.str, Config->Worker.Server.version.str);
   wr_buffer_create(h->resp->resp_body, len);
   wr_buffer_add(h->resp->resp_body, str, len);
 
   len = sprintf(str, HTTP_RESP_ERR_HEADERS,
-          current_date, http_status[HTTP_STATUS_404].phrase, WR_SERVER, WR_VERSION,
+          current_date, http_status[HTTP_STATUS_404].phrase, Config->Worker.Server.name.str, Config->Worker.Server.version.str,
           (conn_header ? conn_header : CONNECTION_CLOSE), len);
   wr_string_new(h->resp->header, str, len);
   h->resp->resp_code = http_status[HTTP_STATUS_404].code;
 }
 
-void send_static_worker_pid(char *root_path) {
+void send_static_worker_pid() {
   LOG_FUNCTION
   node_t *root = NULL;  
-  char file_name[WR_LONG_STR_LEN];
+  
   // Read pid queue related configuration
-  sprintf(file_name, "%s%s", root_path, WR_SERVER_INTERNAL_CONF_PATH);
-  root = yaml_parse(file_name);
+  
+  root = yaml_parse(Config->Worker.File.internal_config.str);
   if(root == NULL) {
     LOG_ERROR(SEVERE, "Could not parse server_internal_config.yml file. PID can not be sent to analyzer");
     return;  
@@ -408,7 +410,7 @@ void send_static_worker_pid(char *root_path) {
     char *host = NULL, *port = NULL, *queue_name = NULL;
     wr_msg_queue_server_t *msg_queue_server = NULL;
     wr_msg_queue_conn_t *msg_queue_conn = NULL;
-    char msg_value[WR_SHORT_STR_LEN];
+    char msg_value[STR_SIZE32];
     int rv;
     
     host = get_node_value(root, WR_MSG_QUEUE_SERVER_HOST);
@@ -433,7 +435,7 @@ void send_static_worker_pid(char *root_path) {
       LOG_ERROR(WARN, "Error establising connection with message queue server");
       goto err; 
     }
-    rv = sprintf(msg_value, "%s:%d", WR_STATIC_FILE_SERVER_NAME, getpid());
+    rv = sprintf(msg_value, "%s:%d", Config->Worker.static_server.str, getpid());
     rv = wr_msg_queue_set(msg_queue_conn, queue_name, msg_value, rv);
     if (rv < 0) {
       LOG_ERROR(SEVERE, "Failed to send PID to message queue"); 
@@ -453,22 +455,19 @@ err:
  *************************************/
 
 /* Initialize extension and mime-type map */
-int static_module_init(char *root_path) {
+int static_module_init() {
   LOG_FUNCTION
   node_t *root;
-  char file_name[100];
   long int expires;
-
-  sprintf(file_name, "%s%s", root_path, WR_CONF_PATH);
-  root = yaml_parse(file_name);
+  
+  root = yaml_parse(Config->Worker.File.config.str);
   if (root == NULL) {
     LOG_ERROR(SEVERE, "Could not read config.yml file");
     return -1;
   }
   expires = get_default_expires(root);
-
-  sprintf(file_name, "%s%s", root_path, WR_MIME_TYPE_PATH);
-  if (create_dictionary(file_name, expires) != 0) {
+  
+  if (create_dictionary(Config->Worker.File.mime_type.str, expires) != 0) {
     node_free(root);
     return -1;
   }
@@ -477,7 +476,7 @@ int static_module_init(char *root_path) {
 
   node_free(root);
   
-  send_static_worker_pid(root_path);
+  send_static_worker_pid();
   return 0;
 }
 
@@ -503,7 +502,7 @@ void static_file_process(http_t *h) {
   wkr_t *w = h->wkr;
   short resp_code;
   struct stat buf;
-  const char *path = scgi_header_value_get(h->req->scgi, WR_HTTP_FILE_PATH);
+  const char *path = scgi_header_value_get(h->req->scgi, Config->Worker.Header.file_path.str);
   
   LOG_DEBUG(DEBUG, "Path = %s", path);
   resp_code = get_resp_code(h, path, &buf);

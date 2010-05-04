@@ -155,7 +155,7 @@ void ctl_read_cb(struct ev_loop *loop, struct ev_io *watcher, int revents) {
     return;
   }
   int bytesRead = recv(watcher->fd, ctl->msg + ctl->bytes_read,
-                       WR_MSG_SIZE - ctl->bytes_read, 0);
+                       STR_SIZE1KB - ctl->bytes_read, 0);
 
   if(bytesRead <= 0) {
     LOG_ERROR(SEVERE,"Error reading control message :%s",strerror(errno));
@@ -215,7 +215,7 @@ static void start_ctl_watchers(wkr_t* worker){
 /** Set flag to TRUE to generate error request */
 static scgi_t* get_worker_add_ctl_scgi(wkr_t* worker, const int flag){
   pid_t pid = getpid();
-  char buf[WR_SHORT_STR_LEN];
+  char buf[STR_SIZE32];
   int len = sprintf(buf, "%d", pid);
 
   scgi_t* scgi = scgi_new();

@@ -19,6 +19,8 @@
 #include <worker.h>
 #include <stdlib.h>
 
+extern config_t *Config;
+
 http_resp_t* http_resp_new() {
   LOG_FUNCTION
   http_resp_t *rsp = wr_malloc(http_resp_t);
@@ -100,10 +102,10 @@ int http_resp_process(http_resp_t *rsp) {
   size_t len;
 
   len = sprintf(str, "%d", rsp->resp_code);
-  scgi_header_add(rsp->scgi, RESP_CODE, strlen(RESP_CODE), str, len);
+  scgi_header_add(rsp->scgi, Config->Worker.Header.resp_code.str, Config->Worker.Header.resp_code.len, str, len);
 
   len = sprintf(str, "%d", rsp->resp_body->len);
-  scgi_header_add(rsp->scgi, RESP_CONTENT_LENGTH, strlen(RESP_CONTENT_LENGTH), str, len);
+  scgi_header_add(rsp->scgi, Config->Worker.Header.resp_content_len.str, Config->Worker.Header.resp_content_len.len, str, len);
 
   scgi_content_length_add(rsp->scgi, rsp->resp_body->len + rsp->header.len);
 
@@ -125,14 +127,14 @@ void http_resp_file_write_cb(struct ev_loop* loop, struct ev_io* watcher, int re
   ssize_t sent;
 
     if (rsp->file) {
-      char buffer[WR_REQ_BODY_MAX_SIZE];
+      char buffer[Config->Worker.max_body_size];
       ssize_t read;
       int rv = fseek(rsp->file, rsp->bytes_write, SEEK_SET);
       if (rv < 0) {
         LOG_ERROR(WARN, "Error reading file:%s", strerror(errno));
         return;
       }
-      read = fread(buffer, 1, WR_REQ_BODY_MAX_SIZE, rsp->file);
+      read = fread(buffer, 1, Config->Worker.max_body_size, rsp->file);
       sent = send(watcher->fd, buffer, read, 0);
     }
 
@@ -211,14 +213,14 @@ void http_resp_file_send_cb(struct ev_loop* loop, struct ev_io* watcher, int rev
     return;
   }
 #else
-   char buffer[WR_REQ_BODY_MAX_SIZE];
+   char buffer[Config->Worker.max_body_size];
    ssize_t read, sent;
    int rv = fseek(rsp->file, rsp->bytes_write, SEEK_SET);
    if(rv < 0) {
      LOG_ERROR(WARN,"Error reading file:%s",strerror(errno));
      return;
    }
-   read = fread(buffer, 1, WR_REQ_BODY_MAX_SIZE, rsp->file);
+   read = fread(buffer, 1, Config->Worker.max_body_size, rsp->file);
    sent = send(watcher->fd, buffer, read, 0);
    if (sent < 0) {
     LOG_ERROR(SEVERE, "error in file sending: %s\n", strerror(errno));

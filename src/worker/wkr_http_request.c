@@ -20,6 +20,8 @@
 #include <stdlib.h>
 #include <assert.h>
 
+extern config_t *Config;
+
 http_req_t* http_req_new() {
   LOG_FUNCTION
   http_req_t* req = wr_malloc(http_req_t);
@@ -137,12 +139,12 @@ static inline void http_req_body_read_in_buff(http_req_t *req, struct ev_loop *l
 /** Read SCGI request body in file */
 static inline void http_req_body_read_in_file(http_req_t *req, struct ev_loop *loop, struct ev_io *watcher) {
   LOG_FUNCTION
-  char buffer[WR_BUF_SIZE+1];
+  char buffer[STR_SIZE10KB+1];
   ssize_t read, write = 0, rv;
 
   read = recv(watcher->fd,
               buffer,
-              wr_min(req->req_len - req->bytes_read, WR_BUF_SIZE),
+              wr_min(req->req_len - req->bytes_read, STR_SIZE10KB),
               0);
 
   if(read < 0) {
@@ -233,7 +235,7 @@ static inline void parser_req_buf(http_req_t *req, struct ev_loop *loop, struct 
 #ifdef L_DEBUG
       // Fetch Connection id
       wkr_t *w = (wkr_t*) watcher->data;
-      scgi_header_t *header = scgi_header_get(req->scgi, WR_CONN_ID);
+      scgi_header_t *header = scgi_header_get(req->scgi, Config->Worker.Header.conn_id.str);
       if(header){
         w->http->conn_id = atoi(req->scgi->header + req->scgi->start_offset + header->value_offset);
       }else{
@@ -241,7 +243,7 @@ static inline void parser_req_buf(http_req_t *req, struct ev_loop *loop, struct 
       }
       
       // Fetch request id
-      header = scgi_header_get(req->scgi, WR_REQ_ID);
+      header = scgi_header_get(req->scgi, Config->Worker.Header.req_id.str);
       if(header){
         w->http->req_id = atoi(req->scgi->header + req->scgi->start_offset + header->value_offset);
       }else{
@@ -256,7 +258,7 @@ static inline void parser_req_buf(http_req_t *req, struct ev_loop *loop, struct 
         req->bytes_read = 0;
         http_req_process();
       } else {
-        if(req->req_len + req->scgi_header_len  > WR_BUF_SIZE) {
+        if(req->req_len + req->scgi_header_len  > STR_SIZE10KB) {
           ssize_t write;
           size_t processed_bytes = 0;
 
@@ -299,7 +301,7 @@ void http_req_header_cb(struct ev_loop *loop, struct ev_io *watcher, int revents
 
     ssize_t read = recv(watcher->fd
                         , req->buf + req->bytes_read
-                        , WR_BUF_SIZE - req->bytes_read
+                        , STR_SIZE10KB - req->bytes_read
                         , 0
                        );
     if(read < 0) {

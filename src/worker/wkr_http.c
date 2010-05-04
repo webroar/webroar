@@ -19,7 +19,7 @@
 #include <worker.h>
 #include <ruby.h>
 
-#include "wkr_static.h"
+extern config_t *Config;
 
 /** for handling of $0, courtesy http://blade.nagaokaut.ac.jp/cgi-bin/scat.rb/ruby/ruby-core/16221 */
 static VALUE gProgName = Qnil;
@@ -202,13 +202,13 @@ static int init_ruby_interpreter(wkr_t *w) {
   }
   strcpy(v[0],"webroar-worker");
 
-  v[1] =  (char*) malloc(sizeof(char)*(w->tmp->script_path.len+1));
+  v[1] =  (char*) malloc(sizeof(char)*(Config->Worker.File.app_loader.len +1));
   if(!v[1]) {
     LOG_ERROR(WARN,"Memory allocation to pseudo argv failed.");
     retval = -1;
     goto err;
   }
-  strcpy(v[1], w->tmp->script_path.str);
+  strcpy(v[1], Config->Worker.File.app_loader.str);
 
   //RUBY_INIT_STACK;
   ruby_init();
@@ -274,7 +274,7 @@ int load_rack_adapter(wkr_tmp_t *tmp) {
 
   rb_gv_set("g_options",g_options);
 
-  rb_protect(RUBY_METHOD_FUNC(rb_require), (VALUE)tmp->script_path.str, &state);
+  rb_protect(RUBY_METHOD_FUNC(rb_require), (VALUE)Config->Worker.File.app_loader.str, &state);
   LOG_DEBUG(DEBUG, "state=%d", state);
   if ( state != 0 ) {
     LOG_ERROR(FATAL, "Some problem occurred while loading application.");
@@ -304,7 +304,7 @@ http_t* http_new(void *ptr) {
   }
   
   if(w->tmp->is_static){
-    if(static_module_init(w->tmp->root_path.str)!=0){
+    if(static_module_init()!=0){
       http_free(&h);
       return NULL;
     }
