@@ -20,52 +20,27 @@
  *          Implementation of CONFIGURATOR module
  *****************************************************************************/
 
-#include <wr_configurator.h>
+#include <wr_request.h>
 #include <sys/stat.h>
 #include <sys/socket.h>
 #include <pwd.h>
+
+extern config_t *Config;
+
+#define WR_CONF_MAX_LEN_APP_NAME  30
+#define WR_CONF_MAX_LEN_USR_NAME  30
 
 /*********************************************************
  *     Private function definitions
  **********************************************************/
 
-static void wr_host_name_free(wr_host_name_t *host) {
-  LOG_FUNCTION
-  wr_host_name_t *next;
-  while(host) {
-    next = host->next;
-    wr_string_free(host->name);
-    free(host);
-    host = next;
-  }
-}
-
-/** Destroy application configuration */
-void wr_conf_app_free(wr_app_conf_t* app) {
-  LOG_FUNCTION
-  wr_app_conf_t* next;
-
-  // Iterate applications and destroy each application
-  while(app) {
-    next = app->next;
-    wr_string_free(app->name);
-    wr_string_free(app->path);
-    wr_string_free(app->env);
-    wr_string_free(app->type);
-    wr_string_free(app->baseuri);
-    wr_host_name_free(app->host_name_list);
-    free(app);
-    app = next;
-  }
-}
-
 /** Create new application configuration with default values inherited from server configuration */
-static inline wr_app_conf_t* wr_app_conf_new(wr_svr_conf_t *server) {
+config_application_list_t* wr_config_application_new(){
   LOG_FUNCTION
-  wr_app_conf_t* app = wr_malloc(wr_app_conf_t);
-  app->log_level = server->log_level;
-  app->min_worker = server->min_worker;
-  app->max_worker = server->max_worker;
+  config_application_list_t* app = wr_malloc(config_application_list_t);
+  app->log_level = Config->Server.log_level;
+  app->min_worker = Config->Application.Default.min_workers;
+  app->max_worker = Config->Application.Default.max_workers;
   app->cgid = -1;
   app->cuid = -1;
   wr_string_null(app->name);
@@ -79,207 +54,116 @@ static inline wr_app_conf_t* wr_app_conf_new(wr_svr_conf_t *server) {
   return app;
 }
 
-/** Create new configuration with default values */
-static inline wr_conf_t* wr_conf_new() {
-  LOG_FUNCTION
-  wr_conf_t         *conf;
-
-  conf = wr_malloc(wr_conf_t);
-  if(conf == NULL) {
-    return NULL;
-  }
-  conf->server = wr_malloc(wr_svr_conf_t);
-  if(conf->server == NULL) {
-    free(conf);
-    return NULL;
-  }
-
-  //Setting default values, can be override by specifying into config.yml
-  //conf->no_of_application = 0;
-  // Check for POSIX system and set UDS flag
-#ifdef AF_UNIX
-  conf->uds = 1;
-#else
-  conf->uds = 0;
-#endif
-  //conf->uds = WR_CONF_UDS;
-
-  conf->server->port = WR_DEFAULT_SVR_PORT;
-  conf->server->min_worker = WR_MIN_WKR;
-  conf->server->max_worker = WR_MAX_WKR;
-  conf->server->log_level = SEVERE;
-  conf->server->flag = 0;
-//  conf->server->ctl_port = 0;
-//  wr_string_null(conf->server->sock_path);
-#ifdef HAVE_GNUTLS
-
-  wr_string_null(conf->server->certificate);
-  wr_string_null(conf->server->key);
-  conf->server->ssl_port = WR_DEFAULT_SSL_PORT;
-#endif
-
-  wr_string_null(conf->wr_root_path);
-  wr_string_null(conf->wkr_exe_path);
-  wr_string_null(conf->admin_panel_path);
-  wr_string_null(conf->ruby_lib_path);
-  wr_string_null(conf->config_file_path);
-
-  conf->apps = NULL;
-
-  return conf;
-}
-
-/** Initialize configuration path variables */
-static inline void wr_init_path(wr_conf_t *conf, const char *root_path) {
-
-  LOG_FUNCTION
-  size_t len;
-  char str[WR_LONG_LONG_STR_LEN];
-
-  // set WebROaR root fodler path
-  len = strlen(root_path);
-  wr_string_new(conf->wr_root_path, root_path, len);
-
-  // Set configuration file path
-  len = sprintf(str,"%s%sconf%s%s",
-                root_path, WR_PATH_SEPARATOR,
-                WR_PATH_SEPARATOR,WR_CONF_FILE);
-  wr_string_new(conf->config_file_path, str, len);
-
-  // Set the 'webroar-worker' file path
-  len = sprintf(str,"%s%s%s%s%s",root_path, WR_PATH_SEPARATOR,
-                WR_BIN_DIR, WR_PATH_SEPARATOR,
-                WR_WKR_BIN);
-  wr_string_new(conf->wkr_exe_path, str, len);
-
-  // Set ruby lib folder path
-  len = sprintf(str,"%s%s%s%s%s",
-                root_path, WR_PATH_SEPARATOR,
-                WR_SRC_DIR, WR_PATH_SEPARATOR,
-                WR_RUBY_LIB_DIR);
-  wr_string_new(conf->ruby_lib_path, str, len);
-
-  // Set Admin Panel folder path
-  len = sprintf(str,"%s%s%s%s%s",
-                root_path, WR_PATH_SEPARATOR,
-                WR_SRC_DIR, WR_PATH_SEPARATOR,
-                WR_ADMIN_PANEL_DIR);
-  wr_string_new(conf->admin_panel_path, str, len);
-}
-
 /** Set Server Configuration */
-static inline int wr_conf_server_set(wr_conf_t * conf, node_t *root) {
+int wr_config_server_set(node_t *root) {
   LOG_FUNCTION
-  wr_svr_conf_t  *server = conf->server;
   char *str;
 
   // Set server listening port
-  str = wr_validate_string(get_node_value(root, WR_CONF_SVR_PORT));
+  str = wr_validate_string(get_node_value(root, "Server Specification/port"));
   if(str)
-    server->port = atoi(str);
+    Config->Server.port = atoi(str);
 
-  if(server->port < 0 || server->port > 65536) {
+  if(Config->Server.port < 0 || Config->Server.port > 65536) {
     LOG_ERROR(SEVERE,"Valid port should be a number between 1 and 65536. Server can not start.");
     printf("Valid port should be a number between 1 and 65536. Server can not start.\n");
     return -1;
   }
 
   // Set min_worker
-  str = wr_validate_string(get_node_value(root, WR_CONF_SVR_MIN_WKR));
+  str = wr_validate_string(get_node_value(root, "Server Specification/min_worker"));
   if(str) {
-    server->min_worker = atoi(str);
-    if(server->min_worker > WR_ALLOWED_MAX_WORKERS) {
-      LOG_ERROR(SEVERE, "Server Specification: Minimum workers should be a number between 1 and %d. Server can not start.", WR_ALLOWED_MAX_WORKERS);
-      printf("Server Specification: Minimum workers should be a number between 1 and %d. Server can not start.\n", WR_ALLOWED_MAX_WORKERS);
+    Config->Application.Default.min_workers = atoi(str);
+    if(Config->Application.Default.min_workers > Config->Server.Worker.max) {
+      LOG_ERROR(SEVERE, "Server Specification: Minimum workers should be a number between 1 and %d. Server can not start.", Config->Server.Worker.max);
+      printf("Server Specification: Minimum workers should be a number between 1 and %d. Server can not start.\n", Config->Server.Worker.max);
       return -1; 
     }
   }
   
   // Set max_worker
-  str = wr_validate_string(get_node_value(root, WR_CONF_SVR_MAX_WKR));
+  str = wr_validate_string(get_node_value(root, "Server Specification/max_worker"));
   if(str) {
-    server->max_worker = atoi(str);
-    if(server->max_worker > WR_ALLOWED_MAX_WORKERS) {
-      LOG_ERROR(SEVERE, "Server Specification: Maximum workers should be a number between 1 and %d. Server can not start.", WR_ALLOWED_MAX_WORKERS);
-      printf("Server Specification: Maximum workers should be a number between 1 and %d. Server can not start.\n", WR_ALLOWED_MAX_WORKERS);
+    Config->Application.Default.max_workers = atoi(str);
+    if(Config->Application.Default.max_workers > Config->Server.Worker.max) {
+      LOG_ERROR(SEVERE, "Server Specification: Maximum workers should be a number between 1 and %d. Server can not start.", Config->Server.Worker.max);
+      printf("Server Specification: Maximum workers should be a number between 1 and %d. Server can not start.\n", Config->Server.Worker.max);
       return -1; 
     }
   }
   
-  if(server->min_worker > server->max_worker) {
+  if(Config->Application.Default.min_workers > Config->Application.Default.max_workers) {
     LOG_ERROR(SEVERE,"Server Specification: Min worker value is greater than Max worker value. Server can not start.");
     printf("Server Specification: Min worker value is greater than Max worker value. Server can not start.\n");
     return -1;
   }
 
   // Set logging level
-  str = wr_validate_string(get_node_value(root, WR_CONF_SVR_LOG_LEVEL));
+  str = wr_validate_string(get_node_value(root, "Server Specification/log_level"));
   if(str)
-    server->log_level = get_log_severity(str);
-
+    Config->Server.log_level = get_log_severity(str); 
+    
   // Set access log flag
-  str = wr_validate_string(get_node_value(root, WR_CONF_SVR_ACCESS_LOG));
+  str = wr_validate_string(get_node_value(root, "Server Specification/access_log"));
 
   if(str && strcmp(str,"enabled")==0 ) {
-    server->flag |= WR_SVR_ACCESS_LOG;
+    Config->Server.flag |= SERVER_ACCESS_LOG;
   }
 
   //check ssl support
-  str = wr_validate_string(get_node_value(root, WR_CONF_SVR_SSL_SUPPORT));
+  str = wr_validate_string(get_node_value(root, "Server Specification/SSL Specification/ssl_support"));
   if(str && strcmp(str,"enabled")==0 ) {
-    server->flag |= WR_SVR_SSL_SUPPORT;
+    Config->Server.flag |= SERVER_SSL_SUPPORT;
   }
 
 #ifdef HAVE_GNUTLS
 
-  if(server->flag&WR_SVR_SSL_SUPPORT) {
+  if(Config->Server.flag & SERVER_SSL_SUPPORT) {
   	size_t len;
     struct stat buff;
     // Set certificate path
-    str = wr_validate_string(get_node_value(root, WR_CONF_SVR_SSL_CERTIFICATE));
+    str = wr_validate_string(get_node_value(root, "Server Specification/SSL Specification/certificate_file"));
     if(str) {
       if(stat(str,&buff)!=0) {
         LOG_ERROR(SEVERE,"SSL certificate file path(%s) invalid. Server can not run on SSL.",str);
         printf("SSL certificate file path(%s) invalid. Server can not run on SSL.\n",str);
-        server->flag &= (!WR_SVR_SSL_SUPPORT);
+        Config->Server.flag &= (!SERVER_SSL_SUPPORT)
       } else {
         len = strlen(str);
-        wr_string_new(server->certificate, str, len);
+        wr_string_new(Config->Server.SSL.certificate, str, len);
       }
     } else {
       LOG_ERROR(SEVERE,"Certificate file path is missing. Server can not run on SSL.");
       printf("Certificate file path is missing. Server can not run on SSL.\n");
-      server->flag &= (!WR_SVR_SSL_SUPPORT);
+      Config->Server.flag &= (!SERVER_SSL_SUPPORT)
     }
 
     // Set certificate path
-    str = wr_validate_string(get_node_value(root, WR_CONF_SVR_SSL_KEY));
+    str = wr_validate_string(get_node_value(root, "Server Specification/SSL Specification/key_file"));
     if(str) {
       if(stat(str,&buff)!=0) {
         LOG_ERROR(SEVERE,"SSL key file path(%s) invalid. Server can not run on SSL.",str);
         printf("SSL key file path(%s) invalid. Server can not run on SSL.\n",str);
-        server->flag &= (!WR_SVR_SSL_SUPPORT);
+        Config->Server.flag &= (!SERVER_SSL_SUPPORT)
       } else {
         len = strlen(str);
-        wr_string_new(server->key, str, len);
+        wr_string_new(Config->Server.SSL.key, str, len);
       }
     } else {
       LOG_ERROR(SEVERE,"SSL key file path is missing. Server can not run on SSL.");
       printf("SSL key file path is missing. Server can not run on SSL.\n");
-      server->flag &= (!WR_SVR_SSL_SUPPORT);
+      Config->Server.flag &= (!SERVER_SSL_SUPPORT)
     }
 
     // Set server listening port
-    str = wr_validate_string(get_node_value(root, WR_CONF_SVR_SSL_PORT));
+    str = wr_validate_string(get_node_value(root, "Server Specification/SSL Specification/ssl_port"));
     if(str) {
-      server->ssl_port = atoi(str);
-      if(server->ssl_port < 0 || server->ssl_port > 65536) {
+      Config->Server.SSL.port = atoi(str);
+      if(Config->Server.SSL.port < 0 || Config->Server.SSL.port > 65536) {
         LOG_ERROR(SEVERE,"Given SSL port is invalid. Valid port should be a number between 1 and 65536. Server can not run on SSL.");
         printf("Given SSL port is invalid. Valid port should be a number between 1 and 65536. Server can not run on SSL.\n");               
-        server->flag &= (!WR_SVR_SSL_SUPPORT);
+        Config->Server.flag &= (!SERVER_SSL_SUPPORT)
       }
-    } else {
-      server->ssl_port = WR_DEFAULT_SSL_PORT;
     }
   }
 
@@ -288,7 +172,7 @@ static inline int wr_conf_server_set(wr_conf_t * conf, node_t *root) {
   return 0;
 }
 
-static int wr_validate_app_host_name(const char *host_name, char *err_msg) {
+int wr_validate_app_host_name(const char *host_name, char *err_msg) {
   LOG_FUNCTION
   int down_level = 1, label_len, i;
   char *label = NULL;
@@ -363,10 +247,10 @@ err_ret:
   return -1;
 }
 
-static int wr_app_host_name_set(wr_app_conf_t *app, char *host_names, char *err_msg) {
+int wr_app_host_name_set(config_application_list_t *app, char *host_names, char *err_msg) {
   LOG_FUNCTION
-  char *host = NULL, *host_array[WR_MAX_HOST_NAMES];
-  wr_host_name_t *hosts = NULL, *tmp_host = NULL;
+  char *host = NULL, *host_array[Config->Application.max_hosts];
+  config_host_list_t *hosts = NULL, *tmp_host = NULL;
   int rv, counter = 0, no_of_hosts = 0;
   size_t len;
 
@@ -377,7 +261,7 @@ static int wr_app_host_name_set(wr_app_conf_t *app, char *host_names, char *err_
   /* Tokenizing all the hostnames here, as in wr_validate_app_host_name() individual hostname is again tokenizing for further validations.
    * Call to second strtok for tokenizing of new string, before completion of its first call, messing up with the original string of first call. */
   host = strtok(host_names, " ");
-  while(host && counter < WR_MAX_HOST_NAMES) {
+  while(host && counter < Config->Application.max_hosts) {
     host_array[counter++] = host;    
     host = strtok(NULL, " ");
   }
@@ -396,28 +280,28 @@ static int wr_app_host_name_set(wr_app_conf_t *app, char *host_names, char *err_
       return -1;
 
     len = strlen(host);
-    tmp_host = wr_malloc(wr_host_name_t);
+    tmp_host = wr_malloc(config_host_list_t);
     if(tmp_host == NULL)
       return -1;
 
     tmp_host->next = NULL;
-    tmp_host->type = WR_HOST_TPE_INVALID;
+    tmp_host->type = HOST_TPE_INVALID;
     //storing plain name, removing any '*', and '~'
     if(host[1] == '*') {
       if(host[len-1] == '*') {
-        tmp_host->type = WR_HOST_TYPE_WILDCARD_IN_START_END;
+        tmp_host->type = HOST_TYPE_WILDCARD_IN_START_END;
         wr_string_new(tmp_host->name, host+2, len-3);
       } else {
-        tmp_host->type = WR_HOST_TYPE_WILDCARD_IN_START;
+        tmp_host->type = HOST_TYPE_WILDCARD_IN_START;
         wr_string_new(tmp_host->name, host+2, len-2);
       }
       LOG_DEBUG(DEBUG, "Host name = %s", tmp_host->name.str);
     } else if(host[len-1] == '*') {
-      tmp_host->type = WR_HOST_TYPE_WILDCARD_IN_END;
+      tmp_host->type = HOST_TYPE_WILDCARD_IN_END;
       wr_string_new(tmp_host->name, host+1, len-2);
       LOG_DEBUG(DEBUG, "Host name = %s", tmp_host->name.str);
     } else {
-      tmp_host->type = WR_HOST_TYPE_STATIC;
+      tmp_host->type = HOST_TYPE_STATIC;
       if(host[0] == '~') {
         wr_string_new(tmp_host->name, host+1, len-1);
       } else {
@@ -437,23 +321,23 @@ static int wr_app_host_name_set(wr_app_conf_t *app, char *host_names, char *err_
 }
 
 /** Create and fill application configuration */
-static inline wr_app_conf_t* wr_app_conf_set (wr_conf_t* conf, node_t* app_node, char* err_msg) {
+config_application_list_t* wr_config_application_set(node_t* app_node, char* err_msg) {
   LOG_FUNCTION
-  wr_app_conf_t *app = NULL;
+  config_application_list_t *app = NULL;
   struct stat buff;
   char *str, *app_name;
   short free_app_obj = 0;
   size_t len;
 
   // Create application configuration with default values
-  app = wr_app_conf_new(conf->server);
+  app = wr_config_application_new();
 
   if(!app) {
     return NULL;
   }
 
   //Set application name
-  str = wr_validate_string(get_node_value(app_node->child, WR_CONF_APP_NAME));
+  str = wr_validate_string(get_node_value(app_node->child, "name"));
   len = strlen(str);  
   if(str && len > 0 && len < WR_CONF_MAX_LEN_APP_NAME) {    
     wr_string_new(app->name, str, len);
@@ -464,19 +348,19 @@ static inline wr_app_conf_t* wr_app_conf_set (wr_conf_t* conf, node_t* app_node,
     printf("Application name is too long. Maximum is %d characters\n", WR_CONF_MAX_LEN_APP_NAME);
     if(err_msg)
       sprintf(err_msg,"\n Application name is too long. Maximum is %d characters", WR_CONF_MAX_LEN_APP_NAME);
-    wr_conf_app_free(app);
+    wr_application_list_free(app);
     return NULL;
   } else {
     LOG_ERROR(SEVERE,"Application name is missing");
     printf("Application name is missing.\n");
     if(err_msg)
       sprintf(err_msg+strlen(err_msg),"\nApplication name is missing.");
-    wr_conf_app_free(app);
+    wr_application_list_free(app);
     return NULL;
   }
 
   // Set application path
-  str = wr_validate_string(get_node_value(app_node->child, WR_CONF_APP_PATH));
+  str = wr_validate_string(get_node_value(app_node->child, "path"));
   if(str && strlen(str) > 0) {
     //Check existence of application path
     if(stat(str,&buff)!=0) {
@@ -500,7 +384,7 @@ static inline wr_app_conf_t* wr_app_conf_set (wr_conf_t* conf, node_t* app_node,
   }
 
   // Set application type
-  str = wr_validate_string(get_node_value(app_node->child, WR_CONF_APP_TYPE));
+  str = wr_validate_string(get_node_value(app_node->child, "type"));
   if(str && strlen(str) > 0) {
     len = strlen(str);
     wr_string_new(app->type, str, len);
@@ -515,10 +399,10 @@ static inline wr_app_conf_t* wr_app_conf_set (wr_conf_t* conf, node_t* app_node,
   }
 
   // Set application analytics
-  str = wr_validate_string(get_node_value(app_node->child, WR_CONF_APP_ANALYTICS));
+  str = wr_validate_string(get_node_value(app_node->child, "analytics"));
   if(str && strlen(str) > 0) {
     LOG_DEBUG(DEBUG,"App analytics = %s", str);
-    if(strcmp(str,WR_ANALYTICS_ON)==0) {
+    if(strcmp(str, Config->Application.analytics_on.str)==0) {
       app->analytics = TRUE;
     }
   } else {
@@ -531,7 +415,7 @@ static inline wr_app_conf_t* wr_app_conf_set (wr_conf_t* conf, node_t* app_node,
   }
 
   // Set application base uri
-  str = wr_validate_string(get_node_value(app_node->child, WR_CONF_APP_BASE_URI));
+  str = wr_validate_string(get_node_value(app_node->child, "baseuri"));
   if(str && strlen(str) > 0) {
     len = strlen(str);
     wr_string_new(app->baseuri, str, len);
@@ -539,13 +423,13 @@ static inline wr_app_conf_t* wr_app_conf_set (wr_conf_t* conf, node_t* app_node,
   }
 
   // Set Host names (used for multiple host deployment and application identifiaction)
-  str = wr_validate_string(get_node_value(app_node->child, WR_CONF_APP_HOST_NAMES));
+  str = wr_validate_string(get_node_value(app_node->child, "host_names"));
   if(str && strlen(str) > 0) {
     wr_app_host_name_set(app, str, err_msg);
   }
 
   // Set application user & group id
-  str = wr_validate_string(get_node_value(app_node->child, WR_CONF_APP_USER));
+  str = wr_validate_string(get_node_value(app_node->child, "run_as_user"));
   if(str && strlen(str) > 0) {
     struct passwd *user_info=NULL;
     user_info = getpwnam(str);
@@ -587,44 +471,43 @@ static inline wr_app_conf_t* wr_app_conf_set (wr_conf_t* conf, node_t* app_node,
   }
 
   // Set application environment
-  str = wr_validate_string(get_node_value(app_node->child, WR_CONF_APP_ENV));
+  str = wr_validate_string(get_node_value(app_node->child, "environment"));
   if(str && strlen(str) > 0) {
     len = strlen(str);
     wr_string_new(app->env, str, len);
     LOG_DEBUG(DEBUG, "Application environment = %s", app->env.str);
   } else {
-    len = strlen(WR_DEFAULT_ENV);
-    wr_string_new(app->env, WR_DEFAULT_ENV, len);
+    wr_string_dump(app->env, Config->Application.Default.env);
   }
 
   // Set min_worker
-  str = wr_validate_string(get_node_value(app_node->child, WR_CONF_APP_MIN_WKR));
+  str = wr_validate_string(get_node_value(app_node->child, "min_worker"));
   if(str && strlen(str) > 0) {
     app->min_worker = atoi(str);
-    if(app->min_worker > WR_ALLOWED_MAX_WORKERS) {
-      LOG_ERROR(SEVERE, "Application(%s)-Minimum workers should be a number between 1 and %d. Application not started.", app_name, WR_ALLOWED_MAX_WORKERS);
-      printf("Application(%s)-Minimum workers should be a number between 1 and %d. Application not started.\n", app_name, WR_ALLOWED_MAX_WORKERS);
+    if(app->min_worker > Config->Server.Worker.max) {
+      LOG_ERROR(SEVERE, "Application(%s)-Minimum workers should be a number between 1 and %d. Application not started.", app_name, Config->Server.Worker.max);
+      printf("Application(%s)-Minimum workers should be a number between 1 and %d. Application not started.\n", app_name, Config->Server.Worker.max);
       if(err_msg)
-        sprintf(err_msg + strlen(err_msg), "Application(%s)-Minimum workers should be a number between 1 and %d. Application not started.", app_name, WR_ALLOWED_MAX_WORKERS);
+        sprintf(err_msg + strlen(err_msg), "Application(%s)-Minimum workers should be a number between 1 and %d. Application not started.", app_name, Config->Server.Worker.max);
       free_app_obj = 1; 
     }
   }
 
   // Set max_worker
-  str = wr_validate_string(get_node_value(app_node->child, WR_CONF_APP_MAX_WKR));
+  str = wr_validate_string(get_node_value(app_node->child, "max_worker"));
   if(str && strlen(str) > 0) {
     app->max_worker = atoi(str);
-    if(app->max_worker > WR_ALLOWED_MAX_WORKERS) {
-      LOG_ERROR(SEVERE, "Application(%s)-Maximum workers should be a number between 1 and %d. Application not started.", app_name, WR_ALLOWED_MAX_WORKERS);
-      printf("Application(%s)-Maximum workers should be a number between 1 and %d. Application not started.\n", app_name, WR_ALLOWED_MAX_WORKERS);
+    if(app->max_worker > Config->Server.Worker.max) {
+      LOG_ERROR(SEVERE, "Application(%s)-Maximum workers should be a number between 1 and %d. Application not started.", app_name, Config->Server.Worker.max);
+      printf("Application(%s)-Maximum workers should be a number between 1 and %d. Application not started.\n", app_name, Config->Server.Worker.max);
       if(err_msg)
-        sprintf(err_msg + strlen(err_msg), "Application(%s)-Maximum workers should be a number between 1 and %d. Application not started.", app_name, WR_ALLOWED_MAX_WORKERS);
+        sprintf(err_msg + strlen(err_msg), "Application(%s)-Maximum workers should be a number between 1 and %d. Application not started.", app_name, Config->Server.Worker.max);
       free_app_obj = 1; 
     }
   }
 
   if(free_app_obj & 1) {
-    wr_conf_app_free(app);
+    wr_application_list_free(app);
     return NULL;
   }
   
@@ -634,39 +517,40 @@ static inline wr_app_conf_t* wr_app_conf_set (wr_conf_t* conf, node_t* app_node,
     printf("Application(%s) no. of min workers(%d) should not be greater than no. of max workers(%d). Application not started.\n",app_name, app->min_worker, app->max_worker);
     if(err_msg)
       sprintf(err_msg+strlen(err_msg),"\nApplication(%s) no. of min workers(%d) should not be greater than no. of max workers(%d). Application not started.",app_name, app->min_worker, app->max_worker);
-    wr_conf_app_free(app);
+    wr_application_list_free(app);
     return NULL;
   }
 
   // Set logging level
-  str = wr_validate_string(get_node_value(app_node->child, WR_CONF_APP_LOG_LEVEL));
+  str = wr_validate_string(get_node_value(app_node->child, "log_level"));
   if(str && strlen(str) > 0)
     app->log_level = get_log_severity(str);
   return app;
 }
 
 /** Iterate application nodes and construct application configuration structure */
-static inline int wr_iterate_app_node(wr_conf_t *conf, node_t *root) {
-  wr_app_conf_t *app, *prev_app;
+int wr_iterate_app_node(node_t *root) {
+  LOG_FUNCTION
+  config_application_list_t *app, *prev_app;
   node_t* app_nodes;
 
   LOG_DEBUG(DEBUG,"iterate_application_node()");
   //Fetch Application Specification nodes
-  app_nodes = get_nodes(root, WR_CONF_APP_SPEC);
+  app_nodes = get_nodes(root, "Application Specification");
 
   // Iterate application nodes
   while(app_nodes) {
     if(app_nodes->child) {
       // Create & fill application configuration structure
-      app = wr_app_conf_set(conf,  app_nodes, NULL);
+      app = wr_config_application_set(app_nodes, NULL);
 
       if(app) {
         //return -1;
         // Set application configuration to configuration structure
-        if(conf->apps) {
+        if(Config->Application.list) {
           prev_app->next = app;
         } else {
-          conf->apps = app;
+          Config->Application.list = app;
         }
         prev_app = app;
       }
@@ -677,9 +561,9 @@ static inline int wr_iterate_app_node(wr_conf_t *conf, node_t *root) {
 }
 
 /** Validate application baseuri for duplication. Also removes every such application object. */
-static inline int wr_remove_app_with_dup_baseuri(wr_conf_t *conf) {
+int wr_remove_app_with_dup_baseuri() {
   LOG_FUNCTION
-  wr_app_conf_t *app=conf->apps, *next,*tmp_app;
+  config_application_list_t *app = Config->Application.list, *next,*tmp_app;
   int rv = 0;
 
   if(app == NULL) {
@@ -694,11 +578,11 @@ static inline int wr_remove_app_with_dup_baseuri(wr_conf_t *conf) {
     if(app->baseuri.str) {
       LOG_DEBUG(DEBUG, "Comparing baseuit %s ",app->baseuri.str)  ;
       // Compare each application baseuri with admin-panel baseuri
-      if(strcmp(app->baseuri.str, WR_ADMIN_PANEL_BASE_URL)==0) {
-        LOG_ERROR(SEVERE,"'%s' base-uri is reserved for 'Admin Panel'. Application %s not started", WR_ADMIN_PANEL_BASE_URL,app->name.str);
-        printf("'%s' base-uri is reserved for 'Admin Panel'. Application %s not started\n", WR_ADMIN_PANEL_BASE_URL,app->name.str);
+      if(strcmp(app->baseuri.str, Config->Application.Admin_panel.base_uri.str)==0) {
+        LOG_ERROR(SEVERE,"'%s' base-uri is reserved for 'Admin Panel'. Application %s not started", Config->Application.Admin_panel.base_uri.str,app->name.str);
+        printf("'%s' base-uri is reserved for 'Admin Panel'. Application %s not started\n", Config->Application.Admin_panel.base_uri.str,app->name.str);
         rv = -1;
-        wr_app_conf_remove(conf, app->name.str);
+        wr_app_conf_remove(app->name.str);
       } else {
         tmp_app = next;
         while(tmp_app) {
@@ -706,7 +590,7 @@ static inline int wr_remove_app_with_dup_baseuri(wr_conf_t *conf) {
             LOG_ERROR(SEVERE,"Base-uri '%s' is repeated for more than one application.", app->baseuri.str);
             printf("Base-uri '%s' is repeated for more than one application.\n",app->baseuri.str);
             rv = -1;
-            wr_app_conf_remove(conf, tmp_app->name.str);
+            wr_app_conf_remove(tmp_app->name.str);
             tmp_app = next = app->next;
           } else {
             tmp_app = tmp_app->next;
@@ -720,10 +604,10 @@ static inline int wr_remove_app_with_dup_baseuri(wr_conf_t *conf) {
   return rv;
 }
 
-static inline int wr_chk_host_within_list(wr_host_name_t *list) {
+int wr_chk_host_within_list(config_host_list_t *list) {
   LOG_FUNCTION
 
-  wr_host_name_t *tmp=NULL;
+  config_host_list_t *tmp=NULL;
 
   while(list) {
     tmp = list->next;
@@ -738,7 +622,7 @@ static inline int wr_chk_host_within_list(wr_host_name_t *list) {
   return 0;
 }
 
-static inline int wr_chk_host_lists(wr_host_name_t *list1, wr_host_name_t *list2) {
+int wr_chk_host_lists(config_host_list_t *list1, config_host_list_t *list2) {
   LOG_FUNCTION
 
   while(list1) {
@@ -754,9 +638,9 @@ static inline int wr_chk_host_lists(wr_host_name_t *list1, wr_host_name_t *list2
 }
 
 /** Removes Application object on repeated host_name. */
-static inline int wr_remove_app_with_dup_host(wr_conf_t *conf) {
+int wr_remove_app_with_dup_host() {
   LOG_FUNCTION
-  wr_app_conf_t *app=conf->apps, *tmp_app = NULL;
+  config_application_list_t *app = Config->Application.list, *tmp_app = NULL;
   short rv = 0;
 
   if(app == NULL) {
@@ -772,7 +656,7 @@ static inline int wr_remove_app_with_dup_host(wr_conf_t *conf) {
       if(wr_chk_host_within_list(app->host_name_list)!=0) {
         LOG_ERROR(WARN,"Host names are repeated in Application '%s'. Application would not start.", app->name.str);
         printf("Host names are repeated in Application '%s'. Application would not start.\n", app->name.str);
-        wr_app_conf_remove(conf, app->name.str);
+        wr_app_conf_remove(app->name.str);
         app = tmp_app;
         rv = -1;
         continue;
@@ -783,8 +667,8 @@ static inline int wr_remove_app_with_dup_host(wr_conf_t *conf) {
           if(wr_chk_host_lists(app->host_name_list, tmp_app->host_name_list) !=0) {
             LOG_ERROR(WARN,"Host names are repeated in '%s' and '%s'. Applications would not start.", app->name.str, tmp_app->name.str);
             printf("Host names are repeated in '%s' and '%s'. Applications would not start.\n", app->name.str, tmp_app->name.str);
-            wr_app_conf_remove(conf, app->name.str);
-            wr_app_conf_remove(conf, tmp_app->name.str);
+            wr_app_conf_remove(app->name.str);
+            wr_app_conf_remove(tmp_app->name.str);
             rv = -1;
             break;
           }
@@ -792,7 +676,7 @@ static inline int wr_remove_app_with_dup_host(wr_conf_t *conf) {
         tmp_app = tmp_app->next;
       }
       if(tmp_app) {
-        app = conf->apps;
+        app = Config->Application.list;
         continue;
       }
     }
@@ -802,47 +686,41 @@ static inline int wr_remove_app_with_dup_host(wr_conf_t *conf) {
 }
 
 /** Read Admin Panel */
-static inline wr_app_conf_t* wr_conf_admin_panel_read(wr_conf_t* conf) {
+config_application_list_t* wr_conf_admin_panel_read() {
   LOG_FUNCTION
-  struct passwd *user_info=NULL;
-  size_t len;
-
-  user_info = getpwnam("root");
+  struct passwd *user_info = getpwnam("root");;
+  
   // Check for user privilege
   if(user_info) {
     if(geteuid() == user_info->pw_uid && getegid() == user_info->pw_gid) {
-      wr_app_conf_t* app = wr_app_conf_new(conf->server);
+      config_application_list_t* app = wr_config_application_new();
 
       if(app ==NULL) {
         return NULL;
       }
 
       // Set Admin base uri to 'admin-panel'
-      len = strlen(WR_ADMIN_PANEL_BASE_URL);
-      wr_string_new(app->baseuri,WR_ADMIN_PANEL_BASE_URL,len);
-
+      wr_string_dump(app->baseuri, Config->Application.Admin_panel.base_uri);
+      
       //Set user & group id
       app->cgid = user_info->pw_gid;
       app->cuid = user_info->pw_uid;
 
       // Set application environment to production
-      len = strlen("production");
-      wr_string_new(app->env,"production",len);
+      wr_string_new(app->env,"production",strlen("production"));
 
       //Set max_worker & min_processsor to 1
       app->max_worker = 1;
       app->min_worker = 1;
 
       // Set application name
-      len = strlen(WR_ADMIN_PANEL_APP_NAME);
-      wr_string_new(app->name,WR_ADMIN_PANEL_APP_NAME,len);
-
+      wr_string_dump(app->name, Config->Application.Admin_panel.name);
+      
       // Set Admin Panel path
-      wr_string_dump(app->path,conf->admin_panel_path);
+      wr_string_dump(app->path, Config->Server.Dir.admin_panel);
 
       // Set application type to rails
-      len = strlen("rails");
-      wr_string_new(app->type,"rails",len);
+      wr_string_new(app->type,"rails", strlen("rails"));
       return app;
     }
   }
@@ -850,24 +728,22 @@ static inline wr_app_conf_t* wr_conf_admin_panel_read(wr_conf_t* conf) {
 }
 
 /** Create application configuration for static content server */
-static inline wr_app_conf_t* wr_conf_static_server_read(wr_conf_t* conf) {
+config_application_list_t* wr_conf_static_server_read() {
   LOG_FUNCTION
   struct passwd *user_info=NULL;
-  size_t len;
 
   user_info = getpwnam("root");
   // Check for user privilege
   if(user_info) {
     if(geteuid() == user_info->pw_uid && getegid() == user_info->pw_gid) {
-      wr_app_conf_t* app = wr_app_conf_new(conf->server);
+      config_application_list_t* app = wr_config_application_new();
 
       if(app == NULL) {
         return NULL;
       }
 
       // Set application name
-      len = strlen(WR_STATIC_FILE_SERVER_NAME);
-      wr_string_new(app->name,WR_STATIC_FILE_SERVER_NAME,len);
+      wr_string_dump(app->name, Config->Application.Static_server.name);
       
       //Set user & group id
       app->cgid = user_info->pw_gid;
@@ -880,94 +756,92 @@ static inline wr_app_conf_t* wr_conf_static_server_read(wr_conf_t* conf) {
       wr_string_dump(app->type,app->name);      
 
       //Set max_worker & min_processsor
-      app->max_worker = WR_STATIC_SVR_MAX_WKR;
-      app->min_worker = WR_STATIC_SVR_MIN_WKR;
+      app->max_worker = Config->Application.Static_server.max_workers;
+      app->min_worker = Config->Application.Static_server.min_workers;
       
       return app;
     }
   }
   return NULL;
 }
+
+config_application_list_t* wr_config_application_exist(const char *app_name, config_application_list_t **prev_app){
+  config_application_list_t* app = Config->Application.list;
+  *prev_app = NULL;
+  while(app){
+    if(strcmp(app_name, app->name.str) == 0) //Compare application name
+      return app;
+    *prev_app = app;
+    app = app->next;
+  }
+  return NULL;
+}
+
 /***********************************************************
  *     Configurator API definitions
  ************************************************************/
 
 /** Remove specified application from configuraion */
-int wr_app_conf_remove(wr_conf_t* conf, const char *app_name) {
+int wr_app_conf_remove(const char *app_name) {
   LOG_FUNCTION
-  wr_app_conf_t* app = conf->apps, *tmp_app = NULL;
-
   LOG_DEBUG(DEBUG, "Removing application %s", app_name);
-  // Iterate application nodes
-  while(app) {
-    if(strcmp(app_name, app->name.str) == 0) //Compare application name
-      break;
-    tmp_app = app;
-    app = app->next;
-  }
+  config_application_list_t *app, *prev_app;
+  
+  app = wr_config_application_exist(app_name, &prev_app);
+
   if(app) {
     // Set application configuraion links
-    if(tmp_app) {
-      tmp_app->next = app->next;
+    if(prev_app) {
+      prev_app->next = app->next;
     } else {
-      conf->apps = app->next;
+      Config->Application.list = app->next;
     }
     app->next = NULL;
     //Destroy application configuration
     LOG_DEBUG(DEBUG, "Removed application %s", app->name.str);
-    wr_conf_app_free(app);
+    wr_application_list_free(app);
     return 0;
   } else
     return -1;
 }
 
 /** Replace the application configuration */
-int wr_conf_app_replace(wr_conf_t *conf, wr_app_conf_t *app_conf){
+int wr_conf_app_replace(config_application_list_t *app_conf){
   LOG_FUNCTION
-  wr_app_conf_t *app = conf->apps, *tmp_app = NULL;
-
-  while(app) {
-    if(strcmp(app_conf->name.str, app->name.str)==0)
-      break;
-    tmp_app = app;
-    app = app->next;
-  }
+  config_application_list_t *app, *prev_app;
+  
+  app = wr_config_application_exist(app_conf->name.str, &prev_app);
 
   if(app){
     app_conf->next = app->next;
-    if(tmp_app){
-      tmp_app->next = app_conf;
+    if(prev_app){
+      prev_app->next = app_conf;
     }else{
-      conf->apps = app_conf;
+      Config->Application.list = app_conf;
     }
     app->next = NULL;
-    wr_conf_app_free(app);
+    wr_application_list_free(app);
   }else{
     LOG_ERROR(WARN, "Application '%s' is not found", app_conf->name.str);
-    app_conf->next = conf->apps;
-    conf->apps = app_conf;
+    app_conf->next = Config->Application.list;
+    Config->Application.list = app_conf;
   }
   return 0;
 }
 
 /** Remove the existing application specification if exists.
  *  And add the new application configuration. */
-wr_app_conf_t* wr_conf_app_update(wr_conf_t* conf, const char *app_name, char* err_msg) {
+config_application_list_t* wr_conf_app_update(const char *app_name, char* err_msg) {
   LOG_FUNCTION
-  wr_app_conf_t *app = conf->apps, *tmp_app = NULL;
-
-  while(app) {
-    if(strcmp(app_name, app->name.str)==0)
-      break;
-    tmp_app = app;
-    app = app->next;
-  }
+  config_application_list_t *app = Config->Application.list, *prev_app;
+  
+  app = wr_config_application_exist(app_name, &prev_app);
 
   if(app){
-    if(tmp_app){
-      tmp_app->next = app->next;
+    if(prev_app){
+      prev_app->next = app->next;
     }else{
-      conf->apps = app->next;
+      Config->Application.list = app->next;
     }
     app->next = NULL;
     //wr_conf_app_free(app);
@@ -976,18 +850,16 @@ wr_app_conf_t* wr_conf_app_update(wr_conf_t* conf, const char *app_name, char* e
       sprintf(err_msg, "Application '%s' is not found", app_name);
   }
 
-  return wr_conf_app_read(conf, app_name, err_msg);
+  return wr_conf_app_read(app_name, err_msg);
 }
 
 /** Read specified application and construct application configuration */
-wr_app_conf_t* wr_conf_app_read(wr_conf_t* conf, const char *app_name, char* err_msg) {
+config_application_list_t* wr_conf_app_read(const char *app_name, char* err_msg) {
   LOG_FUNCTION
   //Parse configuration file
   node_t *root , *app_nodes = NULL;
-  wr_app_conf_t *app = NULL, *tmp;
+  config_application_list_t *app = Config->Application.list, *tmp;
   char *str;
-
-  app = conf->apps;
 
   while(app) {
     if(strcmp(app->name.str, app_name) == 0) {
@@ -1000,13 +872,13 @@ wr_app_conf_t* wr_conf_app_read(wr_conf_t* conf, const char *app_name, char* err
 
   app = NULL;
 
-  if(strcmp(app_name, WR_ADMIN_PANEL_APP_NAME) == 0) {
-    app = wr_conf_admin_panel_read(conf);
+  if(strcmp(app_name, Config->Application.Admin_panel.name.str) == 0) {
+    app = wr_conf_admin_panel_read();
 
     if(app) {
       //Set application configuration into configuration data structure
-      app->next = conf->apps;
-      conf->apps = app;
+      app->next = Config->Application.list;
+      Config->Application.list = app;
     } else {
       if(err_msg)
         strcpy(err_msg, "Could not read Admin Panel");
@@ -1014,7 +886,7 @@ wr_app_conf_t* wr_conf_app_read(wr_conf_t* conf, const char *app_name, char* err
     return app;
   }
 
-  root = yaml_parse(conf->config_file_path.str);
+  root = yaml_parse(Config->Server.File.config.str);
 
   if(!root) {
     LOG_ERROR(SEVERE, "Config file found with erroneous entries. Please correct it.");
@@ -1027,15 +899,14 @@ wr_app_conf_t* wr_conf_app_read(wr_conf_t* conf, const char *app_name, char* err
   //    return NULL;
   //  }
   //Fetch Application Specification nodes
-  app_nodes = get_nodes(root, WR_CONF_APP_SPEC);
+  app_nodes = get_nodes(root, "Application Specification");
 
   // Iterate application nodes
   while(app_nodes) {
     if(app_nodes->child) {
-      str = wr_validate_string(get_node_value(app_nodes->child, WR_CONF_APP_NAME));
-      // Compare application name
+      str = wr_validate_string(get_node_value(app_nodes->child, "name"));// Compare application name
       if(str && strcmp(str, app_name)==0) {
-        app = wr_app_conf_set(conf, app_nodes, err_msg);
+        app = wr_config_application_set(app_nodes, err_msg);
         break;
       }
     }
@@ -1050,16 +921,16 @@ wr_app_conf_t* wr_conf_app_read(wr_conf_t* conf, const char *app_name, char* err
     if(app->host_name_list){
       if(wr_chk_host_within_list(app->host_name_list)!=0) {
         LOG_ERROR(WARN,"Checking hosts within list is failed.");
-        wr_conf_app_free(app);
+        wr_application_list_free(app);
         return NULL;
       }
 
-      tmp = conf->apps;
+      tmp = Config->Application.list;
       while(tmp) {
         if(tmp->host_name_list) {
           if(wr_chk_host_lists(app->host_name_list, tmp->host_name_list)!=0) {
             LOG_ERROR(WARN,"Checking host lists is failed.");
-            wr_conf_app_free(app);
+            wr_application_list_free(app);
             return NULL;
           }
         }
@@ -1067,111 +938,62 @@ wr_app_conf_t* wr_conf_app_read(wr_conf_t* conf, const char *app_name, char* err
       }
     }
     //Set application configuration into configuration data structure
-    app->next = conf->apps;
-    conf->apps = app;
+    app->next = Config->Application.list;
+    Config->Application.list = app;
   }
   return app;
 }
 
-/** Destroy configuration object */
-void wr_conf_free(wr_conf_t* conf) {
-  LOG_FUNCTION
-  //Destroy server_configuration
-  if(conf->server) {
-//    wr_string_free(conf->server->sock_path);
-#ifdef HAVE_GNUTLS
-
-    wr_string_free(conf->server->certificate);
-    wr_string_free(conf->server->key);
-#endif
-
-    free(conf->server);
-  }
-  //Destroy application_configuration list
-  wr_conf_app_free(conf->apps);
-
-  // Destroy configuration structure
-  wr_string_free(conf->wr_root_path);
-  wr_string_free(conf->ruby_lib_path);
-  wr_string_free(conf->wkr_exe_path);
-  wr_string_free(conf->admin_panel_path);
-  wr_string_free(conf->config_file_path);
-  free(conf);
-}
-
 /** Read configuration file and fill configuration object */
-wr_conf_t* wr_conf_read(const char* root_path) {
+int wr_conf_read() {
   LOG_FUNCTION
   node_t *root;
-  wr_conf_t* conf = NULL;
-
-  //Create configuration structure
-  conf =  wr_conf_new();
-  if(conf == NULL) {
-    LOG_ERROR(SEVERE,"Configuration object could not be allocated.");
-    printf("Configuration object could not be allocated.\n");
-    return NULL;
-  }
-
-  // Initialize various paths based on webroar_root path
-  wr_init_path(conf, root_path);
 
   // Get parsed nodes
-  LOG_DEBUG(4,"YAML file path %s", conf->config_file_path.str);
-  root = yaml_parse(conf->config_file_path.str);
+  LOG_DEBUG(4,"YAML file path %s", Config->Server.File.config.str);
+  root = yaml_parse(Config->Server.File.config.str);
 
   if(!root) {
     LOG_ERROR(SEVERE, "Config file found with erroneous entries. Please correct it.");
     printf("Config file found with erroneous entries. Please correct it.\n");
-    wr_conf_free(conf);
-    return NULL;
+    return FALSE;
   }
 
   // Set server_configuration parameters
-  // Set server_configuration parameters
-  if(wr_conf_server_set(conf, root)!=0)
-    goto conf_err;
+  if(wr_config_server_set(root)!=0)
+    return FALSE;
 
   // Set application_configuration list
-  wr_iterate_app_node(conf, root);
+  wr_iterate_app_node(root);
 
-  wr_remove_app_with_dup_baseuri(conf);
+  wr_remove_app_with_dup_baseuri();
 
-  wr_remove_app_with_dup_host(conf);
+  wr_remove_app_with_dup_host();
 
   //configuration_print(configuration);
   node_free(root);
 
-  return conf;
-
-conf_err:
-  wr_conf_free(conf);
-  return NULL;
-
+  return TRUE;
 }
 
 /** Display configuration object */
-void wr_conf_display(wr_conf_t* conf) {
+void wr_conf_display() {
   LOG_FUNCTION
-  wr_app_conf_t *app = conf->apps;
+  config_application_list_t *app = Config->Application.list;
 
   //printf("No of Applications : %d\n", conf->no_of_application);
 
   // Display Server specification
-  if(conf->server) {
-    printf("Server log level : %d\n", conf->server->log_level);
-    printf("Server port : %d\n", conf->server->port);
-    printf("Server min worker : %d\n", conf->server->min_worker);
-    printf("Server max worker : %d\n", conf->server->max_worker);
-    printf("Access log flag : %d\n", conf->server->flag&WR_SVR_ACCESS_LOG);
+  printf("Server log level : %d\n", Config->Server.log_level);
+  printf("Server port : %d\n", Config->Server.port);
+  printf("Server min worker : %d\n", Config->Application.Default.min_workers);
+  printf("Server max worker : %d\n", Config->Application.Default.max_workers);
+  printf("Access log flag : %d\n", Config->Server.flag & SERVER_ACCESS_LOG);
 #ifdef HAVE_GNUTLS
-
-    printf("Server SSL certificate : %s\n", conf->server->certificate.str);
-    printf("Server SSL key : %s\n", conf->server->key.str);
-    printf("Server SSL port : %d\n", conf->server->ssl_port);
+  printf("Server SSL certificate : %s\n", Config->Server.SSL.certificate.str);
+  printf("Server SSL key : %s\n", Config->Server.SSL.key.str);
+  printf("Server SSL port : %d\n", Config->Server.SSL.port);
 #endif
-
-  }
 
   // Display application specification
   while(app) {
@@ -1185,7 +1007,7 @@ void wr_conf_display(wr_conf_t* conf) {
     printf("Application analytics : %d\n", app->analytics);
     printf("Application baseuri : %s\n", app->baseuri.str);
     if(app->host_name_list) {
-      wr_host_name_t* host=app->host_name_list;
+      config_host_list_t* host=app->host_name_list;
       printf("Host Name List :- \n");
       while(host) {
         printf("%s, ", host->name.str);
@@ -1198,13 +1020,13 @@ void wr_conf_display(wr_conf_t* conf) {
 }
 
 /** Add Admin Panel configuration */
-int wr_conf_admin_panel_add(wr_conf_t* conf) {
+int wr_conf_admin_panel_add() {
   LOG_FUNCTION
-  wr_app_conf_t* app = wr_conf_admin_panel_read(conf);
+  config_application_list_t* app = wr_conf_admin_panel_read();
 
   if(app != NULL) {
-    app->next = conf->apps;
-    conf->apps = app;
+    app->next = Config->Application.list;
+    Config->Application.list = app;
     return 0;
   } else {
     printf("'Admin Panel' could not be started. To start 'Admin Panel' run server with root privileges.\n");
@@ -1214,13 +1036,13 @@ int wr_conf_admin_panel_add(wr_conf_t* conf) {
 }
 
 /** Add the configuration for static content server */
-int wr_conf_static_server_add(wr_conf_t* conf) {
+int wr_conf_static_server_add() {
   LOG_FUNCTION
-  wr_app_conf_t* app = wr_conf_static_server_read(conf);
+  config_application_list_t* app = wr_conf_static_server_read();
 
   if(app != NULL) {
-    app->next = conf->apps;
-    conf->apps = app;
+    app->next = Config->Application.list;
+    Config->Application.list = app;
     return 0;
   }
 

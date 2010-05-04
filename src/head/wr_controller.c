@@ -57,11 +57,13 @@
  *         METHOD: ADD
  **/
 
+extern config_t *Config;
+
 static inline wr_ctl_msg_t* wr_ctl_msg_validate(scgi_t* request, wr_ctl_t* ctl) {
   LOG_FUNCTION
   wr_ctl_msg_t* ctl_msg = wr_malloc(wr_ctl_msg_t);
   char *val;
-  char error[WR_STR_LEN];
+  char error[STR_SIZE64];
 
   ctl->type = WR_CTL_MSG_NONE;
   ctl->scgi = scgi_new();
@@ -285,7 +287,7 @@ static void wr_ctl_msg_read_cb(struct ev_loop *loop, struct ev_io *w, int revent
   //Read data
   int bytesRead = recv(w->fd,
                        ctl->msg + ctl->ctl_nbytes,
-                       WR_MSG_SIZE - ctl->ctl_nbytes,
+                       STR_SIZE1KB - ctl->ctl_nbytes,
                        0);
 
   if(bytesRead <= 0 && ctl && ctl->svr && ctl->svr->is_running) {
@@ -329,7 +331,7 @@ static void wr_ctl_accept_cb(struct ev_loop *loop, struct ev_io *w, int revents)
   }
 
   int client_fd;
-  if(server->ctl->uds) {
+  if(Config->Server.flag & SERVER_UDS_SUPPORT) {
     //Accept connection from Internet socket
     struct sockaddr_in client_addr;
     socklen_t client_len = sizeof(client_addr);
@@ -407,7 +409,7 @@ static inline int wr_ctl_init_on_inet_sock(wr_svr_t *server) {
     return -1;
   }
   server->ctl->port = ntohs(addr.sin_port);
-  FILE *tmp_sock = fopen(WR_TMP_SOCK_FILE,"w");
+  FILE *tmp_sock = fopen(Config->Server.File.sock.str,"w");
   if(tmp_sock) {
     fprintf(tmp_sock,"%d", server->ctl->port);
     fclose(tmp_sock);
@@ -416,7 +418,7 @@ static inline int wr_ctl_init_on_inet_sock(wr_svr_t *server) {
   //determine port to which controller_fd bound
   LOG_DEBUG(4,"Initializing controller on port %d, FD is=%d",server->ctl->port,server->ctl->fd);
 
-  if(listen(server->ctl->fd, WR_REQ_CONN_POOL) < 0 )// TODO: Accept connections only from workers
+  if(listen(server->ctl->fd, Config->Request.conn_pool) < 0 )// TODO: Accept connections only from workers
   {
     LOG_ERROR(SEVERE,"listen error on port=%d:%s",server->ctl->port,strerror(errno));
     close_fd(server->ctl->fd);
@@ -429,7 +431,7 @@ static inline int wr_ctl_init_on_inet_sock(wr_svr_t *server) {
 static inline int wr_ctl_init_on_uds(wr_svr_t *server) {
   LOG_FUNCTION
   struct sockaddr_un addr;
-  char sock_path[WR_LONG_STR_LEN];
+  char sock_path[STR_SIZE128];
 
   if ((server->ctl->fd = socket(AF_UNIX, SOCK_STREAM, 0)) == -1) {
     LOG_ERROR(SEVERE,"Socket opening error:%s",strerror(errno));
@@ -446,12 +448,12 @@ static inline int wr_ctl_init_on_uds(wr_svr_t *server) {
 
   /* Preparing unique controller socket path*/
   pid_t pid=getpid();
-  sprintf(sock_path,"%s_%d",WR_CTL_SOCK_PATH,pid);
+  sprintf(sock_path,"%s_%d",Config->Server.Control.sock_path.str,pid);
   size_t len = strlen(sock_path);
 
   wr_string_new(server->ctl->sock_path, sock_path, len);
 
-  FILE *tmp_sock = fopen(WR_TMP_SOCK_FILE,"w");
+  FILE *tmp_sock = fopen(Config->Server.File.sock.str,"w");
   if(tmp_sock) {
     fprintf(tmp_sock,"%s", server->ctl->sock_path.str);
     fclose(tmp_sock);
@@ -474,7 +476,7 @@ static inline int wr_ctl_init_on_uds(wr_svr_t *server) {
     return -1;
   }
   LOG_DEBUG(4,"Getting ready to listen on socket path=%s",addr.sun_path);
-  if(listen(server->ctl->fd, WR_CTL_CONN_POOL) < 0) // TODO: Accept connections only from workers
+  if(listen(server->ctl->fd, Config->Server.Control.conn_pool) < 0) // TODO: Accept connections only from workers
   {
     LOG_ERROR(SEVERE,"listen() error on socket path=%s:%s",server->ctl->sock_path.str,strerror(errno));
     close_fd(server->ctl->fd);
@@ -540,9 +542,8 @@ int wr_ctl_init(wr_svr_t* server) {
   int rv;
 
   /* Start listening for workers control */
-  server->ctl->uds = server->conf->uds;
-
-  if(server->ctl->uds) {
+  
+  if(Config->Server.flag & SERVER_UDS_SUPPORT) {
     // Start listening on UNIX domain socket
     rv = wr_ctl_init_on_uds(server);
     if(rv < 0) {
@@ -583,8 +584,7 @@ wr_svr_ctl_t* wr_svr_ctl_new() {
   ctl->port = -1;
   wr_string_null(ctl->sock_path);
   ctl->w_req = NULL;
-  ctl->uds = -1;
-
+  
   return ctl;
 }
 

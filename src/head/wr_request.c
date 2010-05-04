@@ -22,7 +22,7 @@
 static unsigned int wr_req_count = 0;
 #define HTTP_PREFIX "HTTP_"
 #define HTTP_PREFIX_LEN 5
-
+extern config_t *Config;
 /** Private function */
 
 /** HTTP header received */
@@ -62,7 +62,7 @@ static inline int wr_req_path_set(wr_req_t *req) {
     }
 
     // Check Query String length
-    if(req->req_query_str.len > WR_MAX_REQ_QRY_STR_LEN) {
+    if(req->req_query_str.len > Config->Request.max_query_size) {
       LOG_DEBUG(DEBUG,"query str len = %d", req->req_query_str.len);
       req->resp_buf_len = sprintf(req->resp_buf,"%s","The request query string is too large.");
       wr_req_invalid(req->conn, WR_HTTP_STATUS_413);
@@ -87,7 +87,7 @@ static inline int wr_req_path_set(wr_req_t *req) {
         }
 
         // Check request path length
-        if(req->req_path.len > WR_MAX_REQ_PATH_LEN) {
+        if(req->req_path.len > Config->Request.max_path_size) {
           LOG_DEBUG(DEBUG,"req path len = %d", req->req_path.len);
           req->resp_buf_len = sprintf(req->resp_buf,"%s","The request path is too large.");
           wr_req_invalid(req->conn, WR_HTTP_STATUS_413);
@@ -145,20 +145,20 @@ static inline void wr_req_header_add(wr_req_t * req) {
 
 static int wr_req_header_length_check(wr_req_t *req, size_t length, int index){
   // Check no. of headers
-  if(index >= WR_MAX_REQ_HEADER_NO) {
+  if(index >= Config->Request.max_header_count) {
     req->resp_buf_len = sprintf(req->resp_buf, "%s", "The number of request header is too large.");
     return WR_HTTP_STATUS_413;
   }
   
   // Check field length
   if(req->scgi->index == index){
-    if(req->scgi->header_list->field_length + length >  WR_MAX_REQ_FIELD_NAME_LEN){
+    if(req->scgi->header_list->field_length + length >  Config->Request.max_field_size){
       LOG_DEBUG(DEBUG,"header len = %d", req->scgi->header_list->field_length);
       req->resp_buf_len = sprintf(req->resp_buf, "%s", "The request field name is too large.");
       return WR_HTTP_STATUS_413;
     }
   }else{
-    if((length + 5) > WR_MAX_REQ_FIELD_NAME_LEN){
+    if((length + 5) > Config->Request.max_field_size){
       LOG_DEBUG(DEBUG,"header len = %d", length + 5);
       req->resp_buf_len = sprintf(req->resp_buf, "%s", "The request field name is too large.");
       return WR_HTTP_STATUS_413;
@@ -169,7 +169,7 @@ static int wr_req_header_length_check(wr_req_t *req, size_t length, int index){
   }
   
   // Check request size
-  if((req->scgi->header_offset + length) > WR_MAX_REQ_HEADER_LEN) {
+  if((req->scgi->header_offset + length) > Config->Request.max_header_size) {
     req->resp_buf_len = sprintf(req->resp_buf,"%s","The request is too large.");
     return WR_HTTP_STATUS_413;
   }
@@ -193,13 +193,13 @@ void wr_req_header_field_cb(ebb_request* request, const char *at, size_t length,
 static int wr_req_header_value_check(wr_req_t *req, size_t length, int index){
   // Check value length
   if(req->scgi->index == index){
-    if(req->scgi->header_list->value_length + length >  WR_MAX_REQ_FIELD_VALUE_LEN){
+    if(req->scgi->header_list->value_length + length >  Config->Request.max_value_size){
       LOG_DEBUG(DEBUG,"value len = %d", req->scgi->header_list->value_length);
       req->resp_buf_len = sprintf(req->resp_buf, "%s", "The request field value is too large.");
       return WR_HTTP_STATUS_413;
     }
   }else{
-    if(length > WR_MAX_REQ_FIELD_VALUE_LEN){
+    if(length > Config->Request.max_value_size){
       LOG_DEBUG(DEBUG,"value len = %d", length + 5);
       req->resp_buf_len = sprintf(req->resp_buf, "%s", "The request field value is too large.");
       return WR_HTTP_STATUS_413;
@@ -207,7 +207,7 @@ static int wr_req_header_value_check(wr_req_t *req, size_t length, int index){
   }
   
   // Check request size
-  if((req->scgi->header_offset + length) > WR_MAX_REQ_HEADER_LEN) {
+  if((req->scgi->header_offset + length) > Config->Request.max_header_size) {
     req->resp_buf_len = sprintf(req->resp_buf,"%s","The request is too large.");
     return WR_HTTP_STATUS_413;
   }
@@ -236,7 +236,7 @@ void wr_req_path_cb(ebb_request* request, const char *at, size_t length) {
   req->req_path.len += length;
 
   // Check request path length
-  if(req->req_path.len > WR_MAX_REQ_PATH_LEN) {
+  if(req->req_path.len > Config->Request.max_path_size) {
     LOG_DEBUG(DEBUG,"req path len = %d", req->req_path.len);
     req->resp_buf_len = sprintf(req->resp_buf,"%s","The request path is too large.");
     wr_req_invalid(req->conn, WR_HTTP_STATUS_413);
@@ -251,7 +251,7 @@ void wr_query_string_cb(ebb_request* request, const char *at, size_t length) {
   req->req_query_str.len += length;
 
   // Check query string size
-  if(req->req_query_str.len > WR_MAX_REQ_QRY_STR_LEN) {
+  if(req->req_query_str.len > Config->Request.max_query_size) {
     LOG_DEBUG(DEBUG,"query str len = %d", req->req_query_str.len);
     req->resp_buf_len = sprintf(req->resp_buf,"%s","The request query string is too large.");
     wr_req_invalid(req->conn, WR_HTTP_STATUS_413);
@@ -264,7 +264,7 @@ void wr_req_uri_cb(ebb_request* request, const char *at, size_t length) {
   LOG_FUNCTION
   wr_req_t* req =(wr_req_t*) request->data;
 
-  if(req->req_uri.len + length > WR_MAX_REQ_URI_LEN) {
+  if(req->req_uri.len + length > Config->Request.max_uri_size) {
     LOG_DEBUG(DEBUG,"req uri len = %d",__FUNCTION__, req->req_uri.len);
     req->resp_buf_len = sprintf(req->resp_buf,"%s","The request URI is too large.");
     wr_req_invalid(req->conn, WR_HTTP_STATUS_414);
@@ -285,7 +285,7 @@ void wr_req_fragment_cb(ebb_request* request, const char *at, size_t length) {
 
   // Check request path length
   LOG_DEBUG(DEBUG,"Fragment length = %d", req->req_fragment.len + length);
-  if((req->req_fragment.len + length) > WR_MAX_REQ_FRAG_LEN) {
+  if((req->req_fragment.len + length) > Config->Request.max_frag_size) {
     LOG_DEBUG(DEBUG,"req fragment len = %d", length);
     req->resp_buf_len = sprintf(req->resp_buf, "%s", "The request fragment is too large.");
     wr_req_invalid(req->conn, WR_HTTP_STATUS_413);
@@ -429,17 +429,17 @@ void wr_headers_complete_cb(ebb_request * request) {
   /* Add WR_EBB_HTTP_VER header into CGI header list */
   wr_buffer_t *buf;
   wr_buffer_new(buf);
-  wr_buffer_create(buf, WR_TINY_STR_LEN);
-  buf->len = snprintf(buf->str, WR_TINY_STR_LEN, "HTTP/%d.%d", request->version_major, request->version_minor);
+  wr_buffer_create(buf, STR_SIZE16);
+  buf->len = snprintf(buf->str, STR_SIZE16, "HTTP/%d.%d", request->version_major, request->version_minor);
   scgi_header_add(req->scgi, WR_EBB_HTTP_VER, WR_EBB_HTTP_VER_LEN, buf->str, buf->len);
   wr_buffer_free(buf);
 
   /** Check content length */
   LOG_DEBUG(DEBUG,"Request content len = %d", request->content_length);
-  if(request->content_length > WR_REQ_BODY_MAX_SIZE) {
+  if(request->content_length > Config->Request.max_body_size) {
     // Open file to write req request body
     wr_buffer_new(req->upload_file_name);
-    wr_buffer_create(req->upload_file_name, WR_SHORT_STR_LEN);
+    wr_buffer_create(req->upload_file_name, STR_SIZE32);
     req->upload_file_name->len = sprintf(req->upload_file_name->str,"/tmp/ebb_upload_%d", req->id);
     req->upload_file = fopen(req->upload_file_name->str,"w+");
     if(req->upload_file == NULL) {
@@ -528,12 +528,12 @@ wr_req_t* wr_req_new(wr_conn_t* conn) {
   wr_buffer_t *conn_id, *req_id;
   wr_buffer_new(conn_id);
   wr_buffer_new(req_id);
-  wr_buffer_create(conn_id, WR_SHORT_STR_LEN);
-  wr_buffer_create(req_id, WR_SHORT_STR_LEN);
+  wr_buffer_create(conn_id, STR_SIZE32);
+  wr_buffer_create(req_id, STR_SIZE32);
   conn_id->len = snprintf(conn_id->str, conn_id->size, "%d", conn->id);
   req_id->len = snprintf(req_id->str, req_id->size, "%d", req->id);
-  scgi_header_add(req->scgi, WR_CONN_ID, strlen(WR_CONN_ID), conn_id->str, conn_id->len);
-  scgi_header_add(req->scgi, WR_REQ_ID, strlen(WR_REQ_ID), req_id->str, req_id->len);
+  scgi_header_add(req->scgi, Config->Request.Header.conn_id.str, Config->Request.Header.conn_id.len, conn_id->str, conn_id->len);
+  scgi_header_add(req->scgi, Config->Request.Header.req_id.str, Config->Request.Header.req_id.len, req_id->str, req_id->len);
   wr_buffer_free(conn_id);
   wr_buffer_free(req_id);
 #endif

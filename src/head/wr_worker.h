@@ -90,7 +90,7 @@ void wr_wkr_free(wr_wkr_t*);
 /** Remove worker */
 int wr_wkr_remove(wr_wkr_t*, int);
 /** Create the Worker */
-int wr_wkr_create(wr_svr_t*, wr_app_conf_t*);
+int wr_wkr_create(wr_svr_t*, config_application_list_t*);
 /** Dispatch the request to Worker process */
 void wr_wkr_dispatch_req(wr_req_t*);
 /** Handle connect request from Worker */

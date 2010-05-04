@@ -30,7 +30,6 @@
 
 #include <stdio.h>
 #include <string.h>
-#include <wr_logger.h>
 
 /** Macro definitions */
 #define NODE_NEXT(node) node->next_result

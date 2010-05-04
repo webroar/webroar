@@ -24,6 +24,7 @@
 #include <stdlib.h>
 #include <assert.h>
 #include <wr_yaml_parser.h>
+#include <wr_logger.h>
 
 /** Free node */
 void node_free(node_t* node) {

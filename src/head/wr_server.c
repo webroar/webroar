@@ -18,12 +18,14 @@
  */
 #include <wr_request.h>
 
+extern config_t *Config;
+
 static struct ev_loop *loop;    //Event loop
 struct ev_idle idle_watcher;  //Ideal watcher
 /************ Private functions **************************/
 
 /** Create Server */
-wr_svr_t* wr_svr_new(struct ev_loop* loop, wr_conf_t* conf) {
+wr_svr_t* wr_svr_new(struct ev_loop* loop) {
   LOG_FUNCTION
   wr_svr_t* server = wr_malloc(wr_svr_t);
 
@@ -35,13 +37,13 @@ wr_svr_t* wr_svr_new(struct ev_loop* loop, wr_conf_t* conf) {
   //Get ebb server object
   ebb_server_init(&(server->ebb_svr),loop);
 
-  if(conf->server->flag&WR_SVR_SSL_SUPPORT) {
+  if(Config->Server.flag & SERVER_SSL_SUPPORT) {
 #ifdef HAVE_GNUTLS
 
     //Initialize ebb server for SSL support
     ebb_server_init(&(server->secure_ebb_svr),loop);
     // Add GnuTLS support
-    if(ebb_server_set_secure(&(server->secure_ebb_svr), conf->server->certificate.str, conf->server->key.str) < 0) {
+    if(ebb_server_set_secure(&(server->secure_ebb_svr), Config->Server.SSL.certificate.str, Config->Server.SSL.key.str) < 0) {
       ebb_server_unlisten(&(server->secure_ebb_svr));
       //free(server);
       //return NULL;
@@ -66,7 +68,6 @@ wr_svr_t* wr_svr_new(struct ev_loop* loop, wr_conf_t* conf) {
     return NULL;
   }
 
-  server->conf = conf;
   server->apps = NULL;
   server->default_app = NULL;
   server->resolver = wr_req_resolver_new();
@@ -116,35 +117,34 @@ static inline void idle_cb (struct ev_loop *loop, struct ev_idle *w, int revents
  *****************************************************/
 
 /** Starts listening for requests */
-int wr_svr_init(wr_svr_t** server, wr_conf_t *conf) {
+int wr_svr_init(wr_svr_t** server) {
   //TODO: attach idle watcher
   //ev_idle_init (&idle_watcher, idle_cb);
   //attach_idle_watcher();
 
   //Create and initialize Server object
   loop = ev_default_loop (0);
-  *server = wr_svr_new(loop, conf);
+  *server = wr_svr_new(loop);
 
   if(*server == NULL) {
     LOG_ERROR(SEVERE,"Server is NULL");
     return -1;
   }
 
-  (*server)->conf = conf;
-  if(conf->server->flag&WR_SVR_SSL_SUPPORT) {
+  if(Config->Server.flag & SERVER_SSL_SUPPORT) {
 #ifdef HAVE_GNUTLS
-    LOG_DEBUG(DEBUG,"SSL port = %d", conf->server->ssl_port);
-    if(ebb_server_listen_on_port(&(*server)->secure_ebb_svr, conf->server->ssl_port) < 0) {
-      LOG_ERROR(SEVERE,"ebb_server_listen_on_port(): failed. Port number = %d",conf->server->ssl_port);
-      printf("Port %d is already in use.\n", conf->server->ssl_port);
+    LOG_DEBUG(DEBUG,"SSL port = %d", Config->Server.SSL.port);
+    if(ebb_server_listen_on_port(&(*server)->secure_ebb_svr, Config->Server.SSL.port) < 0) {
+      LOG_ERROR(SEVERE,"ebb_server_listen_on_port(): failed. Port number = %d",Config->Server.SSL.port);
+      printf("Port %d is already in use.\n", Config->Server.SSL.port);
     }
 #endif
 
   }
-  LOG_DEBUG(DEBUG,"port = %d", conf->server->port);
+  LOG_DEBUG(DEBUG,"port = %d", Config->Server.port);
   //ebb server starts listening for request
-  if(ebb_server_listen_on_port(&(*server)->ebb_svr, conf->server->port) < 1) {
-    printf("Port %d is already in use.\n", conf->server->port);
+  if(ebb_server_listen_on_port(&(*server)->ebb_svr, Config->Server.port) < 1) {
+    printf("Port %d is already in use.\n", Config->Server.port);
     return -1;
   }
 
@@ -187,7 +187,6 @@ void wr_svr_free(wr_svr_t* server) {
 
   //Destroy Server Control object
   wr_svr_ctl_free(server->ctl);
-  wr_conf_free(server->conf);
   wr_req_resolver_free(server->resolver);
   free(server);
 }

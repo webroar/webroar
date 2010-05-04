@@ -23,14 +23,15 @@
 #include <execinfo.h>
 
 // wr_server object
-static wr_svr_t *server;
+static wr_svr_t *server = NULL;
+config_t        *Config = NULL;
 
 /** Cleanup and destroy the Server */
 static inline void cleanup(wr_svr_t *server) {
   LOG_FUNCTION
 
   // Delete 'webroar.sock' file
-  remove(WR_TMP_SOCK_FILE);
+  remove(Config->Server.File.sock.str);
 
   // Stop event loop
   ev_unloop(server->ebb_svr.loop, EVUNLOOP_ALL);
@@ -39,7 +40,8 @@ static inline void cleanup(wr_svr_t *server) {
   wr_svr_free(server);
 
   // Delete 'webroar.pid' file
-  remove(WR_PID_FILE);
+  remove(Config->Server.File.pid.str);
+  wr_server_config_free(Config);
   LOG_INFO("Shutting down network server. No more request can be served");
 
   // Destroy logger object
@@ -90,9 +92,9 @@ static inline void daemonize() {
   LOG_DEBUG(DEBUG,"j=%d",j);
 
   //Log current pid
-  char str[WR_SHORT_STR_LEN];
+  char str[STR_SIZE32];
 
-  int pid_FD=open(WR_PID_FILE,O_RDWR|O_CREAT,0640);
+  int pid_FD=open(Config->Server.File.pid.str,O_RDWR|O_CREAT,0640);
   LOG_DEBUG(4,"FD for PID is %i",pid_FD);
 
   if (pid_FD<0) {
@@ -130,10 +132,10 @@ void sigproc() {
 
 /** Handle segmentation fault */
 void crash_handler(int sig) {
-  void *array[WR_STACKTRACE_SIZE];
+  void *array[Config->Server.stack_trace];
   size_t size;
   char **bt_symbols;
-  char bt_string[WR_STACKTRACE_SIZE * WR_LONG_STR_LEN * 2];
+  char bt_string[Config->Server.stack_trace * STR_SIZE256];
   int i;
   sigset_t unblock_sig;
   
@@ -185,7 +187,7 @@ void crash_handler(int sig) {
   sleep(5);
     
   // get void*'s for all entries on the stack
-  size = backtrace(array, WR_STACKTRACE_SIZE);
+  size = backtrace(array, Config->Server.stack_trace);
   bt_symbols = backtrace_symbols(array, size);
   strcpy(bt_string, "\n");
   for(i = 0; i < size; i++) {
@@ -202,33 +204,36 @@ void crash_handler(int sig) {
 
 int main(int argc, char *argv[]) {
   int retval = 0;
-  wr_conf_t *conf=NULL;
-  char *WR_ROOT = argv[1];
-
-  //Initialize logger
-  if(initialize_logger(WR_LOG_FILE, WR_SERVER, WR_VERSION) == 0) {
-    LOG_DEBUG(DEBUG,"Logging started in %s file",WR_LOG_FILE);
+  
+  Config = wr_server_config_init(argv[1]);
+  
+  if(Config == NULL) return -1;
+  
+    //Initialize logger
+  if(initialize_logger(Config->Server.File.log.str, Config->Server.name.str, Config->Server.version.str) == 0) {
+    LOG_DEBUG(DEBUG,"Logging started in %s file",Config->Server.File.log.str);
   } else {
     printf("Logger initialization failed. Please make sure you have write permission on '/var/log/webroar' directory.");
   }
 
   //Allocate and initialize configuration structure
-  conf = wr_conf_read(WR_ROOT);
-  if(conf == NULL ) {
+  if(wr_conf_read() == FALSE ) {
     LOG_ERROR(FATAL,"Configuration reading failed.");
     printf("Server not started.\nProblem with reading the configuration file. Kindly refer the log files for details.\n");
+    wr_server_config_free(Config);
     return -1;
   }
+
 #ifdef L_DEBUG
   set_log_severity(DEBUG);
 #else
-  set_log_severity(conf->server->log_level);
+  set_log_severity(Config->Server.log_level);
 #endif
   // Add Admin Panel
-  wr_conf_admin_panel_add(conf);
+  wr_conf_admin_panel_add();
   
   // Add staic file server
-  wr_conf_static_server_add(conf);
+  wr_conf_static_server_add();
 
   //TODO: Windows Portability?
   signal(SIGINT, sigproc);
@@ -243,13 +248,14 @@ int main(int argc, char *argv[]) {
   
 
   // Initialize and start the Server to accept requests
-  retval = wr_svr_init(&server, conf);
+  retval = wr_svr_init(&server);
   if(retval<0) {
     LOG_ERROR(FATAL,"Initialization of network server failed.");
     printf("Server not started. Kindly refer the log files for details.\n");
+    wr_server_config_free(Config);
     return retval;
   }
-  LOG_INFO("Network server successfully initialized on port %d",server->conf->server->port);
+  LOG_INFO("Network server successfully initialized on port %d",Config->Server.port);
 
   // Set keep alive flag
   server->is_running = 1;
@@ -260,6 +266,7 @@ int main(int argc, char *argv[]) {
     LOG_ERROR(FATAL,"Controller Initialization failed.");
     printf("Server not started. Kindly refer the log files for details.\n");
     wr_svr_free(server);
+    wr_server_config_free(Config);
     return retval;
   }
   LOG_INFO("Controller initialized");

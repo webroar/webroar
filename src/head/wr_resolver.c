@@ -19,6 +19,8 @@
 #include <wr_request.h>
 #include <string.h>
 
+extern config_t *Config;
+
 /*********** Private Function ***********/
 void wr_req_resolver_print(wr_req_resolver_t* resolver) {
   LOG_FUNCTION
@@ -43,7 +45,7 @@ void wr_req_resolver_print(wr_req_resolver_t* resolver) {
 /** Resolve static content */
 int wr_req_resolve_static_content(wr_req_t *req){
   LOG_FUNCTION
-  char path[WR_FILE_PATH_LEN + WR_MAX_REQ_PATH_LEN];
+  char path[STR_SIZE1KB + Config->Request.max_path_size];
   char *req_path;
   struct stat buf;
   int len;
@@ -77,7 +79,7 @@ int wr_req_resolve_static_content(wr_req_t *req){
 
   /* Add WR_FILE_PATH header into SCGI header list */
   LOG_DEBUG(DEBUG, "File path = %s, lenght = %d", path, strlen(path));
-  scgi_header_add(req->scgi, WR_HTTP_FILE_PATH, WR_HTTP_FILE_PATH_LEN, path, strlen(path));
+  scgi_header_add(req->scgi, Config->Request.Header.file_path.str, Config->Request.Header.file_path.len, path, strlen(path));
   req->app = req->app->svr->static_app;
 
   return 0;
@@ -99,7 +101,7 @@ wr_req_resolver_t* wr_req_resolver_new() {
 }
 
 /** Add Application resolver */
-int wr_req_resolver_add(wr_svr_t *server, wr_app_t *app, wr_app_conf_t *conf) {
+int wr_req_resolver_add(wr_svr_t *server, wr_app_t *app, config_application_list_t *conf) {
   LOG_FUNCTION
   short  rv = 0;
 
@@ -112,7 +114,7 @@ int wr_req_resolver_add(wr_svr_t *server, wr_app_t *app, wr_app_conf_t *conf) {
 
     baseuri->baseuri_hash = uri_hash(conf->baseuri.str + 1);
 
-    if(baseuri->baseuri_hash == WR_DEFAULT_PREFIX_HASH) {
+    if(baseuri->baseuri_hash == Config->Request.prefix_hash) {
       free(baseuri);
       server->default_app = app;
     } else {
@@ -130,7 +132,7 @@ int wr_req_resolver_add(wr_svr_t *server, wr_app_t *app, wr_app_conf_t *conf) {
   */
 
   if(conf->host_name_list) {
-    wr_host_name_t *host = conf->host_name_list;
+    config_host_list_t *host = conf->host_name_list;
     while(host) {
       LOG_DEBUG(DEBUG, "Adding resolver Host = %s, type=%d",host->name.str, host->type);
       wr_host_list_t *list = wr_malloc(wr_host_list_t);
@@ -180,7 +182,7 @@ int wr_req_resolver_remove(wr_svr_t *server, wr_app_t *app) {
   while(baseuri) {
     if(baseuri->app == app) {
       LOG_DEBUG(DEBUG,"Removed application %s",baseuri->app->conf->baseuri.str);
-      //      if(baseuri->baseuri_hash == WR_DEFAULT_PREFIX_HASH){
+      //      if(baseuri->baseuri_hash == Config->Request.prefix_hash){
       //        server->default_app = NULL;
       //      }
       if(prev_baseuri == NULL) {
@@ -260,25 +262,25 @@ int wr_req_resolve_http_req(wr_svr_t *server, wr_req_t *req) {
       }
 
       while(list) {
-        if(list->host->type == WR_HOST_TYPE_STATIC &&
+        if(list->host->type == HOST_TYPE_STATIC &&
             list->host->name.len == host_str.len &&
             strncmp(list->host->name.str, host_str.str, host_str.len)==0) {
           LOG_DEBUG(DEBUG,"Application resolved with WR_HOST_TYPE_STATIC host %s", list->host->name.str);
           app = list->app;
           break;
-        } else if(list->host->type == WR_HOST_TYPE_WILDCARD_IN_START &&
+        } else if(list->host->type == HOST_TYPE_WILDCARD_IN_START &&
                   list->host->name.len < host_str.len &&
                   strncmp(list->host->name.str, host_str.str + host_str.len -  list->host->name.len, list->host->name.len)==0) {
           LOG_DEBUG(DEBUG,"Application resolved with WR_HOST_TYPE_WILDCARD_IN_START host %s", list->host->name.str);
           app = list->app;
           break;
-        } else if(list->host->type == WR_HOST_TYPE_WILDCARD_IN_END &&
+        } else if(list->host->type == HOST_TYPE_WILDCARD_IN_END &&
                   list->host->name.len < host_str.len &&
                   strncmp(list->host->name.str, host_str.str, list->host->name.len)==0) {
           LOG_DEBUG(DEBUG,"Application resolved with WR_HOST_TYPE_WILDCARD_IN_END host %s", list->host->name.str);
           app = list->app;
           break;
-        } else if(list->host->type == WR_HOST_TYPE_WILDCARD_IN_START_END &&
+        } else if(list->host->type == HOST_TYPE_WILDCARD_IN_START_END &&
                   list->host->name.len < host_str.len &&
                   strstr(host_str.str, list->host->name.str)!=NULL) {
           LOG_DEBUG(DEBUG,"Application resolved with WR_HOST_TYPE_WILDCARD_IN_START_END host %s", list->host->name.str);

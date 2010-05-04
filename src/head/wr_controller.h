@@ -66,7 +66,7 @@ struct wr_ctl_s {
   wr_svr_t           *svr;    /* Pointer to wr_server_t */
   wr_wkr_t           *wkr;    /* Pointer to wr_processsor_t */
   wr_app_t           *app;    /* Pointer to wr_app_t, would be used at time of freeing control object */
-  char               msg[WR_MSG_SIZE];
+  char               msg[STR_SIZE1KB];
   size_t             ctl_nbytes;
   wr_ctl_msg_type_t  type;
 
@@ -86,7 +86,6 @@ void wr_ctl_resp_write(wr_ctl_t*);
 /** Server Control structure */
 struct wr_svr_ctl_s {
   int       fd;        /**< Control socket fd */
-  int       uds;      /**< Flag for Unix Domain Socket */
   int       port;      /**< Control port */
   wr_str_t  sock_path;    /**< Control socket path */
   ev_io*     w_req;      /**< Accept worker connect request watcher */

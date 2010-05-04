@@ -20,6 +20,7 @@
 
 // Worker count
 static unsigned int worker_count = 0;
+extern config_t *Config;
 
 /************** Private Functions ******************/
 
@@ -34,7 +35,7 @@ static inline wr_app_t* wr_app_exist(wr_svr_t *server, const char *app_name){
     app = app->next;
   }
   
-  if(strcmp(app_name, WR_STATIC_FILE_SERVER_NAME) == 0){
+  if(strcmp(app_name, Config->Application.Static_server.name.str) == 0){
     return server->static_app;
   }
   
@@ -80,7 +81,7 @@ static void wr_app_kill_pending_wkr(wr_app_t* app, const int flag){
       kill(pid ,SIGKILL);
     if(flag) break;
   }
-  app->high_ratio = TOTAL_WORKER_COUNT(app) * WR_MAX_REQ_RATIO;
+  app->high_ratio = TOTAL_WORKER_COUNT(app) * Config->Application.max_req_ratio;
 }
 
 static void wr_app_add_error_msg(wr_app_t* app){
@@ -118,18 +119,18 @@ void wr_app_wkr_add_timeout_cb(struct ev_loop *loop, ev_timer *w, int revents) {
   ev_timer_stop(loop, &app->t_add_timeout);
   app->timeout_counter ++;
 
-  if(app->timeout_counter > WR_MAX_ADD_TIMEOUT_COUNTER){
+  if(app->timeout_counter > Config->Server.Worker.add_trials){
     LOG_ERROR(SEVERE,"Reset worker timeout counter for %s.", app->conf->name.str);
     app->timeout_counter = 0;
     return;
-  }else if(app->timeout_counter == WR_MAX_ADD_TIMEOUT_COUNTER){
+  }else if(app->timeout_counter == Config->Server.Worker.add_trials){
     LOG_ERROR(SEVERE,"worker timeout counter for %s exceeds limit.", app->conf->name.str);
 
     app->timeout_counter ++;
 
     wr_app_kill_pending_wkr(app, FALSE);
 
-    app->t_add_timeout.repeat = WR_WKR_ADD_WAIT_TIME;
+    app->t_add_timeout.repeat = Config->Server.Worker.add_wait;
     ev_timer_again(loop, &app->t_add_timeout);
   }
 
@@ -183,8 +184,8 @@ void wr_app_wkr_remove_cb(struct ev_loop *loop, ev_timer *w, int revents) {
   LOG_DEBUG(DEBUG,"Pending_wkr = %d, app->q_workers->q_count = %d",
             WR_QUEUE_SIZE(app->q_pending_workers), WR_QUEUE_SIZE(app->q_workers));
   if(app->q_workers->q_count > app->conf->min_worker) {
-    char cmd[WR_LONG_LONG_STR_LEN];
-    char pid_list[WR_LONG_LONG_STR_LEN], pid_c[WR_SHORT_STR_LEN];
+    char cmd[STR_SIZE512];
+    char pid_list[STR_SIZE512], pid_c[STR_SIZE32];
     int i,index;
     i = 0;
     index = (app->q_workers->q_front + i) % app->q_workers->q_max_size;
@@ -193,7 +194,7 @@ void wr_app_wkr_remove_cb(struct ev_loop *loop, ev_timer *w, int revents) {
     
     // Get pid of the worker consuming more resident memory
 #ifdef __APPLE__
-    //sprintf(cmd,"ps -o pid -m -p %s | head -n2 | tail -n1 | cut -c-6 > %s",pid_list, WR_HIGH_RSS_PID_FILE);
+    //sprintf(cmd,"ps -o pid -m -p %s | head -n2 | tail -n1 | cut -c-6 > %s",pid_list, Config->Server.File.high_rss.str);
 	/* TODO: when any shell command is executed using system(), process goes into wait state. It is 
 	 observed on only Mac. When tried calling syste() at various interval like after port binding,
 	 controller initialization, forking required worker, daemonizing, activating event loop etc, in all 
@@ -201,7 +202,7 @@ void wr_app_wkr_remove_cb(struct ev_loop *loop, ev_timer *w, int revents) {
 	 goes into infinite wait.	   
 	 In this case we would simply pick the first worker from queue and remove it.
 	 */
-    FILE *wfp = fopen(WR_HIGH_RSS_PID_FILE, "w");
+    FILE *wfp = fopen(Config->Server.File.high_rss.str, "w");
     if(wfp) {
       fprintf(wfp,"%d", tmp_worker->pid); 
       fclose(wfp);
@@ -216,18 +217,18 @@ void wr_app_wkr_remove_cb(struct ev_loop *loop, ev_timer *w, int revents) {
       sprintf(pid_c,",%d", tmp_worker->pid);
       strcat(pid_list, pid_c);
     }
-    sprintf(cmd,"ps -o pid --sort=rss -p %s | tail -n1 | cut -c-6 > %s",pid_list, WR_HIGH_RSS_PID_FILE);
+    sprintf(cmd,"ps -o pid --sort=rss -p %s | tail -n1 | cut -c-6 > %s",pid_list, Config->Server.File.high_rss.str);
     LOG_DEBUG(DEBUG,"Formed command to remove worker is %s",cmd);
     system(cmd);
 #endif
 	
     // Read pid from file
-    FILE *fp = fopen(WR_HIGH_RSS_PID_FILE, "r");
+    FILE *fp = fopen(Config->Server.File.high_rss.str, "r");
     if(fp) {
       unsigned pid = 0;
       fscanf(fp, "%u", &pid);
       fclose(fp);
-      remove(WR_HIGH_RSS_PID_FILE);
+      remove(Config->Server.File.high_rss.str);
       int flag = 1;
 
       // Check for worker in list of free workers. If found remove it.
@@ -277,15 +278,14 @@ void wr_app_wkr_remove_cb(struct ev_loop *loop, ev_timer *w, int revents) {
 static inline int wr_app_reload(wr_app_t *app){
   LOG_FUNCTION
   wr_wkr_t *worker;
-  wr_app_conf_t *app_conf;
+  config_application_list_t *app_conf;
   short count;
 
   // Remove an old application from the resolver list.
   wr_req_resolver_remove(app->svr, app);
 
   // Update the application configuration.
-  app_conf = wr_conf_app_update(app->svr->conf,
-                   app->conf->name.str,
+  app_conf = wr_conf_app_update(app->conf->name.str,
                    app->svr->err_msg);
   if(app_conf == NULL){
     LOG_DEBUG(WARN, "Error: %s",app->svr->err_msg);
@@ -300,7 +300,7 @@ static inline int wr_app_reload(wr_app_t *app){
 
   // Remove old application specification.
   app->conf->next = NULL;
-  wr_conf_app_free(app->conf);
+  wr_application_list_free(app->conf);
   app->conf = app_conf;
 
   // Add the updated application to resolver list.
@@ -384,9 +384,9 @@ void wr_app_print(wr_app_t*app) {
 /** Create worker for application */
 int wr_app_wkr_add(wr_app_t *app) {
   if(WR_QUEUE_SIZE(app->q_pending_workers) < WR_QUEUE_MAX_SIZE(app->q_pending_workers)) {
-    if(app->timeout_counter >= WR_MAX_ADD_TIMEOUT_COUNTER){
+    if(app->timeout_counter >= Config->Server.Worker.add_trials){
       LOG_ERROR(SEVERE, "Could not fork worker because previous %d workers got timed out.",
-              WR_MAX_ADD_TIMEOUT_COUNTER);
+              Config->Server.Worker.add_trials);
       return FALSE;
     }
     int retval = wr_wkr_create(app->svr, app->conf);
@@ -394,7 +394,7 @@ int wr_app_wkr_add(wr_app_t *app) {
       wr_pending_wkr_t *pending = wr_malloc(wr_pending_wkr_t);
       *pending = retval;
       wr_queue_insert(app->q_pending_workers, pending);
-      app->high_ratio = TOTAL_WORKER_COUNT(app) * WR_MAX_REQ_RATIO;
+      app->high_ratio = TOTAL_WORKER_COUNT(app) * Config->Application.max_req_ratio;
       ev_timer_again(app->svr->ebb_svr.loop, &app->t_add_timeout);
       LOG_INFO("PID of created worker = %d, Rails application=%s",
                retval, app->conf->path.str);
@@ -407,7 +407,7 @@ int wr_app_wkr_add(wr_app_t *app) {
 }
 
 /** Insert application based on application configuration */
-static int wr_app_insert(wr_svr_t* server, wr_app_conf_t* config, wr_ctl_t *ctl) {
+static int wr_app_insert(wr_svr_t* server, config_application_list_t* config, wr_ctl_t *ctl) {
   LOG_FUNCTION
   wr_app_t* app = wr_malloc(wr_app_t);
 
@@ -416,13 +416,13 @@ static int wr_app_insert(wr_svr_t* server, wr_app_conf_t* config, wr_ctl_t *ctl)
     return FALSE;
   }
 
-  // Queue size is WR_ALLOWED_MAX_WORKERS + 1 to accommodate temporary extra 
+  // Queue size is Config->Server.Worker.max + 1 to accommodate temporary extra 
   // worker, created during application restart 
-  app->q_free_workers     = wr_queue_new(WR_ALLOWED_MAX_WORKERS + 1);
-  app->q_workers         = wr_queue_new(WR_ALLOWED_MAX_WORKERS + 1);
-  app->q_pending_workers = wr_queue_new(WR_MAX_PENDING_WKR);
+  app->q_free_workers     = wr_queue_new(Config->Server.Worker.max + 1);
+  app->q_workers         = wr_queue_new(Config->Server.Worker.max + 1);
+  app->q_pending_workers = wr_queue_new(Config->Server.Worker.pending);
 
-  app->q_messages        = wr_queue_new(WR_MSG_QUE_SIZE);
+  app->q_messages        = wr_queue_new(Config->Application.msg_queue_size);
 
   if(app->q_workers == NULL || app->q_pending_workers == NULL ||
      app->q_free_workers == NULL || app->q_messages == NULL) {
@@ -443,7 +443,7 @@ static int wr_app_insert(wr_svr_t* server, wr_app_conf_t* config, wr_ctl_t *ctl)
   /* set application object in control, it would be used at time of freeing control object */
   if(ctl)    ctl->app = app;
   
-  if(strcmp(config->name.str, WR_STATIC_FILE_SERVER_NAME) == 0){
+  if(strcmp(config->name.str, Config->Application.Static_server.name.str) == 0){
     app->next = NULL;
     server->static_app = app;
   }else{
@@ -452,9 +452,9 @@ static int wr_app_insert(wr_svr_t* server, wr_app_conf_t* config, wr_ctl_t *ctl)
     server->apps = app;
   }
 
-  ev_timer_init (&app->t_add, wr_app_wkr_add_cb, 0., WR_HIGH_LOAD_LIMIT);
-  ev_timer_init (&app->t_remove, wr_app_wkr_remove_cb, 0., WR_LOW_LOAD_LIMIT);
-  ev_timer_init (&app->t_add_timeout, wr_app_wkr_add_timeout_cb, 0., WR_WKR_ADD_TIMEOUT);
+  ev_timer_init (&app->t_add, wr_app_wkr_add_cb, 0., Config->Application.high_load);
+  ev_timer_init (&app->t_remove, wr_app_wkr_remove_cb, 0., Config->Application.low_load);
+  ev_timer_init (&app->t_add_timeout, wr_app_wkr_add_timeout_cb, 0., Config->Server.Worker.add_timeout);
 
   LOG_DEBUG(4,"%s() Application Added:%s", __FUNCTION__, config->name.str);
 
@@ -466,10 +466,10 @@ static int wr_app_insert(wr_svr_t* server, wr_app_conf_t* config, wr_ctl_t *ctl)
 /** Balance number of workers */
 void wr_app_wkr_balance(wr_app_t *app){
   // Maintain minimum number of workers
-  //while(TOTAL_WORKER_COUNT(app) < app->conf->min_worker && app->timeout_counter < WR_MAX_ADD_TIMEOUT_COUNTER){
+  //while(TOTAL_WORKER_COUNT(app) < app->conf->min_worker && app->timeout_counter < Config->Server.Worker.add_trials){
   while(TOTAL_WORKER_COUNT(app) < app->conf->min_worker){
     if(wr_app_wkr_add(app) == FALSE)   break;
-    app->low_ratio = TOTAL_WORKER_COUNT(app) * WR_MIN_REQ_RATIO;
+    app->low_ratio = TOTAL_WORKER_COUNT(app) * Config->Application.min_req_ratio;
   }
 
   if(WR_QUEUE_SIZE(app->q_workers) >= app->conf->min_worker && app->state == WR_APP_RESTART)
@@ -596,7 +596,7 @@ int wr_app_remove(wr_svr_t* server, const char* app_name) {
 
     app->next = NULL;
     wr_app_free(app);
-    wr_app_conf_remove(server->conf, app_name);
+    wr_app_conf_remove(app_name);
     return 0;
   } else {
     LOG_ERROR(WARN,"Aapplication %s didn't found in list", app_name);
@@ -639,7 +639,7 @@ void wr_app_chk_load_to_remove_wkr(wr_app_t *app) {
 /** Initialize the applications */
 void wr_app_init(wr_svr_t *server) {
   LOG_FUNCTION
-  wr_app_conf_t *app = server->conf->apps;
+  config_application_list_t *app = Config->Application.list;
 
   while(app) {
     wr_app_insert(server, app, NULL);
@@ -653,7 +653,7 @@ void wr_app_add_cb(wr_ctl_t *ctl, const wr_ctl_msg_t *ctl_msg) {
   LOG_FUNCTION
 
   wr_svr_t* server = ctl->svr;
-  wr_app_conf_t* app_conf = NULL;
+  config_application_list_t* app_conf = NULL;
   wr_app_t* app = wr_app_exist(server, ctl_msg->msg.app.app_name.str);
   
   // Reset the error message
@@ -662,9 +662,8 @@ void wr_app_add_cb(wr_ctl_t *ctl, const wr_ctl_msg_t *ctl_msg) {
      /* set application object in control, it would be used at time of freeing control object */
      ctl->app = app;
      sprintf(ctl->svr->err_msg, "Application '%s' is already running.", ctl_msg->msg.app.app_name.str); 
-  }else if(ctl && server && server->conf) {
-    app_conf = wr_conf_app_read(server->conf,
-                           ctl_msg->msg.app.app_name.str,
+  }else if(ctl && server) {
+    app_conf = wr_conf_app_read(ctl_msg->msg.app.app_name.str,
                            ctl->svr->err_msg);
     if(app_conf!=NULL) {
       if(wr_app_insert(ctl->svr, app_conf, ctl) == TRUE)        return;
@@ -693,12 +692,11 @@ void wr_app_remove_cb(wr_ctl_t *ctl, const wr_ctl_msg_t *ctl_msg) {
 /** Allication reload callback */
 void wr_app_reload_cb(wr_ctl_t *ctl, const wr_ctl_msg_t *ctl_msg){
   LOG_FUNCTION
-  wr_app_conf_t* app_config = NULL;
+  config_application_list_t* app_config = NULL;
   wr_app_t *app = wr_app_exist(ctl->svr, ctl_msg->msg.app.app_name.str);
 
   // Read new application configuration.
-  app_config = wr_conf_app_update(ctl->svr->conf,
-                                  ctl_msg->msg.app.app_name.str,
+  app_config = wr_conf_app_update(ctl_msg->msg.app.app_name.str,
                                   ctl->svr->err_msg);
 
   LOG_INFO("Reload the application %s", ctl_msg->msg.app.app_name.str);
@@ -711,14 +709,14 @@ void wr_app_reload_cb(wr_ctl_t *ctl, const wr_ctl_msg_t *ctl_msg){
     // Add old application configuration to server configuration.
     if(app){
       LOG_DEBUG(WARN,"Replace the application configuration with old one.");
-      wr_conf_app_replace(app->svr->conf, app->conf);
+      wr_conf_app_replace(app->conf);
     }
     return;
   }
   
   if(app){
     int i;
-    wr_app_conf_t *tmp_app_conf = app->conf;
+    config_application_list_t *tmp_app_conf = app->conf;
     // Set variables to restart the application.
     LOG_DEBUG(DEBUG,"Set variables to restart an existing application.");
     app->conf = app_config;
@@ -737,7 +735,7 @@ void wr_app_reload_cb(wr_ctl_t *ctl, const wr_ctl_msg_t *ctl_msg){
     wr_app_wkr_add(app);
     
     // Replace the application configuration with older configuration object.
-    wr_conf_app_replace(app->svr->conf, tmp_app_conf);
+    wr_conf_app_replace(tmp_app_conf);
     app->conf = tmp_app_conf;
     return;
   }else{

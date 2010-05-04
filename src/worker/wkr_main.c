@@ -296,15 +296,12 @@ static void send_error(){
 int manipulate_environment_variable(wkr_tmp_t *tmp) {
   LOG_FUNCTION
   node_t *root = NULL, *env_var = NULL, *app_nodes = NULL;
-  char file_name[512];
-  char *str, *root_path, *app_name;
+  char *str, *app_name;
   int rv = 0;  
 
-  root_path = tmp->root_path.str;
   app_name = tmp->name.str;
   
-  sprintf(file_name, "%s%s", root_path, WR_CONF_PATH);
-  root = yaml_parse(file_name);
+  root = yaml_parse(Config->Worker.File.config.str);
   if (root == NULL) {
     LOG_ERROR(SEVERE, "Could not read config.yml file");
     return -1;

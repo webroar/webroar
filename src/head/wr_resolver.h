@@ -31,7 +31,7 @@ typedef struct wr_host_list_s   wr_host_list_t;
  * Host name start and end with '*'
  */
 struct wr_host_list_s {
-  wr_host_name_t  *host;
+  config_host_list_t      *host;
   wr_app_t        *app;
   wr_host_list_t     *next;
 };
@@ -50,7 +50,7 @@ struct wr_req_resolver_s {
 };
 
 wr_req_resolver_t* wr_req_resolver_new();
-int wr_req_resolver_add(wr_svr_t*, wr_app_t*, wr_app_conf_t*);
+int wr_req_resolver_add(wr_svr_t*, wr_app_t*, config_application_list_t*);
 int wr_req_resolver_remove(wr_svr_t*, wr_app_t*);
 int wr_req_resolve_http_req(wr_svr_t*, wr_req_t*);
 void wr_req_resolver_free(wr_req_resolver_t*);

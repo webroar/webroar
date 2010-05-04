@@ -45,7 +45,7 @@ struct wr_app_s {
 
   wr_queue_t     *q_messages;      /**< Pending message queue */
 
-  wr_app_conf_t  *conf;        /**< Application configuration parameters */
+  config_application_list_t  *conf;        /**< Application configuration parameters */
   wr_svr_t       *svr;        /**< Server pointer */
   wr_ctl_t       *ctl;
 

@@ -38,12 +38,11 @@ typedef struct {
 #ifdef HAVE_GNUTLS
 #endif
 
-  wr_conf_t*       conf;      /**< Configuration pointer */
   wr_app_t*        apps;  /**< Application list */
   wr_app_t*        default_app;
   wr_app_t*        static_app;
   wr_svr_ctl_t*    ctl;    /**< Server control pointer */
-  char             err_msg[WR_MSG_SIZE];    /**< Error message */
+  char             err_msg[STR_SIZE1KB];    /**< Error message */
   wr_req_resolver_t *resolver;
   short            is_running;  /**< Keep alive flag */
 
@@ -58,7 +57,7 @@ typedef struct {
 }wr_svr_t;
 
 /** Initialize Server */
-int wr_svr_init(wr_svr_t**, wr_conf_t*);
+int wr_svr_init(wr_svr_t**);
 /** Destroy Server */
 void wr_svr_free(wr_svr_t*);
 
