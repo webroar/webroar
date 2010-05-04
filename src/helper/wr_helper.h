@@ -20,12 +20,10 @@
 #ifndef WR_HELPER_H_
 #define WR_HELPER_H_
 
-#include <wr_macro.h>
-#include <wr_string.h>
+#include <wr_config.h>
 #include <wr_queue.h>
 #include <wr_util.h>
 #include <wr_scgi.h>
-#include <wr_logger.h>
 #include <wr_yaml_parser.h>
 #include <wr_msg_queue_client.h>
 

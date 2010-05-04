@@ -18,7 +18,6 @@
  */
 #include <worker.h>
 #include <stdlib.h>
-#include <wr_logger.h>
 
 http_resp_t* http_resp_new() {
   LOG_FUNCTION

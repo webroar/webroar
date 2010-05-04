@@ -30,6 +30,8 @@
 
 #include <stdio.h>
 
+#define SCGI_CONTENT_LENGTH "CONTENT_LENGTH"
+
 typedef struct scgi_header_s scgi_header_t;
 
 /** SCGI request type */

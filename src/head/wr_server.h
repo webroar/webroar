@@ -21,7 +21,6 @@
 
 #include <wr_configurator.h>
 #include <ebb.h>
-#include <wr_config.h>
 
 typedef struct wr_app_s           wr_app_t;
 typedef struct wr_svr_ctl_s       wr_svr_ctl_t;

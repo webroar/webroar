@@ -21,7 +21,6 @@
  *****************************************************************************/
 
 #include <wr_configurator.h>
-#include <wr_config.h>
 #include <sys/stat.h>
 #include <sys/socket.h>
 #include <pwd.h>

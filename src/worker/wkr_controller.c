@@ -18,7 +18,6 @@
  */
 
 #include <worker.h>
-#include <wr_logger.h>
 #include <netinet/in.h>
 #include <sys/un.h>
 

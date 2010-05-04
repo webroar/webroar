@@ -27,9 +27,6 @@
 #include <string.h>
 #include <fcntl.h>
 
-
-#include "wkr_static.h"
-
 #define MAP_SIZE 36
 #define DEFAULT_EXPIRES "Headers/expires"
 #define EXPIRES_BY_TYPE "Headers/expires_by_type"

@@ -36,8 +36,8 @@ typedef struct {
 #define wr_string_is_empty(_str) _str.str == NULL
 #define wr_string_new(_str,str1,_len) _str.len = _len; _str.str = (char*) malloc(sizeof(char)*(_len+1)); memcpy(_str.str, str1, _len); _str.str[_len] = 0
 #define wr_string_null(_str) _str.len = 0; _str.str = NULL
-#define wr_string_append(_str, str1, _len)  char *str2 =(char*) realloc(_str.str,sizeof(char)*(_str.len+_len+1));\
-        if(str2){memcpy(str2+_str.len, str1, _len); _str.len+=_len;str2[_str.len]=0;_str.str=str2;}
+#define wr_string_append(_str, str1, _len)  {char *str2 =(char*) realloc(_str.str,sizeof(char)*(_str.len+_len+1));\
+        if(str2){memcpy(str2+_str.len, str1, _len); _str.len+=_len;str2[_str.len]=0;_str.str=str2;}}
 #define wr_string_free(_str) if(_str.str) free(_str.str); _str.len = 0; _str.str = NULL
 #define wr_string_dump(_str,_str1) _str.len = _str1.len;_str.str = (char*) malloc(sizeof(char)*(_str.len+1)); memcpy(_str.str, _str1.str, _str.len); _str.str[_str.len] = 0
 

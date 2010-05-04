@@ -28,7 +28,6 @@
 #include "wr_logger.h"
 
 #define SCGI_START_OFFSET 40
-#define SCGI_CONTENT_LENGTH "CONTENT_LENGTH"
 #define SCGI_CONTENT_LENGTH_LEN    14
 
 #define SCGI_HEADER_BLOCK_SIZE 2048

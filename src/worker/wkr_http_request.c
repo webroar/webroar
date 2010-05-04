@@ -18,7 +18,6 @@
  */
 #include <worker.h>
 #include <stdlib.h>
-#include <wr_logger.h>
 #include <assert.h>
 
 http_req_t* http_req_new() {
