@@ -507,6 +507,7 @@ end
 def test_report(report_dir)
   total = 0
   failed = 0
+  FileUtils.mkdir_p(report_dir) unless File.exists?(report_dir)
   f = File.open(File.join(report_dir,'test-summary'),"w")
   f.puts "------------------------------------------------------------------------------"
   fmt = "%*s%*s%*s"
