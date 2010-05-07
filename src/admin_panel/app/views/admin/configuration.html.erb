@@ -71,7 +71,7 @@ along with WebROaR.  If not, see <http://www.gnu.org/licenses/>.
       <%elsif flash[:smtp_errors]%>
         <%=render :partial => 'mail_specification/smtp_form'%>
       <%else%>
-        <%=mail_config_block()%>    
+        <%=render :partial => 'mail_specification/current_spec' %>    
       <%end%>  
     </div>
     <div id = 'application_list_table'>

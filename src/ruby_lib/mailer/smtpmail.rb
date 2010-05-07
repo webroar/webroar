@@ -40,19 +40,22 @@ module Email
           :password=>data['smtp']['password']}
         from = data['smtp']['from']
         recipients = data['smtp']['recipients']
-        ActionMailer::Base.smtp_settings = details
-        mail_configuration=true
+        ActionMailer::Base.smtp_settings = details        
       else
         details ={:location=>data['sendmail']['location'],
           :arguments=>"-i -t -f"}
         from = data['sendmail']['from']
         recipients = data['sendmail']['recipients']
-        ActionMailer::Base.sendmail_settings = details
-        mail_configuration=true
+        ActionMailer::Base.sendmail_settings = details        
       end
     rescue
       mail_configuration=false
       nil
+    end
+    if data and data['email_notification'] and data['email_notification'].downcase == 'enabled'
+      mail_configuration = true
+    else
+      mail_configuration = false
     end
     return from,recipients,mail_configuration
   end

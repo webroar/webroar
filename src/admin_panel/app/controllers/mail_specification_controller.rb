@@ -70,4 +70,14 @@ class MailSpecificationController < ApplicationController
     redirect_to :controller => 'admin', :action => 'configuration', :smtp => smtp
   end
   
+  def enable_notification
+    MailSpecification.update_notification_status(:enable)
+    render :partial => 'current_spec'
+  end
+  
+  def disable_notification
+    MailSpecification.update_notification_status(:disable)
+    render :partial => 'current_spec'
+  end
+  
 end

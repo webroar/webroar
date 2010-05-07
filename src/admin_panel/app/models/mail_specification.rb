@@ -50,7 +50,7 @@ class MailSpecification
     
     def save_sendmail_specification(sendmail)
       data = sendmail_specification_hash(sendmail) 
-      data = {'sendmail' => data}
+      data = {'sendmail' => data, 'email_notification' => 'enabled'}
       YAMLWriter.write(data, MAIL_FILE_PATH, "sendmail")
     end
     
@@ -106,7 +106,7 @@ class MailSpecification
     
     def save_smtp_specification(smtp)
       data = smtp_specification_hash(smtp) 
-      data = {'smtp' => data}
+      data = {'smtp' => data, 'email_notification' => 'enabled'}
       YAMLWriter.write(data, MAIL_FILE_PATH, "smtp")
     end
     
@@ -134,6 +134,21 @@ class MailSpecification
             'recipients' => ""
             ]
       end
-    end 
+    end
+    
+    def update_notification_status(status)
+      @notification_conf = YAML::load_file(MAIL_FILE_PATH)      
+      case status
+        when :enable
+          @notification_conf['email_notification'] = 'enabled'
+        when :disable
+          @notification_conf['email_notification'] = 'disabled'          
+      end      
+      yaml_obj = YAML::dump(@notification_conf)
+      File.open(MAIL_FILE_PATH, 'w') do |f|
+        f.puts yaml_obj
+      end
+    end
+    
   end
 end
