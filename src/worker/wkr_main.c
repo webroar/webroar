@@ -289,7 +289,7 @@ static void send_error(){
   cleanup();
 }
 
-#define SET_ENVIRONMENT_VARIABLE "Environment Variable/set_env"
+#define SET_ENVIRONMENT_VARIABLE "environment_variables/set_env"
 #define WR_CONF_APP_SPEC           "Application Specification"
 #define WR_CONF_APP_NAME           "name"
 

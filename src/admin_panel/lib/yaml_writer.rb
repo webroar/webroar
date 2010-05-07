@@ -106,7 +106,7 @@ class YAMLWriter
 #              min_worker: 2
 #              max_worker: 5
 #              log_level: SEVERE
-#              Environment Variable: 
+#              environment_variables: 
 #                - set_env: LOG_DIR=/var/log/webroar
 #                - set_env: TMP_DIR=/tmp
 #        Example with host_names:
@@ -121,7 +121,7 @@ class YAMLWriter
 #              min_worker: 2
 #              max_worker: 5
 #              log_level: SEVERE
-#              Environment Variable: 
+#              environment_variables: 
 #                - set_env: LOG_DIR=/var/log/webroar
 #                - set_env: TMP_DIR=/tmp
 #  (c)  Headers (optional)
