@@ -101,18 +101,18 @@ wr_req_resolver_t* wr_req_resolver_new() {
 }
 
 /** Add Application resolver */
-int wr_req_resolver_add(wr_svr_t *server, wr_app_t *app, config_application_list_t *conf) {
+int wr_req_resolver_add(wr_svr_t *server, wr_app_t *app) {
   LOG_FUNCTION
   short  rv = 0;
 
-  if(conf->baseuri.str) {
-    LOG_DEBUG(DEBUG, "Adding resolver baseuri = %s",conf->baseuri.str);
+  if(app->conf->baseuri.str) {
+    LOG_DEBUG(DEBUG, "Adding resolver baseuri = %s",app->conf->baseuri.str);
     wr_baseuri_t *baseuri = wr_malloc(wr_baseuri_t);
     if(baseuri == NULL) {
       rv = -1;
     }
 
-    baseuri->baseuri_hash = uri_hash(conf->baseuri.str + 1);
+    baseuri->baseuri_hash = uri_hash(app->conf->baseuri.str + 1);
 
     if(baseuri->baseuri_hash == Config->Request.prefix_hash) {
       free(baseuri);
@@ -131,8 +131,8 @@ int wr_req_resolver_add(wr_svr_t *server, wr_app_t *app, config_application_list
   * Host name start and end with '*'
   */
 
-  if(conf->host_name_list) {
-    config_host_list_t *host = conf->host_name_list;
+  if(app->conf->host_name_list) {
+    config_host_list_t *host = app->conf->host_name_list;
     while(host) {
       LOG_DEBUG(DEBUG, "Adding resolver Host = %s, type=%d",host->name.str, host->type);
       wr_host_list_t *list = wr_malloc(wr_host_list_t);

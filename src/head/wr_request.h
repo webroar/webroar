@@ -52,12 +52,8 @@ struct wr_req_s {
   size_t        bytes_received;
 };
 
-/** Create new Request */
-wr_req_t* wr_req_new(wr_conn_t*);
 /** Destroy Request */
 void wr_req_free(wr_req_t*);
-/** Add Request body */
-int wr_req_body_add(wr_req_t*, const char*, size_t);
 /** Invalid request */
 void wr_req_invalid(wr_conn_t *, wr_resp_status_t);
 /** Allocates and initializes ab ebb_request */

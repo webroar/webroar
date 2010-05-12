@@ -84,12 +84,6 @@ void http_resp_set(http_resp_t *rsp) {
   rsp->scgi = NULL;
 }
 
-int http_resp_body_add(http_resp_t *rsp, const char* str, size_t len) {
-  LOG_FUNCTION
-  wr_buffer_add(rsp->resp_body, str, len);
-  return 0;
-}
-
 int http_resp_process(http_resp_t *rsp) {
   LOG_FUNCTION
   rsp->scgi = scgi_new();

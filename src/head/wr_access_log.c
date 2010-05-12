@@ -21,7 +21,7 @@
 #include<time.h>
 #include <wr_access_log.h>
 
-static inline  void get_date_time(char *str_time, int str_time_len) {
+ void get_date_time1(char *str_time, int str_time_len) {
   struct tm   *now      =NULL;
   time_t       time_value  =0;
 
@@ -41,7 +41,7 @@ int wr_access_log(wr_req_t* req) {
 
   if(fp) {
     char str_time[32];
-    get_date_time(str_time, 32);
+    get_date_time1(str_time, 32);
     const char *method = scgi_header_value_get(req->scgi, WR_EBB_REQ_METHOD);
     const char *uri = scgi_header_value_get(req->scgi, WR_EBB_REQ_URI);
     const char *http_version = scgi_header_value_get(req->scgi, WR_EBB_HTTP_VER);

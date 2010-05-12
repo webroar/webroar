@@ -28,11 +28,11 @@
 extern config_t *Config;
 
 /** Private functions */
-static void wr_req_hearer_write_cb(struct ev_loop*, struct ev_io*, int);
-static void wr_wrk_allocate(wr_wkr_t* worker);
-static void wr_wkr_ping_send(wr_wkr_t *worker);
+void wr_req_hearer_write_cb(struct ev_loop*, struct ev_io*, int);
+void wr_wrk_allocate(wr_wkr_t* worker);
+void wr_wkr_ping_send(wr_wkr_t *worker);
 
-static void wr_wkr_state_machine(wr_wkr_t *worker, wr_wkr_action_t action){
+void wr_wkr_state_machine(wr_wkr_t *worker, wr_wkr_action_t action){
 
  switch(action){
     case WKR_ACTION_ERROR:
@@ -136,7 +136,7 @@ static void wr_wkr_state_machine(wr_wkr_t *worker, wr_wkr_action_t action){
   }
 }
 
-static void wr_wkr_ping_send(wr_wkr_t *worker){
+void wr_wkr_ping_send(wr_wkr_t *worker){
   worker->trials_done++;
   LOG_INFO("Worker %d with pid %u ping for trial no %d",
             worker->id, worker->pid, worker->trials_done);
@@ -154,7 +154,7 @@ static void wr_wkr_ping_send(wr_wkr_t *worker){
   ev_timer_again(worker->loop, &worker->t_wait);
 }
 
-static inline void wr_wait_watcher_start(wr_wkr_t *worker) {
+void wr_wait_watcher_start(wr_wkr_t *worker) {
   wr_wkr_state_machine(worker, WKR_ACTION_REQ_PROCESSING);
   worker->trials_done = 0;
   // Clear WR_WKR_PING_SENT, WR_WKR_PING_REPLIED and WR_WKR_HANG state.
@@ -162,7 +162,7 @@ static inline void wr_wait_watcher_start(wr_wkr_t *worker) {
   ev_timer_again(worker->loop, &worker->t_wait);
 }
 
-static void wr_wkr_req_processing(wr_wkr_t* worker, wr_req_t* req){
+void wr_wkr_req_processing(wr_wkr_t* worker, wr_req_t* req){
   LOG_DEBUG(4,"Allocate worker %d to req id %d", worker->id , req->id);
   req->wkr = worker;
   req->using_wkr = TRUE;
@@ -177,7 +177,7 @@ static void wr_wkr_req_processing(wr_wkr_t* worker, wr_req_t* req){
 }
 
 /** Check for pending request to process */
-static void wr_wrk_allocate(wr_wkr_t* worker) {
+void wr_wrk_allocate(wr_wkr_t* worker) {
   LOG_FUNCTION
   wr_req_t* req;
   wr_app_t* app = worker->app;
@@ -207,7 +207,7 @@ static void wr_wrk_allocate(wr_wkr_t* worker) {
   }
 }
 
-static void wr_wkr_req_processed(wr_wkr_t *worker){
+void wr_wkr_req_processed(wr_wkr_t *worker){
   wr_req_free(worker->req);
   worker->req = NULL;
   LOG_DEBUG(DEBUG,"Idle watcher stopped for worker %d", worker->id);
@@ -217,7 +217,7 @@ static void wr_wkr_req_processed(wr_wkr_t *worker){
 }
 
 /** Reads streamed response from Worker */
-static void wr_resp_read_cb(struct ev_loop *loop,struct ev_io *w, int revents) {
+void wr_resp_read_cb(struct ev_loop *loop,struct ev_io *w, int revents) {
   LOG_FUNCTION
   wr_req_t *req = (wr_req_t*) w->data;
   wr_wkr_t *worker = req->wkr;
@@ -260,7 +260,7 @@ static void wr_resp_read_cb(struct ev_loop *loop,struct ev_io *w, int revents) {
   }
 }
 
-static int wr_wkr_set_req(wr_wkr_t *worker, wr_req_t* req, scgi_t* scgi){
+int wr_wkr_set_req(wr_wkr_t *worker, wr_req_t* req, scgi_t* scgi){
   const char *value = scgi_header_value_get(scgi, SCGI_CONTENT_LENGTH);
   
   // Set response length
@@ -304,7 +304,7 @@ static int wr_wkr_set_req(wr_wkr_t *worker, wr_req_t* req, scgi_t* scgi){
 }
 
 /** Reads the response from worker, deserialize it, render it to the Request. */
-static void wr_resp_len_read_cb(struct ev_loop *loop, struct ev_io *w, int revents) {
+void wr_resp_len_read_cb(struct ev_loop *loop, struct ev_io *w, int revents) {
   LOG_FUNCTION
   wr_req_t* req = (wr_req_t*) w->data;
   wr_wkr_t *worker = req->wkr;
@@ -353,7 +353,7 @@ static void wr_resp_len_read_cb(struct ev_loop *loop, struct ev_io *w, int reven
   }
 }
 
-static void wr_wkr_req_sent(wr_wkr_t *worker){
+void wr_wkr_req_sent(wr_wkr_t *worker){
   ev_io_stop(worker->loop, &worker->watcher);
   wr_req_t * req = worker->req;
 
@@ -376,7 +376,7 @@ static void wr_wkr_req_sent(wr_wkr_t *worker){
 
 /** Send SCGI formatted request stream to Worker*/
 /* Send request body to worker */
-static void wr_req_body_write_cb(struct ev_loop *loop, struct ev_io *w, int revents) {
+void wr_req_body_write_cb(struct ev_loop *loop, struct ev_io *w, int revents) {
   LOG_FUNCTION
   wr_req_t *req = (wr_req_t*) w->data;
   wr_wkr_t *worker = req->wkr;
@@ -414,7 +414,7 @@ static void wr_req_body_write_cb(struct ev_loop *loop, struct ev_io *w, int reve
 /** Start writing SCGI formatted request to Worker */
 /* Send request headers to worker */
 //whenever there is a pending request for processing and worker's fd is ready for write, it will dump serialized data to worker by this function
-static void wr_req_hearer_write_cb(struct ev_loop *loop, struct ev_io *w, int revents) {
+void wr_req_hearer_write_cb(struct ev_loop *loop, struct ev_io *w, int revents) {
   LOG_FUNCTION
   wr_req_t* req = (wr_req_t*) w->data;
   wr_wkr_t *worker = req->wkr;
@@ -445,38 +445,239 @@ static void wr_req_hearer_write_cb(struct ev_loop *loop, struct ev_io *w, int re
   }
 }
 
-/*******************************************
- *       Worker Function Definition          *
- *******************************************/
-
 typedef struct {
-  char uid[STR_SIZE32], gid[STR_SIZE32],
-          log_level[STR_SIZE32], controller_path[STR_SIZE32];
+  char log_level[STR_SIZE32], controller_path[STR_SIZE32];
   wr_str_t baseuri;
 }wr_wkr_create_t;
 
-static wr_wkr_create_t* wr_wkr_create_init(wr_svr_t *server, config_application_list_t *app_conf){
+wr_wkr_create_t* wr_wkr_create_init(wr_svr_t *server, config_application_list_t *app_conf){
   wr_wkr_create_t *worker = wr_malloc(wr_wkr_create_t);
-
+  
   wr_string_null(worker->baseuri);
   if(app_conf->baseuri.str) {
     wr_string_dump(worker->baseuri, app_conf->baseuri);
   } else {
     wr_string_new(worker->baseuri, "/", 1);
   }
-
-  sprintf(worker->uid, "%d", app_conf->cuid);
-  sprintf(worker->gid, "%d", app_conf->cgid);
+  
   sprintf(worker->log_level, "%d", app_conf->log_level);
-
+  
   if(Config->Server.flag & SERVER_UDS_SUPPORT) {
     strcpy(worker->controller_path, server->ctl->sock_path.str);
   } else {
     sprintf(worker->controller_path, "%d", server->ctl->port);
   }
-
+  
   return worker;
 }
+
+/** This would get called when idel time watcher goes timeout */
+void wr_wkr_wait_cb(struct ev_loop *loop, ev_timer *w, int revents) {
+  LOG_FUNCTION
+  wr_wkr_t *worker = (wr_wkr_t*)w->data;
+  
+  //ev_timer_stop(loop, &worker->t_idle);
+  ev_timer_stop(loop, &worker->t_wait);
+  
+  if(worker->app == NULL) {
+    LOG_INFO("wr_wkr_wait_cb: Worker removed with pid %d", worker->pid);
+    wr_wkr_state_machine(worker, WKR_ACTION_ERROR);
+  }else{
+    wr_wkr_state_machine(worker, WKR_ACTION_PING_TIMEOUT);
+  }
+}
+
+/** Create new worker */
+wr_wkr_t* wr_wkr_new(wr_ctl_t *ctl) {
+  LOG_FUNCTION
+  wr_wkr_t* worker = wr_malloc(wr_wkr_t);
+  if(worker == NULL)
+    return NULL;
+  
+  // Set default value
+  worker->ctl = ctl;
+  worker->req = NULL;
+  worker->fd = 0;
+  worker->id = 0;
+  worker->pid = 0;
+  worker->app = NULL;
+  worker->watcher.active = 0;
+  worker->state = WKR_STATE_CONNECTING;
+  worker->trials_done = 0;
+  worker->t_wait.data = worker;
+  worker->loop = ctl->svr->ebb_svr.loop;
+  ev_timer_init(&worker->t_wait, wr_wkr_wait_cb, 0., Config->Server.Worker.idle_time);
+  return worker;
+}
+
+int wr_wkr_check_uds(wr_ctl_t *ctl, const wr_ctl_msg_t *ctl_msg){
+  if(Config->Server.flag & SERVER_UDS_SUPPORT) {
+    if(strcmp(ctl_msg->msg.wkr.uds.str,"YES")!=0 ||
+       ctl_msg->msg.wkr.sock_path.str == NULL) {
+      scgi_body_add(ctl->scgi, "Invalid UDS, sock path and configuration.", strlen("Invalid UDS, sock path and configuration."));
+      LOG_ERROR(SEVERE,"connect_with_worker()Invalid UDS, sock path and configuration.");
+      return FALSE;
+    }
+  } else {
+    if(strcmp(ctl_msg->msg.wkr.uds.str,"NO")!=0 ||
+       ctl_msg->msg.wkr.port.str == NULL) {
+      scgi_body_add(ctl->scgi, "Invalid UDS, sock path and configuration.", strlen("Invalid UDS, sock path and configuration."));
+      LOG_ERROR(SEVERE,"connect_with_worker()Invalid UDS, sock path and configuration.");
+      return FALSE;
+    }
+  }
+  return TRUE;
+}
+
+/** Connect to worker using UDS */
+int wr_wkr_connect_uds(wr_wkr_t* worker, const wr_ctl_msg_t *ctl_msg){
+  struct sockaddr_un addr;
+  int len;
+  
+  if((worker->fd = socket(AF_UNIX, SOCK_STREAM, 0)) == -1) {
+    perror("socket()");
+    LOG_ERROR(4,"socket() failed");
+    // Worker is not added, Reset the high load ratio
+    return FALSE;
+  }
+  
+  LOG_DEBUG(3,"Socket successfully open for worker. File Descriptor is %d",worker->fd);
+  
+  setsocketoption(worker->fd);
+  memset(&addr, 0, sizeof(addr));
+  
+  addr.sun_family = AF_UNIX;
+  strcpy(addr.sun_path,ctl_msg->msg.wkr.sock_path.str);
+  len = sizeof(addr.sun_family) + strlen(addr.sun_path);
+  
+#ifdef __APPLE__
+  len++;
+#endif
+  
+  if(connect(worker->fd, (struct sockaddr *)&addr,len) == -1) {
+    perror("connect");
+    LOG_ERROR(4,"Unable to connect with worker at socket path %s. %s Closing it.",addr.sun_path, strerror(errno));
+    close_fd(worker->fd);
+    worker->fd=0;
+    // Worker is not added, Reset the high load ratio
+    return FALSE;
+  }
+  
+  return TRUE;
+}
+
+/** Connect to worker using internet socket */
+int wr_wkr_connect_inet(wr_wkr_t* worker, const wr_ctl_msg_t *ctl_msg){
+  struct sockaddr_in addr;
+  if ((worker->fd = socket(AF_INET, SOCK_STREAM, 0)) == -1) {
+    perror("socket()");
+    LOG_ERROR(4,"socket() failed for worker");
+    // Worker is not added, Reset the high load ratio
+    // return if not able to connect to the first worker
+    return FALSE;
+  }
+  LOG_DEBUG(3,"Socket successfully open for worker. File Descriptor is %d",worker->fd);
+  
+  setsocketoption(worker->fd);
+  memset(&addr, 0, sizeof(addr));
+  
+  addr.sin_family = AF_INET;
+  addr.sin_port = htons(atoi(ctl_msg->msg.wkr.port.str));
+  addr.sin_addr.s_addr =inet_addr("127.0.0.1");
+  
+  if(connect(worker->fd, (struct sockaddr *)&addr,sizeof addr) == -1) {
+    perror("connect");
+    LOG_ERROR(4,"Unable to connect with worker at port %s. %s Closing it.",ctl_msg->msg.wkr.port.str, strerror(errno));
+    close_fd(worker->fd);
+    worker->fd=0;
+    return FALSE;
+  }
+  
+  return TRUE;
+}
+
+int wr_wkr_set_ratio(wr_ctl_t *ctl, wr_wkr_t* worker){
+  if(setnonblock(worker->fd) < 0) {
+    LOG_ERROR(SEVERE,"Setting worker_fd non-block failed:%s",strerror(errno));
+    close_fd(worker->fd);
+    return FALSE;
+  }
+  
+  if(wr_queue_insert(worker->app->q_workers, worker) < 0){
+    LOG_ERROR(WARN,"Worker queue is full.");
+    return FALSE;
+  }
+  
+  //Setting low load ratio for application, refer "wr_worker_remove_cb" in wr_server.c for details.
+  worker->app->low_ratio = worker->app->q_workers->q_count * Config->Application.min_req_ratio;
+  ctl->wkr = worker;
+  LOG_DEBUG(DEBUG,"Added Worker %d",worker->id);
+  
+  wr_wkr_state_machine(worker, WKR_ACTION_ADD);
+  
+  ev_io_set(&worker->watcher,worker->fd,EV_READ);
+  return TRUE;
+}
+
+/** Handle connect request from Worker */
+int wr_wkr_connect(wr_ctl_t *ctl, const wr_ctl_msg_t *ctl_msg) {
+  LOG_FUNCTION
+  wr_svr_t* server = ctl->svr;
+  wr_wkr_t* worker = NULL;
+  wr_u_short retval = TRUE;
+  
+  if(wr_wkr_check_uds(ctl, ctl_msg) == FALSE) return -1;
+  
+  LOG_DEBUG(4,"Sock_path = %s, port=%s, app_name=%s, pid=%s", ctl_msg->msg.wkr.sock_path.str,
+            ctl_msg->msg.wkr.port.str,
+            ctl_msg->msg.wkr.app_name.str,
+            ctl_msg->msg.wkr.pid.str);
+  
+  worker = wr_wkr_new(ctl);
+  if(worker == NULL) {
+    LOG_ERROR(WARN,"worker object alloaction failde. Returning ...");
+    return -1;
+  }
+  
+  worker->pid = atoi(ctl_msg->msg.wkr.pid.str);
+  
+  // Insert newly added Worker to application list*/
+  if(wr_app_wkr_insert(server, worker, ctl_msg)!=0) {
+    LOG_INFO("No more workers required.");
+    free(worker);
+    return -1;
+  }
+  
+  LOG_INFO("Worker %d with PID %d for Application %s inserted successfully. control fd = %d",
+           worker->id, worker->pid, worker->app->conf->name.str,worker->ctl->fd);
+  if(Config->Server.flag & SERVER_UDS_SUPPORT) {
+    retval = wr_wkr_connect_uds(worker, ctl_msg);
+  } else {
+    retval = wr_wkr_connect_inet(worker, ctl_msg);
+  }
+  
+  if(retval == TRUE) retval = wr_wkr_set_ratio(ctl, worker);
+  
+  if(retval == FALSE){
+    worker->app->high_ratio = TOTAL_WORKER_COUNT(worker->app) * Config->Application.max_req_ratio;
+    free(worker);
+    return -1;
+  }
+  
+  LOG_DEBUG(DEBUG,"Allocating task to newly added worker %d",worker->id);
+  //Check for pending requests
+  wr_wrk_allocate(worker);
+  LOG_DEBUG(5,"Successfully connected to worker");
+  LOG_DEBUG(DEBUG,"Allocated task to newly added worker %d",worker->id);
+  wr_app_wkr_balance(worker->app);
+  
+  return 0;
+}
+
+
+/*******************************************
+ *       Worker Function Definition          *
+ *******************************************/
 
 /** Create the Worker */
 /* Fork a new process and start worker in it. */
@@ -486,7 +687,7 @@ int wr_wkr_create(wr_svr_t *server, config_application_list_t *app_conf) {
   wr_wkr_create_t *worker = wr_wkr_create_init(server, app_conf);
   
   pid = fork();
-  LOG_DEBUG(DEBUG,"Forked PID is  %i, uid = %s, gid =%s, app = %s",pid, worker->uid, worker->gid, app_conf->name.str) ;
+  LOG_DEBUG(DEBUG,"Forked PID is  %i, app = %s",pid, app_conf->name.str) ;
   if (pid == 0) {
       LOG_DEBUG(3,"Child is continuing %i",pid);
       setsid();
@@ -505,21 +706,13 @@ int wr_wkr_create(wr_svr_t *server, config_application_list_t *app_conf) {
       int j = dup(i); // stdout
       j = dup(i); // stderr
 
-      LOG_DEBUG(DEBUG,"Before execl():Rails application=%s, uid=%s, gid = %s",
-              app_conf->path.str, worker->uid, worker->gid);
+      LOG_DEBUG(DEBUG,"Before execl():Rails application=%s", app_conf->path.str);
       LOG_DEBUG(DEBUG,"exe file = %s",Config->Server.File.worker_bin.str);
       int rv;
       rv=execl(Config->Server.File.worker_bin.str, Config->Server.File.worker_bin.str,
-               "-a", app_conf->path.str,
-               "-e", app_conf->env.str,
-               "-u", worker->uid,
-               "-g", worker->gid,
                "-c", worker->controller_path,
                "-i", (Config->Server.flag & SERVER_UDS_SUPPORT ? "y" : "n"),
-               "-t", app_conf->type.str,
                "-n", app_conf->name.str,
-               "-p", (app_conf->analytics? "y" : "n"),
-               "-r", worker->baseuri.str,
                "-o", Config->Server.Dir.root.str,
                "-k", (Config->Server.flag & SERVER_KEEP_ALIVE ? "y" : "n"),
                "-l", worker->log_level,
@@ -543,46 +736,6 @@ int wr_wkr_create(wr_svr_t *server, config_application_list_t *app_conf) {
     return pid;
   }
   return -1;
-}
-
-
-/** This would get called when idel time watcher goes timeout */
-static void wr_wkr_wait_cb(struct ev_loop *loop, ev_timer *w, int revents) {
-  LOG_FUNCTION
-  wr_wkr_t *worker = (wr_wkr_t*)w->data;
-
-  //ev_timer_stop(loop, &worker->t_idle);
-  ev_timer_stop(loop, &worker->t_wait);
-
-  if(worker->app == NULL) {
-    LOG_INFO("wr_wkr_wait_cb: Worker removed with pid %d", worker->pid);
-    wr_wkr_state_machine(worker, WKR_ACTION_ERROR);
-  }else{
-    wr_wkr_state_machine(worker, WKR_ACTION_PING_TIMEOUT);
-  }
-}
-
-/** Create new worker */
-wr_wkr_t* wr_wkr_new(wr_ctl_t *ctl) {
-  LOG_FUNCTION
-  wr_wkr_t* worker = wr_malloc(wr_wkr_t);
-  if(worker == NULL)
-    return NULL;
-
-  // Set default value
-  worker->ctl = ctl;
-  worker->req = NULL;
-  worker->fd = 0;
-  worker->id = 0;
-  worker->pid = 0;
-  worker->app = NULL;
-  worker->watcher.active = 0;
-  worker->state = WKR_STATE_CONNECTING;
-  worker->trials_done = 0;
-  worker->t_wait.data = worker;
-  worker->loop = ctl->svr->ebb_svr.loop;
-  ev_timer_init(&worker->t_wait, wr_wkr_wait_cb, 0., Config->Server.Worker.idle_time);
-  return worker;
 }
 
 /** Destroy worker */
@@ -667,171 +820,6 @@ void wr_wkr_dispatch_req(wr_req_t* req) {
   }else{
     LOG_DEBUG(DEBUG, "Could not dispatch the request");
   }
-}
-
-int wr_wkr_check_uds(wr_ctl_t *ctl, const wr_ctl_msg_t *ctl_msg){
-  if(Config->Server.flag & SERVER_UDS_SUPPORT) {
-    if(strcmp(ctl_msg->msg.wkr.uds.str,"YES")!=0 ||
-        ctl_msg->msg.wkr.sock_path.str == NULL) {
-      scgi_body_add(ctl->scgi, "Invalid UDS, sock path and configuration.", strlen("Invalid UDS, sock path and configuration."));
-      LOG_ERROR(SEVERE,"connect_with_worker()Invalid UDS, sock path and configuration.");
-      return FALSE;
-    }
-  } else {
-    if(strcmp(ctl_msg->msg.wkr.uds.str,"NO")!=0 ||
-        ctl_msg->msg.wkr.port.str == NULL) {
-      scgi_body_add(ctl->scgi, "Invalid UDS, sock path and configuration.", strlen("Invalid UDS, sock path and configuration."));
-      LOG_ERROR(SEVERE,"connect_with_worker()Invalid UDS, sock path and configuration.");
-      return FALSE;
-    }
-  }
-  return TRUE;
-}
-
-/** Connect to worker using UDS */
-int wr_wkr_connect_uds(wr_wkr_t* worker, const wr_ctl_msg_t *ctl_msg){
-  struct sockaddr_un addr;
-  int len;
-
-  if((worker->fd = socket(AF_UNIX, SOCK_STREAM, 0)) == -1) {
-    perror("socket()");
-    LOG_ERROR(4,"socket() failed");
-    // Worker is not added, Reset the high load ratio
-    return FALSE;
-  }
-
-  LOG_DEBUG(3,"Socket successfully open for worker. File Descriptor is %d",worker->fd);
-
-  setsocketoption(worker->fd);
-  memset(&addr, 0, sizeof(addr));
-
-  addr.sun_family = AF_UNIX;
-  strcpy(addr.sun_path,ctl_msg->msg.wkr.sock_path.str);
-  len = sizeof(addr.sun_family) + strlen(addr.sun_path);
-
-#ifdef __APPLE__
-  len++;
-#endif
-
-  if(connect(worker->fd, (struct sockaddr *)&addr,len) == -1) {
-    perror("connect");
-    LOG_ERROR(4,"Unable to connect with worker at socket path %s. %s Closing it.",addr.sun_path, strerror(errno));
-    close_fd(worker->fd);
-    worker->fd=0;
-    // Worker is not added, Reset the high load ratio
-    return FALSE;
-  }
-
-  return TRUE;
-}
-
-/** Connect to worker using internet socket */
-int wr_wkr_connect_inet(wr_wkr_t* worker, const wr_ctl_msg_t *ctl_msg){
-  struct sockaddr_in addr;
-  if ((worker->fd = socket(AF_INET, SOCK_STREAM, 0)) == -1) {
-    perror("socket()");
-    LOG_ERROR(4,"socket() failed for worker");
-    // Worker is not added, Reset the high load ratio
-    // return if not able to connect to the first worker
-    return FALSE;
-  }
-  LOG_DEBUG(3,"Socket successfully open for worker. File Descriptor is %d",worker->fd);
-
-  setsocketoption(worker->fd);
-  memset(&addr, 0, sizeof(addr));
-
-  addr.sin_family = AF_INET;
-  addr.sin_port = htons(atoi(ctl_msg->msg.wkr.port.str));
-  addr.sin_addr.s_addr =inet_addr("127.0.0.1");
-
-  if(connect(worker->fd, (struct sockaddr *)&addr,sizeof addr) == -1) {
-    perror("connect");
-    LOG_ERROR(4,"Unable to connect with worker at port %s. %s Closing it.",ctl_msg->msg.wkr.port.str, strerror(errno));
-    close_fd(worker->fd);
-    worker->fd=0;
-    return FALSE;
-  }
-
-  return TRUE;
-}
-
-int wr_wkr_set_ratio(wr_ctl_t *ctl, wr_wkr_t* worker){
-  if(setnonblock(worker->fd) < 0) {
-    LOG_ERROR(SEVERE,"Setting worker_fd non-block failed:%s",strerror(errno));
-    close_fd(worker->fd);
-    return FALSE;
-  }
-
-  if(wr_queue_insert(worker->app->q_workers, worker) < 0){
-    LOG_ERROR(WARN,"Worker queue is full.");
-    return FALSE;
-  }
-
-  //Setting low load ratio for application, refer "wr_worker_remove_cb" in wr_server.c for details.
-  worker->app->low_ratio = worker->app->q_workers->q_count * Config->Application.min_req_ratio;
-  ctl->wkr = worker;
-  LOG_DEBUG(DEBUG,"Added Worker %d",worker->id);
-
-  wr_wkr_state_machine(worker, WKR_ACTION_ADD);
-  
-  ev_io_set(&worker->watcher,worker->fd,EV_READ);
-  return TRUE;
-}
-
-/** Handle connect request from Worker */
-int wr_wkr_connect(wr_ctl_t *ctl, const wr_ctl_msg_t *ctl_msg) {
-  LOG_FUNCTION
-  wr_svr_t* server = ctl->svr;
-  wr_wkr_t* worker = NULL;
-  wr_u_short retval = TRUE;
-
-  if(wr_wkr_check_uds(ctl, ctl_msg) == FALSE) return -1;
-
-  LOG_DEBUG(4,"Sock_path = %s, port=%s, app_name=%s, pid=%s", ctl_msg->msg.wkr.sock_path.str,
-            ctl_msg->msg.wkr.port.str,
-            ctl_msg->msg.wkr.app_name.str,
-            ctl_msg->msg.wkr.pid.str);
-
-  worker = wr_wkr_new(ctl);
-  if(worker == NULL) {
-    LOG_ERROR(WARN,"worker object alloaction failde. Returning ...");
-    return -1;
-  }
-
-  worker->pid = atoi(ctl_msg->msg.wkr.pid.str);
-  
-  // Insert newly added Worker to application list*/
-  if(wr_app_wkr_insert(server, worker, ctl_msg)!=0) {
-    LOG_INFO("No more workers required.");
-    free(worker);
-    return -1;
-  }
-
-  LOG_INFO("Worker %d with PID %d for Application %s inserted successfully. control fd = %d",
-           worker->id, worker->pid, worker->app->conf->name.str,worker->ctl->fd);
-  if(Config->Server.flag & SERVER_UDS_SUPPORT) {
-    retval = wr_wkr_connect_uds(worker, ctl_msg);
-  } else {
-    retval = wr_wkr_connect_inet(worker, ctl_msg);
-  }
-  
-  if(retval == TRUE) retval = wr_wkr_set_ratio(ctl, worker);
-  
-  if(retval == FALSE){
-    worker->app->high_ratio = TOTAL_WORKER_COUNT(worker->app) * Config->Application.max_req_ratio;
-    free(worker);
-    return -1;
-  }
-
-  LOG_DEBUG(DEBUG,"Allocating task to newly added worker %d",worker->id);
-  //Check for pending requests
-  wr_wrk_allocate(worker);
-  LOG_DEBUG(5,"Successfully connected to worker");
-  LOG_DEBUG(DEBUG,"Allocated task to newly added worker %d",worker->id);
-  wr_app_wkr_balance(worker->app);
-  //wr_app_wkr_added_cb(worker->app);
-
-  return 0;
 }
 
 ///** This would get called when worker reply to PING */

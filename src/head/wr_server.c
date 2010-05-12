@@ -82,19 +82,19 @@ wr_svr_t* wr_svr_new(struct ev_loop* loop) {
 }
 
 /** Attach ideal watcher with event loop */
-static inline  void attach_idle_watcher() {
+void attach_idle_watcher() {
   if(!ev_is_active(&idle_watcher)) {
     ev_idle_start (loop, &idle_watcher);
   }
 }
 
 /** Detach Ideal watcher from event loop*/
-static inline void detach_idle_watcher() {
+void detach_idle_watcher() {
   ev_idle_stop(loop, &idle_watcher);
 }
 
 /** Callback function for Ideal watcher */
-static inline void idle_cb (struct ev_loop *loop, struct ev_idle *w, int revents) {
+void idle_cb (struct ev_loop *loop, struct ev_idle *w, int revents) {
   /*if(clients_in_use_p()) {
     rb_thread_schedule();
 } else if(!rb_thread_alone()) {*/
@@ -155,6 +155,7 @@ int wr_svr_init(wr_svr_t** server) {
   (*server)->on_wkr_add_error = wr_wkr_add_error_cb;
   (*server)->on_wkr_remove = wr_wkr_remove_cb;
   (*server)->on_wkr_ping = wr_wkr_ping_cb;
+  (*server)->on_wkr_conf_req = wr_app_conf_req_cb;
   (*server)->default_app = (*server)->static_app = NULL;
 
   return 0;

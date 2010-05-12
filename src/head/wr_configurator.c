@@ -41,17 +41,73 @@ config_application_list_t* wr_config_application_new(){
   app->log_level = Config->Server.log_level;
   app->min_worker = Config->Application.Default.min_workers;
   app->max_worker = Config->Application.Default.max_workers;
-  app->cgid = -1;
-  app->cuid = -1;
   wr_string_null(app->name);
-  wr_string_null(app->path);
   wr_string_null(app->baseuri);
-  wr_string_null(app->env);
-  wr_string_null(app->type);
-  app->analytics = FALSE;
+  wr_string_null(app->path);
+  app->scgi = NULL;
   app->host_name_list = NULL;
+  app->new = NULL;
   app->next = NULL;
   return app;
+}
+
+/** Set SCGI Config request */
+int wr_app_conf_req_set(config_application_list_t *app, node_t *app_node){
+  LOG_FUNCTION
+  char *str;
+  
+  app->scgi = scgi_new();
+
+  if(!app->scgi) {
+    return FALSE;
+  }
+  
+  scgi_header_add(app->scgi, "COMPONENT", strlen("COMPONENT"), "WORKER", strlen("WORKER"));
+  scgi_header_add(app->scgi, "METHOD", strlen("METHOD"), "CONF_REQ", strlen("CONF_REQ"));
+  scgi_header_add(app->scgi, "STATUS", strlen("STATUS"), "OK", strlen("OK"));   
+  scgi_header_add(app->scgi, "NAME", strlen("NAME"), app->name.str, app->name.len);
+  scgi_header_add(app->scgi, "PATH", strlen("PATH"), app->path.str, app->path.len);
+  if(!wr_string_is_empty(app->baseuri))
+    scgi_header_add(app->scgi, "BASE_URI", strlen("BASE_URI"), app->baseuri.str, app->baseuri.len);
+ 
+  str = wr_validate_string(get_node_value(app_node->child, "type"));
+  scgi_header_add(app->scgi, "TYPE", strlen("TYPE"), str, strlen(str));
+    
+  str = wr_validate_string(get_node_value(app_node->child, "analytics"));
+  scgi_header_add(app->scgi, "ANALYTICS", strlen("ANALYTICS"), str, strlen(str));
+  
+  str = wr_validate_string(get_node_value(app_node->child, "run_as_user"));
+  scgi_header_add(app->scgi, "USER", strlen("USER"), str, strlen(str));
+
+  // Set application environment
+  str = wr_validate_string(get_node_value(app_node->child, "environment_variables"));
+  if(str){
+    scgi_header_add(app->scgi, "ENV", strlen("ENV"), str, strlen(str));
+  }else{
+    scgi_header_add(app->scgi, "ENV", strlen("ENV"), Config->Application.Default.env.str, Config->Application.Default.env.len);
+  }
+  
+  node_t *nodes = get_nodes(app_node, "set_env");
+  wr_str_t val;
+  wr_string_null(val);
+  while(nodes){
+    if(nodes->value){
+      if(wr_string_is_empty(val)){
+        wr_string_new(val, nodes->value, nodes->value_len);
+      }else{
+        wr_string_append(val, "#", 1);
+        wr_string_append(val, nodes->value, nodes->value_len);
+      }
+    }
+    nodes = nodes->next;
+  }
+  if(!wr_string_is_empty(val)){
+   scgi_header_add(app->scgi, "ENV_VAR", strlen("ENV_VAR"), val.str, val.len); 
+  }
+  wr_string_free(val);
+  scgi_build(app->scgi);
+  
+  return TRUE;
 }
 
 /** Set Server Configuration */
@@ -335,7 +391,7 @@ config_application_list_t* wr_config_application_set(node_t* app_node, char* err
   if(!app) {
     return NULL;
   }
-
+  
   //Set application name
   str = wr_validate_string(get_node_value(app_node->child, "name"));
   len = strlen(str);  
@@ -373,7 +429,7 @@ config_application_list_t* wr_config_application_set(node_t* app_node, char* err
     }
     len = strlen(str);
     wr_string_new(app->path, str, len);
-    LOG_DEBUG(DEBUG, "Application Path = %s", app->path.str);
+    LOG_DEBUG(DEBUG, "Application Path = %s", str);
   } else {
     LOG_ERROR(SEVERE,"Application path for %s is missing. Application not started.", app_name);
     printf("Application path for %s is missing. Application not started\n", app_name);
@@ -386,9 +442,7 @@ config_application_list_t* wr_config_application_set(node_t* app_node, char* err
   // Set application type
   str = wr_validate_string(get_node_value(app_node->child, "type"));
   if(str && strlen(str) > 0) {
-    len = strlen(str);
-    wr_string_new(app->type, str, len);
-    LOG_DEBUG(DEBUG, "Application Type = %s", app->type.str);
+    LOG_DEBUG(DEBUG, "Application Type = %s", str);
   } else {
     LOG_ERROR(SEVERE,"Application type for %s is missing", app_name);
     printf("Application type for %s is missing\n", app_name);
@@ -401,10 +455,8 @@ config_application_list_t* wr_config_application_set(node_t* app_node, char* err
   // Set application analytics
   str = wr_validate_string(get_node_value(app_node->child, "analytics"));
   if(str && strlen(str) > 0) {
+    len = strlen(str);
     LOG_DEBUG(DEBUG,"App analytics = %s", str);
-    if(strcmp(str, Config->Application.analytics_on.str)==0) {
-      app->analytics = TRUE;
-    }
   } else {
     LOG_ERROR(SEVERE,"Application analytics for %s is missing. Application not started.",app_name);
     printf("Application analytics for %s is missing. Application not started.\n",app_name);
@@ -431,13 +483,11 @@ config_application_list_t* wr_config_application_set(node_t* app_node, char* err
   // Set application user & group id
   str = wr_validate_string(get_node_value(app_node->child, "run_as_user"));
   if(str && strlen(str) > 0) {
+    len = strlen(str);
     struct passwd *user_info=NULL;
     user_info = getpwnam(str);
     // Check for user existence
-    if(user_info) {
-      app->cuid = user_info->pw_uid;
-      app->cgid = user_info->pw_gid;
-    } else {
+    if(!user_info) {
       LOG_ERROR(SEVERE,"Application run_as_user for %s is invalid. Application not started.",app_name);
       printf("Application run_as_user for %s is invalid. Application not started.\n",app_name);
       if(err_msg)
@@ -473,11 +523,7 @@ config_application_list_t* wr_config_application_set(node_t* app_node, char* err
   // Set application environment
   str = wr_validate_string(get_node_value(app_node->child, "environment"));
   if(str && strlen(str) > 0) {
-    len = strlen(str);
-    wr_string_new(app->env, str, len);
-    LOG_DEBUG(DEBUG, "Application environment = %s", app->env.str);
-  } else {
-    wr_string_dump(app->env, Config->Application.Default.env);
+    LOG_DEBUG(DEBUG, "Application environment = %s", str);
   }
 
   // Set min_worker
@@ -523,8 +569,15 @@ config_application_list_t* wr_config_application_set(node_t* app_node, char* err
 
   // Set logging level
   str = wr_validate_string(get_node_value(app_node->child, "log_level"));
-  if(str && strlen(str) > 0)
+  if(str && strlen(str) > 0){
     app->log_level = get_log_severity(str);
+  }
+  
+  if(wr_app_conf_req_set(app, app_node) == FALSE){
+    wr_application_list_free(app);
+    return NULL;
+  }
+
   return app;
 }
 
@@ -698,16 +751,21 @@ config_application_list_t* wr_conf_admin_panel_read() {
       if(app ==NULL) {
         return NULL;
       }
+      
+      app->scgi = scgi_new();
+      scgi_header_add(app->scgi, "COMPONENT", strlen("COMPONENT"), "WORKER", strlen("WORKER"));
+      scgi_header_add(app->scgi, "METHOD", strlen("METHOD"), "CONF_REQ", strlen("CONF_REQ"));
+      scgi_header_add(app->scgi, "STATUS", strlen("STATUS"), "OK", strlen("OK"));   
+      
 
       // Set Admin base uri to 'admin-panel'
       wr_string_dump(app->baseuri, Config->Application.Admin_panel.base_uri);
+      scgi_header_add(app->scgi, "BASE_URI", strlen("BASE_URI"), app->baseuri.str, app->baseuri.len);
       
-      //Set user & group id
-      app->cgid = user_info->pw_gid;
-      app->cuid = user_info->pw_uid;
-
+      scgi_header_add(app->scgi, "USER", strlen("USER"), "root", strlen("root"));
+      
       // Set application environment to production
-      wr_string_new(app->env,"production",strlen("production"));
+      scgi_header_add(app->scgi, "ENV", strlen("ENV"), "production",strlen("production"));
 
       //Set max_worker & min_processsor to 1
       app->max_worker = 1;
@@ -715,12 +773,17 @@ config_application_list_t* wr_conf_admin_panel_read() {
 
       // Set application name
       wr_string_dump(app->name, Config->Application.Admin_panel.name);
+      scgi_header_add(app->scgi, "NAME", strlen("NAME"), app->name.str, app->name.len);
       
       // Set Admin Panel path
       wr_string_dump(app->path, Config->Server.Dir.admin_panel);
+      scgi_header_add(app->scgi, "PATH", strlen("PATH"), Config->Server.Dir.admin_panel.str, Config->Server.Dir.admin_panel.len);
 
       // Set application type to rails
-      wr_string_new(app->type,"rails", strlen("rails"));
+      scgi_header_add(app->scgi, "TYPE", strlen("TYPE"), "rails", strlen("rails"));
+      
+      scgi_header_add(app->scgi, "ANALYTICS", strlen("ANALYTICS"), "disabled", strlen("disabled"));
+      scgi_build(app->scgi);
       return app;
     }
   }
@@ -746,14 +809,10 @@ config_application_list_t* wr_conf_static_server_read() {
       wr_string_dump(app->name, Config->Application.Static_server.name);
       
       //Set user & group id
-      app->cgid = user_info->pw_gid;
-      app->cuid = user_info->pw_uid;
 
       // Set all other parameter to app name
-      wr_string_dump(app->env,app->name);
       wr_string_dump(app->baseuri,app->name);
       wr_string_dump(app->path,app->name);
-      wr_string_dump(app->type,app->name);      
 
       //Set max_worker & min_processsor
       app->max_worker = Config->Application.Static_server.max_workers;
@@ -765,17 +824,28 @@ config_application_list_t* wr_conf_static_server_read() {
   return NULL;
 }
 
-config_application_list_t* wr_config_application_exist(const char *app_name, config_application_list_t **prev_app){
+/** Search application configuration form application list */
+config_application_list_t* wr_conf_app_exist(const char *app_name, config_application_list_t **prev_app){
   config_application_list_t* app = Config->Application.list;
-  *prev_app = NULL;
-  while(app){
-    if(strcmp(app_name, app->name.str) == 0) //Compare application name
-      return app;
-    *prev_app = app;
-    app = app->next;
-  }
+  
+  if(prev_app){
+    *prev_app = NULL;
+    while(app){
+      if(strcmp(app_name, app->name.str) == 0) //Compare application name
+        return app;
+      *prev_app = app;
+      app = app->next;
+    }
+  }else{
+    while(app){
+      if(strcmp(app_name, app->name.str) == 0) //Compare application name
+        return app;
+      app = app->next;
+    }
+  }  
   return NULL;
 }
+
 
 /***********************************************************
  *     Configurator API definitions
@@ -787,7 +857,7 @@ int wr_app_conf_remove(const char *app_name) {
   LOG_DEBUG(DEBUG, "Removing application %s", app_name);
   config_application_list_t *app, *prev_app;
   
-  app = wr_config_application_exist(app_name, &prev_app);
+  app = wr_conf_app_exist(app_name, &prev_app);
 
   if(app) {
     // Set application configuraion links
@@ -805,80 +875,65 @@ int wr_app_conf_remove(const char *app_name) {
     return -1;
 }
 
-/** Replace the application configuration */
-int wr_conf_app_replace(config_application_list_t *app_conf){
-  LOG_FUNCTION
-  config_application_list_t *app, *prev_app;
-  
-  app = wr_config_application_exist(app_conf->name.str, &prev_app);
-
-  if(app){
-    app_conf->next = app->next;
-    if(prev_app){
-      prev_app->next = app_conf;
-    }else{
-      Config->Application.list = app_conf;
-    }
-    app->next = NULL;
-    wr_application_list_free(app);
-  }else{
-    LOG_ERROR(WARN, "Application '%s' is not found", app_conf->name.str);
-    app_conf->next = Config->Application.list;
-    Config->Application.list = app_conf;
-  }
-  return 0;
-}
-
 /** Remove the existing application specification if exists.
  *  And add the new application configuration. */
-config_application_list_t* wr_conf_app_update(const char *app_name, char* err_msg) {
+int wr_conf_app_update(config_application_list_t *app) {
   LOG_FUNCTION
-  config_application_list_t *app = Config->Application.list, *prev_app;
   
-  app = wr_config_application_exist(app_name, &prev_app);
-
-  if(app){
-    if(prev_app){
-      prev_app->next = app->next;
-    }else{
-      Config->Application.list = app->next;
-    }
-    app->next = NULL;
-    //wr_conf_app_free(app);
-  }else{
-    if(err_msg)
-      sprintf(err_msg, "Application '%s' is not found", app_name);
-  }
-
-  return wr_conf_app_read(app_name, err_msg);
+  if(app == NULL)   return FALSE;
+  
+  wr_string_free(app->baseuri);
+  app->baseuri = app->new->baseuri;
+  
+  wr_string_free(app->path);
+  app->path = app->new->path;
+  
+  scgi_free(app->scgi);
+  app->scgi = app->new->scgi;
+  
+  wr_host_list_free(app->host_name_list);
+  app->host_name_list = app->new->host_name_list;
+   
+  app->min_worker = app->new->min_worker;
+  app->max_worker = app->new->max_worker;
+  app->log_level = app->new->log_level;  
+  
+  free(app->new);
+  app->new = NULL;
+  
+  return TRUE;
 }
 
 /** Read specified application and construct application configuration */
-config_application_list_t* wr_conf_app_read(const char *app_name, char* err_msg) {
+// Flag to allow duplicate application
+config_application_list_t* wr_conf_app_read(const char *app_name, char* err_msg, int flag) {
   LOG_FUNCTION
   //Parse configuration file
   node_t *root , *app_nodes = NULL;
-  config_application_list_t *app = Config->Application.list, *tmp;
+  config_application_list_t *app = NULL, *old_app = NULL, *tmp;
   char *str;
-
-  while(app) {
-    if(strcmp(app->name.str, app_name) == 0) {
-      if(err_msg)
+  
+  old_app = wr_conf_app_exist(app_name, NULL);
+  
+  if(flag == TRUE && old_app == NULL)   return NULL;
+  if(flag == FALSE && old_app){
+    if(err_msg)
         sprintf(err_msg, "Application '%s' is already exists", app_name);
-      return NULL;
-    }
-    app = app->next;
+    return NULL;
   }
-
-  app = NULL;
-
+    
   if(strcmp(app_name, Config->Application.Admin_panel.name.str) == 0) {
     app = wr_conf_admin_panel_read();
 
     if(app) {
       //Set application configuration into configuration data structure
-      app->next = Config->Application.list;
-      Config->Application.list = app;
+      if(flag == TRUE){
+        old_app->new = app;
+        return old_app;
+      }else{
+        app->next = Config->Application.list;
+        Config->Application.list = app;
+      }
     } else {
       if(err_msg)
         strcpy(err_msg, "Could not read Admin Panel");
@@ -914,33 +969,40 @@ config_application_list_t* wr_conf_app_read(const char *app_name, char* err_msg)
   }
 
   node_free(root);
+  if(app == NULL)   return NULL;
+  
 
-  if(app) {
-    // checking uniqueness for host name. While setting application object, we are parsing raw string of host_names
-    // into host_name_list. We can easily check for uniqueness once host_name_list is ready.
-    if(app->host_name_list){
-      if(wr_chk_host_within_list(app->host_name_list)!=0) {
-        LOG_ERROR(WARN,"Checking hosts within list is failed.");
-        wr_application_list_free(app);
-        return NULL;
-      }
-
-      tmp = Config->Application.list;
-      while(tmp) {
-        if(tmp->host_name_list) {
-          if(wr_chk_host_lists(app->host_name_list, tmp->host_name_list)!=0) {
-            LOG_ERROR(WARN,"Checking host lists is failed.");
-            wr_application_list_free(app);
-            return NULL;
-          }
-        }
-        tmp = tmp->next;
-      }
+  // checking uniqueness for host name. While setting application object, we are parsing raw string of host_names
+  // into host_name_list. We can easily check for uniqueness once host_name_list is ready.
+  if(app->host_name_list){
+    if(wr_chk_host_within_list(app->host_name_list)!=0) {
+      LOG_ERROR(WARN,"Checking hosts within list is failed.");
+      wr_application_list_free(app);
+      return NULL;
     }
-    //Set application configuration into configuration data structure
+
+    tmp = Config->Application.list;
+    while(tmp) {
+      if(tmp->host_name_list && strcmp(tmp->name.str, app_name)!= 0 ) {
+        if(wr_chk_host_lists(app->host_name_list, tmp->host_name_list)!=0) {
+          LOG_ERROR(WARN,"Checking host lists is failed.");
+          wr_application_list_free(app);
+          return NULL;
+        }
+      }
+      tmp = tmp->next;
+    }
+  }
+  
+  //Set application configuration into configuration data structure
+  if(flag == TRUE){
+    old_app->new = app;
+    return old_app;
+  }else{    
     app->next = Config->Application.list;
     Config->Application.list = app;
   }
+  
   return app;
 }
 
@@ -998,13 +1060,10 @@ void wr_conf_display() {
   // Display application specification
   while(app) {
     printf("Application log level : %d\n", app->log_level);
-    printf("Environment  : %s\n", app->env.str);
     printf("Application min worker : %d\n", app->max_worker);
     printf("Application max worker : %d\n", app->min_worker);
     printf("Application name : %s\n", app->name.str);
     printf("Application path : %s\n", app->path.str);
-    printf("Application type : %s\n", app->type.str);
-    printf("Application analytics : %d\n", app->analytics);
     printf("Application baseuri : %s\n", app->baseuri.str);
     if(app->host_name_list) {
       config_host_list_t* host=app->host_name_list;

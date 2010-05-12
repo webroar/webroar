@@ -33,8 +33,15 @@
 #include <netinet/in.h>
 #include <sys/un.h>
 #include <ev.c>
+#include <pwd.h>
+
+#ifdef __linux__
+#include <sys/prctl.h>
+#endif
 
 extern config_t *Config;
+
+void load_application(wkr_t* w);
 
 wkr_tmp_t* wkr_tmp_new() {
   LOG_FUNCTION
@@ -99,38 +106,23 @@ wkr_t* worker_new(struct ev_loop *loop, wkr_tmp_t *tmp) {
   w->tmp = tmp;
   assert(w->tmp!=NULL);
 
-  w->ctl = wkr_ctl_new();
+  w->ctl = wkr_ctl_new(w);
   assert(w->ctl!=NULL);
-
-  // Connect to head controller UDS socket before user previliges get lowered.
-  if(tmp->is_uds) {
-    struct sockaddr_un addr;
-
-    if ((w->ctl->fd = socket(AF_UNIX, SOCK_STREAM, 0)) == -1) {
-      LOG_ERROR(WARN,"socket()%s",strerror(errno));
-      worker_free(&w);
-      return NULL;
-    }
-
-    setsocketoption(w->ctl->fd);
-
-    memset(&addr, 0, sizeof(addr));
-    addr.sun_family = AF_UNIX;
-    strcpy(addr.sun_path, tmp->ctl_path.str);
-
-    int len = sizeof(addr.sun_family)+strlen(addr.sun_path);
-#ifdef __APPLE__
-    len ++;
-#endif
-
-    LOG_DEBUG(DEBUG,"send_ack_on_unix_socket() connecting with socket %s",addr.sun_path);
-    if(connect(w->ctl->fd, (struct sockaddr *)&addr, len) < 0) {
-      LOG_ERROR(SEVERE,"Connect with controller fd failed: %s",strerror(errno));
-      worker_free(&w);
-      return NULL;
-    }
+  if(connect_to_head(w) == FALSE){
+    worker_free(&w);
+    return NULL;
+  }
+  start_ctl_watcher(w);
+  if(w->tmp->is_static){
+    w->ctl->scgi = scgi_new();
+    load_application(w);
+  } else if(send_config_req_msg(w) < 0){
+    worker_free(&w);
+    return NULL;
   }
 
+  // Connect to head controller UDS socket before user previliges get lowered.
+  
   return w;
 }
 
@@ -168,7 +160,7 @@ void worker_free(wkr_t **wrk) {
 }
 
 /** Conenct worker on internet socket */
-static inline int connect_internet_socket(wkr_t* w) {
+int listen_internet_socket(wkr_t* w) {
   LOG_FUNCTION
   struct sockaddr_in addr;
   if ((w->listen_fd = socket(AF_INET, SOCK_STREAM, 0)) == -1) {
@@ -205,8 +197,7 @@ static inline int connect_internet_socket(wkr_t* w) {
   return 0;
 }
 
-/** Connect worker on unix domain socket */
-static inline int connect_unix_socket(wkr_t* w) {
+int listen_unix_socket(wkr_t* w) {
   LOG_FUNCTION
   struct sockaddr_un addr;
 
@@ -254,22 +245,20 @@ static inline int connect_unix_socket(wkr_t* w) {
 
 
 /** Connect worket to Head */
-int worker_connect(wkr_t* w) {
+int worker_listen(wkr_t* w) {
   LOG_FUNCTION
   int retval;
   if(w->is_uds == 1) {
-    retval = connect_unix_socket(w);
+    return listen_unix_socket(w);
   }else{
-    retval = connect_internet_socket(w);
+    return listen_internet_socket(w);
   }
 
-  if(retval >= 0 ) return send_ack_ctl_msg(w);
-  
-  return -1;
+//  if(retval >= 0 ) return send_ack_ctl_msg(w);
 }
 
 /** This function accept connection from Head. */
-static void request_accept_cb(struct ev_loop *loop, struct ev_io *watcher, int revents) {
+void request_accept_cb(struct ev_loop *loop, struct ev_io *watcher, int revents) {
   LOG_FUNCTION
   wkr_t *w = (wkr_t*) watcher->data;
 
@@ -312,4 +301,159 @@ void worker_accept_requests(wkr_t* w) {
   ev_io_init(&(w->w_accept), request_accept_cb, w->listen_fd, EV_READ);
   ev_io_start(w->loop,&(w->w_accept));
   //wkr_tmp_free(&w->tmp);
+}
+
+int drop_privileges(wkr_t *w, scgi_t *scgi) {
+  char *str;
+  
+  str = (char*) scgi_header_value_get(scgi, "USER");
+  
+  if(str && strlen(str) > 0) {
+    struct passwd *user_info=NULL;
+    user_info = getpwnam(str);
+    // Check for user existence
+    if(user_info) {
+      w->tmp->uid = user_info->pw_uid; 
+      w->tmp->gid = user_info->pw_gid;
+    } else {
+      scgi_body_add(w->ctl->scgi, "Application run_as_user is invalid. Application not started.", strlen("Application run_as_user is invalid. Application not started."));
+      LOG_ERROR(SEVERE,"Application run_as_user is invalid. Application not started.");
+      return FALSE;
+    }
+  } else {
+    scgi_body_add(w->ctl->scgi, "Application run_as_user is missing. Application not started.", strlen("Application run_as_user is missing. Application not started."));
+    LOG_ERROR(SEVERE,"Application run_as_user is missing. Application not started.");
+    return FALSE;
+  }
+  
+  change_log_file_owner(w->tmp->uid, w->tmp->gid);
+  //setting read, effective, saved group and user id
+  if(setgid(w->tmp->gid)!=0) {
+    scgi_body_add(w->ctl->scgi, "setegid() failed", strlen("setegid() failed"));
+    LOG_ERROR(SEVERE,"setegid() failed");
+    return FALSE;
+  }
+  if(setuid(w->tmp->uid)!=0) {
+    scgi_body_add(w->ctl->scgi, "seteuid() failed", strlen("seteuid() failed"));
+    LOG_ERROR(SEVERE,"seteuid() failed");
+    return FALSE;
+  }
+  
+  LOG_DEBUG(DEBUG,"Passed userid=%d and groupid=%d",
+            w->tmp->uid, w->tmp->gid);
+  LOG_DEBUG(DEBUG,"effective userid=%d and groupid=%d",geteuid(),getegid());
+#ifdef __linux__
+  int rv = prctl(PR_SET_DUMPABLE, 1, 0, 0, 0);
+  LOG_DEBUG(DEBUG,"prctl(PR_SET_DUMPABLE, 1, 0, 0, 0) = %d", rv);
+  if (rv < 0) {
+    LOG_ERROR(SEVERE,"error setting prctl(PR_SET_DUMPABLE, 1, 0, 0, 0), errno = %d, desc = %s", errno, strerror(errno));
+  }
+#endif  
+  return TRUE;
+}
+
+void manipulate_environment_variable(wkr_t* w, scgi_t *scgi) {
+  LOG_FUNCTION
+  char *var, *str;
+  int rv = 0;  
+    
+  str = (char*) scgi_header_value_get(scgi, "ENV_VAR");
+  if(str){
+    var = strtok(str,"#");
+    while(var){
+      rv = putenv(var);
+      if (rv != 0) {
+        LOG_ERROR(WARN, "putenv() failed, errno = %d, description = %s", errno, strerror(errno)); 
+      } 
+      var = strtok(NULL,"#");
+    }
+  }
+}
+
+void load_application(wkr_t* w){
+  LOG_FUNCTION
+  
+  w->http = http_new(w);
+  if(w->http == NULL) {
+    scgi_body_add(w->ctl->scgi, "unable to load application.", strlen("unable to load application."));
+    LOG_ERROR(SEVERE,"unable to load application.");
+  }else if(worker_listen(w) < 0) {
+    scgi_body_add(w->ctl->scgi, "Error Initializing Workers.", strlen("Error Initializing Workers."));
+    LOG_ERROR(WARN,"Error Initializing Workers.");
+  }else{
+    worker_accept_requests(w);
+    LOG_INFO("Worker ready for serving requests.");
+    init_idle_watcher(w);
+    
+    LOG_INFO("Successfully loaded rack application=%s with environment=%s",
+             w->tmp->path.str,   w->tmp->env.str);
+  }  
+  
+  //loading adapter according to application type
+  LOG_DEBUG(DEBUG,"webroar_root = %s", w->tmp->root_path.str);
+  LOG_DEBUG(DEBUG,"path = %s, name = %s, type = %s, environment = %s, baseuri = %s, analytics = %c",
+            w->tmp->path.str,  w->tmp->name.str, w->tmp->type.str,
+            w->tmp->env.str, w->tmp->resolver.str, w->tmp->profiler);
+  
+  // Send error or ok acknowledgement message
+  if(w->ctl->scgi->body_length > 0){
+    // Send error response
+    w->ctl->error = TRUE;
+    get_worker_add_ctl_scgi(w, TRUE);
+    ev_io_start(w->loop,&(w->ctl->w_write));
+    ev_timer_again(w->loop, &w->ctl->t_ack);
+  }else{
+    // Send acknowledgement message
+    get_worker_add_ctl_scgi(w, FALSE);
+    ev_io_start(w->loop,&(w->ctl->w_write));        
+  }
+  wkr_tmp_free(&w->tmp);
+}
+
+void application_config_read_cb(wkr_t* w, scgi_t *scgi){
+  char *str;
+  w->ctl->scgi = scgi_new();
+  
+  if(w->ctl->scgi == NULL) {
+    LOG_ERROR(SEVERE,"Cannot create SCGI Request");
+    sigproc();
+    return;
+  }  
+  
+  if(drop_privileges(w, scgi) == FALSE) {
+    wkr_tmp_free(&w->tmp);
+    sigproc();
+    return;
+  }
+  
+  manipulate_environment_variable(w, scgi);
+  str = (char*) scgi_header_value_get(scgi, "PATH");
+  if(str){
+    wr_string_new(w->tmp->path, str, strlen(str));
+  }
+    
+  str = (char*) scgi_header_value_get(scgi, "ENV");
+  if(str){
+    wr_string_new(w->tmp->env, str, strlen(str));
+  }
+    
+  str = (char*) scgi_header_value_get(scgi, "TYPE");
+  if(str){
+    wr_string_new(w->tmp->type, str, strlen(str));
+  }
+    
+  str = (char*) scgi_header_value_get(scgi, "BASE_URI");
+  if(str){
+    wr_string_new(w->tmp->resolver, str, strlen(str));
+  }
+    
+    
+  str = (char*) scgi_header_value_get(scgi, "ANALYTICS");
+  if(str && strcmp(str,"enabled")==0){
+    w->tmp->profiler = 'y';
+  }else{
+    w->tmp->profiler = 'n'; 
+  }
+  
+  load_application(w);
 }

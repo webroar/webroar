@@ -65,10 +65,14 @@ struct wkr_ctl_s {
   int       error;
 };
 
-wkr_ctl_t* wkr_ctl_new();
+wkr_ctl_t* wkr_ctl_new(wkr_t *w);
 void wkr_ctl_free(wkr_ctl_t**);
-int send_ack_ctl_msg(wkr_t* w);
-int send_err_ctl_msg(wkr_t* w);
+int connect_to_head(wkr_t *w);
+void start_ctl_watcher(wkr_t *w);
+// Flag to create error response.
+void get_worker_add_ctl_scgi(wkr_t* w, const int flag);
+int send_config_req_msg(wkr_t* w);
+void application_config_read_cb(wkr_t* w, scgi_t *scgi);
 
 /********** Worker structure *********/
 struct wkr_s {
@@ -91,10 +95,8 @@ struct wkr_s {
 
 wkr_t* worker_new(struct ev_loop *, wkr_tmp_t*);
 void worker_free(wkr_t**);
-void worker_accept_requests(wkr_t*);
-int worker_connect(wkr_t*);
+void init_idle_watcher(wkr_t *w);
 void start_idle_watcher();
-void stop_idle_watcher();
 void sigproc();
 
 #endif /*WORKER_H_*/

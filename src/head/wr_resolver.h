@@ -50,7 +50,7 @@ struct wr_req_resolver_s {
 };
 
 wr_req_resolver_t* wr_req_resolver_new();
-int wr_req_resolver_add(wr_svr_t*, wr_app_t*, config_application_list_t*);
+int wr_req_resolver_add(wr_svr_t*, wr_app_t*);
 int wr_req_resolver_remove(wr_svr_t*, wr_app_t*);
 int wr_req_resolve_http_req(wr_svr_t*, wr_req_t*);
 void wr_req_resolver_free(wr_req_resolver_t*);

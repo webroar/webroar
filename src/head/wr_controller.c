@@ -59,7 +59,7 @@
 
 extern config_t *Config;
 
-static inline wr_ctl_msg_t* wr_ctl_msg_validate(scgi_t* request, wr_ctl_t* ctl) {
+wr_ctl_msg_t* wr_ctl_msg_validate(scgi_t* request, wr_ctl_t* ctl) {
   LOG_FUNCTION
   wr_ctl_msg_t* ctl_msg = wr_malloc(wr_ctl_msg_t);
   char *val;
@@ -134,6 +134,9 @@ static inline wr_ctl_msg_t* wr_ctl_msg_validate(scgi_t* request, wr_ctl_t* ctl) 
       ctl->type = WR_CTL_MSG_WORKER_REMOVE;
     } else if(strcmp(val,"PING") == 0) {
       ctl->type = WR_CTL_MSG_WORKER_PING;
+    } else if(strcmp(val,"CONF_REQ") == 0){
+      ctl->type = WR_CTL_MSG_WORKER_CONF_REQ;
+      ctl_msg->msg.wkr.app_name.str  =   (char*) scgi_header_value_get(request,"APPLICATION");
     } else if(strcmp(val,"ERROR") == 0) {
       ctl->type = WR_CTL_MSG_WORKER_ADD_ERROR;
       ctl_msg->msg.wkr.app_name.str  =   (char*) scgi_header_value_get(request,"APPLICATION");
@@ -166,7 +169,7 @@ ctl_msg_err:
   return ctl_msg;
 }
 
-static void wr_ctl_msg_write_cb(struct ev_loop *loop, struct ev_io *w, int revents) {
+void wr_ctl_msg_write_cb(struct ev_loop *loop, struct ev_io *w, int revents) {
   LOG_FUNCTION
   if(EV_ERROR & revents) {
     LOG_ERROR(4,"got error event, returning.");
@@ -174,8 +177,8 @@ static void wr_ctl_msg_write_cb(struct ev_loop *loop, struct ev_io *w, int reven
   }
 
   wr_ctl_t* ctl = (wr_ctl_t*) w->data;
-  
-  if(scgi_send(ctl->scgi, w->fd) <= 0){
+
+  if(scgi_send(ctl->scgi, ctl->fd) <= 0){
     LOG_ERROR(4,"got error event, returning.");
     return;
   }
@@ -183,27 +186,25 @@ static void wr_ctl_msg_write_cb(struct ev_loop *loop, struct ev_io *w, int reven
   LOG_DEBUG(DEBUG,"Sending control messag %d/%d", ctl->scgi->bytes_sent, ctl->scgi->length);
   if(ctl->scgi->bytes_sent >= ctl->scgi->length) {
     ev_io_stop(loop, w);
-    scgi_free(ctl->scgi);
+    if(ctl->destroy_scgi == TRUE){
+       scgi_free(ctl->scgi);
+    }else{
+      ctl->scgi->bytes_sent = 0;
+    }
     ctl->scgi = NULL;
+    ctl->destroy_scgi = TRUE;
     if(ctl->type == WR_CTL_MSG_TYPE_ERROR || ctl->type == WR_CTL_MSG_WORKER_ADD_ERROR) {
       wr_ctl_free(ctl);
     }
-    /*if(control->type == WR_CTL_MSG_WORKER_PING){
-      ev_io_start(loop, &control->w_read);
-  }*/
   }
 }
 
 /** Process Control message */
-static inline void wr_ctl_msg_process(scgi_t* request,  wr_ctl_t* ctl) {
+void wr_ctl_msg_process(scgi_t* request,  wr_ctl_t* ctl) {
   LOG_FUNCTION
 
   wr_ctl_msg_t* ctl_msg = wr_ctl_msg_validate(request, ctl);
-
-  //  ctl->type.type = ctl_msg->type;
-  //ctl->resp_nbytes = 0;
-  ctl->w_write.data = ctl;
-  ev_io_init(&(ctl->w_write ), wr_ctl_msg_write_cb, ctl->fd, EV_WRITE);
+  
   int flag = 0;
 
   switch(ctl->type) {
@@ -258,6 +259,13 @@ static inline void wr_ctl_msg_process(scgi_t* request,  wr_ctl_t* ctl) {
     else
       flag =1;
     break;
+  case WR_CTL_MSG_WORKER_CONF_REQ:
+      LOG_DEBUG(DEBUG,"WR_CTL_MSG_WORKER_CONF_REQ");
+      if(ctl->svr && ctl->svr->on_wkr_conf_req)
+        ctl->svr->on_wkr_conf_req(ctl, ctl_msg);
+      else
+        flag =1;
+      break;
   case WR_CTL_MSG_TYPE_ERROR:
     LOG_DEBUG(DEBUG,"WR_CTL_MSG_TYPE_ERROR");
     wr_ctl_resp_write(ctl);
@@ -275,7 +283,7 @@ static inline void wr_ctl_msg_process(scgi_t* request,  wr_ctl_t* ctl) {
 }
 
 /** Read and handle data sent by control port of Workers*/
-static void wr_ctl_msg_read_cb(struct ev_loop *loop, struct ev_io *w, int revents) {
+void wr_ctl_msg_read_cb(struct ev_loop *loop, struct ev_io *w, int revents) {
   LOG_FUNCTION
   wr_ctl_t* ctl = (wr_ctl_t*) w->data;
 
@@ -315,12 +323,30 @@ static void wr_ctl_msg_read_cb(struct ev_loop *loop, struct ev_io *w, int revent
   ctl->ctl_nbytes = 0;
 }
 
+wr_ctl_t* wr_ctl_new(wr_svr_t* server) {
+  LOG_FUNCTION
+  wr_ctl_t* ctl = wr_malloc(wr_ctl_t);
+  if(ctl == NULL) {
+    LOG_DEBUG(SEVERE, "Error Control object allocation failed. Returning ... ");
+    return NULL;
+  }
+  ctl->svr = server;
+  ctl->w_read.data = ctl->w_write.data = ctl;
+  ctl->w_read.active = 0;
+  ctl->wkr = NULL;
+  ctl->app = NULL;
+  ctl->ctl_nbytes = 0;
+  ctl->fd = -1;
+  ctl->destroy_scgi = TRUE;
+  return ctl;
+}
+
 /**
  * This function accept connection from worker.
  * We need to change it to keep detail of each worker. Currently it is maintaining only latest worker connected.
  * Its prone produce bug.
  */
-static void wr_ctl_accept_cb(struct ev_loop *loop, struct ev_io *w, int revents) {
+void wr_ctl_accept_cb(struct ev_loop *loop, struct ev_io *w, int revents) {
   LOG_FUNCTION
   wr_svr_t* server = (wr_svr_t*) w->data;
   wr_ctl_t* ctl = NULL;
@@ -366,14 +392,13 @@ static void wr_ctl_accept_cb(struct ev_loop *loop, struct ev_io *w, int revents)
   LOG_INFO("Successfully connected with controller client. Read watcher starting...");
 
   //Start control read watcher
-  ctl->w_read.data = ctl;
-
-  ev_io_init(&(ctl->w_read),wr_ctl_msg_read_cb,client_fd,EV_READ);
+  ev_io_init(&(ctl->w_read),wr_ctl_msg_read_cb,ctl->fd, EV_READ);
+  ev_io_init(&(ctl->w_write),wr_ctl_msg_write_cb,ctl->fd, EV_WRITE);
   ev_io_start(loop,&(ctl->w_read));
 }
 
 /** Start listening for Workers connect request on Internet socket */
-static inline int wr_ctl_init_on_inet_sock(wr_svr_t *server) {
+int wr_ctl_init_on_inet_sock(wr_svr_t *server) {
   LOG_FUNCTION
   struct sockaddr_in addr;
   int len;
@@ -428,7 +453,7 @@ static inline int wr_ctl_init_on_inet_sock(wr_svr_t *server) {
 }
 
 /** Start listening for Workers connect request on UNIX domain socket */
-static inline int wr_ctl_init_on_uds(wr_svr_t *server) {
+int wr_ctl_init_on_uds(wr_svr_t *server) {
   LOG_FUNCTION
   struct sockaddr_un addr;
   char sock_path[STR_SIZE128];
@@ -489,22 +514,6 @@ static inline int wr_ctl_init_on_uds(wr_svr_t *server) {
 /********************************************************
  *     Control Function Definition                *
  ********************************************************/
-wr_ctl_t* wr_ctl_new(wr_svr_t* server) {
-  LOG_FUNCTION
-  wr_ctl_t* ctl = wr_malloc(wr_ctl_t);
-  if(ctl == NULL) {
-    LOG_DEBUG(SEVERE, "Error Control object allocation failed. Returning ... ");
-    return NULL;
-  }
-  ctl->svr = server;
-  ctl->w_read.active = 0;
-  ctl->wkr = NULL;
-  ctl->app = NULL;
-  ctl->ctl_nbytes = 0;
-  //ctl->msg_size = 0;
-  ctl->fd = -1;
-  return ctl;
-}
 
 void wr_ctl_free(wr_ctl_t* ctl) {
   LOG_FUNCTION
@@ -606,7 +615,9 @@ void wr_svr_ctl_free(wr_svr_ctl_t *ctl) {
 void wr_ctl_resp_write(wr_ctl_t *ctl) {
   LOG_FUNCTION
   if(ctl->scgi) {
-    scgi_build(ctl->scgi);
+    if(ctl->destroy_scgi == TRUE){
+      scgi_build(ctl->scgi);
+    }
     LOG_DEBUG(DEBUG,"sending control signal response");
     ev_io_start(ctl->svr->ebb_svr.loop, (&ctl->w_write));
   }

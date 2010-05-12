@@ -22,6 +22,7 @@
  *****************************************************************/
  
 #include <wr_config.h>
+#include <sys/socket.h>
 
 #define SERVER_NAME       "WebROaR"
 #define SERVER_VERSION    "0.3.2"
@@ -272,11 +273,11 @@ void wr_application_list_free(config_application_list_t* list){
   while(list) {
     next = list->next;
     wr_string_free(list->name);
-    wr_string_free(list->path);
-    wr_string_free(list->env);
-    wr_string_free(list->type);
     wr_string_free(list->baseuri);
+    wr_string_free(list->path);
+    scgi_free(list->scgi);
     wr_host_list_free(list->host_name_list);
+    wr_application_list_free(list->new);
     free(list);
     list = next;
   }

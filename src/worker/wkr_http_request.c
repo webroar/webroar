@@ -110,7 +110,7 @@ int http_req_body_read(http_req_t *req, char *buf, int len) {
 }
 
 /** Read SCGI request body in buffer */
-static inline void http_req_body_read_in_buff(http_req_t *req, struct ev_loop *loop, struct ev_io *watcher) {
+void http_req_body_read_in_buff(http_req_t *req, struct ev_loop *loop, struct ev_io *watcher) {
   LOG_FUNCTION
   ssize_t read = recv(watcher->fd,
                       req->buf + req->scgi_header_len + req->bytes_read,
@@ -137,7 +137,7 @@ static inline void http_req_body_read_in_buff(http_req_t *req, struct ev_loop *l
 }
 
 /** Read SCGI request body in file */
-static inline void http_req_body_read_in_file(http_req_t *req, struct ev_loop *loop, struct ev_io *watcher) {
+void http_req_body_read_in_file(http_req_t *req, struct ev_loop *loop, struct ev_io *watcher) {
   LOG_FUNCTION
   char buffer[STR_SIZE10KB+1];
   ssize_t read, write = 0, rv;
@@ -171,7 +171,7 @@ static inline void http_req_body_read_in_file(http_req_t *req, struct ev_loop *l
 }
 
 /** Read SCGI request body */
-static void http_req_body_cb(struct ev_loop *loop, struct ev_io *watcher, int revents) {
+void http_req_body_cb(struct ev_loop *loop, struct ev_io *watcher, int revents) {
   LOG_FUNCTION
   wkr_t *w     = (wkr_t*) watcher->data;
   http_req_t *req   = w->http->req;
@@ -194,7 +194,7 @@ static void http_req_body_cb(struct ev_loop *loop, struct ev_io *watcher, int re
 }
 
 /** Parse SCGI request */
-static inline void parser_req_buf(http_req_t *req, struct ev_loop *loop, struct ev_io *watcher) {
+void parser_req_buf(http_req_t *req, struct ev_loop *loop, struct ev_io *watcher) {
   LOG_FUNCTION
   if(req->scgi_header_len == 0) {
     // Fetch header packet length

@@ -153,7 +153,7 @@ VALUE log_message(VALUE _, VALUE message_type, VALUE severity, VALUE message) {
 }
 
 /** for handling of $0 */
-static void setProgName(VALUE name, ID id) {
+void setProgName(VALUE name, ID id) {
   LOG_FUNCTION
   gProgName = rb_obj_as_string(name);
   rb_obj_taint(gProgName);
@@ -181,7 +181,7 @@ void init_ruby_interface(http_t *h) {
   rb_define_hooked_variable("$0", &gProgName, 0, setProgName);
 }
 
-static int init_ruby_interpreter(wkr_t *w) {
+int init_ruby_interpreter(wkr_t *w) {
   LOG_FUNCTION
   //initializing ruby interpreter ... referred from main.c and ruby.c of ruby-dev
   //preparing pseudo argc and argv to set ruby_option
@@ -346,14 +346,3 @@ void http_free(http_t** http) {
   *http = NULL;
 }
 
-void http_set(http_t* h) {
-  LOG_FUNCTION
-  if(h->resp)
-    http_resp_set(h->resp);
-  if(h->req)
-    http_req_set(h->req);
-#ifdef L_DEBUG
-
-  h->conn_id = h->req_id = 0;
-#endif
-}

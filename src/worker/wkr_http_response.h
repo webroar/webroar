@@ -41,7 +41,6 @@ struct http_resp_s {
 http_resp_t* http_resp_new();
 void http_resp_free(http_resp_t**);
 void http_resp_set(http_resp_t*);
-int http_resp_body_add(http_resp_t*, const char* , size_t);
 int http_resp_process(http_resp_t*);
 void http_resp_scgi_write_cb(struct ev_loop*, struct ev_io*, int);
 

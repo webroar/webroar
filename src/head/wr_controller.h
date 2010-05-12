@@ -45,6 +45,7 @@ typedef enum{
   WR_CTL_MSG_WORKER_ADD_ERROR,
   WR_CTL_MSG_WORKER_REMOVE,  
   WR_CTL_MSG_WORKER_PING,
+  WR_CTL_MSG_WORKER_CONF_REQ,
   WR_CTL_MSG_TYPE_ERROR
 }wr_ctl_msg_type_t;
 
@@ -71,11 +72,10 @@ struct wr_ctl_s {
   wr_ctl_msg_type_t  type;
 
   ev_io              w_write;
-  scgi_t            *scgi;
+  scgi_t             *scgi;
+  wr_u_short         destroy_scgi;
   //size_t             resp_nbytes;
 };
-/** Create new control structure */
-wr_ctl_t* wr_ctl_new(wr_svr_t*);
 /** Destroy control */
 void wr_ctl_free(wr_ctl_t*);
 /** Initialize controller */

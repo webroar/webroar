@@ -37,7 +37,6 @@ struct http_s {
 };
 
 http_t* http_new(void *worker);
-void http_set(http_t*);
 void http_free(http_t**);
 void http_req_process();
 

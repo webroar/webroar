@@ -28,8 +28,8 @@
 #include<time.h>
 #include<errno.h>
 
-static inline char* get_date_time();
-static inline char* get_log_file_path();
+char* get_date_time();
+char* get_log_file_path();
 
 //this macro should included in common utility
 #define null_check(ptr) if (ptr == NULL) \
@@ -51,11 +51,11 @@ void close_logger() {
   fclose(stderr);
 }
 
-static inline char* get_log_file_path() {
+char* get_log_file_path() {
   return log_file_path;
 }
 
-static inline  char* get_date_time() {
+ char* get_date_time() {
   struct tm     *now=NULL;
   time_t         time_value=0;
   char         *str;

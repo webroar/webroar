@@ -24,11 +24,9 @@
 /** Remove application_configuration from configuration */
 int wr_app_conf_remove(const char *app_name);
 /** Read application configuration of specified application name */
-config_application_list_t* wr_conf_app_read(const char *app_name, char* err_msg);
-/** Read and update specified application */
-config_application_list_t* wr_conf_app_update(const char *app_name, char* err_msg);
-/** Replace the application configuration */
-int wr_conf_app_replace(config_application_list_t *app_conf);
+config_application_list_t* wr_conf_app_read(const char *app_name, char* err_msg, int flag);
+/** Update application configuration with new parameters */
+int wr_conf_app_update(config_application_list_t *app);
 /** Destroy application configuration */
 void wr_conf_app_free(config_application_list_t* app);
 

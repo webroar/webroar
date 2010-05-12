@@ -109,9 +109,6 @@ void wr_req_parse_err_cb(ebb_connection* connection) {
   LOG_DEBUG(DEBUG,"Connection id = %d",conn->id);
   conn->keep_alive = 0;
   wr_req_invalid(conn, WR_HTTP_STATUS_400);
-  //  if(conn->resp_to_write == 0)
-  //    conn->resp_to_write = 1;
-  //  wr_server_err_response(conn, WR_HTTP_STATUS_400);
 }
 
 /** The ebb connection goes timeout */
@@ -148,29 +145,25 @@ void wr_conn_close_cb(ebb_connection* connection) {
   }
 }
 
-/********************************************************
- *       Connection Function Definition      *
- ********************************************************/
-
 /** Create new Connection */
 wr_conn_t* wr_conn_new(wr_svr_t *server) {
   LOG_FUNCTION
   wr_conn_t* a_connection = wr_malloc(wr_conn_t);
-
+  
   if(a_connection == NULL) {
     LOG_DEBUG(SEVERE, "Error a_connection is null. Returning ...");
     return NULL;
   }
   ebb_connection *connection = wr_malloc(ebb_connection);
-
+  
   if(connection == NULL) {
     free(a_connection);
     LOG_DEBUG(SEVERE, "Error connection is null. Returning ...");
     return NULL;
   }
-
+  
   ebb_connection_init(connection);
-
+  
   a_connection->id = ++wr_conn_count;
   a_connection->resp_to_write = 0;
   a_connection->ebb_conn = connection;
@@ -185,9 +178,14 @@ wr_conn_t* wr_conn_new(wr_svr_t *server) {
   connection->on_close = wr_conn_close_cb;
   connection->on_timeout = wr_conn_timeout_cb;
   connection->on_request_parse_error = wr_req_parse_err_cb;
-
+  
   return a_connection;
 }
+
+
+/********************************************************
+ *       Connection Function Definition      *
+ ********************************************************/
 
 /** Destroy Connection */
 void wr_conn_free(wr_conn_t *conn) {

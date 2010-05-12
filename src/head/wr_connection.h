@@ -35,8 +35,6 @@ typedef struct {
   wr_str_list_t  *resp;
 }wr_conn_t;
 
-/** Create new Connection */
-wr_conn_t* wr_conn_new(wr_svr_t*);
 /** Destroy Connection */
 void wr_conn_free(wr_conn_t*);
 /** Add response to Connection */

@@ -54,6 +54,7 @@ typedef struct {
   wr_ctl_signal_cb on_wkr_remove;
   wr_ctl_signal_cb on_wkr_ping;
   wr_ctl_signal_cb on_wkr_add_error;
+  wr_ctl_signal_cb on_wkr_conf_req;
 }wr_svr_t;
 
 /** Initialize Server */

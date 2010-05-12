@@ -33,7 +33,7 @@ extern config_t *Config;
  */
 
 
-static inline int wr_req_path_set(wr_req_t *req) {
+int wr_req_path_set(wr_req_t *req) {
   LOG_FUNCTION
   // terminate request uri with 'null' character
 
@@ -116,34 +116,7 @@ static inline int wr_req_path_set(wr_req_t *req) {
   return 0;
 }
 
-/*
-static inline void wr_req_header_add(wr_req_t * req) {
-  int i = 5;
-
-  if(req->scgi->request_headers_len+1 > WR_MAX_REQ_HEADER_LEN) {
-    req->resp_buf_len = sprintf(req->resp_buf,"%s","The number of request headers is too large.");
-    wr_req_invalid(req->conn, WR_HTTP_STATUS_413);
-    return;
-  }
-
-  for( ; i < req->tmp_header.len ; i++) {
-    req->tmp_header.str[i] = (req->tmp_header.str[i]=='-' ? '_' : wr_toupper(req->tmp_header.str[i]));
-  }
-
-  LOG_DEBUG(DEBUG, "%s() header=%s, value=%s", __FUNCTION__, req->tmp_header.str, req->tmp_value.str);
-
-  scgiUEST_HEADER_SET(req->scgi,
-                          req->tmp_header.str, req->tmp_header.len,
-                          req->tmp_value.str, req->tmp_value.len);
-
-
-
-  wr_string_null(req->tmp_value);
-  wr_string_null(req->tmp_header);
-}
-*/
-
-static int wr_req_header_length_check(wr_req_t *req, size_t length, int index){
+int wr_req_header_length_check(wr_req_t *req, size_t length, int index){
   // Check no. of headers
   if(index >= Config->Request.max_header_count) {
     req->resp_buf_len = sprintf(req->resp_buf, "%s", "The number of request header is too large.");
@@ -190,7 +163,7 @@ void wr_req_header_field_cb(ebb_request* request, const char *at, size_t length,
   LOG_DEBUG(DEBUG,"field name = %s",req->scgi->header + req->scgi->header_list->field_offset);
 }
 
-static int wr_req_header_value_check(wr_req_t *req, size_t length, int index){
+int wr_req_header_value_check(wr_req_t *req, size_t length, int index){
   // Check value length
   if(req->scgi->index == index){
     if(req->scgi->header_list->value_length + length >  Config->Request.max_value_size){
@@ -297,6 +270,22 @@ void wr_req_fragment_cb(ebb_request* request, const char *at, size_t length) {
   }else{
     wr_string_append(req->req_fragment, at, length);
   }
+}
+
+/** Add req request body */
+int wr_req_body_add(wr_req_t *req, const char *at, size_t length) {
+  LOG_FUNCTION
+  if(req->upload_file) {
+    LOG_DEBUG(DEBUG, "writing into file");
+    size_t write = 0;
+    while(write < length) {
+      write += fwrite( at + write, sizeof(char), length - write, req->upload_file);
+    }
+  } else {
+    LOG_DEBUG(DEBUG, "copying into buffer. len=%d", length);
+    scgi_body_add(req->scgi, at, length);
+  }
+  return 0;
 }
 
 /** Request body received */
@@ -482,47 +471,43 @@ void wr_req_complete_cb(ebb_request * request) {
   wr_req_invalid(req->conn, WR_HTTP_STATUS_404);
 }
 
-/********************************************************
- *     Request Function Definition      *
- ********************************************************/
-
 /** Create new Request */
 wr_req_t* wr_req_new(wr_conn_t* conn) {
   LOG_FUNCTION
   LOG_DEBUG(DEBUG,"for connection = %d", conn->id);
-
+  
   wr_req_t  *req = wr_malloc(wr_req_t);
-
+  
   if(req == NULL) {
     LOG_DEBUG(SEVERE, "Error req is null. Returning ...");
     return NULL;
   }
-
+  
   req->conn = conn;
   req->id = ++wr_req_count;
-
+  
   req->app       = NULL;
   req->wkr       = NULL;
-
+  
   req->upload_file      = NULL;
   req->upload_file_name = NULL;
   //  req->uri_hash    =
   req->bytes_sent      = 0;
   req->scgi    = scgi_new();
-
+  
   if(req->scgi == NULL) {
     free(req);
     LOG_ERROR(WARN, "Error req->scgi is null. Returning ...");
     return NULL;
   }
-
+  
   req->resp_buf_len   =
-    req->bytes_received =
-      req->resp_body_len = 0;
+  req->bytes_received =
+  req->resp_body_len = 0;
   req->resp_code = 0;
-
+  
   req->conn_err = req->using_wkr = FALSE;
-
+  
 #ifdef L_DEBUG
   /* Adding Connection id and req id */
   wr_buffer_t *conn_id, *req_id;
@@ -537,12 +522,12 @@ wr_req_t* wr_req_new(wr_conn_t* conn) {
   wr_buffer_free(conn_id);
   wr_buffer_free(req_id);
 #endif
-
+  
   wr_string_null(req->req_uri);
   wr_string_null(req->req_path);
   wr_string_null(req->req_query_str);
   wr_string_null(req->req_fragment);
-
+  
   ebb_request *request = wr_malloc(ebb_request);
   if(request == NULL) {
     scgi_free(req->scgi);
@@ -550,12 +535,12 @@ wr_req_t* wr_req_new(wr_conn_t* conn) {
     LOG_DEBUG(SEVERE, "Error ebb_request is null. Returning ...");
     return NULL;
   }
-
+  
   ebb_request_init(request);
-
+  
   //TODO: can connection have multiple requests?
   req->ebb_req = request;
-
+  
   request->data = req;
   request->on_path = wr_req_path_cb;
   request->on_query_string = wr_query_string_cb;
@@ -566,12 +551,17 @@ wr_req_t* wr_req_new(wr_conn_t* conn) {
   request->on_headers_complete = wr_headers_complete_cb;
   request->on_body = wr_req_body_cb;
   request->on_complete = wr_req_complete_cb;
-
+  
   //TODO: Check for keep alive status & then increment 'responses_to_write'
   // Else it will be 1
-
+  
   return req;
 }
+
+
+/********************************************************
+ *     Request Function Definition      *
+ ********************************************************/
 
 /** Destroy req */
 void wr_req_free(wr_req_t* req) {
@@ -602,22 +592,6 @@ void wr_req_free(wr_req_t* req) {
   } else {
     LOG_DEBUG(SEVERE, "Error req is null.");
   }
-}
-
-/** Add req request body */
-int wr_req_body_add(wr_req_t *req, const char *at, size_t length) {
-  LOG_FUNCTION
-  if(req->upload_file) {
-    LOG_DEBUG(DEBUG, "writing into file");
-    size_t write = 0;
-    while(write < length) {
-      write += fwrite( at + write, sizeof(char), length - write, req->upload_file);
-    }
-  } else {
-    LOG_DEBUG(DEBUG, "copying into buffer. len=%d", length);
-    scgi_body_add(req->scgi, at, length);
-  }
-  return 0;
 }
 
 ebb_request* wr_new_req_cb(ebb_connection *connection) {

@@ -67,8 +67,6 @@ struct wr_app_s {
 void wr_app_free(wr_app_t*);
 /** Display application structure */
 void wr_app_print(wr_app_t*);
-/** Create worker for application */
-int wr_app_wkr_add(wr_app_t*);
 /** Add request message in pending queue */
 int wr_app_message_insert(wr_svr_t*, wr_req_t*);
 /** Check load balance to add the worker */
@@ -79,15 +77,15 @@ void wr_app_chk_load_to_remove_wkr(wr_app_t*);
 int wr_app_wkr_insert(wr_svr_t *, wr_wkr_t*, const wr_ctl_msg_t*);
 /** Got worker add error */
 int wr_app_wkr_error(wr_svr_t *, const wr_ctl_msg_t*);
-/** Remove application from application list */
-int wr_app_remove(wr_svr_t*, const char* app_name);
 /** Initialize the applications */
 void wr_app_init(wr_svr_t*);
-/** Allication add callback */
+/** Application add callback */
 void wr_app_add_cb(wr_ctl_t*, const wr_ctl_msg_t*);
-/** Allication remove callback */
+/** Application remove callback */
 void wr_app_remove_cb(wr_ctl_t*, const wr_ctl_msg_t*);
-/** Allication reload callback */
+/** Application configuration requset */
+void wr_app_conf_req_cb(wr_ctl_t*, const wr_ctl_msg_t*);
+/** Application reload callback */
 void wr_app_reload_cb(wr_ctl_t*, const wr_ctl_msg_t*);
 /** Worker added to application callback */
 void wr_app_wkr_added_cb(wr_app_t *app);

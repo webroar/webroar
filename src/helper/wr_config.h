@@ -22,6 +22,7 @@
 #include<wr_string.h>
 #include<wr_macro.h>
 #include<wr_logger.h>
+#include<wr_scgi.h>
 
 #define TRUE  1
 #define FALSE 0
@@ -136,18 +137,15 @@ struct config_host_list_s {
 typedef struct config_application_list_s config_application_list_t;
 struct config_application_list_s {
   wr_str_t        name;       /**< Application name */
-  wr_str_t        path;       /**< Application path */
-  wr_str_t        env;        /**< Application environment */
-  wr_str_t        type;       /**< Application type {rails, merb etc.}*/
-  wr_u_short      analytics;  /**< analytics flag {enabled/disabled} */
   wr_str_t        baseuri;    /**< Application baseuri */
+  wr_str_t        path;    /**< Application path */
   wr_u_short      min_worker; /**< Minimum number of workers required */
   wr_u_short      max_worker; /**< Maximum number of workers */
   LOG_SEVERITY    log_level;  /**< Logging level */
-  short           cuid;       /**< User id */
-  short           cgid;       /**< Group id */
   
+  scgi_t          *scgi;
   config_host_list_t          *host_name_list;
+  config_application_list_t   *new;
   config_application_list_t   *next;
 };
 

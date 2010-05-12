@@ -27,7 +27,7 @@ static wr_svr_t *server = NULL;
 config_t        *Config = NULL;
 
 /** Cleanup and destroy the Server */
-static inline void cleanup(wr_svr_t *server) {
+void cleanup(wr_svr_t *server) {
   LOG_FUNCTION
 
   // Delete 'webroar.sock' file
@@ -49,7 +49,7 @@ static inline void cleanup(wr_svr_t *server) {
 }
 
 /** Daemonize the process */
-static inline void daemonize() {
+void daemonize() {
   LOG_FUNCTION
   /* Our process ID and Session ID */
   pid_t pid, sid;
@@ -215,7 +215,7 @@ int main(int argc, char *argv[]) {
   } else {
     printf("Logger initialization failed. Please make sure you have write permission on '/var/log/webroar' directory.");
   }
-
+  
   //Allocate and initialize configuration structure
   if(wr_conf_read() == FALSE ) {
     LOG_ERROR(FATAL,"Configuration reading failed.");
