@@ -1,0 +1,113 @@
+<!--
+WebROaR - Ruby Application Server - http://webroar.in/
+Copyright (C) 2009  Goonj LLC
+
+This file is part of WebROaR.
+
+WebROaR is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+WebROaR is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with WebROaR.  If not, see <http://www.gnu.org/licenses/>.
+-->
+<% expires = Headers.get_expires_value() %>  
+<table width = 95% cellpadding = "4" id = 'headers_table'>
+    <tr>
+        <td class = 'table_header' colspan = 3>
+            Headers&nbsp;&nbsp;&nbsp;<span class = 'help_link'><%=link_to_function "Help", :onclick => "addHelp('headers')" %></span>
+            <br/>
+            <div id = 'headers' class = 'font_size_12'>
+            </div>
+        </td>
+    </tr>    
+    <tr>
+        <td width = 40% class = 'BG_white'>
+            Expires&nbsp;&nbsp;&nbsp;<span class = 'help_link'><%=link_to_function "Help", :onclick => "addHelp('expires')" %>
+            </span>
+            <br/>
+            <div id = 'expires' class = 'font_size_12'>
+            </div>
+        </td>
+        <td width = 40% class = 'BG_white'>
+            <div id = 'expires_div'>
+                <%= h(expires) %>
+            </div>
+        </td>
+        <td width = 20% class = 'BG_white'>
+            <%= link_to_remote 'Edit', :update => 'expires_div', :url => {:controller => 'headers', :action => 'add_expires_text_box', :div_id => 'expires_div'} %>
+        </td>
+    </tr>
+		<tr>
+			<td class = 'sub_header' colspan = 3>
+				Expires By Type&nbsp;&nbsp;&nbsp;<span class = 'help_link'><%=link_to_function "Help", :onclick => "addHelp('expires_by_type')" %></span>
+            <br/>
+            <div id = 'expires_by_type' class = 'font_size_12'>
+            </div>
+			</td>
+		</tr>
+		<% expires_by_type_array = Headers.get_expires_by_type_array() %>		
+		<% if expires_by_type_array.length > 0 %>
+		<tr>
+			<td class = 'sub_header'>
+				Extension&nbsp;&nbsp;&nbsp;<span class = 'help_link'><%=link_to_function "Help", :onclick => "addHelp('expires_by_type_ext')" %></span>
+        &nbsp;&nbsp;&nbsp;        
+            <br/>
+            <div id = 'expires_by_type_ext' class = 'font_size_12'>
+            </div>
+			</td>
+			<td class = 'sub_header'>
+				Expires&nbsp;&nbsp;&nbsp;<span class = 'help_link'><%=link_to_function "Help", :onclick => "addHelp('expires_by_type_expires_value')" %></span>
+        &nbsp;&nbsp;&nbsp;        
+            <br/>
+            <div id = 'expires_by_type_expires_value' class = 'font_size_12'>
+            </div>
+			</td>
+			<td class = 'sub_header'>
+				
+			</td>
+		</tr>
+		<% index = 0 %>
+		<% expires_by_type_array.each do |item| %>
+		  <tr>
+		  	<td class = 'BG_white'>
+		  		<%=h item['ext'] %>
+		  	</td>
+				<td class = 'BG_white'>
+          <%=h item['expires'] %>
+        </td>
+				<td class = 'BG_white'>
+          <%=link_to_remote "Delete", :update => 'headers_div', :url => {:controller => 'headers', :action => 'delete_expires_by_type', :id => index}, :confirm => "Are you sure to delete?", :oncontextmenu => 'return false;' %>
+        </td>
+		  </tr>
+			<% index += 1%>
+		  <% end %>
+		<% end %>
+		
+</table>
+
+<div id = 'expires_by_type_form'>
+</div>
+
+<table width = 95% cellpadding = "4">		
+	<% if @restart_server_message %>
+		<tr>
+	   <td align = 'left'>
+      <span id='error_div'>
+      	<%= @restart_server_message%>
+		  </span>			
+     </td>		
+		</tr>
+		<% end %>			
+		<tr>
+			<td align = 'right'>
+				<%=link_to_remote "Add Expires By Type", :update => 'expires_by_type_form', :url => {:controller => 'headers', :action => 'add_expires_by_type_form'} %>			  
+			</td>
+		</tr>
+</table>

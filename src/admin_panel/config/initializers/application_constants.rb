@@ -149,3 +149,6 @@ IGNORED_EXCEPTION = 2
 
 ENABLE_EMAIL_NOTIFICATION = 'Are you sure, enable email notification for the exceptions?'
 DISABLE_EMAIL_NOTIFICATION = 'Are you sure, disable email notificaion for the exceptions? This would still captures exceptions and stores into database.'
+
+EXPIRES_VALIDATION = "Possible value for expires is off or no. of seconds."
+EMPTY_STRING = "Value is empty string."

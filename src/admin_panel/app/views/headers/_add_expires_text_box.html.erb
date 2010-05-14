@@ -1,0 +1,35 @@
+<!--
+WebROaR - Ruby Application Server - http://webroar.in/
+Copyright (C) 2009  Goonj LLC
+
+This file is part of WebROaR.
+
+WebROaR is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+WebROaR is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with WebROaR.  If not, see <http://www.gnu.org/licenses/>.
+-->
+
+<%old_value = Headers.get_expires_value()%>  
+
+<div  id = 'div_add_expires_text_box'>
+  <span style = "height:20px;float:left">
+    <%remote_form_for :data, :update => params[:div_id], :url => {:controller => 'headers', :action => 'save_expires_value', :div_id => params[:div_id], :old_value => old_value}do%>
+      <%=text_field :data, :value, :size => '10', :value => h(old_value)%> 
+    <%=submit_tag 'Save'%>
+    <%end%> 
+  </span>
+  <span style = "height:20px;float:left;">
+    <%remote_form_for :cancel, :update => params[:div_id], :url => {:controller => 'headers', :action => 'cancel_expires_value_edit', :div_id => params[:div_id], :old_value => old_value} do%>
+      <%=submit_tag 'Cancel'%>
+    <%end%> 
+  </span>
+</div>

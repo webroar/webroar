@@ -74,6 +74,11 @@ along with WebROaR.  If not, see <http://www.gnu.org/licenses/>.
         <%=render :partial => 'mail_specification/current_spec' %>    
       <%end%>  
     </div>
+		<div id = 'headers_div'>
+			<%= render :partial => 'headers/headers_table' %>
+		</div>
+		<br/>
+		<br/>		
     <div id = 'application_list_table'>
       <%=render :partial => 'application_table', :locals => {:start => 0}%>
     </div>

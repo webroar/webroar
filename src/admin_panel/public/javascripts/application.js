@@ -143,8 +143,27 @@ function addHelp(id)
   if(id=='sendmail_location')
   {
     str="Location of the sendmail agent e.g. /usr/sbin/sendmail"
+  }  
+  if (id == 'headers') 
+  {
+    str = "It allows adding or changing the Expires and Cache-Control in the response headers for static assets (e.g. *.js, *.gif etc)."
   }
-
+  if (id == 'expires') 
+  {
+    str = "Expires header for all static assets (optional) (default is 'off'). Possible value for expires is off or no. of seconds."
+  }
+  if (id == 'expires_by_type') 
+  {
+    str = "Specific expires header for specific file types."
+  }
+  if (id == 'expires_by_type_ext') 
+  {
+    str = 'File extensions separated by comma (e.g png, jpg, gif).'
+  }
+  if (id == 'expires_by_type_expires_value') 
+  {
+    str = "Expires value in no. of seconds."
+  }
   if(id=='runasuser')
   {
 	  str=str+"<div style='width:99%;text-align:right'><a href=# onClick=\" $('application_specification_type1').show(); $('application_specification_analytics').show(); $('"+id+"').hide(); return false;\" class='calendar_link'>Close</a></div>"
