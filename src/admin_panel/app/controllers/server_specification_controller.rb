@@ -83,6 +83,20 @@ class ServerSpecificationController < ApplicationController
     end
   end
   
+  #This method is to add div for changing the server specifications.
+  #This action is called as a ajax call when user click on the edit button of the server specification block in the configuration page.
+  def add_text_box
+    @path = CONFIG_FILE_PATH
+    render :partial => 'add_div'
+  end
+  
+  #This method is to close the edit box for the server specification.
+  #This is called if user doesnot wants to made the changes in the server specification.   
+  def cancel_edit
+    text = params[:old_value].to_s    
+    render :text =>   text
+  end
+  
   private
   
   #Method is to check for the various constarins for ssl supports 

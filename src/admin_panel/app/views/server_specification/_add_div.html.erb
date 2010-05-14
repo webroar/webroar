@@ -35,7 +35,7 @@ along with WebROaR.  If not, see <http://www.gnu.org/licenses/>.
     <%end%> 
   </span>
   <span style = "height:20px;float:right;">
-    <%remote_form_for :cancel, :update => params[:div_id], :url => {:action => 'cancel_edit', :div_id => params[:div_id], :old_value => old_value}do%>
+    <%remote_form_for :cancel, :update => params[:div_id], :url => {:controller => 'server_specification', :action => 'cancel_edit', :div_id => params[:div_id], :old_value => old_value}do%>
       <%=submit_tag 'Cancel'%>
     <%end%> 
   </span>

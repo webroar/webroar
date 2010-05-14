@@ -155,20 +155,6 @@ class AdminController < ApplicationController
     set_application_name
   end
   
-  #This method is to add div for changing the server specifications.
-  #This action is called as a ajax call when user click on the edit button of the server specification block in the configuration page.
-  def add_text_box
-    @path = CONFIG_FILE_PATH
-    render :partial => 'add_div'
-  end
-  
-  #This method is to close the edit box for the server specification.
-  #This is called if user doesnot wants to made the changes in the server specification.	 
-  def cancel_edit
-    text = params[:old_value].to_s		
-    render :text => 	text
-  end
-  
   #This method is to return the server time.
   #The method refreshes the time after every minute.	
   def get_latest_time

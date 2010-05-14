@@ -30,7 +30,7 @@ along with WebROaR.  If not, see <http://www.gnu.org/licenses/>.
       <tr>
         <td width = 40% class = 'BG_dark_gray'> Port&nbsp;&nbsp;&nbsp;</td>	
         <td width = 40% class = 'BG_dark_gray'><div id = 'port_div'><%=h(port)%></div></td>
-        <td width = 20% class = 'BG_dark_gray'><%=link_to_remote 'Edit', :update => 'port_div', :url => {:action => 'add_text_box', :div_id => 'port_div'}%></td>
+        <td width = 20% class = 'BG_dark_gray'><%=link_to_remote 'Edit', :update => 'port_div', :url => {:controller => 'server_specification', :action => 'add_text_box', :div_id => 'port_div'}%></td>
       </tr>
       <tr>
         <td class = 'BG_white'>Minimum number of workers&nbsp;&nbsp;&nbsp;
@@ -40,7 +40,7 @@ along with WebROaR.  If not, see <http://www.gnu.org/licenses/>.
           <br/> <div id = 'minworker' class = 'font_size_12'></div>
         </td>
         <td class = 'BG_white'><div id = 'min_pro_div'><%=h(min_worker)%></div></td>
-        <td class = 'BG_white'><%=link_to_remote 'Edit', :update => 'min_pro_div', :url => {:action => 'add_text_box', :div_id => 'min_pro_div'}%></td>
+        <td class = 'BG_white'><%=link_to_remote 'Edit', :update => 'min_pro_div', :url => {:controller => 'server_specification', :action => 'add_text_box', :div_id => 'min_pro_div'}%></td>
       </tr>
       <tr>
         <td class = 'BG_dark_gray'>Maximum number of workers&nbsp;&nbsp;&nbsp;
@@ -50,7 +50,7 @@ along with WebROaR.  If not, see <http://www.gnu.org/licenses/>.
           <br/> <div id = 'maxworker' class = 'font_size_12'></div>
         </td>
         <td class = 'BG_dark_gray'><div id = 'max_pro_div'><%=h(max_worker)%></td>
-        <td class = 'BG_dark_gray'><%=link_to_remote 'Edit', :update => 'max_pro_div', :url => {:action => 'add_text_box', :div_id => 'max_pro_div'}%></td>
+        <td class = 'BG_dark_gray'><%=link_to_remote 'Edit', :update => 'max_pro_div', :url => {:controller => 'server_specification', :action => 'add_text_box', :div_id => 'max_pro_div'}%></td>
       </tr>
       <tr>
         <td class = 'BG_white'>Log Level&nbsp;&nbsp;&nbsp;
@@ -60,7 +60,7 @@ along with WebROaR.  If not, see <http://www.gnu.org/licenses/>.
           <br/> <div id = 'log_level' class = 'font_size_12'></div>
         </td>
         <td class = 'BG_white'><div id = 'log_div'><%=h(log_level)%></div></td>
-        <td class = 'BG_white'><%=link_to_remote 'Edit', :update => 'log_div', :url => {:action => 'add_text_box', :div_id => 'log_div'}%></td>
+        <td class = 'BG_white'><%=link_to_remote 'Edit', :update => 'log_div', :url => {:controller => 'server_specification', :action => 'add_text_box', :div_id => 'log_div'}%></td>
       </tr>
     </table>
     <br/><br/>
