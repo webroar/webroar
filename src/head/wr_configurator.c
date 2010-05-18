@@ -80,7 +80,7 @@ int wr_app_conf_req_set(config_application_list_t *app, node_t *app_node){
   scgi_header_add(app->scgi, "USER", strlen("USER"), str, strlen(str));
 
   // Set application environment
-  str = wr_validate_string(get_node_value(app_node->child, "environment_variables"));
+  str = wr_validate_string(get_node_value(app_node->child, "environment"));
   if(str){
     scgi_header_add(app->scgi, "ENV", strlen("ENV"), str, strlen(str));
   }else{
