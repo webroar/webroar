@@ -58,8 +58,7 @@ wkr_tmp_t* wkr_tmp_new() {
   wr_string_null(tmp->root_path);
   wr_string_null(tmp->ctl_path);
   wr_string_null(tmp->log_file);
-  tmp->env_var = NULL;
-
+  
   tmp->profiler = 'n';
   tmp->gid = tmp->uid = 0;
   // HTTP1.1 assumes persistent connection by default
@@ -81,8 +80,7 @@ void wkr_tmp_free(wkr_tmp_t** t) {
     wr_string_free(tmp->resolver);
     wr_string_free(tmp->root_path);
     wr_string_free(tmp->ctl_path);
-    wr_string_free(tmp->log_file);
-    wr_string_list_free(tmp->env_var);
+    wr_string_free(tmp->log_file);    
 
     free(tmp);
   }
@@ -106,6 +104,8 @@ wkr_t* worker_new(struct ev_loop *loop, wkr_tmp_t *tmp) {
   w->tmp = tmp;
   assert(w->tmp!=NULL);
 
+  w->env_var = NULL;
+  
   w->ctl = wkr_ctl_new(w);
   assert(w->ctl!=NULL);
   if(connect_to_head(w) == FALSE){
@@ -154,6 +154,7 @@ void worker_free(wkr_t **wrk) {
     if(w->ctl)
       wkr_ctl_free(&w->ctl);
 
+    wr_string_list_free(w->env_var);
     free(w);
   }
   *wrk=NULL;
@@ -358,10 +359,14 @@ void manipulate_environment_variable(wkr_t* w, scgi_t *scgi) {
   int rv = 0;  
     
   str = (char*) scgi_header_value_get(scgi, "ENV_VAR");
-  if(str){
+  w->env_var = wr_string_list_new();  
+  if(str){    
     var = strtok(str,"#");
     while(var){
-      rv = putenv(var);
+      LOG_DEBUG(DEBUG,"Environment variable string = %s", var);
+      wr_string_list_add(w->env_var, var, strlen(var));
+       // TODO: see the security concerns     
+      rv = putenv(w->env_var->rear->str.str);
       if (rv != 0) {
         LOG_ERROR(WARN, "putenv() failed, errno = %d, description = %s", errno, strerror(errno)); 
       } 

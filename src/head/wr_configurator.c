@@ -87,19 +87,20 @@ int wr_app_conf_req_set(config_application_list_t *app, node_t *app_node){
     scgi_header_add(app->scgi, "ENV", strlen("ENV"), Config->Application.Default.env.str, Config->Application.Default.env.len);
   }
   
-  node_t *nodes = get_nodes(app_node, "set_env");
+  node_t *nodes = get_nodes(app_node->child, "environment_variables/set_env");
   wr_str_t val;
   wr_string_null(val);
   while(nodes){
-    if(nodes->value){
+    str = wr_validate_string(NODE_VALUE(nodes));
+    if(str){      
       if(wr_string_is_empty(val)){
-        wr_string_new(val, nodes->value, nodes->value_len);
+        wr_string_new(val, str, strlen(str));
       }else{
         wr_string_append(val, "#", 1);
-        wr_string_append(val, nodes->value, nodes->value_len);
+        wr_string_append(val, str, strlen(str));
       }
     }
-    nodes = nodes->next;
+    nodes = NODE_NEXT(nodes);
   }
   if(!wr_string_is_empty(val)){
    scgi_header_add(app->scgi, "ENV_VAR", strlen("ENV_VAR"), val.str, val.len); 

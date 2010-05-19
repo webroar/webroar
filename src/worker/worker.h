@@ -40,7 +40,6 @@ struct wkr_tmp_s {
   char    profiler;      /**< Analytics flag */
   wr_str_t ctl_path;    /**< Server control path/port */
   wr_str_t log_file;         /**< Log file name */
-  wr_str_list_t *env_var;   /**< Environment variable array */
   short   gid;              /**< Process group id */
   short   uid;              /**< Process user id */
   short    keep_alive;      /**< HTTP connection keep alive flag */
@@ -91,6 +90,8 @@ struct wkr_s {
   wkr_ctl_t     *ctl;
   wkr_tmp_t     *tmp;
   http_t        *http;
+  
+  wr_str_list_t *env_var;   /**< Environment variable array */
 };
 
 wkr_t* worker_new(struct ev_loop *, wkr_tmp_t*);
