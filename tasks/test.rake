@@ -322,7 +322,7 @@ task :load_test => [:create_test_dirs] do
 end
 
 desc "Build gem"
-task :build => [:create_test_dirs] do
+task :build_gem => [:create_test_dirs] do
   total += 1
   begin
     file.print "Build gem ... " if file
@@ -338,7 +338,7 @@ task :build => [:create_test_dirs] do
 end
 
 desc "Gem install. It's meant for automated testing, passing predefined values for required inputs"
-task :build_install => [:create_test_dirs] do
+task :build_install => [:build_gem] do
   total += 1
   gem_file = File.join(WEBROAR_ROOT,'pkg',"webroar-#{Webroar::VERSION::STRING}.gem")
   unless File.exists?(gem_file)
@@ -410,7 +410,7 @@ task :build_uninstall => [:create_test_dirs] do
 end
 
 desc "Build test"
-task :build_test do
+task :build_test => [:create_test_dirs] do
   next unless test_flag == 1 or ENV["build_test"] == "yes"
   
   begin
@@ -427,7 +427,6 @@ task :build_test do
     failed = 0
     file = File.open(build_test,'w')
     
-    Rake::Task[:build].invoke
     Rake::Task[:build_install].invoke
     Rake::Task[:build_uninstall].invoke
        
@@ -570,7 +569,7 @@ desc "Integrated testing executes unit tests, admin-panel tests and functional \
       tests. To run load tests give load_test=yes, to run build tests give \
       build_test=yes as an argument. To run test under debug build give \
       debug_build=yes as an argument."
-task :all_test => [:create_test_dirs, :unit_test, :spec_test, :admin_panel_test, :load_test, :build_test] do
+task :all_test => [:create_test_dirs, :unit_test, :spec_test, :admin_panel_test, :load_test] do
 
   unless ENV["no_report"]
     test_report
@@ -586,11 +585,11 @@ desc "Runs integrated test-suit comprises of gem creation, installation, unit \
       tests, admin-panel tests, functional tests. To run load tests give \
       load_test=yes as an argument. To run under debug build give debug_build=\
       yes as an argument."
-task :test do
+task :test => [:build_test] do
   
   Dir.chdir(WEBROAR_ROOT)
 
-  Rake::Task[:build].invoke
+  Rake::Task[:build_install].reenable
   Rake::Task[:build_install].invoke
   
   str = " "
@@ -600,4 +599,6 @@ task :test do
   # Run tests on installed directory. Copy test-report and test-summary to TEST_DIR
   cmd = "webroar test -r=#{REPORT_DIR} #{str}"
   system(cmd)
+  Rake::Task[:build_uninstall].reenable
+  Rake::Task[:build_uninstall].invoke
 end
