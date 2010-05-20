@@ -298,14 +298,13 @@ task :load_test => [:create_test_dirs] do
     start_server
     sleep(15)
     system("ruby #{File.join(TEST_DIR,'load_test.rb')}")
+    stop_server
     
     log_file_pattern = File.join(LOG_FILES,'*.log')
     log_files = Dir.glob(log_file_pattern)
     for file in log_files
       FileUtils.cp(file,File.join(LOAD_TEST_REPORT,"#{File.basename(file)}"))
     end
-    
-    stop_server
   rescue Exception => e
     Rake::Task[:log_exception].invoke(e)
   ensure
