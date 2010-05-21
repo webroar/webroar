@@ -360,6 +360,23 @@ class ApplicationSpecification < PseudoModel
           i +=1
         end  
         return i
-    end  
+    end
+    
+    def analytics_enabled?(application_name)
+      info = YAML::load_file(CONFIG_FILE_PATH) rescue nil
+      i = 0 
+      while info['Application Specification']
+        if info['Application Specification'][i]['name'] == application_name
+          if info['Application Specification'][i]['analytics'].downcase == "enabled".downcase
+            return true 
+          else
+            return false
+          end
+        end
+        i +=1
+      end
+      false
+    end
+    
   end
 end

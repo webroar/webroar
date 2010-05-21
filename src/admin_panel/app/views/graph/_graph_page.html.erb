@@ -29,6 +29,9 @@ along with WebROaR.  If not, see <http://www.gnu.org/licenses/>.
 	<div id = 'reload'>Select Graph:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<%=select :graph,:name,%w{URL-Breakup URL-Calls Database-Usage Throughput Resource-Usage},:selected=>session[:graph_type]%></div>
 		<hr/>
 		<div style = "font-weight:bold;font-size:14;">Application Name : <%=@application_name%>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</div>
+    <% unless ApplicationSpecification.analytics_enabled?(@application_name) %>
+    <span style = "color:red">Analytics for this application is currently disabled. You can still view the reports on captured data.</span>
+    <% end %>
 		<hr/>
 		<div id = 'graphs'>
 			<%=render :partial => get_partial(session[:graph_type])%>

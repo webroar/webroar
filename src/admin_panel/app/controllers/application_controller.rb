@@ -95,9 +95,9 @@ private
     info = YAML::load_file(CONFIG_FILE_PATH) rescue nil
     if info and info['Application Specification']	
       while(info['Application Specification'][i])
-        if info['Application Specification'][i]['analytics'].downcase == "enabled".downcase
+        #if info['Application Specification'][i]['analytics'].downcase == "enabled".downcase
           apps << info['Application Specification'][i]['name'].gsub("<","&lt;").gsub(">","&gt;")
-        end	
+        #end	
         i += 1
       end	
     end
