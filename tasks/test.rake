@@ -542,9 +542,9 @@ def test_report
     f.puts "\n"
   end
   
-  if File.exists?(File.join(TEST_DIR,'build_test'))
+  if File.exists?(File.join(BUILD_TEST_REPORT,'build_test'))
     f.puts "--------------------------------Build Tests Result------------------------------"
-    f.puts File.read(File.join(TEST_DIR,'build_test'))
+    f.puts File.read(File.join(BUILD_TEST_REPORT,'build_test'))
     f.puts "\n"
   end
   
