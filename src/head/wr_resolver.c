@@ -43,6 +43,9 @@ void wr_req_resolver_print(wr_req_resolver_t* resolver) {
 }
 
 /** Resolve static content */
+/* Do not set req->app if static workers are not there.
+ * If req->app does not set, the static content served by the worker of
+ * respective application */
 int wr_req_resolve_static_content(wr_req_t *req){
   LOG_FUNCTION
   char path[STR_SIZE1KB + Config->Request.max_path_size];
@@ -51,7 +54,8 @@ int wr_req_resolve_static_content(wr_req_t *req){
   int len;
   wr_str_t decoded_req_path;
 
-  if(WR_QUEUE_SIZE(req->app->svr->static_app->q_workers) <= 0){
+  // Check static-workers exist or not
+  if(req->app->svr->static_app == NULL || WR_QUEUE_SIZE(req->app->svr->static_app->q_workers) <= 0){
     LOG_ERROR(SEVERE,"Static content server is down.")
     return -1;
   }

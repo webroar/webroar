@@ -940,6 +940,23 @@ config_application_list_t* wr_conf_app_read(const char *app_name, char* err_msg,
         strcpy(err_msg, "Could not read Admin Panel");
     }
     return app;
+  }else if(strcmp(app_name, Config->Application.Static_server.name.str) == 0){
+  	// Read Static server
+  	app = wr_conf_static_server_read();
+  	if(app) {
+      //Set application configuration into configuration data structure
+      if(flag == TRUE){
+        old_app->new = app;
+        return old_app;
+      }else{
+        app->next = Config->Application.list;
+        Config->Application.list = app;
+      }
+    } else {
+      if(err_msg)
+        strcpy(err_msg, "Could not read Static Server");
+    }
+    return app; 
   }
 
   root = yaml_parse(Config->Server.File.config.str);
