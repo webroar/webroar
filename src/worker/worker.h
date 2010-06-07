@@ -23,7 +23,7 @@
 #ifndef WORKER_H_
 #define WORKER_H_
 
-#include <wkr_static.h>
+#include <wkr_http.h>
 
 typedef struct wkr_s       wkr_t;
 typedef struct wkr_tmp_s   wkr_tmp_t;

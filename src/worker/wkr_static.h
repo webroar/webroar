@@ -19,7 +19,9 @@
 #ifndef WKR_STATIC_H_
 #define WKR_STATIC_H_
 
-#include <wkr_http.h>
+#include <wkr_http_response.h>
+
+#define MAP_SIZE 36
 
 typedef struct static_file_s{
     char ext[10];
@@ -28,13 +30,17 @@ typedef struct static_file_s{
     struct static_file_s *next;
 }static_file_t;
 
-/* Initialize extension and mime-type map */
-int static_module_init();
+typedef struct static_server_s{
+  struct stat     buf;
+  const char      *path, *encoding, *user_agent, *modify;
+  wr_buffer_t     *buffer;  // Buffer to
+  static_file_t   *map[MAP_SIZE + 1];
+}static_server_t;
 
-/* Free extension and mime-type map */
-void static_module_free();
+static_server_t * static_server_new();
+void static_server_free(static_server_t *stat);
 
 /* Serve the static file content */
-void static_file_process(http_t *h);
+void static_file_process(void *http);
 
 #endif /*WKR_STATIC_H_*/

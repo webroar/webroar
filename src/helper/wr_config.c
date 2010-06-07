@@ -136,6 +136,8 @@ int wr_config_worker_init(config_t *Config, const char *root_path){
   Config->Worker.stack_tace    = 50;
   Config->Worker.max_body_size = 65536;
   
+  Config->Worker.Compress.lower_limit = 1024;   //10KB
+  Config->Worker.Compress.upper_limit = 1024*1024; //1MB
   
   return TRUE;
 }

@@ -203,6 +203,11 @@ typedef struct config_worker_s{
     wr_str_t    version;
   }Server;
   
+  struct compress{
+    wr_u_long lower_limit;
+    wr_u_long upper_limit;
+  }Compress;
+  
   wr_str_t    static_server;
   wr_str_t    sock_path;
   wr_u_short  stack_tace;

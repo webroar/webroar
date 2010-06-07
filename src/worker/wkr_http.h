@@ -19,7 +19,8 @@
 #ifndef WKR_HTTP_H_
 #define WKR_HTTP_H_
 
-#include <wkr_http_response.h>
+#include <wkr_static.h>
+
 
 typedef struct http_s    http_t;
 
@@ -28,9 +29,9 @@ struct http_s {
   void          *wkr;
   http_req_t      *req;
   http_resp_t     *resp;
-  short            is_static;
-#ifdef L_DEBUG
+  static_server_t *stat;
 
+#ifdef L_DEBUG
   wr_u_int       conn_id;
   wr_u_int       req_id;
 #endif

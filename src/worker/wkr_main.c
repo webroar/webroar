@@ -221,7 +221,7 @@ void idle_cb (struct ev_loop *loop, struct ev_idle *w, int revents) {
 }
 
 void init_idle_watcher(wkr_t *w){
-  if(!w->http->is_static){
+  if(!w->http->stat){
     ev_idle_init (&idle_watcher, idle_cb);
     start_idle_watcher();
   }  

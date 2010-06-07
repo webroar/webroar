@@ -28,13 +28,13 @@ typedef struct http_req_s    http_req_t;
 
 /******* HTTP Request  ******/
 struct http_req_s {
-  char           buf[STR_SIZE10KB];    /**< Request buffer */
-  size_t           bytes_read;
-  scgi_t     *scgi;    /**< Parsed SCGI request */
-  FILE             *file;          /**< File pointer */
-  char           file_name[STR_SIZE64];      /**< File name */
-  size_t           scgi_header_len;    /**< Header packet length */
-  size_t           req_len;        /**< Content length */
+  char          buf[STR_SIZE10KB];    /**< Request buffer */
+  size_t        bytes_read;
+  scgi_t        *scgi;    /**< Parsed SCGI request */
+  FILE          *file;          /**< File pointer */
+  char          file_name[STR_SIZE64];      /**< File name */
+  size_t        scgi_header_len;    /**< Header packet length */
+  size_t        req_len;        /**< Content length */
 };
 
 http_req_t* http_req_new();

@@ -139,7 +139,7 @@ class Installer
       Dependencies::Ruby,
       Dependencies::LibRuby,
       Dependencies::Ruby_OpenSSL,
-      Dependencies::Zlib,
+      Dependencies::RubyZlib,
       Dependencies::Ruby_DevHeaders,
       Dependencies::RubyGems,
       Dependencies::GCC,
@@ -147,7 +147,8 @@ class Installer
       Dependencies::LibSqlite,
       Dependencies::Sqlite_DevHeaders,
       Dependencies::Starling,
-      Dependencies::Gnutls
+      Dependencies::Gnutls,
+      Dependencies::Zlib
     ]
   end
   
@@ -156,14 +157,15 @@ class Installer
       Dependencies::Ruby,
       Dependencies::LibRuby,
       Dependencies::Ruby_OpenSSL,
-      Dependencies::Zlib,
+      Dependencies::RubyZlib,
       Dependencies::Ruby_DevHeaders,
       Dependencies::RubyGems,
       Dependencies::GCC,
       Dependencies::Make,
       Dependencies::Starling,
       Dependencies::Xcode,
-      Dependencies::Gnutls
+      Dependencies::Gnutls,
+      Dependencies::Zlib
     ]
   end
 
@@ -173,36 +175,44 @@ class Installer
     @import = false
     @port = 0
     @err_msg = nil
+    @zlib = true
   end
 
   # Install the server
   def install(options)
-    return -1 unless CheckUser.check
-    @options = options
-
-    str = set_install_options
-      
     
-    check_dependencies || exit(1)
+    begin
+      return -1 unless CheckUser.check
+      @options = options
+  
+      check_dependencies || exit(1)
       
-    @port, @import, gem_name = UserInteraction.new(@options).user_input
-    @port = import_files(gem_name) if @import
-    write_server_port if !@import
+      str = set_install_options
+        
+      @port, @import, gem_name = UserInteraction.new(@options).user_input
+      @port = import_files(gem_name) if @import
+      write_server_port if !@import
+        
+      create_dirs
+      return -1 unless compile_code(str)
+      return -1 unless install_server
       
-    create_dirs
-    return -1 unless compile_code(str)
-    return -1 unless install_server
-    
-
-    # Stop WebROaR if already running.
-    WebroarCommand.new.operation(nil, "stop") if File.exist?(PIDFILE)
-
-    # Start WebROaR
-    puts"Starting WebROaR ... "
-    WebroarCommand.new.operation(nil, "start")
-    
-    install_msg(false)
-    puts "Warning: " + @err_msg if @err_msg
+  
+      # Stop WebROaR if already running.
+      WebroarCommand.new.operation(nil, "stop") if File.exist?(PIDFILE)
+  
+      # Start WebROaR
+      puts"Starting WebROaR ... "
+      WebroarCommand.new.operation(nil, "start")
+      
+      install_msg(false)
+      puts "Warning: " + @err_msg if @err_msg
+    rescue Exception=>e
+      File.open(File.join(WEBROAR_ROOT, "install.log"), "a+") do |f|
+        f.puts e.class.name
+        f.puts e.backtrace
+      end
+    end
   end
 
   # Start test cases
@@ -400,8 +410,8 @@ class Installer
   # Check the dependency
   def check_dependencies
     puts "Checking for the dependencies ..."
-    failed_dependencies =[]
-
+    failed_dependencies = []
+    
     REQUIRED_DEPENDENCIES.each do |dep|
       if (dep.name=="gnutls/gnutls.h" and @ssl) or dep.name != "gnutls/gnutls.h"
         print "Checking for #{dep.name}........"
@@ -416,6 +426,9 @@ class Installer
         end
       end
     end
+    
+    @zlib = false if failed_dependencies.include?(Dependencies::Zlib.name)
+    failed_dependencies.delete(Dependencies::Zlib.name)
 
     if( failed_dependencies.size > 0)
       puts "The following dependencies required for installation could not be found:"
@@ -423,9 +436,15 @@ class Installer
       failed_dependencies.each do |dependency|
         puts dependency
       end
+      
       puts "\e[0mPlease refer the user guide for the list of prerequisites."
       puts "Sorry, WebROaR could not be installed on this machine."
       return false
+    end
+    
+    unless @zlib
+      puts "\n\e[31mThe installation continue without supporting static assets encoding.\e[0m"
+      puts ""    
     end
 
     return true
@@ -640,6 +659,7 @@ exit 0"
 
     str += " include_flags=\"#{@options[:include_paths]}\"" if @options[:include_paths].length > 0
     str += " library_flags=\"#{@options[:library_paths]}\"" if @options[:library_paths].length > 0
+    str += " zlib=yes" if @zlib
     str
   end
 
@@ -711,7 +731,7 @@ exit 0"
   def create_dirs
     print 'Creating directory structure ...'
     Dir.chdir(WEBROAR_ROOT)
-    system("ln -s  #{ADMIN_PANEL_DIR} #{File.join(WEBROAR_ROOT)}>install.log 2>>install.log")
+    system("ln -s  #{ADMIN_PANEL_DIR} #{WEBROAR_ROOT}>install.log 2>>install.log")
     system("chmod ugo+x #{File.join(WEBROAR_BIN_DIR,'webroar-analyzer')}")
     puts " done."
   end

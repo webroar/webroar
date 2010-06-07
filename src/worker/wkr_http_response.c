@@ -269,7 +269,8 @@ void http_resp_header_write_cb(struct ev_loop* loop, struct ev_io* watcher, int 
       LOG_DEBUG(DEBUG, "http_resp_header_write_cb() starting read watcher. bytes write=%d", rsp->bytes_write);
       if (rsp->resp_body->len > 0) {
         rsp->bytes_write = 0;
-        if (w->http->is_static && w->http->resp->resp_code == 200) {
+        if (w->http->stat && w->http->resp->resp_code == 200 &&
+            rsp->resp_body->str == NULL) {
           ev_io_init(watcher, http_resp_file_send_cb, w->req_fd, EV_WRITE);
           //send_file(w);
           //ev_io_init(watcher, http_resp_file_write_cb, w->req_fd, EV_WRITE);

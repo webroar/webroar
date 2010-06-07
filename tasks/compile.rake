@@ -200,7 +200,7 @@ worker_obj.each { |obj_file,src_file|
     unless $webroar_config_called
       webroar_config
     end
-    cmd = "#{COMPILER} #$inc_flags #$c_flags #$flags #$debug_flags -c  #{src_file} -o #{obj_file} "
+    cmd = "#{COMPILER} #$inc_flags #{ ENV['zlib']=='yes' ? '-DW_ZLIB' : '' } #$c_flags #$flags #$debug_flags -c  #{src_file} -o #{obj_file} "
     sh cmd
   end
 }
@@ -249,6 +249,7 @@ file worker_bin do
   #$libs += ' '+CONFIG["LIBRUBYARG"]  
   #$libs += ' -lpthread '
   lib_flags += " #{ENV['library_flags']}" if ENV['library_flags']
+  lib_flags += " -lz" if ENV['zlib'] == "yes"
   out_file=File.join(BIN_DIR,'webroar-worker')
   object_files=FileList[File.join(WORKER_OBJ_DIR,'*.o'), helper_obj.keys, File.join(YAML_OBJ_DIR,'*.o')]
   # -rdynamic option to get function name in stacktrace

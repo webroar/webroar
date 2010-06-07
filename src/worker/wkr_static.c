@@ -27,9 +27,12 @@
 #include <string.h>
 #include <fcntl.h>
 
+#ifdef W_ZLIB
+#include <zlib.h>
+#endif
+
 extern config_t *Config;
 
-#define MAP_SIZE 36
 #define DEFAULT_EXPIRES "Headers/expires"
 #define EXPIRES_BY_TYPE "Headers/expires_by_type"
 #define EXPIRES_BY_TYPE_EXT "expires_by_type/ext"
@@ -51,7 +54,7 @@ typedef enum {
   HTTP_STATUS_404
 } resp_status_t;
 
-typedef void (*resp_fun_t) (http_t*, const char*, struct stat *);
+typedef void (*resp_fun_t) (http_t*);
 
 typedef struct {
   wr_u_short code;
@@ -60,10 +63,10 @@ typedef struct {
   resp_fun_t fun;
 } http_status_t;
 
-void http_resp_200(http_t*, const char*, struct stat *);
-void http_resp_304(http_t*, const char*, struct stat *);
-void http_resp_403(http_t*, const char*, struct stat *);
-void http_resp_404(http_t*, const char*, struct stat *);
+void http_resp_200(http_t*);
+void http_resp_304(http_t*);
+void http_resp_403(http_t*);
+void http_resp_404(http_t*);
 
 static http_status_t http_status [] = {
   {200, "200 OK", "", http_resp_200},
@@ -88,9 +91,6 @@ Content-Length: %d\r\n\r\n"
 <br><hr>%s-%s\
 </body></html>"
 
-// Static mapping object
-static static_file_t* map[MAP_SIZE + 1];
-
 /**************************************
  *    Private Functions 
  *************************************/
@@ -109,7 +109,7 @@ static char* get_file_ext(const char *path) {
 }
 
 /** Set expires time based on file type */
-static void set_expires_time(char *ext, long int expires) {
+static void set_expires_time(static_server_t * s, char *ext, long int expires) {
   int index;
   char tmp_ext[STR_SIZE64], *p;
   strcpy(tmp_ext, ext);
@@ -129,7 +129,7 @@ static void set_expires_time(char *ext, long int expires) {
   }
 
   if (index >= 0 && index < MAP_SIZE) {
-    static_file_t *e = map[index];
+    static_file_t *e = s->map[index];
     while (e) {
       if (strcmp(e->ext, tmp_ext) == 0) {
         //HTTP/1.1 servers SHOULD NOT send Expires dates more than one year in the future. 
@@ -142,8 +142,8 @@ static void set_expires_time(char *ext, long int expires) {
 }
 
 /* Get mime-type */
-static static_file_t* get_mime_type(const char *path) {
-  char *ext = get_file_ext(path);
+static static_file_t* get_mime_type(static_server_t *s) {
+  char *ext = get_file_ext(s->path);
   char tmp_ext[STR_SIZE64], *p;
   strcpy(tmp_ext, ext);
   p = tmp_ext;
@@ -164,7 +164,7 @@ static static_file_t* get_mime_type(const char *path) {
     }
     
     if (index >= 0 && index < MAP_SIZE) {
-      static_file_t *e = map[index];
+      static_file_t *e = s->map[index];
       while (e) {
         if (strcmp(e->ext, tmp_ext) == 0) {
           return e;
@@ -173,39 +173,38 @@ static static_file_t* get_mime_type(const char *path) {
       }
     }
   }
-  return map[MAP_SIZE];
+  return s->map[MAP_SIZE];
 }
 
 /** Get response code */
-static short get_resp_code(http_t *h, const char *path, struct stat *buf) {
+static short get_resp_code(static_server_t *s) {
   LOG_FUNCTION
-  const char *modify = scgi_header_value_get(h->req->scgi, HTTP_HEADER_IF_MODIFIED_SINCE);
   time_t modify_tm;
   
-  if (path == NULL) {
+  if (s->path == NULL) {
     LOG_ERROR(WARN, "Requested file path is NULL.");
     return HTTP_STATUS_404;
   }
 
-  if (stat(path, buf)) {
-    LOG_ERROR(WARN, "Requested file %s does not exist.", path);
+  if (stat(s->path, &(s->buf))) {
+    LOG_ERROR(WARN, "Requested file %s does not exist.", s->path);
     return HTTP_STATUS_404;
   }
 
-  if (S_ISDIR(buf->st_mode) != 0) {
-    LOG_ERROR(WARN, "%s is a directory.", path)
+  if (S_ISDIR(s->buf.st_mode) != 0) {
+    LOG_ERROR(WARN, "%s is a directory.", s->path)
     return HTTP_STATUS_404;
   }
 
-  if (strstr(path, "..")) {
-    LOG_ERROR(WARN, "Requested file path %s is forbidden.", path);
+  if (strstr(s->path, "..")) {
+    LOG_ERROR(WARN, "Requested file path %s is forbidden.", s->path);
     return HTTP_STATUS_403;
   }
   // Compare 'If-Modified-Since' time with file modication time
-  if (modify) {
+  if (s->modify) {
     // Assume 'If-Modified-Since' date zone is GMT        
-    modify_tm = httpdate_to_c_time(modify) - timezone;
-    long int diff = difftime(buf->st_mtime, modify_tm);
+    modify_tm = httpdate_to_c_time(s->modify) - timezone;
+    long int diff = difftime(s->buf.st_mtime, modify_tm);
     if (diff <= 0) {
       return HTTP_STATUS_304;
     }
@@ -226,14 +225,14 @@ static long int get_default_expires(node_t *root) {
   }
 }
 
-static int create_dictionary(const char *mapping_file, long int expires) {
+static int create_dictionary(static_server_t *s, const char *mapping_file, long int expires) {
   node_t *root = yaml_parse(mapping_file), *node;
   static_file_t *ext;
   int index;
 
   // Initialize map with NULL value
   for (index = 0; index < MAP_SIZE; index++) {
-    map[index] = NULL;
+    s->map[index] = NULL;
   }
 
   if (root == NULL) {
@@ -256,8 +255,8 @@ static int create_dictionary(const char *mapping_file, long int expires) {
     }
     
     if (index >= 0 && index < MAP_SIZE) {
-      ext->next = map[index];
-      map[index] = ext;
+      ext->next = s->map[index];
+      s->map[index] = ext;
     }else {
       LOG_ERROR(WARN, "Mapping index out of bound for extension = %s", ext->ext);
       free(ext);
@@ -272,12 +271,12 @@ static int create_dictionary(const char *mapping_file, long int expires) {
   strcpy(ext->mime_type, "text/plain");
   ext->expires = expires;
   ext->next = NULL;
-  map[MAP_SIZE] = ext;
+  s->map[MAP_SIZE] = ext;
 
   return 0;
 }
 
-static void set_expires_by_type(node_t *root) {
+static void set_expires_by_type(static_server_t *s, node_t *root) {
   node_t *node = get_nodes(root, EXPIRES_BY_TYPE);
   long int expires;
   char *types, *expires_str, *type;
@@ -287,54 +286,121 @@ static void set_expires_by_type(node_t *root) {
     expires = atol(expires_str);
     type = strtok(types, " ,");
     while (type != NULL) {
-      set_expires_time(type, expires);
+      set_expires_time(s, type, expires);
       type = strtok(NULL, " ,");
     }
     node = NODE_NEXT(node);
   }
 }
 
-void http_resp_200(http_t *h, const char *path, struct stat *buf) {
+
+#ifdef W_ZLIB
+
+/** Compress file */
+/* Compress file if its size is >10kb and < 1mb and its mime-type has either
+ * text or xml */
+
+int file_compress(http_t *h, static_file_t *ext){
+  LOG_FUNCTION  
+  if(h->stat->buf.st_size >= Config->Worker.Compress.lower_limit 
+     && h->stat->buf.st_size <= Config->Worker.Compress.upper_limit
+     && h->stat->encoding && strstr(h->stat->encoding,"deflate")
+     && (strstr(ext->mime_type, "text") != NULL || strstr(ext->mime_type, "xml"))){
+     
+    wr_u_int read;
+    FILE *file;
+    wr_buffer_create(h->stat->buffer, h->stat->buf.st_size);
+    file = fopen(h->stat->path, "r");
+
+    if(file == NULL) return FALSE;
+    
+    while(h->stat->buffer->len < h->stat->buf.st_size){
+      read = fread(h->stat->buffer->str + h->stat->buffer->len, sizeof(char), 
+                  h->stat->buf.st_size - h->stat->buffer->len, file);
+      if(read < 0){
+        fclose(file);
+        wr_buffer_null(h->stat->buffer);
+        return FALSE;
+      }
+      h->stat->buffer->len += read;      
+    } 
+    
+    fclose(file);
+
+    //zlib states that the source buffer must be at least 0.1 times larger than 
+    //the source buffer plus 12 bytes to cope with the overhead of zlib data streams
+    wr_buffer_create(h->resp->resp_body, h->stat->buf.st_size + h->stat->buf.st_size*0.1 + 12);
+    h->resp->resp_body->len = h->resp->resp_body->size;
+    //now compress the data
+    if(compress2((Bytef*)h->resp->resp_body->str, (uLongf*)&h->resp->resp_body->len,
+                (const Bytef*)h->stat->buffer->str, (uLongf)h->stat->buffer->len, Z_DEFAULT_COMPRESSION) != Z_OK){
+      wr_buffer_null(h->stat->buffer);
+      wr_buffer_null(h->resp->resp_body);
+      return FALSE;
+    }
+    wr_buffer_null(h->stat->buffer);
+
+    return TRUE;
+  }
+  return FALSE; 
+} 
+
+#endif
+
+void http_resp_200(http_t *h) {
   LOG_FUNCTION
   char str[STR_SIZE512], expire_date[STR_SIZE64] = "", current_date[STR_SIZE64] = "", modify_date[STR_SIZE64] = "";
   int len;
+  int ret_val;
   time_t t;
   
-  static_file_t *ext = get_mime_type(path);
+  static_file_t *ext = get_mime_type(h->stat);
   LOG_DEBUG(DEBUG,"File extension = %s, mimetype = %s, expires = %d ", ext->ext, ext->mime_type, ext->expires);
   const char *conn_header = scgi_header_value_get(h->req->scgi, HTTP_HEADER_CONNECTION);
   
   t = get_time(current_date, STR_SIZE64);
-  time_to_httpdate(buf->st_mtime, modify_date, STR_SIZE64);
+  time_to_httpdate(h->stat->buf.st_mtime, modify_date, STR_SIZE64);
+  
+#ifdef W_ZLIB
+  ret_val = file_compress(h, ext);
+  if(ret_val == FALSE){
+#endif
+    h->resp->resp_body->len = h->stat->buf.st_size;
+    #ifdef _POSIX_C_SOURCE
+      h->resp->file = open(h->stat->path, O_RDONLY);
+    #else
+      h->resp->file = fopen(h->stat->path, "r");
+    #endif
+#ifdef W_ZLIB
+  }
+#endif
 
   if (ext->expires > 0) {
     t += ext->expires;
     time_to_httpdate(t, expire_date, STR_SIZE64);
-    len = sprintf(str, "HTTP/1.1 200 OK\r\nDate: %s\r\nServer: %s-%s\r\nLast-Modified: %s\r\nExpires: %s\r\nConnection: %s\r\nContent-Type: %s\r\nContent-Length: %d\r\n\r\n",
+    len = sprintf(str, "HTTP/1.1 200 OK\r\nDate: %s\r\nServer: %s-%s\r\nLast-Modified: %s\r\nExpires: %s\r\nConnection: %s\r\n%sContent-Type: %s\r\nContent-Length: %d\r\n\r\n",
             current_date, Config->Worker.Server.name.str, Config->Worker.Server.version.str, modify_date, expire_date,
-            (conn_header ? conn_header : CONNECTION_CLOSE), ext->mime_type, buf->st_size);
+            (conn_header ? conn_header : CONNECTION_CLOSE),
+            (ret_val == TRUE ? "Content-Encoding: deflate\r\n" : ""),
+            ext->mime_type, h->resp->resp_body->len);
   }else {
-    len = sprintf(str, "HTTP/1.1 200 OK\r\nDate: %s\r\nServer: %s-%s\r\nLast-Modified: %s\r\nConnection: %s\r\nContent-Type: %s\r\nContent-Length: %d\r\n\r\n",
+    len = sprintf(str, "HTTP/1.1 200 OK\r\nDate: %s\r\nServer: %s-%s\r\nLast-Modified: %s\r\nConnection: %s\r\n%sContent-Type: %s\r\nContent-Length: %d\r\n\r\n",
              current_date, Config->Worker.Server.name.str, Config->Worker.Server.version.str, modify_date,
-            (conn_header ? conn_header : CONNECTION_CLOSE), ext->mime_type, buf->st_size);
+            (conn_header ? conn_header : CONNECTION_CLOSE),
+            (ret_val == TRUE ? "Content-Encoding: deflate\r\n" : ""), 
+            ext->mime_type, h->resp->resp_body->len);
   }
 
   wr_string_new(h->resp->header, str, len);
-  h->resp->resp_body->len = buf->st_size;
   h->resp->resp_code = http_status[HTTP_STATUS_200].code;
-#ifdef _POSIX_C_SOURCE
-  h->resp->file = open(path, O_RDONLY);
-#else
-  h->resp->file = fopen(path, "r");
-#endif  
 }
 
-void http_resp_304(http_t *h, const char *path, struct stat *buf) {
+void http_resp_304(http_t *h) {
   LOG_FUNCTION
   char str[STR_SIZE512], expire_date[STR_SIZE64] = "", current_date[STR_SIZE64] = "";
   int len;
   time_t t;
-  static_file_t *ext = get_mime_type(path);
+  static_file_t *ext = get_mime_type(h->stat);
   LOG_DEBUG(DEBUG,"File extension = %s, mimetype = %s, expires = %d ", ext->ext, ext->mime_type, ext->expires);
   const char *conn_header = scgi_header_value_get(h->req->scgi, HTTP_HEADER_CONNECTION);
 
@@ -354,7 +420,7 @@ void http_resp_304(http_t *h, const char *path, struct stat *buf) {
   h->resp->resp_code = http_status[HTTP_STATUS_304].code;
 }
 
-void http_resp_403(http_t *h, const char *path, struct stat *buf) {
+void http_resp_403(http_t *h) {
   LOG_FUNCTION
   char str[STR_SIZE512], current_date[STR_SIZE64];
   const char *conn_header = scgi_header_value_get(h->req->scgi, HTTP_HEADER_CONNECTION);
@@ -375,7 +441,7 @@ void http_resp_403(http_t *h, const char *path, struct stat *buf) {
   h->resp->resp_code = http_status[HTTP_STATUS_403].code;
 }
 
-void http_resp_404(http_t *h, const char *path, struct stat *buf) {
+void http_resp_404(http_t *h) {
   LOG_FUNCTION
   char str[STR_SIZE512], current_date[STR_SIZE64];
   const char *conn_header = scgi_header_value_get(h->req->scgi, HTTP_HEADER_CONNECTION);
@@ -450,12 +516,9 @@ err:
   }   
 }
 
-/**************************************
- *    Public Functions 
- *************************************/
 
 /* Initialize extension and mime-type map */
-int static_module_init() {
+int static_module_init(static_server_t *s) {
   LOG_FUNCTION
   node_t *root;
   long int expires;
@@ -463,31 +526,31 @@ int static_module_init() {
   root = yaml_parse(Config->Worker.File.config.str);
   if (root == NULL) {
     LOG_ERROR(SEVERE, "Could not read config.yml file");
-    return -1;
+    return FALSE;
   }
   expires = get_default_expires(root);
   
-  if (create_dictionary(Config->Worker.File.mime_type.str, expires) != 0) {
+  if (create_dictionary(s, Config->Worker.File.mime_type.str, expires) != 0) {
     node_free(root);
-    return -1;
+    return FALSE;
   }
 
-  set_expires_by_type(root);
+  set_expires_by_type(s, root);
 
   node_free(root);
   
   send_static_worker_pid();
-  return 0;
+  return TRUE;
 }
 
 /* Free extension and mime-type map */
-void static_module_free() {
+void static_module_free(static_server_t *s) {
   LOG_FUNCTION
   int i;
   static_file_t *ext, *next_ext;
 
   for (i = 0; i <= MAP_SIZE; i++) {
-    ext = map[i];
+    ext = s->map[i];
     while (ext) {
       next_ext = ext->next;
       free(ext);
@@ -496,17 +559,48 @@ void static_module_free() {
   }
 }
 
-/* Serve static file content */
-void static_file_process(http_t *h) {
+/**************************************
+ *    Public Functions 
+ *************************************/
+
+/** Create new static server */ 
+static_server_t * static_server_new(){
   LOG_FUNCTION
+  
+  static_server_t *s = wr_malloc(static_server_t);
+  if(s == NULL) return NULL;
+  
+  if( static_module_init(s) == FALSE){
+    free(s);
+    return NULL;
+  }
+  wr_buffer_new(s->buffer);
+  return s;
+}
+
+/** Delete static server */
+void static_server_free(static_server_t *s){
+  if(s){
+    if(s->buffer) wr_buffer_free(s->buffer);
+    static_module_free(s);
+    free(s);
+  }
+}
+
+/* Serve static file content */
+void static_file_process(void *http) {
+  LOG_FUNCTION
+  http_t *h = (http_t*) http;
   wkr_t *w = h->wkr;
   short resp_code;
-  struct stat buf;
-  const char *path = scgi_header_value_get(h->req->scgi, Config->Worker.Header.file_path.str);
+  
+  h->stat->path = scgi_header_value_get(h->req->scgi, Config->Worker.Header.file_path.str);
+  h->stat->encoding = scgi_header_value_get(h->req->scgi, "HTTP_ACCEPT_ENCODING");
+  h->stat->modify = scgi_header_value_get(h->req->scgi, HTTP_HEADER_IF_MODIFIED_SINCE); 
   
   LOG_DEBUG(DEBUG, "Path = %s", path);
-  resp_code = get_resp_code(h, path, &buf);
-  http_status[resp_code].fun(h, path, &buf);
+  resp_code = get_resp_code(h->stat);
+  http_status[resp_code].fun(h);
   http_req_set(h->req);
   http_resp_process(h->resp);
 

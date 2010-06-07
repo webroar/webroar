@@ -41,7 +41,7 @@ static http_t *g_http;
 /** Call 'Ruby' method 'RequestHandler.process' */
 void http_req_process() {
   LOG_FUNCTION
-  if(g_http->is_static){
+  if(g_http->stat){
     static_file_process(g_http);
   }else{
     rb_funcall(cRequestHandler, rb_intern("process"),1,rb_req);
@@ -297,6 +297,7 @@ http_t* http_new(void *ptr) {
   
   h->req = http_req_new();
   h->resp = http_resp_new();
+  h->stat = NULL;  
 
   if(h->req==NULL || h->resp == NULL) {
     http_free(&h);
@@ -304,11 +305,11 @@ http_t* http_new(void *ptr) {
   }
   
   if(w->tmp->is_static){
-    if(static_module_init()!=0){
+    h->stat = static_server_new();
+    if(h->stat == NULL){
       http_free(&h);
       return NULL;
     }
-    h->is_static = 1;
   }else{
     if(init_ruby_interpreter(w)!=0) {
       http_free(&h);
@@ -321,7 +322,6 @@ http_t* http_new(void *ptr) {
       return NULL;
     }
     rb_req = Data_Wrap_Struct(cReq, 0, 0, h->req);
-    h->is_static = 0;
   }
   g_http = h;
   return h;
@@ -331,16 +331,13 @@ void http_free(http_t** http) {
   LOG_FUNCTION
   http_t *h = *http;  
   if(h) {
-    if(h->is_static){
-      static_module_free();
-    }else{
+    if(h->stat == NULL){
       ruby_finalize();
     }
     
-    if(h->resp)
-      http_resp_free(&h->resp);
-    if(h->req)
-      http_req_free(&h->req);
+    if(h->resp) http_resp_free(&h->resp);
+    if(h->req) http_req_free(&h->req);
+    if(h->stat) static_server_free(h->stat);
     free(h);
   }
   *http = NULL;
