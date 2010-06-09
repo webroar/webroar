@@ -305,7 +305,7 @@ http_t* http_new(void *ptr) {
   }
   
   if(w->tmp->is_static){
-    h->stat = static_server_new();
+    h->stat = static_server_new(w);
     if(h->stat == NULL){
       http_free(&h);
       return NULL;

@@ -31,20 +31,28 @@ typedef struct wkr_ctl_s     wkr_ctl_t;
 
 /****** Worket temporary structure ****/
 struct wkr_tmp_s {
-  wr_str_t path;      /**< Application path */
-  wr_str_t env;        /**< Application environment */
-  wr_str_t type;      /**< Application type */
-  wr_str_t name;      /**< Application name */
-  wr_str_t resolver;    /**< Application baseuri */
-  wr_str_t root_path;    /**< WebROaR root path */
-  char    profiler;      /**< Analytics flag */
-  wr_str_t ctl_path;    /**< Server control path/port */
-  wr_str_t log_file;         /**< Log file name */
-  short   gid;              /**< Process group id */
-  short   uid;              /**< Process user id */
-  short    keep_alive;      /**< HTTP connection keep alive flag */
-  short   is_uds;
-  short   is_static;        /**< Worker to serve static files only */
+  wr_str_t  path;      /**< Application path */
+  wr_str_t  env;        /**< Application environment */
+  wr_str_t  type;      /**< Application type */
+  wr_str_t  name;      /**< Application name */
+  wr_str_t  resolver;    /**< Application baseuri */
+  wr_str_t  root_path;    /**< WebROaR root path */
+  char      profiler;      /**< Analytics flag */
+  wr_str_t  ctl_path;    /**< Server control path/port */
+  wr_str_t  log_file;         /**< Log file name */
+  short     gid;              /**< Process group id */
+  short     uid;              /**< Process user id */
+  short     keep_alive;      /**< HTTP connection keep alive flag */
+  short     is_uds;
+  short     is_static;        /**< Worker to serve static files only */
+#ifdef W_ZLIB
+  wr_u_long lower_limit;    /**< Content-Length lower than the value would not be encoded */
+  wr_u_long upper_limit;    /**< Content-Length larger than the value would not be encoded */
+#ifdef W_REGEX
+  wr_str_t  r_user_agent;    /**< Regex value to validate User-Agent */
+  wr_str_t  r_content_type; /**< Regex value to validate Content-Type */
+#endif
+#endif
 };
 
 wkr_tmp_t* wkr_tmp_new();

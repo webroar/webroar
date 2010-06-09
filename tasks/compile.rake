@@ -200,7 +200,7 @@ worker_obj.each { |obj_file,src_file|
     unless $webroar_config_called
       webroar_config
     end
-    cmd = "#{COMPILER} #$inc_flags #{ ENV['zlib']=='yes' ? '-DW_ZLIB' : '' } #$c_flags #$flags #$debug_flags -c  #{src_file} -o #{obj_file} "
+    cmd = "#{COMPILER} #$inc_flags #{ ENV['zlib']=='yes' ? '-DW_ZLIB' : '' } #{ ENV['regex']=='yes' ? '-DW_REGEX' : '' } #$c_flags #$flags #$debug_flags -c  #{src_file} -o #{obj_file} "
     sh cmd
   end
 }

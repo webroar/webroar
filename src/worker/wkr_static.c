@@ -96,7 +96,7 @@ Content-Length: %d\r\n\r\n"
  *************************************/
 
 /** Searches path backward and returns pointer to the first character of extension */
-static char* get_file_ext(const char *path) {
+char* get_file_ext(const char *path) {
   int len = strlen(path);
   char *ext = path + len;
   while (len) {
@@ -109,7 +109,7 @@ static char* get_file_ext(const char *path) {
 }
 
 /** Set expires time based on file type */
-static void set_expires_time(static_server_t * s, char *ext, long int expires) {
+void set_expires_time(static_server_t * s, char *ext, long int expires) {
   int index;
   char tmp_ext[STR_SIZE64], *p;
   strcpy(tmp_ext, ext);
@@ -142,7 +142,7 @@ static void set_expires_time(static_server_t * s, char *ext, long int expires) {
 }
 
 /* Get mime-type */
-static static_file_t* get_mime_type(static_server_t *s) {
+static_file_t* get_mime_type(static_server_t *s) {
   char *ext = get_file_ext(s->path);
   char tmp_ext[STR_SIZE64], *p;
   strcpy(tmp_ext, ext);
@@ -177,7 +177,7 @@ static static_file_t* get_mime_type(static_server_t *s) {
 }
 
 /** Get response code */
-static short get_resp_code(static_server_t *s) {
+short get_resp_code(static_server_t *s) {
   LOG_FUNCTION
   time_t modify_tm;
   
@@ -212,7 +212,7 @@ static short get_resp_code(static_server_t *s) {
   return HTTP_STATUS_200;
 }
 
-static long int get_default_expires(node_t *root) {
+long int get_default_expires(node_t *root) {
   char *node_value = get_node_value(root, DEFAULT_EXPIRES);
 
   if (node_value == NULL) {
@@ -225,7 +225,8 @@ static long int get_default_expires(node_t *root) {
   }
 }
 
-static int create_dictionary(static_server_t *s, const char *mapping_file, long int expires) {
+/** Read 'mime_type.yml' file and create dictionary for supported Content-Type. */
+int create_dictionary(static_server_t *s, const char *mapping_file, long int expires) {
   node_t *root = yaml_parse(mapping_file), *node;
   static_file_t *ext;
   int index;
@@ -239,7 +240,16 @@ static int create_dictionary(static_server_t *s, const char *mapping_file, long 
     LOG_ERROR(SEVERE, "Could not read the file %s", mapping_file);
     return -1;
   }
-  node = root;
+
+  node = get_nodes(root, "File Extensions");
+
+  if (root == NULL || node->child == NULL) {
+    LOG_ERROR(SEVERE, "Could not read 'File Extensions' from the file %s", mapping_file);
+    return -1;
+  }
+
+  node = node->child;
+
   while (node) {
     ext = wr_malloc(static_file_t);
     strcpy(ext->ext, node->name);
@@ -276,7 +286,7 @@ static int create_dictionary(static_server_t *s, const char *mapping_file, long 
   return 0;
 }
 
-static void set_expires_by_type(static_server_t *s, node_t *root) {
+void set_expires_by_type(static_server_t *s, node_t *root) {
   node_t *node = get_nodes(root, EXPIRES_BY_TYPE);
   long int expires;
   char *types, *expires_str, *type;
@@ -302,11 +312,31 @@ static void set_expires_by_type(static_server_t *s, node_t *root) {
 
 int file_compress(http_t *h, static_file_t *ext){
   LOG_FUNCTION  
+  h->stat->encoding = scgi_header_value_get(h->req->scgi, "HTTP_ACCEPT_ENCODING");
+  h->stat->user_agent = scgi_header_value_get(h->req->scgi, "HTTP_USER_AGENT");
+  
   if(h->stat->buf.st_size >= Config->Worker.Compress.lower_limit 
      && h->stat->buf.st_size <= Config->Worker.Compress.upper_limit
-     && h->stat->encoding && strstr(h->stat->encoding,"deflate")
-     && (strstr(ext->mime_type, "text") != NULL || strstr(ext->mime_type, "xml"))){
+     && h->stat->encoding && strstr(h->stat->encoding,"deflate")){
+
+#ifdef W_REGEX
+     if(h->stat->r_content_type){
+      if(regexec(h->stat->r_content_type, ext->mime_type, 0, NULL, 0) !=0 )   return FALSE;
+     }else if(strstr(ext->mime_type, "text") == NULL && strstr(ext->mime_type, "xml") == NULL){
+      // Encode assets having Content-Type either 'text' or 'xml'. 
+      return FALSE;
+     }
      
+     if(h->stat->r_user_agent && h->stat->user_agent){
+      if(regexec(h->stat->r_user_agent, h->stat->user_agent, 0, NULL, 0) !=0 )   return FALSE;
+     }
+#else
+    // Encode assets having Content-Type either 'text' or 'xml'.
+    if(strstr(ext->mime_type, "text") == NULL && strstr(ext->mime_type, "xml") == NULL){
+      return FALSE;
+    }
+#endif
+
     wr_u_int read;
     FILE *file;
     wr_buffer_create(h->stat->buffer, h->stat->buf.st_size);
@@ -564,17 +594,74 @@ void static_module_free(static_server_t *s) {
  *************************************/
 
 /** Create new static server */ 
-static_server_t * static_server_new(){
+static_server_t * static_server_new(void* ptr){  
   LOG_FUNCTION
-  
+
+  wkr_t* w = (wkr_t*)ptr;
+
   static_server_t *s = wr_malloc(static_server_t);
   if(s == NULL) return NULL;
-  
-  if( static_module_init(s) == FALSE){
+
+#ifdef W_ZLIB
+  if(w->tmp->lower_limit > 0)
+    Config->Worker.Compress.lower_limit = w->tmp->lower_limit;
+
+  if(w->tmp->upper_limit > 0)
+    Config->Worker.Compress.upper_limit = w->tmp->upper_limit;
+
+#ifdef W_REGEX
+  s->r_content_type = NULL;
+  if(!wr_string_is_empty(w->tmp->r_content_type)){
+    int err_no;
+    s->r_content_type = wr_malloc(regex_t);
+    // #define REG_EXTENDED 1
+    if((err_no = regcomp(s->r_content_type, w->tmp->r_content_type.str, 1))!=0){ /* Compile the regex */
+      size_t length;
+      char *buffer;
+      length = regerror (err_no, s->r_content_type, NULL, 0);
+      buffer = malloc(length);
+      regerror (err_no, s->r_content_type, buffer, length);
+      LOG_ERROR(SEVERE, "%s", buffer); /* Print the error */
+      LOG_ERROR(SEVERE, "Now Static Workers allow encoding for only 'text' and 'xml' Content-Type.");
+      free(buffer);
+      regfree(s->r_content_type);
+      if((err_no = regcomp(s->r_content_type, "text|xml", 1))!=0){
+        regfree(s->r_content_type);
+        free(s->r_content_type);
+        s->r_content_type = NULL;
+      }
+    }
+  }
+
+  s->r_user_agent = NULL;
+  // Do not apply validation on User-Agent if it is not given or it is '.*'(allow all).
+  if(!wr_string_is_empty(w->tmp->r_user_agent) && strcmp(w->tmp->r_user_agent.str,".*") != 0){
+    int err_no;
+    s->r_user_agent = wr_malloc(regex_t);
+    if((err_no = regcomp(s->r_user_agent, w->tmp->r_content_type.str, 1))!=0){ /* Compile the regex */
+      size_t length;
+      char *buffer;
+      length = regerror (err_no, s->r_user_agent, NULL, 0);
+      buffer = malloc(length);
+      regerror (err_no, s->r_user_agent, buffer, length);
+      LOG_ERROR(SEVERE, "%s", buffer); /* Print the error */
+      LOG_ERROR(SEVERE, "Now Static Workers serves encoded assets to all User-Agent.");
+      free(buffer);
+      regfree(s->r_user_agent);
+      free(s->r_user_agent);
+      s->r_user_agent = NULL;
+    }
+  }
+#endif
+
+#endif  
+
+  if(static_module_init(s) == FALSE){
     free(s);
     return NULL;
   }
   wr_buffer_new(s->buffer);
+
   return s;
 }
 
@@ -583,6 +670,18 @@ void static_server_free(static_server_t *s){
   if(s){
     if(s->buffer) wr_buffer_free(s->buffer);
     static_module_free(s);
+
+#if defined(W_ZLIB) && defined(W_REGEX) 
+  if(s->r_user_agent){
+    regfree(s->r_user_agent);
+    free(s->r_user_agent);
+  }
+  if(s->r_content_type){
+    regfree(s->r_content_type);
+    free(s->r_content_type);
+  }
+#endif
+
     free(s);
   }
 }
@@ -593,12 +692,11 @@ void static_file_process(void *http) {
   http_t *h = (http_t*) http;
   wkr_t *w = h->wkr;
   short resp_code;
-  
+
   h->stat->path = scgi_header_value_get(h->req->scgi, Config->Worker.Header.file_path.str);
-  h->stat->encoding = scgi_header_value_get(h->req->scgi, "HTTP_ACCEPT_ENCODING");
-  h->stat->modify = scgi_header_value_get(h->req->scgi, HTTP_HEADER_IF_MODIFIED_SINCE); 
-  
-  LOG_DEBUG(DEBUG, "Path = %s", path);
+  h->stat->modify = scgi_header_value_get(h->req->scgi, HTTP_HEADER_IF_MODIFIED_SINCE);
+
+  LOG_DEBUG(DEBUG, "Path = %s", h->stat->path);
   resp_code = get_resp_code(h->stat);
   http_status[resp_code].fun(h);
   http_req_set(h->req);

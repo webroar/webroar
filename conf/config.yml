@@ -85,21 +85,39 @@
 #              environment_variables: 
 #                - set_env: LOG_DIR=/var/log/webroar
 #                - set_env: TMP_DIR=/tmp
-#  (c)  Headers (optional)
-#         It allows adding or changing the Expires and Cache-Control in the response headers for static assets (e.g. *.js, *.gif etc). 
-#         Elements:
-#           1) Expires header for all static assets (optional) (default is 'off')
-#           2) Specific expires header for specific file types (optional)
-#              Elements:
-#                 I) File Extensions(mandatory)
-#                II) Expires value(mandatory) (No of seconds)
-#         Possible value for expires is off or no. of seconds. 
-#         Example:
-#           Headers:
-#             expires: 3600
-#             expires_by_type:
-#             - ext: png, jpg, gif
-#               expires: 31536000
+#
+#  (c) Headers (optional)
+#        It allows adding or changing the Expires and Cache-Control in the response headers for static assets (e.g. *.js, *.gif etc). 
+#        Elements:
+#          1) Expires header for all static assets (optional) (default is 'off')
+#          2) Specific expires header for specific file types (optional)
+#             Elements:
+#                I) File Extensions(mandatory)
+#               II) Expires value(mandatory) (No of seconds)
+#        Possible value for expires is off or no. of seconds. 
+#        Example:
+#          Headers:
+#            expires: 3600
+#            expires_by_type:
+#            - ext: png, jpg, gif
+#              expires: 31536000
+#
+#  (d) Encoding (optional)
+#        It allows encoding for static assets.
+#        Elements:
+#          1) Regex value for supported Content-Type (optional) (default is 'text|xml')
+#          2) Regex value for supported Used-Agent (optional) (default is '.*')
+#          3) Range of Content-Length (optional)
+#             Elements:
+#                I) Lower limit of Content-Length (optional) (default is 1024 i.e. 1KB) 
+#               II) Upper limit of Content-Length (optional) (default is 12328960 i.e. 10MB)
+#        Example:
+#          Encoding:
+#            Content-Type: text|xml|javascript
+#            User-Agent: .*
+#            Size Limit:
+#              lower_limit: 2094
+#              upper_limit: 12328960
 #
 ######################################################################################
 --- 

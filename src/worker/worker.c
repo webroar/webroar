@@ -58,14 +58,20 @@ wkr_tmp_t* wkr_tmp_new() {
   wr_string_null(tmp->root_path);
   wr_string_null(tmp->ctl_path);
   wr_string_null(tmp->log_file);
-  
+
   tmp->profiler = 'n';
   tmp->gid = tmp->uid = 0;
   // HTTP1.1 assumes persistent connection by default
   tmp->keep_alive = TRUE;
   tmp->is_uds = FALSE;
   tmp->is_static = 0;
-
+#ifdef W_ZLIB
+  tmp->lower_limit = tmp->upper_limit = 0;
+#ifdef W_REGEX
+  wr_string_null(tmp->r_user_agent);
+  wr_string_null(tmp->r_content_type);
+#endif
+#endif
   return tmp;
 }
 
@@ -80,8 +86,11 @@ void wkr_tmp_free(wkr_tmp_t** t) {
     wr_string_free(tmp->resolver);
     wr_string_free(tmp->root_path);
     wr_string_free(tmp->ctl_path);
-    wr_string_free(tmp->log_file);    
-
+    wr_string_free(tmp->log_file);
+#if defined(W_ZLIB) && defined(W_REGEX)
+    wr_string_free(tmp->r_content_type);
+    wr_string_free(tmp->r_user_agent);
+#endif
     free(tmp);
   }
   *t = NULL;
@@ -113,10 +122,10 @@ wkr_t* worker_new(struct ev_loop *loop, wkr_tmp_t *tmp) {
     return NULL;
   }
   start_ctl_watcher(w);
-  if(w->tmp->is_static){
+/*  if(w->tmp->is_static){
     w->ctl->scgi = scgi_new();
     load_application(w);
-  } else if(send_config_req_msg(w) < 0){
+  } else */ if(send_config_req_msg(w) < 0){
     worker_free(&w);
     return NULL;
   }
@@ -378,6 +387,13 @@ void manipulate_environment_variable(wkr_t* w, scgi_t *scgi) {
 void load_application(wkr_t* w){
   LOG_FUNCTION
   
+  w->ctl->scgi = scgi_new();
+  if(w->ctl->scgi == NULL) {
+    LOG_ERROR(SEVERE,"Cannot create SCGI Request");
+    sigproc();
+    return;
+  }
+  
   w->http = http_new(w);
   if(w->http == NULL) {
     scgi_body_add(w->ctl->scgi, "unable to load application.", strlen("unable to load application."));
@@ -416,48 +432,76 @@ void load_application(wkr_t* w){
 }
 
 void application_config_read_cb(wkr_t* w, scgi_t *scgi){
+  LOG_FUNCTION
   char *str;
-  w->ctl->scgi = scgi_new();
+  /*w->ctl->scgi = scgi_new();
   
   if(w->ctl->scgi == NULL) {
     LOG_ERROR(SEVERE,"Cannot create SCGI Request");
     sigproc();
     return;
-  }  
+  } */ 
   
-  if(drop_privileges(w, scgi) == FALSE) {
-    wkr_tmp_free(&w->tmp);
-    sigproc();
-    return;
-  }
-  
-  manipulate_environment_variable(w, scgi);
-  str = (char*) scgi_header_value_get(scgi, "PATH");
-  if(str){
-    wr_string_new(w->tmp->path, str, strlen(str));
-  }
-    
-  str = (char*) scgi_header_value_get(scgi, "ENV");
-  if(str){
-    wr_string_new(w->tmp->env, str, strlen(str));
-  }
-    
-  str = (char*) scgi_header_value_get(scgi, "TYPE");
-  if(str){
-    wr_string_new(w->tmp->type, str, strlen(str));
-  }
-    
-  str = (char*) scgi_header_value_get(scgi, "BASE_URI");
-  if(str){
-    wr_string_new(w->tmp->resolver, str, strlen(str));
-  }
-    
-    
-  str = (char*) scgi_header_value_get(scgi, "ANALYTICS");
-  if(str && strcmp(str,"enabled")==0){
-    w->tmp->profiler = 'y';
+  if(w->tmp->is_static){
+
+#ifdef W_ZLIB
+    str = (char*) scgi_header_value_get(scgi, "LOWER_LIMIT");
+    if(str){
+      w->tmp->lower_limit = atol(str);
+    }
+
+    str = (char*) scgi_header_value_get(scgi, "UPPER_LIMIT");
+    if(str){
+      w->tmp->upper_limit = atol(str);
+    }
+
+#ifdef W_REGEX
+    str = (char*) scgi_header_value_get(scgi, "CONTENT_TYPE");
+    if(str){
+      wr_string_new(w->tmp->r_content_type, str, strlen(str));
+    }
+
+    str = (char*) scgi_header_value_get(scgi, "USER_AGENT");
+    if(str){
+      wr_string_new(w->tmp->r_user_agent, str, strlen(str));
+    }
+#endif
+
+#endif
   }else{
-    w->tmp->profiler = 'n'; 
+    if(drop_privileges(w, scgi) == FALSE) {
+      wkr_tmp_free(&w->tmp);
+      sigproc();
+      return;
+    }
+    
+    manipulate_environment_variable(w, scgi);
+    str = (char*) scgi_header_value_get(scgi, "PATH");
+    if(str){
+      wr_string_new(w->tmp->path, str, strlen(str));
+    }
+
+    str = (char*) scgi_header_value_get(scgi, "ENV");
+    if(str){
+      wr_string_new(w->tmp->env, str, strlen(str));
+    }
+
+    str = (char*) scgi_header_value_get(scgi, "TYPE");
+    if(str){
+      wr_string_new(w->tmp->type, str, strlen(str));
+    }
+
+    str = (char*) scgi_header_value_get(scgi, "BASE_URI");
+    if(str){
+      wr_string_new(w->tmp->resolver, str, strlen(str));
+    }
+
+    str = (char*) scgi_header_value_get(scgi, "ANALYTICS");
+    if(str && strcmp(str,"enabled")==0){
+      w->tmp->profiler = 'y';
+    }else{
+      w->tmp->profiler = 'n'; 
+    }
   }
   
   load_application(w);

@@ -20,6 +20,9 @@
 #define WKR_STATIC_H_
 
 #include <wkr_http_response.h>
+#if defined(W_ZLIB) && defined(W_REGEX)
+#include <regex.h>
+#endif
 
 #define MAP_SIZE 36
 
@@ -35,9 +38,12 @@ typedef struct static_server_s{
   const char      *path, *encoding, *user_agent, *modify;
   wr_buffer_t     *buffer;  // Buffer to
   static_file_t   *map[MAP_SIZE + 1];
+#if defined(W_ZLIB) && defined(W_REGEX) 
+  regex_t         *r_user_agent, *r_content_type;
+#endif
 }static_server_t;
 
-static_server_t * static_server_new();
+static_server_t * static_server_new(void *worker);
 void static_server_free(static_server_t *stat);
 
 /* Serve the static file content */

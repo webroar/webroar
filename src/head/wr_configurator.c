@@ -801,6 +801,8 @@ config_application_list_t* wr_conf_static_server_read() {
   if(user_info) {
     if(geteuid() == user_info->pw_uid && getegid() == user_info->pw_gid) {
       config_application_list_t* app = wr_config_application_new();
+      node_t *root;
+      const char *value;
 
       if(app == NULL) {
         return NULL;
@@ -815,10 +817,44 @@ config_application_list_t* wr_conf_static_server_read() {
       wr_string_dump(app->baseuri,app->name);
       wr_string_dump(app->path,app->name);
 
+      app->scgi = scgi_new();
+      scgi_header_add(app->scgi, "COMPONENT", strlen("COMPONENT"), "WORKER", strlen("WORKER"));
+      scgi_header_add(app->scgi, "METHOD", strlen("METHOD"), "CONF_REQ", strlen("CONF_REQ"));
+      scgi_header_add(app->scgi, "STATUS", strlen("STATUS"), "OK", strlen("OK"));
+
+      root = yaml_parse(Config->Server.File.config.str);
+
+      if(!root) {
+        LOG_ERROR(SEVERE, "Config file found with erroneous entries. Please correct it.");
+      }else{
+        value = get_node_value(root,"Encoding/Content-Type");
+        if(value){
+          scgi_header_add(app->scgi, "CONTENT_TYPE", strlen("CONTENT_TYPE"), value, strlen(value));
+        }
+
+        value = get_node_value(root,"Encoding/User-Agent");
+        if(value){
+          scgi_header_add(app->scgi, "USER_AGENT", strlen("USER_AGENT"), value, strlen(value));
+        }
+
+        value = get_node_value(root,"Encoding/Size Limit/lower_limit");
+        if(value){
+          scgi_header_add(app->scgi, "LOWER_LIMIT", strlen("LOWER_LIMIT"), value, strlen(value));
+        }
+
+        value = get_node_value(root,"Encoding/Size Limit/upper_limit");
+        if(value){
+          scgi_header_add(app->scgi, "UPPER_LIMIT", strlen("UPPER_LIMIT"), value, strlen(value));
+        }
+        node_free(root);
+      }
+
       //Set max_worker & min_processsor
       app->max_worker = Config->Application.Static_server.max_workers;
       app->min_worker = Config->Application.Static_server.min_workers;
-      
+
+      scgi_build(app->scgi);
+
       return app;
     }
   }

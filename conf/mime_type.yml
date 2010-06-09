@@ -1,166 +1,172 @@
-# File extension entry should be in lower case.
-eps: application/postscript
-mpg: video/mpeg
-ppt: application/vnd.ms-powerpoint
-h: text/x-c
-jpeg: image/jpeg
-aif: audio/x-aiff
-m3u: audio/x-mpegurl
-asx: video/x-ms-asf
-xml: application/xml
-3gp: video/3gpp
-csv: text/csv
-rtf: application/rtf
-mov: video/quicktime
-bz2: application/x-bzip2
-dmg: application/octet-stream
-gem: application/octet-stream
-mml: application/mathml+xml
-sh: application/x-sh
-ru: text/x-script.ruby
-rss: application/rss+xml
-iso: application/octet-stream
-pnm: image/x-portable-anymap
-msi: application/x-msdownload
-log: text/plain
-xpm: image/x-xpixmap
-djvu: image/vnd.djvu
-deb: application/x-debian-package
-odp: application/vnd.oasis.opendocument.presentation
-dot: application/msword
-xsl: application/xml
-aiff: audio/x-aiff
-au: audio/basic
-bat: application/x-msdownload
-for: text/x-fortran
-pl: text/x-script.perl
-wma: audio/x-ms-wma
-cab: application/vnd.ms-cab-compressed
-ifb: text/calendar
-pm: text/x-script.perl-module
-class: application/octet-stream
-xbm: image/x-xbitmap
-sgml: text/sgml
-ods: application/vnd.oasis.opendocument.spreadsheet
-text: text/plain
-p: text/x-pascal
-js: application/javascript
-odt: application/vnd.oasis.opendocument.text
-hh: text/x-c
-flv: video/x-flv
-bmp: image/bmp
-wrl: model/vrml
-torrent: application/x-bittorrent
-sgm: text/sgml
-roff: text/troff
-gif: image/gif
-vcf: text/x-vcard
-texinfo: application/x-texinfo
-so: application/octet-stream
-mng: video/x-mng
-ms: text/troff
-dvi: application/x-dvi
-tif: image/tiff
-s: text/x-asm
-json: application/json
-t: text/troff
-svg: image/svg+xml
-cc: text/x-c
-ps: application/postscript
-html: text/html
-tcl: application/x-tcl
-jpg: image/jpeg
-tex: application/x-tex
-tbz: application/x-bzip-compressed-tar
-com: application/x-msdownload
-gz: application/x-gzip
-f90: text/x-fortran
-m4v: video/mp4
-rake: text/x-script.ruby
-pdf: application/pdf
-jar: application/java-archive
-exe: application/x-msdownload
-war: application/java-archive
-snd: audio/basic
-atom: application/atom+xml
-dtd: application/xml-dtd
-mdoc: text/troff
-asc: application/pgp-signature
-djv: image/vnd.djvu
-mid: audio/midi
-rdf: application/rdf+xml
-mathml: application/mathml+xml
-midi: audio/midi
-py: text/x-script.python
-ico: image/vnd.microsoft.icon
-tiff: image/tiff
-ra: audio/x-pn-realaudio
-asf: video/x-ms-asf
-mime: message/rfc822
-wav: audio/x-wav
-vrml: model/vrml
-rb: text/x-script.ruby
-mpeg: video/mpeg
-mp3: audio/mpeg
-diff: text/x-diff
-gemspec: text/x-script.ruby
-yml: text/yaml
-xhtml: application/xhtml+xml
-mp4: video/mp4
-der: application/x-x509-ca-cert
-psd: image/vnd.adobe.photoshop
-svgz: image/svg+xml
-ics: text/calendar
-jnlp: application/x-java-jnlp-file
-ram: audio/x-pn-realaudio
-vcs: text/x-vcalendar
-pgm: image/x-portable-graymap
-crt: application/x-x509-ca-cert
-swf: application/x-shockwave-flash
-avi: video/x-msvideo
-doc: application/msword
-java: text/x-java-source
-pas: text/x-pascal
-tr: text/troff
-asm: text/x-asm
-ear: application/java-archive
-qt: video/quicktime
-pgp: application/pgp-encrypted
-rar: application/x-rar-compressed
-eml: message/rfc822
-wmv: video/x-ms-wmv
-bin: application/octet-stream
-ppm: image/x-portable-pixmap
-wsdl: application/wsdl+xml
-sig: application/pgp-signature
-ai: application/postscript
-a: application/octet-stream
-mp4v: video/mp4
-zip: application/zip
-wmx: video/x-ms-wmx
-tar: application/x-tar
-cpp: text/x-c
-cxx: text/x-c
-htm: text/html
-dll: application/x-msdownload
-pkg: application/octet-stream
-c: text/x-c
-xslt: application/xslt+xml
-xls: application/vnd.ms-excel
-rpm: application/x-redhat-package-manager
-f77: text/x-fortran
-pbm: image/x-portable-bitmap
-yaml: text/yaml
-png: image/png
-conf: text/plain
-me: text/troff
-texi: application/x-texinfo
-man: text/troff
-pem: application/x-x509-ca-cert
-chm: application/vnd.ms-htmlhelp
-ogg: application/ogg
-f: text/x-fortran
-txt: text/plain
-mbox: application/mbox
-pps: application/vnd.ms-powerpoint
-css: text/css
+################################################################################
+#   List of File Extensions and their Content-Type
+################################################################################
+
+# NOTE: File extension entry should be in lower case.
+
+File Extensions:
+  eps: application/postscript
+  mpg: video/mpeg
+  ppt: application/vnd.ms-powerpoint
+  h: text/x-c
+  jpeg: image/jpeg
+  aif: audio/x-aiff
+  m3u: audio/x-mpegurl
+  asx: video/x-ms-asf
+  xml: application/xml
+  3gp: video/3gpp
+  csv: text/csv
+  rtf: application/rtf
+  mov: video/quicktime
+  bz2: application/x-bzip2
+  dmg: application/octet-stream
+  gem: application/octet-stream
+  mml: application/mathml+xml
+  sh: application/x-sh
+  ru: text/x-script.ruby
+  rss: application/rss+xml
+  iso: application/octet-stream
+  pnm: image/x-portable-anymap
+  msi: application/x-msdownload
+  log: text/plain
+  xpm: image/x-xpixmap
+  djvu: image/vnd.djvu
+  deb: application/x-debian-package
+  odp: application/vnd.oasis.opendocument.presentation
+  dot: application/msword
+  xsl: application/xml
+  aiff: audio/x-aiff
+  au: audio/basic
+  bat: application/x-msdownload
+  for: text/x-fortran
+  pl: text/x-script.perl
+  wma: audio/x-ms-wma
+  cab: application/vnd.ms-cab-compressed
+  ifb: text/calendar
+  pm: text/x-script.perl-module
+  class: application/octet-stream
+  xbm: image/x-xbitmap
+  sgml: text/sgml
+  ods: application/vnd.oasis.opendocument.spreadsheet
+  text: text/plain
+  p: text/x-pascal
+  js: application/javascript
+  odt: application/vnd.oasis.opendocument.text
+  hh: text/x-c
+  flv: video/x-flv
+  bmp: image/bmp
+  wrl: model/vrml
+  torrent: application/x-bittorrent
+  sgm: text/sgml
+  roff: text/troff
+  gif: image/gif
+  vcf: text/x-vcard
+  texinfo: application/x-texinfo
+  so: application/octet-stream
+  mng: video/x-mng
+  ms: text/troff
+  dvi: application/x-dvi
+  tif: image/tiff
+  s: text/x-asm
+  json: application/json
+  t: text/troff
+  svg: image/svg+xml
+  cc: text/x-c
+  ps: application/postscript
+  html: text/html
+  tcl: application/x-tcl
+  jpg: image/jpeg
+  tex: application/x-tex
+  tbz: application/x-bzip-compressed-tar
+  com: application/x-msdownload
+  gz: application/x-gzip
+  f90: text/x-fortran
+  m4v: video/mp4
+  rake: text/x-script.ruby
+  pdf: application/pdf
+  jar: application/java-archive
+  exe: application/x-msdownload
+  war: application/java-archive
+  snd: audio/basic
+  atom: application/atom+xml
+  dtd: application/xml-dtd
+  mdoc: text/troff
+  asc: application/pgp-signature
+  djv: image/vnd.djvu
+  mid: audio/midi
+  rdf: application/rdf+xml
+  mathml: application/mathml+xml
+  midi: audio/midi
+  py: text/x-script.python
+  ico: image/vnd.microsoft.icon
+  tiff: image/tiff
+  ra: audio/x-pn-realaudio
+  asf: video/x-ms-asf
+  mime: message/rfc822
+  wav: audio/x-wav
+  vrml: model/vrml
+  rb: text/x-script.ruby
+  mpeg: video/mpeg
+  mp3: audio/mpeg
+  diff: text/x-diff
+  gemspec: text/x-script.ruby
+  yml: text/yaml
+  xhtml: application/xhtml+xml
+  mp4: video/mp4
+  der: application/x-x509-ca-cert
+  psd: image/vnd.adobe.photoshop
+  svgz: image/svg+xml
+  ics: text/calendar
+  jnlp: application/x-java-jnlp-file
+  ram: audio/x-pn-realaudio
+  vcs: text/x-vcalendar
+  pgm: image/x-portable-graymap
+  crt: application/x-x509-ca-cert
+  swf: application/x-shockwave-flash
+  avi: video/x-msvideo
+  doc: application/msword
+  java: text/x-java-source
+  pas: text/x-pascal
+  tr: text/troff
+  asm: text/x-asm
+  ear: application/java-archive
+  qt: video/quicktime
+  pgp: application/pgp-encrypted
+  rar: application/x-rar-compressed
+  eml: message/rfc822
+  wmv: video/x-ms-wmv
+  bin: application/octet-stream
+  ppm: image/x-portable-pixmap
+  wsdl: application/wsdl+xml
+  sig: application/pgp-signature
+  ai: application/postscript
+  a: application/octet-stream
+  mp4v: video/mp4
+  zip: application/zip
+  wmx: video/x-ms-wmx
+  tar: application/x-tar
+  cpp: text/x-c
+  cxx: text/x-c
+  htm: text/html
+  dll: application/x-msdownload
+  pkg: application/octet-stream
+  c: text/x-c
+  xslt: application/xslt+xml
+  xls: application/vnd.ms-excel
+  rpm: application/x-redhat-package-manager
+  f77: text/x-fortran
+  pbm: image/x-portable-bitmap
+  yaml: text/yaml
+  png: image/png
+  conf: text/plain
+  me: text/troff
+  texi: application/x-texinfo
+  man: text/troff
+  pem: application/x-x509-ca-cert
+  chm: application/vnd.ms-htmlhelp
+  ogg: application/ogg
+  f: text/x-fortran
+  txt: text/plain
+  mbox: application/mbox
+  pps: application/vnd.ms-powerpoint
+  css: text/css
