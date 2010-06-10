@@ -35,7 +35,7 @@ module Webroar
       case (@name)
       when File.basename(Config::CONFIG['CC']), "make", Config::CONFIG['RUBY_INSTALL_NAME'], "starling"; flag = find_command
       when "libsqlite3.so"; flag = find_so
-      when "sqlite3.h", "gnutls/gnutls.h", "zlib.h"; flag = find_header_file
+      when "sqlite3.h", "gnutls/gnutls.h", "zlib.h", "regex.h"; flag = find_header_file
       when "ruby_headers"; flag = find_header_file("ruby.h")
       when Config::CONFIG['LIBRUBY_SO']; flag = find_shared_lib
       when "rubygems"; flag = find_gem
@@ -136,5 +136,6 @@ module Webroar
     Xcode = Dependency.new('Xcode.app')
     RubyZlib = Dependency.new('zlib-ruby')
     Zlib = Dependency.new('zlib.h')
+    Regex = Dependency.new('regex.h')
   end
 end # module Webroar

@@ -148,7 +148,8 @@ class Installer
       Dependencies::Sqlite_DevHeaders,
       Dependencies::Starling,
       Dependencies::Gnutls,
-      Dependencies::Zlib
+      Dependencies::Zlib,
+      Dependencies::Regex
     ]
   end
   
@@ -165,7 +166,8 @@ class Installer
       Dependencies::Starling,
       Dependencies::Xcode,
       Dependencies::Gnutls,
-      Dependencies::Zlib
+      Dependencies::Zlib,
+      Dependencies::Regex
     ]
   end
 
@@ -176,6 +178,7 @@ class Installer
     @port = 0
     @err_msg = nil
     @zlib = true
+    @regex = true
   end
 
   # Install the server
@@ -430,6 +433,9 @@ class Installer
     @zlib = false if failed_dependencies.include?(Dependencies::Zlib.name)
     failed_dependencies.delete(Dependencies::Zlib.name)
 
+    @regex = false if failed_dependencies.include?(Dependencies::Regex.name)
+    failed_dependencies.delete(Dependencies::Regex.name)
+
     if( failed_dependencies.size > 0)
       puts "The following dependencies required for installation could not be found:"
       print "\e[31m"
@@ -444,11 +450,16 @@ class Installer
     
     unless @zlib
       puts "\n\e[31mThe installation continue without supporting static assets encoding.\e[0m"
-      puts ""    
+      puts ""
+    else
+      unless @regex
+        puts "\n\e[31mThe static asstes endcoding supported without Regex validations.\e[0m"
+        puts ""
+      end
     end
 
     return true
-  end
+  end 
 
   def check_exe_file(file)
     paths = ENV['PATH'].split(":")
@@ -461,7 +472,6 @@ class Installer
     end
     return flag
   end
-
 
   def create_service_links(script_file)
     create_service_link("0", 'K15webroar', script_file)
@@ -660,6 +670,7 @@ exit 0"
     str += " include_flags=\"#{@options[:include_paths]}\"" if @options[:include_paths].length > 0
     str += " library_flags=\"#{@options[:library_paths]}\"" if @options[:library_paths].length > 0
     str += " zlib=yes" if @zlib
+    str += " regex=yes" if(@zlib and @regex)
     str
   end
 
