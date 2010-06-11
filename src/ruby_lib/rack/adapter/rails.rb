@@ -27,6 +27,8 @@ module Webroar
         
         @rails_app = if defined?(ActionController::Dispatcher) and ActionController::Dispatcher.instance_methods.include?('call')
           ActionController::Dispatcher.new
+        elsif ::Rails::VERSION::MAJOR >= 3
+          ::Rails.application
         else
           CgiApp.new
         end
@@ -38,12 +40,17 @@ module Webroar
         ENV['RAILS_ENV'] = @env
         
         require "#{@root}/config/environment"
-        require 'dispatcher'        
-        if ActionController::Base.respond_to?('relative_url_root=') 
-          ActionController::Base.relative_url_root = @prefix # new way to set the relative URL in Rails 2.1.1 
-        else 
-          ActionController::AbstractRequest.relative_url_root = @prefix
-        end 
+#        TODO: figure out way to set relative URL, following is not working on Rails3-beta4 for stylesheet_link_tag, javascript_include_tag
+        if ::Rails::VERSION::MAJOR >= 3
+          ::Rails.application.config.relative_url_root = @prefix
+        else
+          require 'dispatcher'
+          if ActionController::Base.respond_to?('relative_url_root=') 
+            ActionController::Base.relative_url_root = @prefix # new way to set the relative URL in Rails 2.1.1 
+          else 
+            ActionController::AbstractRequest.relative_url_root = @prefix
+          end
+        end
       end
       
       # TODO refactor this in File#can_serve?(path) ??

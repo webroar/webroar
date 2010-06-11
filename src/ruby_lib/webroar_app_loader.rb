@@ -51,12 +51,14 @@ begin
       #    STDERR.sync = true
       #    puts '...........file opened..............'
       require File.join(File.dirname(__FILE__), 'profiler', 'message_dispatcher') #to send pid of worker
-      if $pid_sent and $g_options["app_name"].strip != 'Admin Panel'
+#      TODO: Add Exception tracking for Rails 3
+      if $pid_sent and $g_options["app_name"].strip != 'Admin Panel' and $g_options["app_type"] == "rails"  and ::Rails::VERSION::MAJOR < 3
         require File.join(File.dirname(__FILE__), 'exception_tracker', 'webroar_exception.rb')
       else
         Webroar.log_info("Exception notification would not work.")
       end
-      if $g_options["app_profiling"] == "yes"
+#      TODO: Add profiling support for Rails 3
+      if $g_options["app_profiling"] == "yes" and $g_options["app_type"] == "rails"  and ::Rails::VERSION::MAJOR < 3
         if $pid_sent
           require File.expand_path(File.join($g_options["webroar_root"], 'src', 'ruby_lib', 'profiler', 'webroar_profiling.rb'))     
         else
