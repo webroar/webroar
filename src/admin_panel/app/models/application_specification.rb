@@ -42,25 +42,19 @@ class ApplicationSpecification < PseudoModel
   #  validates_format_of :baseuri, :with => /^\/[A-Za-z0-9_\-\/]*$/i, :message => "must start with '/' and contains characters A-Z, a-z, 0-9 , _ , -  and /."
 
   def write
-    server_specification = ServerSpecification.get_hash
-    info= YAML::load_file(CONFIG_FILE_PATH) rescue nil
-    if info 
-      if info['Application Specification']
-        i = info['Application Specification'].size
-        info['Application Specification'][i] = obj_to_hash
-        data = info['Application Specification']
-      else
-        data = Array[obj_to_hash]
-      end
-    else
-      data = Array[obj_to_hash]
+    
+    info = YAML::load_file(CONFIG_FILE_PATH) rescue nil
+    if not (info and info['Application Specification'])
+      info['Application Specification'] = Array.new
     end
-    info = Hash['Server Specification' => server_specification, 'Application Specification' => data]
-    YAMLWriter.write(info, CONFIG_FILE_PATH, "config")
+    
+    info['Application Specification'].push(obj_to_hash)
+    
+    YAMLWriter.write(info, CONFIG_FILE_PATH, Config::CONFIG)
+  
   end
 
   def self.remove(app_name)
-    server_specification = ServerSpecification.get_hash
     info = YAML::load_file(CONFIG_FILE_PATH) rescue nil
     
     if info and info['Application Specification']
@@ -69,12 +63,10 @@ class ApplicationSpecification < PseudoModel
           info['Application Specification'].delete(x)
         end
       end
-      
-      info = Hash['Server Specification' => server_specification] if info['Application Specification'].length == 0
-
+      info.delete('Application Specification') if info['Application Specification'].length == 0
     end
 
-    YAMLWriter.write(info, CONFIG_FILE_PATH, "config")
+    YAMLWriter.write(info, CONFIG_FILE_PATH, Config::CONFIG)
   end
 
   def remove
@@ -92,7 +84,7 @@ class ApplicationSpecification < PseudoModel
   def update(app_id)
     info = YAML::load_file(CONFIG_FILE_PATH) rescue nil
     info['Application Specification'][app_id] = obj_to_hash	
-    YAMLWriter.write(info, CONFIG_FILE_PATH, "config")
+    YAMLWriter.write(info, CONFIG_FILE_PATH, Config::CONFIG)
   end
   
   #this method is used to validate the various fields of the apps model.
@@ -304,10 +296,9 @@ class ApplicationSpecification < PseudoModel
       info = YAML::load_file(CONFIG_FILE_PATH) rescue nil
       app_name = info['Application Specification'][app_id]["name"]
       info['Application Specification'].delete_at(app_id)
-      if(info['Application Specification'].length == 0)
-        info.delete('Application Specification')
-      end	
-      YAMLWriter.write(info,CONFIG_FILE_PATH,"config")
+      info.delete('Application Specification') if info['Application Specification'].length == 0 
+
+      YAMLWriter.write(info,CONFIG_FILE_PATH, Config::CONFIG)
       return app_name
     end
     

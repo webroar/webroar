@@ -43,7 +43,7 @@ class Headers < PseudoModel
       end
       @conf['Headers'].delete('expires_by_type') if @conf['Headers']['expires_by_type'].empty?
       @conf.delete('Headers') if @conf['Headers'].empty?
-      YAMLWriter.write(@conf, CONFIG_FILE_PATH, "config") 
+      YAMLWriter.write(@conf, CONFIG_FILE_PATH, Config::CONFIG) 
     end
     
     def validate_and_write_expires_value(old_value, data)
@@ -93,9 +93,8 @@ class Headers < PseudoModel
       @conf = YAML::load_file(CONFIG_FILE_PATH)
       @conf['Headers'] = Hash.new unless @conf['Headers']
       @conf['Headers']['expires_by_type'] = Array.new unless @conf['Headers']['expires_by_type']
-      array_len = @conf['Headers']['expires_by_type'].length
-      @conf['Headers']['expires_by_type'][array_len] = Hash['ext' => ext, 'expires' => expires]
-      YAMLWriter.write(@conf, CONFIG_FILE_PATH, "config")
+      @conf['Headers']['expires_by_type'].push(Hash['ext' => ext, 'expires' => expires])
+      YAMLWriter.write(@conf, CONFIG_FILE_PATH, Config::CONFIG)
     end
     
     def write_expires_value(expires)
@@ -110,7 +109,7 @@ class Headers < PseudoModel
         @conf['Headers']['expires'] = expires
       end
             
-      YAMLWriter.write(@conf, CONFIG_FILE_PATH, "config")      
+      YAMLWriter.write(@conf, CONFIG_FILE_PATH, Config::CONFIG)      
     end
     
   end  

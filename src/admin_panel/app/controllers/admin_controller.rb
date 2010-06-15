@@ -138,7 +138,7 @@ class AdminController < ApplicationController
     end
     if password_changed
       flash[:notice] = PASSWORD_CHANGED
-      YAMLWriter.write(users,USERS_FILE_PATH,"user")
+      YAMLWriter.write(users, USERS_FILE_PATH, Config::USER)
     else
       if params[:password][:new].length < 6
         flash[:notice] = WRONG_PASSWORD2

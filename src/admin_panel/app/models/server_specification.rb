@@ -91,13 +91,8 @@ class ServerSpecification
     
     #Method is use to write server specification into the config file
     def write(info, server_specification)
-      if info and info['Application Specification']
-        application_specification = info['Application Specification']
-        data = Hash['Server Specification' => server_specification, 'Application Specification' => application_specification]
-      else
-        data = Hash['Server Specification' => server_specification]
-      end
-      YAMLWriter.write(data,CONFIG_FILE_PATH, "config")
+      info['Server Specification'] = server_specification
+      YAMLWriter.write(info, CONFIG_FILE_PATH, Config::CONFIG)
     end
   
     def get_fields
