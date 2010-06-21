@@ -37,7 +37,7 @@ module Webroar
       when "libsqlite3.so"; flag = find_so
       when "sqlite3.h", "gnutls/gnutls.h", "zlib.h", "regex.h"; flag = find_header_file
       when "ruby_headers"; flag = find_header_file("ruby.h")
-      when Config::CONFIG['LIBRUBY_SO']; flag = find_shared_lib
+      when Config::CONFIG['LIBRUBY']; flag = find_shared_lib
       when "rubygems"; flag = find_gem
       when "openssl-ruby"; flag = find_gem("openssl")
       when "zlib-ruby"; flag = find_gem("zlib")
@@ -50,14 +50,14 @@ module Webroar
     private
 
     def find_shared_lib
-      if File.exist?(File.join(Config::CONFIG['libdir'],Config::CONFIG['LIBRUBY_SO']))
+      if File.exist?(File.join(Config::CONFIG['libdir'],Config::CONFIG['LIBRUBY']))
         flag = "\e[32mfound\e[0m  at #{Config::CONFIG['libdir']}."
       elsif Config::CONFIG['ENABLE_SHARED'] == 'yes'
         flag = "\e[32mfound\e[0m."
       else
-        flag = find_so(Config::CONFIG['LIBRUBY_SO'])
+        flag = find_so(Config::CONFIG['LIBRUBY'])
 #      else
-#        flag="\e[31mnot found\e[0m.\nUnable to find #{Config::CONFIG['LIBRUBY_SO']} at #{Config::CONFIG['libdir']}."
+#        flag="\e[31mnot found\e[0m.\nUnable to find #{Config::CONFIG['LIBRUBY']} at #{Config::CONFIG['libdir']}."
       end
       return flag
     end
@@ -125,7 +125,7 @@ module Webroar
     GCC = Dependency.new(File.basename(Config::CONFIG['CC']))
     Gnutls = Dependency.new('gnutls/gnutls.h')
     Make = Dependency.new('make')
-    LibRuby = Dependency.new(Config::CONFIG['LIBRUBY_SO'])
+    LibRuby = Dependency.new(Config::CONFIG['LIBRUBY'])
     LibSqlite = Dependency.new('libsqlite3.so')
     Ruby_OpenSSL = Dependency.new('openssl-ruby')
     Ruby = Dependency.new(Config::CONFIG['RUBY_INSTALL_NAME'])
