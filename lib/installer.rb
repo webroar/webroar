@@ -637,6 +637,12 @@ exit 0"
   end
   
   def import_server_configuration(import_dir)
+    unless File.exist?(File.join(import_dir,"conf","config.yml"))
+      @port = 3000
+      write_server_port
+      return
+    end
+
     info = YAML.load(File.open(File.join(import_dir,"conf","config.yml")))
     ssl = info['Server Specification']['SSL Specification'] if info and info['Server Specification'] and info['Server Specification']['SSL Specification']
 
