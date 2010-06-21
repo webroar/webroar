@@ -34,10 +34,10 @@ module Webroar
       @options = options
       case (@name)
       when File.basename(Config::CONFIG['CC']), "make", Config::CONFIG['RUBY_INSTALL_NAME'], "starling"; flag = find_command
-      when "libsqlite3.so"; flag = find_so
+      when "libsqlite3.so"; flag = find_lib
       when "sqlite3.h", "gnutls/gnutls.h", "zlib.h", "regex.h"; flag = find_header_file
       when "ruby_headers"; flag = find_header_file("ruby.h")
-      when Config::CONFIG['LIBRUBY']; flag = find_shared_lib
+      when Config::CONFIG['LIBRUBY']; flag = find_ruby_lib
       when "rubygems"; flag = find_gem
       when "openssl-ruby"; flag = find_gem("openssl")
       when "zlib-ruby"; flag = find_gem("zlib")
@@ -49,13 +49,13 @@ module Webroar
 
     private
 
-    def find_shared_lib
+    def find_ruby_lib
       if File.exist?(File.join(Config::CONFIG['libdir'],Config::CONFIG['LIBRUBY']))
         flag = "\e[32mfound\e[0m  at #{Config::CONFIG['libdir']}."
       elsif Config::CONFIG['ENABLE_SHARED'] == 'yes'
         flag = "\e[32mfound\e[0m."
       else
-        flag = find_so(Config::CONFIG['LIBRUBY'])
+        flag = find_lib(Config::CONFIG['LIBRUBY'])
 #      else
 #        flag="\e[31mnot found\e[0m.\nUnable to find #{Config::CONFIG['LIBRUBY']} at #{Config::CONFIG['libdir']}."
       end
@@ -84,7 +84,7 @@ module Webroar
       check_file(arr, name)
     end
 
-    def find_so(name = @name)
+    def find_lib(name = @name)
       arr = []
       arr += ENV['LD_LIBRARY_PATH'].split(File::PATH_SEPARATOR) if ENV['LD_LIBRARY_PATH']
       arr += ["/usr/lib"]
