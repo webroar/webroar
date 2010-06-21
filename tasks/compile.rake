@@ -245,10 +245,13 @@ file worker_bin do
     webroar_config
   end
   #libraries for making executable
-  lib_flags = $libs + $LIBS + ' -L' + Config::expand($libdir,CONFIG)  + ' ' + Config::expand($LIBRUBYARG_SHARED,CONFIG)
+  lib_flags = ' -L' + Config::expand($libdir,CONFIG)  + ' '
+  lib_flags += Config::expand($LIBRUBYARG_SHARED,CONFIG) if CONFIG["ENABLE_SHARED"] == "yes"
+  lib_flags += Config::expand($LIBRUBYARG_STATIC, CONFIG) if CONFIG["ENABLE_SHARED"] == "no"
   #$libs += ' '+CONFIG["LIBRUBYARG"]  
   #$libs += ' -lpthread '
   lib_flags += " #{ENV['library_flags']}" if ENV['library_flags']
+  lib_flags += ' ' + $libs + $LIBS 
   lib_flags += " -lz" if ENV['zlib'] == "yes"
   out_file=File.join(BIN_DIR,'webroar-worker')
   object_files=FileList[File.join(WORKER_OBJ_DIR,'*.o'), helper_obj.keys, File.join(YAML_OBJ_DIR,'*.o')]
