@@ -256,7 +256,7 @@ file worker_bin do
   out_file=File.join(BIN_DIR,'webroar-worker')
   object_files=FileList[File.join(WORKER_OBJ_DIR,'*.o'), helper_obj.keys, File.join(YAML_OBJ_DIR,'*.o')]
   # -rdynamic option to get function name in stacktrace
-  cmd="#{COMPILER} #{lib_flags} -rdynamic #{object_files} -o #{out_file}"
+  cmd = "#{COMPILER} -o #{out_file} #{object_files} -rdynamic #{lib_flags}"
   sh cmd
 end
 
@@ -264,19 +264,19 @@ file webroar_bin do
   unless $webroar_config_called
     webroar_config
   end
-  #libraries for making executable
-  lib_flags = $libs + $LIBS # + ' -L' + Config::expand($libdir,CONFIG)  + ' ' + Config::expand($LIBRUBYARG_SHARED,CONFIG)
+  #libraries for making executable  
   #$libs += ' '+CONFIG["LIBRUBYARG"]  
   #$libs += ' -lpthread '
-  lib_flags += " #{ENV['library_flags']}" if ENV['library_flags']
+  lib_flags = " #{ENV['library_flags']}" if ENV['library_flags']
   if ENV['ssl'].eql?("yes")
     puts "Compiling with gnutls library."
     lib_flags += ' -L' + Config::CONFIG['libdir'] + ' -lgnutls '
   end
+  lib_flags = $libs + $LIBS # + ' -L' + Config::expand($libdir,CONFIG)  + ' ' + Config::expand($LIBRUBYARG_SHARED,CONFIG)
   out_file=File.join(BIN_DIR,'webroar-head')
   object_files=FileList[File.join(OBJ_DIR,'*.o'),File.join(YAML_OBJ_DIR,'*.o')]
   # -rdynamic option to get function name in stacktrace
-  cmd="#{COMPILER} #{lib_flags} -rdynamic #{object_files} -o #{out_file}"
+  cmd="#{COMPILER} -o #{out_file} #{object_files} -rdynamic #{lib_flags}"
   sh cmd
 end
 
