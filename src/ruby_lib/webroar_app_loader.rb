@@ -58,7 +58,7 @@ begin
         Webroar.log_info("Exception notification would not work.")
       end
 #      TODO: Add profiling support for Rails 3
-      if $g_options["app_profiling"] == "yes" and $g_options["app_type"] == "rails"  and ::Rails::VERSION::MAJOR < 3
+      if $g_options["app_profiling"] == "yes" and $g_options["app_type"] == "rails"  
         if $pid_sent
           require File.expand_path(File.join($g_options["webroar_root"], 'src', 'ruby_lib', 'profiler', 'webroar_profiling.rb'))     
         else
