@@ -21,7 +21,7 @@
 module Webroar
   class Client
     BASE_ENV = {
-      SERVER_NAME => Webroar,
+      SERVER_NAME => WEBROAR,
       SCRIPT_NAME => EMPTY_STRING,
       QUERY_STRING => EMPTY_STRING,
       SERVER_SOFTWARE => Webroar::SERVER,
