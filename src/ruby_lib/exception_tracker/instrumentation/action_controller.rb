@@ -18,7 +18,8 @@
 
 module Webroar
   module ExceptionTracker
-    trace_rescue_action(:rescue_action, ActionController::Rescue, 'i')
+    trace_rescue_action(:rescue_action, ActionController::Rescue, 'i') if ::Rails::VERSION::MAJOR < 3
+    trace_rescue_action(:rescue_with_handler, ActionController::Base, 'i') if ::Rails::VERSION::MAJOR > 2
   end # ExceptionTracker
 end # Webroar
 
