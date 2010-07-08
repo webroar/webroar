@@ -184,7 +184,7 @@ int wr_config_server_set(node_t *root) {
       if(stat(str,&buff)!=0) {
         LOG_ERROR(SEVERE,"SSL certificate file path(%s) invalid. Server can not run on SSL.",str);
         printf("SSL certificate file path(%s) invalid. Server can not run on SSL.\n",str);
-        Config->Server.flag &= (!SERVER_SSL_SUPPORT)
+        Config->Server.flag &= (!SERVER_SSL_SUPPORT);
       } else {
         len = strlen(str);
         wr_string_new(Config->Server.SSL.certificate, str, len);
@@ -192,7 +192,7 @@ int wr_config_server_set(node_t *root) {
     } else {
       LOG_ERROR(SEVERE,"Certificate file path is missing. Server can not run on SSL.");
       printf("Certificate file path is missing. Server can not run on SSL.\n");
-      Config->Server.flag &= (!SERVER_SSL_SUPPORT)
+      Config->Server.flag &= (!SERVER_SSL_SUPPORT);
     }
 
     // Set certificate path
@@ -201,7 +201,7 @@ int wr_config_server_set(node_t *root) {
       if(stat(str,&buff)!=0) {
         LOG_ERROR(SEVERE,"SSL key file path(%s) invalid. Server can not run on SSL.",str);
         printf("SSL key file path(%s) invalid. Server can not run on SSL.\n",str);
-        Config->Server.flag &= (!SERVER_SSL_SUPPORT)
+        Config->Server.flag &= (!SERVER_SSL_SUPPORT);
       } else {
         len = strlen(str);
         wr_string_new(Config->Server.SSL.key, str, len);
@@ -209,7 +209,7 @@ int wr_config_server_set(node_t *root) {
     } else {
       LOG_ERROR(SEVERE,"SSL key file path is missing. Server can not run on SSL.");
       printf("SSL key file path is missing. Server can not run on SSL.\n");
-      Config->Server.flag &= (!SERVER_SSL_SUPPORT)
+      Config->Server.flag &= (!SERVER_SSL_SUPPORT);
     }
 
     // Set server listening port
@@ -219,7 +219,7 @@ int wr_config_server_set(node_t *root) {
       if(Config->Server.SSL.port < 0 || Config->Server.SSL.port > 65536) {
         LOG_ERROR(SEVERE,"Given SSL port is invalid. Valid port should be a number between 1 and 65536. Server can not run on SSL.");
         printf("Given SSL port is invalid. Valid port should be a number between 1 and 65536. Server can not run on SSL.\n");               
-        Config->Server.flag &= (!SERVER_SSL_SUPPORT)
+        Config->Server.flag &= (!SERVER_SSL_SUPPORT);
       }
     }
   }
