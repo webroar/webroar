@@ -205,10 +205,10 @@ class Installer
     begin
       return -1 unless CheckUser.check
       @options = options
-  
-      check_dependencies || exit(1)
       
       str = set_install_options
+  
+      check_dependencies || exit(1)
         
       @port, @import, gem_name = UserInteraction.new(@options).user_input
       @port = import_files(gem_name) if @import
