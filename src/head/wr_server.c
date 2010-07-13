@@ -37,9 +37,8 @@ wr_svr_t* wr_svr_new(struct ev_loop* loop) {
   //Get ebb server object
   ebb_server_init(&(server->ebb_svr),loop);
 
-  if(Config->Server.flag & SERVER_SSL_SUPPORT) {
 #ifdef HAVE_GNUTLS
-
+  if(Config->Server.flag & SERVER_SSL_SUPPORT) {
     //Initialize ebb server for SSL support
     ebb_server_init(&(server->secure_ebb_svr),loop);
     // Add GnuTLS support
@@ -52,10 +51,9 @@ wr_svr_t* wr_svr_new(struct ev_loop* loop) {
       server->secure_ebb_svr.data = server;
       server->secure_ebb_svr.new_connection = wr_new_conn_cb;
     }
-
+  }
 #endif
 
-  }
   server->ebb_svr.data = server;
   server->ebb_svr.new_connection = wr_new_conn_cb;
 
@@ -170,7 +168,8 @@ void wr_svr_free(wr_svr_t* server) {
 #ifdef HAVE_GNUTLS
 
   //Destroy ebb server object used for SSL
-  ebb_server_unlisten(&(server->secure_ebb_svr));
+  if(Config->Server.flag & SERVER_SSL_SUPPORT)
+    ebb_server_unlisten(&(server->secure_ebb_svr));
 
 #endif
 
