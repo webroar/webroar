@@ -85,10 +85,10 @@ module Webroar
     end
 
     def find_lib(name = @name)
-      arr = []
-      arr += ENV['LD_LIBRARY_PATH'].split(File::PATH_SEPARATOR) if ENV['LD_LIBRARY_PATH']
-      arr += ["/usr/lib"]
-      arr += @options[:library_paths].gsub(' -L','').gsub("''",":").gsub("'",'').split(File::PATH_SEPARATOR) if @options[:library_paths]
+      arr = ["/usr/lib"]
+      arr << ENV['LD_LIBRARY_PATH'].split(File::PATH_SEPARATOR) if ENV['LD_LIBRARY_PATH']
+      arr << Config::CONFIG['libdir'] if Config::CONFIG['libdir']
+      arr << @options[:library_paths].gsub(' -L','').gsub("''",":").gsub("'",'').split(File::PATH_SEPARATOR) if @options[:library_paths]
       arr.delete("")
 
       check_file(arr, name)
@@ -100,7 +100,7 @@ module Webroar
       begin
         require 'rbconfig'
         require 'mkmf'
-        arr += [Config::CONFIG['archdir'], Config::CONFIG['sitearchdir']]
+        arr += [Config::CONFIG['includedir'], Config::CONFIG['archdir'], Config::CONFIG['sitearchdir']]
       end
 
       arr += ["/usr/include"]

@@ -135,6 +135,7 @@ TMP_FILES = File.join('','tmp').freeze
 #create_directories([OBJ_DIR, WORKER_OBJ_DIR, YAML_OBJ_DIR, TEST_OBJ_DIR, TMP_FILES, LOG_FILES])
 
 include_dir = ["#{LIBEV_DIR}","#{EBB_DIR}","#{HEAD_DIR}","#{YAML_DIR}","#{HELPER_DIR}","#{UNIT_TEST_DIR}", "#{WORKER_DIR}"]
+include_dir << " Config::CONFIG['includedir']" if Config::CONFIG['includedir']
 
 include_dir.each do |dir|
   $inc_flags << " -I#{dir} "
@@ -246,13 +247,13 @@ file worker_bin do
   end
   #libraries for making executable
   lib_flags = ' -L' + Config::expand($libdir,CONFIG)  + ' '
-  lib_flags += Config::expand($LIBRUBYARG_SHARED,CONFIG) if CONFIG["ENABLE_SHARED"] == "yes"
-  lib_flags += Config::expand($LIBRUBYARG_STATIC, CONFIG) if CONFIG["ENABLE_SHARED"] == "no"
-  #$libs += ' '+CONFIG["LIBRUBYARG"]  
-  #$libs += ' -lpthread '
-  lib_flags += " #{ENV['library_flags']}" if ENV['library_flags']
-  lib_flags += ' ' + $libs + $LIBS 
-  lib_flags += " -lz" if ENV['zlib'] == "yes"
+  lib_flags << Config::expand($LIBRUBYARG_SHARED,CONFIG) if CONFIG["ENABLE_SHARED"] == "yes"
+  lib_flags << Config::expand($LIBRUBYARG_STATIC, CONFIG) if CONFIG["ENABLE_SHARED"] == "no"
+  #$libs << ' '+CONFIG["LIBRUBYARG"]  
+  #$libs << ' -lpthread '
+  lib_flags << " #{ENV['library_flags']}" if ENV['library_flags']
+  lib_flags << (' ' + $libs + $LIBS )
+  lib_flags << " -lz" if ENV['zlib'] == "yes"
   out_file=File.join(BIN_DIR,'webroar-worker')
   object_files=FileList[File.join(WORKER_OBJ_DIR,'*.o'), helper_obj.keys, File.join(YAML_OBJ_DIR,'*.o')]
   # -rdynamic option to get function name in stacktrace
