@@ -108,7 +108,7 @@ int scgi_header_add(scgi_t* scgi, const char* field, size_t field_len, const cha
   header->next = scgi->header_list;
   scgi->header_list = header;
   
-  LOG_DEBUG(DEBUG, "%s:%s", scgi->header + header->field_offset, scgi->header + header->value_offset);
+  //LOG_DEBUG(DEBUG, "%s:%s", scgi->header + header->field_offset, scgi->header + header->value_offset);
   
   return 0;
 }
@@ -331,7 +331,7 @@ scgi_t* scgi_parse(const char *buffer, size_t length){
         state = STATE_HEADER;
         field_offset = i + 1;
         field_len = value_len = 0;
-        LOG_DEBUG(DEBUG, "Header %s:%s", buffer + header->field_offset, buffer + header->value_offset);
+        //LOG_DEBUG(DEBUG, "Header %s:%s", buffer + header->field_offset, buffer + header->value_offset);
       }
       break;
     case STATE_BODY:  // Process request body

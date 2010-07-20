@@ -79,7 +79,6 @@ typedef struct config_server_s{
     wr_u_int    port;
     wr_str_t    certificate;
     wr_str_t    key;
-    wr_str_t    name;
   }SSL;
 #endif
   

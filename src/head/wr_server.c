@@ -61,6 +61,11 @@ wr_svr_t* wr_svr_new(struct ev_loop* loop) {
   server->ctl =  wr_svr_ctl_new();
   if(!server->ctl) {
     ebb_server_unlisten(&(server->ebb_svr));
+#ifdef HAVE_GNUTLS
+    if(Config->Server.flag & SERVER_SSL_SUPPORT) {
+      ebb_server_unlisten(&(server->secure_ebb_svr));
+    }
+#endif
     free(server);
     LOG_ERROR(WARN, "%s() control object allocation failed. Returning ...",__FUNCTION__);
     return NULL;
@@ -71,6 +76,11 @@ wr_svr_t* wr_svr_new(struct ev_loop* loop) {
   server->resolver = wr_req_resolver_new();
   if(server->resolver == NULL) {
     ebb_server_unlisten(&(server->ebb_svr));
+#ifdef HAVE_GNUTLS
+    if(Config->Server.flag & SERVER_SSL_SUPPORT) {
+      ebb_server_unlisten(&(server->secure_ebb_svr));
+    }
+#endif
     free(server);
     LOG_ERROR(WARN, "Resolver object allocation failed. Returning ...");
     return NULL;
@@ -129,16 +139,17 @@ int wr_svr_init(wr_svr_t** server) {
     return -1;
   }
 
-  if(Config->Server.flag & SERVER_SSL_SUPPORT) {
 #ifdef HAVE_GNUTLS
+  if(Config->Server.flag & SERVER_SSL_SUPPORT) {
     LOG_DEBUG(DEBUG,"SSL port = %d", Config->Server.SSL.port);
     if(ebb_server_listen_on_port(&(*server)->secure_ebb_svr, Config->Server.SSL.port) < 0) {
       LOG_ERROR(SEVERE,"ebb_server_listen_on_port(): failed. Port number = %d",Config->Server.SSL.port);
       printf("Port %d is already in use.\n", Config->Server.SSL.port);
+      return -1;
     }
-#endif
-
   }
+#endif
+  
   LOG_DEBUG(DEBUG,"port = %d", Config->Server.port);
   //ebb server starts listening for request
   if(ebb_server_listen_on_port(&(*server)->ebb_svr, Config->Server.port) < 1) {
@@ -172,7 +183,6 @@ void wr_svr_free(wr_svr_t* server) {
     ebb_server_unlisten(&(server->secure_ebb_svr));
 
 #endif
-
 
   // Destroy application list
   if(server->apps) {

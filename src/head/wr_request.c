@@ -160,7 +160,7 @@ void wr_req_header_field_cb(ebb_request* request, const char *at, size_t length,
   
   scgi_header_field_add(req->scgi, at, length, header_index);
  
-  LOG_DEBUG(DEBUG,"field name = %s",req->scgi->header + req->scgi->header_list->field_offset);
+  //LOG_DEBUG(DEBUG,"field name = %s",req->scgi->header + req->scgi->header_list->field_offset);
 }
 
 int wr_req_header_value_check(wr_req_t *req, size_t length, int index){
@@ -199,7 +199,7 @@ void wr_req_header_value_cb(ebb_request* request, const char *at, size_t length,
   
   scgi_header_value_add(req->scgi, at, length, header_index);
   
-  LOG_DEBUG(DEBUG,"field value = %s",req->scgi->header + req->scgi->header_list->value_offset);
+  //LOG_DEBUG(DEBUG,"field value = %s",req->scgi->header + req->scgi->header_list->value_offset);
 }
 
 /** HTTP Request path received */

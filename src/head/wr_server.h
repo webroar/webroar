@@ -34,8 +34,8 @@ typedef void (*wr_ctl_signal_cb) (wr_ctl_t*, const wr_ctl_msg_t*);
 typedef struct {
   ebb_server         ebb_svr;    /**< Ebb server */
 
-  ebb_server         secure_ebb_svr;    /**< Ebb server */
 #ifdef HAVE_GNUTLS
+  ebb_server         secure_ebb_svr;    /**< Ebb server */
 #endif
 
   wr_app_t*        apps;  /**< Application list */
