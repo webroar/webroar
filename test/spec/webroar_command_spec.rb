@@ -63,4 +63,27 @@ describe "Webroar command" do
     op.should =~ /WebROaR-\d[.]\d[.]\d/
   end
   
+  it "should remove application" do
+    cmd = "#{File.join(WEBROAR_ROOT,'bin','webroar')} remove test_app"
+    system("#{cmd} >>#{TEST_RUN_LOG} 2>>#{TEST_RUN_LOG}")
+    sleep(5)
+    res = @http.start{ |http| http.get('/test_app/')}
+    res.class.should == Net::HTTPNotFound
+  end
+  
+  it "should add application" do
+    cmd = "#{File.join(WEBROAR_ROOT,'bin','webroar')} add test_app -R /test_app -D #{TEST_APP_PATH} -U #{RUN_AS_USER} -N 1 -X 2 -E test"
+    system("#{cmd} >>#{TEST_RUN_LOG} 2>>#{TEST_RUN_LOG}")
+    sleep(60)
+    res = @http.start{ |http| http.get('/test_app/')}
+    res.class.should == Net::HTTPOK
+  end
+  
+  it "should respond during application restart" do
+    cmd = "#{File.join(WEBROAR_ROOT,'bin','webroar')} restart test_app"
+    system("#{cmd} >>#{TEST_RUN_LOG} 2>>#{TEST_RUN_LOG}")    
+    res = @http.start{ |http| http.get('/test_app/')}
+    res.class.should == Net::HTTPOK
+    sleep(60)
+  end
 end
