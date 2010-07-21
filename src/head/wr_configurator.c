@@ -117,10 +117,8 @@ int wr_config_server_set(node_t *root) {
   char *str;
 
   // Set server listening port
-  str = wr_validate_string(get_node_value(root, "Server Specification/port"));
-  if(str)
-    Config->Server.port = atoi(str);
-
+  wr_set_numeric_value(root, "Server Specification/port", &Config->Server.port, FALSE);
+  
   if(Config->Server.port < 0 || Config->Server.port > 65536) {
     LOG_ERROR(SEVERE,"Valid port should be a number between 1 and 65536. Server can not start.");
     printf("Valid port should be a number between 1 and 65536. Server can not start.\n");
@@ -128,25 +126,20 @@ int wr_config_server_set(node_t *root) {
   }
 
   // Set min_worker
-  str = wr_validate_string(get_node_value(root, "Server Specification/min_worker"));
-  if(str) {
-    Config->Application.Default.min_workers = atoi(str);
-    if(Config->Application.Default.min_workers > Config->Server.Worker.max) {
-      LOG_ERROR(SEVERE, "Server Specification: Minimum workers should be a number between 1 and %d. Server can not start.", Config->Server.Worker.max);
-      printf("Server Specification: Minimum workers should be a number between 1 and %d. Server can not start.\n", Config->Server.Worker.max);
-      return -1; 
-    }
+  wr_set_numeric_value(root, "Server Specification/min_worker", &Config->Application.Default.min_workers, FALSE);
+  if(Config->Application.Default.min_workers > Config->Server.Worker.max) {
+    LOG_ERROR(SEVERE, "Server Specification: Minimum workers should be a number between 1 and %d. Server can not start.", Config->Server.Worker.max);
+    printf("Server Specification: Minimum workers should be a number between 1 and %d. Server can not start.\n", Config->Server.Worker.max);
+    return -1; 
   }
   
+  
   // Set max_worker
-  str = wr_validate_string(get_node_value(root, "Server Specification/max_worker"));
-  if(str) {
-    Config->Application.Default.max_workers = atoi(str);
-    if(Config->Application.Default.max_workers > Config->Server.Worker.max) {
-      LOG_ERROR(SEVERE, "Server Specification: Maximum workers should be a number between 1 and %d. Server can not start.", Config->Server.Worker.max);
-      printf("Server Specification: Maximum workers should be a number between 1 and %d. Server can not start.\n", Config->Server.Worker.max);
-      return -1; 
-    }
+  wr_set_numeric_value(root, "Server Specification/max_worker", &Config->Application.Default.max_workers, FALSE);
+  if(Config->Application.Default.max_workers > Config->Server.Worker.max) {
+    LOG_ERROR(SEVERE, "Server Specification: Maximum workers should be a number between 1 and %d. Server can not start.", Config->Server.Worker.max);
+    printf("Server Specification: Maximum workers should be a number between 1 and %d. Server can not start.\n", Config->Server.Worker.max);
+    return -1; 
   }
   
   if(Config->Application.Default.min_workers > Config->Application.Default.max_workers) {
@@ -213,14 +206,11 @@ int wr_config_server_set(node_t *root) {
     }
 
     // Set server listening port
-    str = wr_validate_string(get_node_value(root, "Server Specification/SSL Specification/ssl_port"));
-    if(str) {
-      Config->Server.SSL.port = atoi(str);
-      if(Config->Server.SSL.port < 0 || Config->Server.SSL.port > 65536) {
-        LOG_ERROR(SEVERE,"Given SSL port is invalid. Valid port should be a number between 1 and 65536. Server can not run on SSL.");
-        printf("Given SSL port is invalid. Valid port should be a number between 1 and 65536. Server can not run on SSL.\n");               
-        Config->Server.flag &= (!SERVER_SSL_SUPPORT);
-      }
+    wr_set_numeric_value(root, "Server Specification/SSL Specification/ssl_port", &Config->Server.SSL.port, FALSE);
+    if(Config->Server.SSL.port < 0 || Config->Server.SSL.port > 65536) {
+      LOG_ERROR(SEVERE,"Given SSL port is invalid. Valid port should be a number between 1 and 65536. Server can not run on SSL.");
+      printf("Given SSL port is invalid. Valid port should be a number between 1 and 65536. Server can not run on SSL.\n");               
+      Config->Server.flag &= (!SERVER_SSL_SUPPORT);
     }
   }
 
@@ -528,31 +518,25 @@ config_application_list_t* wr_config_application_set(node_t* app_node, char* err
   }
 
   // Set min_worker
-  str = wr_validate_string(get_node_value(app_node->child, "min_worker"));
-  if(str && strlen(str) > 0) {
-    app->min_worker = atoi(str);
-    if(app->min_worker > Config->Server.Worker.max) {
-      LOG_ERROR(SEVERE, "Application(%s)-Minimum workers should be a number between 1 and %d. Application not started.", app_name, Config->Server.Worker.max);
-      printf("Application(%s)-Minimum workers should be a number between 1 and %d. Application not started.\n", app_name, Config->Server.Worker.max);
-      if(err_msg)
-        sprintf(err_msg + strlen(err_msg), "Application(%s)-Minimum workers should be a number between 1 and %d. Application not started.", app_name, Config->Server.Worker.max);
-      free_app_obj = 1; 
-    }
+  wr_set_numeric_value(app_node->child, "min_worker", &app->min_worker, FALSE);
+  if(app->min_worker > Config->Server.Worker.max) {
+    LOG_ERROR(SEVERE, "Application(%s)-Minimum workers should be a number between 1 and %d. Application not started.", app_name, Config->Server.Worker.max);
+    printf("Application(%s)-Minimum workers should be a number between 1 and %d. Application not started.\n", app_name, Config->Server.Worker.max);
+    if(err_msg)
+      sprintf(err_msg + strlen(err_msg), "Application(%s)-Minimum workers should be a number between 1 and %d. Application not started.", app_name, Config->Server.Worker.max);
+    free_app_obj = 1; 
   }
-
+  
   // Set max_worker
-  str = wr_validate_string(get_node_value(app_node->child, "max_worker"));
-  if(str && strlen(str) > 0) {
-    app->max_worker = atoi(str);
-    if(app->max_worker > Config->Server.Worker.max) {
-      LOG_ERROR(SEVERE, "Application(%s)-Maximum workers should be a number between 1 and %d. Application not started.", app_name, Config->Server.Worker.max);
-      printf("Application(%s)-Maximum workers should be a number between 1 and %d. Application not started.\n", app_name, Config->Server.Worker.max);
-      if(err_msg)
-        sprintf(err_msg + strlen(err_msg), "Application(%s)-Maximum workers should be a number between 1 and %d. Application not started.", app_name, Config->Server.Worker.max);
-      free_app_obj = 1; 
-    }
+  wr_set_numeric_value(app_node->child, "max_worker", &app->max_worker, FALSE);
+  if(app->max_worker > Config->Server.Worker.max) {
+    LOG_ERROR(SEVERE, "Application(%s)-Maximum workers should be a number between 1 and %d. Application not started.", app_name, Config->Server.Worker.max);
+    printf("Application(%s)-Maximum workers should be a number between 1 and %d. Application not started.\n", app_name, Config->Server.Worker.max);
+    if(err_msg)
+      sprintf(err_msg + strlen(err_msg), "Application(%s)-Maximum workers should be a number between 1 and %d. Application not started.", app_name, Config->Server.Worker.max);
+    free_app_obj = 1; 
   }
-
+  
   if(free_app_obj & 1) {
     wr_application_list_free(app);
     return NULL;
@@ -883,6 +867,49 @@ config_application_list_t* wr_conf_app_exist(const char *app_name, config_applic
   return NULL;
 }
 
+/** Read Application Configuration **/
+void wr_application_conf_read(node_t *root){
+  wr_set_numeric_value(root, "Application/message_queue_size", &Config->Application.msg_queue_size, FALSE);
+  wr_set_numeric_value(root, "Application/maximum_request_ratio", &Config->Application.max_req_ratio, FALSE);
+  wr_set_numeric_value(root, "Application/minimum_request_ratio", &Config->Application.min_req_ratio, FALSE);
+  wr_set_numeric_value(root, "Application/high_load_time", &Config->Application.high_load, FALSE);
+  wr_set_numeric_value(root, "Application/low_load_time", &Config->Application.low_load, FALSE);
+  wr_set_numeric_value(root, "Application/maximum_hosts", &Config->Application.max_hosts, FALSE);
+}
+
+/** Read Worker Configuration **/
+void wr_worker_conf_read(node_t *root){
+  wr_set_numeric_value(root, "Worker/maximum_request_body_size", &Config->Request.max_body_size, FALSE);
+  wr_set_numeric_value(root, "Worker/maximum_workers", &Config->Server.Worker.max, FALSE);
+  wr_set_numeric_value(root, "Worker/pending_workers", &Config->Server.Worker.pending, FALSE);
+  wr_set_numeric_value(root, "Worker/add_trials", &Config->Server.Worker.add_trials, FALSE);
+  wr_set_numeric_value(root, "Worker/add_wait", &Config->Server.Worker.add_wait, FALSE);
+  wr_set_numeric_value(root, "Worker/add_timeout", &Config->Server.Worker.add_timeout, FALSE);
+  wr_set_numeric_value(root, "Worker/kill_timeout", &Config->Server.Worker.kill_timeout, FALSE);
+  wr_set_numeric_value(root, "Worker/idle_time", &Config->Server.Worker.idle_time, FALSE);
+  wr_set_numeric_value(root, "Worker/ping_timeout", &Config->Server.Worker.ping_timeout, FALSE);
+  wr_set_numeric_value(root, "Worker/ping_trials", &Config->Server.Worker.ping_trials, FALSE);
+}
+
+/** Read and fill Server Internal Configuration **/
+void wr_internal_conf_read(){
+  LOG_FUNCTION
+  node_t *root;
+  
+  LOG_DEBUG(4,"YAML file path %s", Config->Server.File.internal_config.str);
+  root = yaml_parse(Config->Server.File.internal_config.str);
+
+  if(!root) {
+    LOG_ERROR(SEVERE, "Config file found with erroneous entries. Please correct it.");
+    printf("Config file found with erroneous entries. Please correct it.\n");
+    return;
+  }
+  
+  wr_application_conf_read(root);
+  wr_worker_conf_read(root);
+  
+  node_free(root);
+}
 
 /***********************************************************
  *     Configurator API definitions
@@ -1064,6 +1091,8 @@ config_application_list_t* wr_conf_app_read(const char *app_name, char* err_msg,
 int wr_conf_read() {
   LOG_FUNCTION
   node_t *root;
+  
+  wr_internal_conf_read();
 
   // Get parsed nodes
   LOG_DEBUG(4,"YAML file path %s", Config->Server.File.config.str);
@@ -1088,7 +1117,7 @@ int wr_conf_read() {
 
   //configuration_print(configuration);
   node_free(root);
-
+  
   return TRUE;
 }
 

@@ -23,7 +23,6 @@
 #include <wr_config.h>
 #include <wr_queue.h>
 #include <wr_util.h>
-#include <wr_yaml_parser.h>
 #include <wr_msg_queue_client.h>
 
 #endif /*WR_HELPER_H_*/

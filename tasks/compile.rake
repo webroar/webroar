@@ -114,17 +114,18 @@ $debug_flags = " -DL_ERROR -DL_INFO "
 COMPILER = CONFIG['CC']
 DIR = File.expand_path(File.join(File.dirname(__FILE__), '..')).freeze
 SRC_DIR = File.join(DIR, 'src').freeze
-HEAD_DIR = File.join(SRC_DIR, 'head').freeze
-HELPER_DIR = File.join(SRC_DIR, 'helper').freeze
 VENDOR_DIR = File.join(SRC_DIR, 'vendor').freeze
 LIBEV_DIR = File.join(VENDOR_DIR, 'libev').freeze
 EBB_DIR = File.join(VENDOR_DIR, 'libebb').freeze
 BIN_DIR = File.join(DIR,'bin').freeze
 OBJ_DIR = File.join(DIR,'obj').freeze
+HEAD_DIR = File.join(SRC_DIR, 'head').freeze
+HEAD_OBJ_DIR = File.join(OBJ_DIR, 'head').freeze
+HELPER_DIR = File.join(SRC_DIR, 'helper').freeze
+HELPER_OBJ_DIR = File.join(OBJ_DIR, 'helper').freeze
 WORKER_DIR = File.join(SRC_DIR, 'worker').freeze
 WORKER_OBJ_DIR = File.join(OBJ_DIR, 'worker').freeze
 YAML_DIR = File.join(VENDOR_DIR, 'libyaml').freeze
-YAML_OBJ_DIR = File.join(OBJ_DIR, 'libyaml').freeze
 CONF_DIR = File.join(SRC_DIR, 'conf').freeze
 UNIT_TEST_DIR = File.join(DIR, 'test', 'unit').freeze
 TEST_OBJ_DIR = File.join(OBJ_DIR, 'test').freeze
@@ -132,7 +133,7 @@ LOG_FILES = File.join('','var','log','webroar').freeze
 TMP_FILES = File.join('','tmp').freeze
 
 ## Create necessory directories
-#create_directories([OBJ_DIR, WORKER_OBJ_DIR, YAML_OBJ_DIR, TEST_OBJ_DIR, TMP_FILES, LOG_FILES])
+#create_directories([OBJ_DIR, WORKER_OBJ_DIR, HEAD_OBJ_DIR, HELPER_OBJ_DIR, TEST_OBJ_DIR, TMP_FILES, LOG_FILES])
 
 include_dir = ["#{LIBEV_DIR}","#{EBB_DIR}","#{HEAD_DIR}","#{YAML_DIR}","#{HELPER_DIR}","#{UNIT_TEST_DIR}", "#{WORKER_DIR}"]
 include_dir << " Config::CONFIG['includedir']" if Config::CONFIG['includedir']
@@ -143,38 +144,39 @@ end
 
 $inc_flags << " #{ENV['include_flags']}" if ENV['include_flags']
 
-CLEAN.include(File.join(OBJ_DIR,'*.o'),File.join(WORKER_OBJ_DIR,'*.o'), File.join(YAML_OBJ_DIR,'*.o'), File.join(TEST_OBJ_DIR,'*.o'))
+CLEAN.include(File.join(OBJ_DIR,'*.o'), File.join(WORKER_OBJ_DIR,'*.o'), File.join(HEAD_OBJ_DIR,'*.o'), File.join(HELPER_OBJ_DIR,'*.o'), File.join(TEST_OBJ_DIR,'*.o'))
 CLOBBER.include(File.join(BIN_DIR,'webroar-head'),File.join(BIN_DIR,'webroar-worker'), File.join(UNIT_TEST_DIR,'*.so'))
 
-webroar_bin = File.join(BIN_DIR,"webroar-head")
+head_bin = File.join(BIN_DIR,"webroar-head")
 worker_bin = File.join(BIN_DIR,"webroar-worker")
 
 #% ebb_request_parser_rl_file = FileList[File.join(EBB_DIR,'ebb_requset_parser.rl')]
-src_files = FileList[File.join(HEAD_DIR,'*.c'),File.join(EBB_DIR,'*.c')]
+head_files = FileList[File.join(HEAD_DIR,'*.c'),File.join(EBB_DIR,'*.c')]
 worker_files = FileList[File.join(WORKER_DIR,'*.c')]
-yaml_files = FileList[File.join(YAML_DIR,'*.c')]
-helper_files = FileList[File.join(HELPER_DIR,'*.c')]
+#yaml_files = FileList[File.join(YAML_DIR,'*.c')]
+#helper_files = FileList[File.join(HELPER_DIR,'*.c')]
+helper_files = FileList[File.join(HELPER_DIR,'*.c'), File.join(YAML_DIR,'*.c')]
 
 #src_obj is a hash which will keep object file name as key and source file name as value. This is used to map source file to object file.
 #It's been used at time of object generation
-src_obj={}
+head_obj={}
 worker_obj={}
-yaml_obj={}
+#yaml_obj={}
 helper_obj={}
 
 # File dependencies go here ...
-src_files.each do |sfn|
+head_files.each do |sfn|
   obj = sfn.sub(/\.[^.]*$/, '.o')
-  obj_file = File.join(OBJ_DIR , obj[obj.rindex(File::SEPARATOR)+1..obj.length])
+  obj_file = File.join(HEAD_OBJ_DIR , obj[obj.rindex(File::SEPARATOR)+1..obj.length])
   
   desc "Setting Executable's dependency on objects files"
-  file webroar_bin => obj_file
+  file head_bin => obj_file
   
   #Insertion of object file to source file mapping in hash
-  src_obj[obj_file]=sfn
+  head_obj[obj_file]=sfn
 end
 
-src_obj.each { |obj_file,src_file|
+head_obj.each { |obj_file,src_file|
   file obj_file => src_file do
     unless $webroar_config_called
       webroar_config
@@ -206,26 +208,27 @@ worker_obj.each { |obj_file,src_file|
   end
 }
 
-yaml_files.each do |sfn|
-  obj = sfn.sub(/\.[^.]*$/, '.o')
-  obj_file = File.join(YAML_OBJ_DIR , obj[obj.rindex(File::SEPARATOR)+1..obj.length])
-  file webroar_bin => obj_file
-  yaml_obj[obj_file]=sfn
-end
+#yaml_files.each do |sfn|
+#  obj = sfn.sub(/\.[^.]*$/, '.o')
+#  obj_file = File.join(YAML_OBJ_DIR , obj[obj.rindex(File::SEPARATOR)+1..obj.length])
+#  file webroar_bin => obj_file
+#  yaml_obj[obj_file]=sfn
+#end
 
-yaml_obj.each { |obj_file,src_file|
-  file obj_file => src_file do
-    cmd = "#{COMPILER}  #$inc_flags -c #{src_file} -o #{obj_file} "
-    sh cmd
-  end
-}
+#yaml_obj.each { |obj_file,src_file|
+#  file obj_file => src_file do
+#    cmd = "#{COMPILER}  #$inc_flags -c #{src_file} -o #{obj_file} "
+#    sh cmd
+#  end
+#}
 
 helper_files.each do |sfn|
   obj = sfn.sub(/\.[^.]*$/, '.o')
-  obj_file = File.join(OBJ_DIR , obj[obj.rindex(File::SEPARATOR)+1..obj.length])
+  obj_file = File.join(HELPER_OBJ_DIR , obj[obj.rindex(File::SEPARATOR)+1..obj.length])
   
   desc "Setting Executable's dependency on objects files"
-  file worker_bin => obj_file
+  #file worker_bin => obj_file
+  file head_bin => obj_file
   
   #Insertion of object file to source file mapping in hash
   helper_obj[obj_file]=sfn
@@ -255,13 +258,14 @@ file worker_bin do
   lib_flags << (' ' + $libs + $LIBS )
   lib_flags << " -lz" if ENV['zlib'] == "yes"
   out_file=File.join(BIN_DIR,'webroar-worker')
-  object_files=FileList[File.join(WORKER_OBJ_DIR,'*.o'), helper_obj.keys, File.join(YAML_OBJ_DIR,'*.o')]
+  #object_files=FileList[File.join(WORKER_OBJ_DIR,'*.o'), helper_obj.keys, File.join(YAML_OBJ_DIR,'*.o')]
+  object_files=FileList[File.join(WORKER_OBJ_DIR,'*.o'), File.join(HELPER_OBJ_DIR,'*.o')]
   # -rdynamic option to get function name in stacktrace
   cmd = "#{COMPILER} -o #{out_file} #{object_files} -rdynamic #{lib_flags}"
   sh cmd
 end
 
-file webroar_bin do
+file head_bin do
   unless $webroar_config_called
     webroar_config
   end
@@ -276,14 +280,15 @@ file webroar_bin do
   end
   lib_flags += $libs + $LIBS # + ' -L' + Config::expand($libdir,CONFIG)  + ' ' + Config::expand($LIBRUBYARG_SHARED,CONFIG)
   out_file=File.join(BIN_DIR,'webroar-head')
-  object_files=FileList[File.join(OBJ_DIR,'*.o'),File.join(YAML_OBJ_DIR,'*.o')]
+  #object_files=FileList[File.join(OBJ_DIR,'*.o'),File.join(YAML_OBJ_DIR,'*.o')]
+  object_files=FileList[File.join(HEAD_OBJ_DIR,'*.o'), File.join(HELPER_OBJ_DIR,'*.o')]
   # -rdynamic option to get function name in stacktrace
   cmd="#{COMPILER} -o #{out_file} #{object_files} -rdynamic #{lib_flags}"
   sh cmd
 end
 
-file webroar_bin => worker_bin
-task :compile => [:create_obj_dirs, webroar_bin]
+file head_bin => worker_bin
+task :compile => [:create_obj_dirs, head_bin]
 task :default => :compile
 
 desc "Build with debug statements"
@@ -297,7 +302,7 @@ $sbin_flag=true
 
 desc "Creates required folders for compilation."
 task :create_obj_dirs do
-  if create_directories([OBJ_DIR, WORKER_OBJ_DIR, YAML_OBJ_DIR, TMP_FILES]) == true
+  if create_directories([OBJ_DIR, WORKER_OBJ_DIR, HEAD_OBJ_DIR, HELPER_OBJ_DIR, TMP_FILES]) == true
     puts 'Required directories created successfully. Building executables...'
   else
     puts 'Required directories could not be created. Can not continue...'

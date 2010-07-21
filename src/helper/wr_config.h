@@ -23,6 +23,7 @@
 #include<wr_macro.h>
 #include<wr_logger.h>
 #include<wr_scgi.h>
+#include<wr_yaml_parser.h>
 
 #define TRUE  1
 #define FALSE 0
@@ -55,6 +56,7 @@ typedef struct config_server_s{
     wr_str_t    sock;
     wr_str_t    high_rss;
     wr_str_t    worker_bin;
+    wr_str_t    internal_config;
   }File;
   
   struct dir{
@@ -228,4 +230,6 @@ void wr_server_config_free(config_t *Config);
 void wr_worker_config_free(config_t *Config);
 void wr_application_list_free(config_application_list_t* list);
 
+void wr_set_numeric_value(node_t *root, const char *path, void *value, wr_u_short flag);
+  
 #endif /*WR_CONFIG_H_*/

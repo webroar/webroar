@@ -112,6 +112,27 @@ void crash_handler(int sig) {
   cleanup();
 }
 
+/** Read and set Worker Configuration **/
+void wr_worker_config_read(){
+  LOG_FUNCTION
+  node_t *root;
+  
+  LOG_DEBUG(4,"YAML file path %s", Config->Worker.File.internal_config);
+  root = yaml_parse(Config->Worker.File.internal_config.str);
+
+  if(!root) {
+    LOG_ERROR(SEVERE, "Config file found with erroneous entries. Please correct it.");
+    printf("Config file found with erroneous entries. Please correct it.\n");
+    return;
+  }
+  
+  wr_set_numeric_value(root, "Worker/maximum_request_body_size", &Config->Worker.max_body_size, FALSE);
+  wr_set_numeric_value(root, "Encoding/lower_limit", &Config->Worker.Compress.lower_limit, FALSE);
+  wr_set_numeric_value(root, "Encoding/upper_limit", &Config->Worker.Compress.upper_limit, FALSE);
+  
+  node_free(root);
+}
+
 /** Parse command line arguments */
 wkr_tmp_t* parse_args(int argc, char **argv) {
   int option;
@@ -163,6 +184,7 @@ wkr_tmp_t* parse_args(int argc, char **argv) {
   }
   
   Config = wr_worker_config_init(tmp->root_path.str);
+  wr_worker_config_read();
   
   if(tmp->log_file.str){
     initialize_logger(tmp->log_file.str, Config->Worker.Server.name.str, Config->Worker.Server.version.str);

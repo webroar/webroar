@@ -7,6 +7,7 @@ starling:
   exception_queue_name: exception_queue # queue name to read/write exceptions
   pid_queue_name: pid_queue # queue to dispatch worker process id
   max_queue_items: 30000 # Max number of unprocessed messages in queue. One message is approximately 1 Kb
+
 webroar_analyzer_script:
   pid_file: /var/run/webroar_analyzer.pid   # pid file path to store pid of analyzer
   daemonize: true # true or false
@@ -14,3 +15,30 @@ webroar_analyzer_script:
   sampling_rate: 1 # sampling time (in mins)
   environment: production # to choose the database specific to environment
 
+## Application Configuration ##
+Application:
+  message_queue_size: 2048  # Default is 1024
+  maximum_request_ratio: 1  # Default is 1
+  minimum_request_ratio: 3  # Default is 3
+  high_load_time: 2         # Default is 2
+  low_load_time: 600        # Default is 600
+  maximum_hosts: 16         # Default is 16
+
+## Encoding Configuration ##
+Encoding:
+  lower_limit: 10240      # Default is 10KB
+  upper_limit: 1048576   # Default is 1MB
+
+## Worker Configuration ##
+Worker:
+  maximum_request_body_size: 65536  # Default is 35536
+  maximum_workers: 20               # Default is 20
+  pending_workers: 10               # Default is 10
+  add_trials: 3                     # Default is 3
+  add_wait: 1800                    # Default is 1800
+  add_timeout: 25                   # Default is 25
+  kill_timeout: 10                  # Default is 10
+  idle_time: 60                     # Default is 60
+  ping_timeout: 15                  # Default is 15
+  ping_trials: 2                    # Default is 2  
+  

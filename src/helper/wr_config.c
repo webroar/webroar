@@ -45,6 +45,8 @@ int wr_config_server_init(config_t *Config, const char* root_path){
   wr_string_new(Config->Server.File.log, "webroar.log", strlen("webroar.log"));  
   wr_string_dump(Config->Server.File.config, Config->Server.Dir.root);
   wr_string_append(Config->Server.File.config, "/conf/config.yml", strlen("/conf/config.yml"));
+  wr_string_dump(Config->Server.File.internal_config, Config->Server.Dir.root);
+  wr_string_append(Config->Server.File.internal_config, "/conf/server_internal_config.yml", strlen("/conf/server_internal_config.yml"));
   wr_string_dump(Config->Server.File.worker_bin, Config->Server.Dir.root);
   wr_string_append(Config->Server.File.worker_bin, "/bin/webroar-worker", strlen("/bin/webroar-worker"));
 
@@ -136,7 +138,7 @@ int wr_config_worker_init(config_t *Config, const char *root_path){
   Config->Worker.stack_tace    = 50;
   Config->Worker.max_body_size = 65536;
   
-  Config->Worker.Compress.lower_limit = 1024;   //10KB
+  Config->Worker.Compress.lower_limit = 10240;   //10KB
   Config->Worker.Compress.upper_limit = 1024*1024; //1MB
   
   return TRUE;
@@ -210,6 +212,7 @@ void wr_config_server_free(config_t *Config){
   wr_string_free(Config->Server.File.high_rss);
   wr_string_free(Config->Server.File.log);
   wr_string_free(Config->Server.File.config);
+  wr_string_free(Config->Server.File.internal_config);
   wr_string_free(Config->Server.File.worker_bin);
   wr_string_free(Config->Server.Dir.admin_panel);
   wr_string_free(Config->Server.Dir.root);
@@ -297,4 +300,17 @@ void wr_worker_config_free(config_t *Config){
   if(Config == NULL) return;
   wr_config_worker_free(Config);
   free(Config);
+}
+
+void wr_set_numeric_value(node_t *root, const char *path, void *value, wr_u_short flag){
+  char *str = wr_validate_string(get_node_value(root, path));
+  long *lvalue = (long*) value;
+  if(str) {
+    wr_u_long val = atoi(str);
+    if(val > 0){
+      *lvalue = val;
+    }else if(flag && strcmp(str,"0") == 0){
+      *lvalue = 0;
+    }
+  }  
 }
