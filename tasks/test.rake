@@ -91,9 +91,7 @@ task :create_test_dirs do
 end
 
 def check_and_copy(src_file, dest_file)
-  if File.exists?(src_file)
-    FileUtils.copy(src_file, dest_file)
-  end
+  FileUtils.copy(src_file, dest_file) if File.exists?(src_file)
 end
 
 desc "Build .so file for all the test written in c"

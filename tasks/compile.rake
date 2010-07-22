@@ -24,8 +24,6 @@
 #rake::clean, removes all the object files from obj directory.
 #rake::clobber, performs rake::clean, also removes executable from bin directory.
 
-#% $LOAD_PATH.unshift("#{File.dirname(__FILE__)}/lib")
-
 require 'mkmf'
 
 #Boolean to keep check method webroar_config has been called or not
@@ -37,37 +35,24 @@ $flags = []
 def webroar_config
   #add flag to compile libev
   
-  if have_header('sys/select.h')
-    $flags << '-DEV_USE_SELECT'
-  end
-  
-  if have_header('poll.h')
-    $flags << '-DEV_USE_POLL'
-  end
-  
-  if have_header('sys/epoll.h')
-    $flags << '-DEV_USE_EPOLL'
-  end
-  
-  if have_header('sys/event.h') and have_header('sys/queue.h')
-    $flags << '-DEV_USE_KQUEUE'
-  end
-  
-  if have_header('port.h')
-    $flags << '-DEV_USE_PORT'
-  end
-  
-  if have_header('sys/inotify.h')
-    $flags << '-DEV_USE_INOTIFY'
-  end
-  
+  $flags << '-DEV_USE_SELECT' if have_header('sys/select.h')
+  $flags << '-DEV_USE_POLL' if have_header('poll.h')
+  $flags << '-DEV_USE_EPOLL' if have_header('sys/epoll.h')
+  $flags << '-DEV_USE_KQUEUE' if have_header('sys/event.h') and have_header('sys/queue.h')
+  $flags << '-DEV_USE_PORT' if have_header('port.h')
+  $flags << '-DEV_USE_INOTIFY' if have_header('sys/inotify.h')
   $flags << '-DEV_USE_MONOTONIC=0'
+
   if ENV['ssl'].eql?("yes")
     puts "Adding HAVE_GNUTLS flag."
-    $flags << '-DHAVE_GNUTLS'
+    $flags << '-DHAVE_GNUTLS' 
   end
+  
   $flags = $flags.join(" ")
-  $webroar_config_called=true
+  ruby_version_code = RUBY_VERSION.gsub(/\D/, '')
+  $flags << " -DRUBY_VERSION=#{ruby_version_code}"
+
+  $webroar_config_called = true
 end
 
 #Create directories if they don't exists
@@ -92,8 +77,7 @@ def create_directories(required_directories)
   rv
 end
 
-ruby_version_code = RUBY_VERSION.gsub(/\D/, '')
-$flags << "-DRUBY_VERSION=#{ruby_version_code}"
+
 ## Include for ruby files
 if ruby_version_code.to_i < 190
   $inc_flags = Config::expand($INCFLAGS,CONFIG.merge('hdrdir' => $hdrdir.quote, 'srcdir' => $srcdir.quote))
@@ -132,9 +116,6 @@ TEST_OBJ_DIR = File.join(OBJ_DIR, 'test').freeze
 LOG_FILES = File.join('','var','log','webroar').freeze
 TMP_FILES = File.join('','tmp').freeze
 
-## Create necessory directories
-#create_directories([OBJ_DIR, WORKER_OBJ_DIR, HEAD_OBJ_DIR, HELPER_OBJ_DIR, TEST_OBJ_DIR, TMP_FILES, LOG_FILES])
-
 include_dir = ["#{LIBEV_DIR}","#{EBB_DIR}","#{HEAD_DIR}","#{YAML_DIR}","#{HELPER_DIR}","#{UNIT_TEST_DIR}", "#{WORKER_DIR}"]
 include_dir << " Config::CONFIG['includedir']" if Config::CONFIG['includedir']
 
@@ -150,18 +131,14 @@ CLOBBER.include(File.join(BIN_DIR,'webroar-head'),File.join(BIN_DIR,'webroar-wor
 head_bin = File.join(BIN_DIR,"webroar-head")
 worker_bin = File.join(BIN_DIR,"webroar-worker")
 
-#% ebb_request_parser_rl_file = FileList[File.join(EBB_DIR,'ebb_requset_parser.rl')]
 head_files = FileList[File.join(HEAD_DIR,'*.c'),File.join(EBB_DIR,'*.c')]
 worker_files = FileList[File.join(WORKER_DIR,'*.c')]
-#yaml_files = FileList[File.join(YAML_DIR,'*.c')]
-#helper_files = FileList[File.join(HELPER_DIR,'*.c')]
 helper_files = FileList[File.join(HELPER_DIR,'*.c'), File.join(YAML_DIR,'*.c')]
 
 #src_obj is a hash which will keep object file name as key and source file name as value. This is used to map source file to object file.
 #It's been used at time of object generation
 head_obj={}
 worker_obj={}
-#yaml_obj={}
 helper_obj={}
 
 # File dependencies go here ...
@@ -208,20 +185,6 @@ worker_obj.each { |obj_file,src_file|
   end
 }
 
-#yaml_files.each do |sfn|
-#  obj = sfn.sub(/\.[^.]*$/, '.o')
-#  obj_file = File.join(YAML_OBJ_DIR , obj[obj.rindex(File::SEPARATOR)+1..obj.length])
-#  file webroar_bin => obj_file
-#  yaml_obj[obj_file]=sfn
-#end
-
-#yaml_obj.each { |obj_file,src_file|
-#  file obj_file => src_file do
-#    cmd = "#{COMPILER}  #$inc_flags -c #{src_file} -o #{obj_file} "
-#    sh cmd
-#  end
-#}
-
 helper_files.each do |sfn|
   obj = sfn.sub(/\.[^.]*$/, '.o')
   obj_file = File.join(HELPER_OBJ_DIR , obj[obj.rindex(File::SEPARATOR)+1..obj.length])
@@ -252,14 +215,11 @@ file worker_bin do
   lib_flags = ' -L' + Config::expand($libdir,CONFIG)  + ' '
   lib_flags << Config::expand($LIBRUBYARG_SHARED,CONFIG) if CONFIG["ENABLE_SHARED"] == "yes"
   lib_flags << Config::expand($LIBRUBYARG_STATIC, CONFIG) if CONFIG["ENABLE_SHARED"] == "no"
-  #$libs << ' '+CONFIG["LIBRUBYARG"]  
-  #$libs << ' -lpthread '
   lib_flags << " #{ENV['library_flags']}" if ENV['library_flags']
   lib_flags << (' ' + $libs + $LIBS )
   lib_flags << " -lz" if ENV['zlib'] == "yes"
-  out_file=File.join(BIN_DIR,'webroar-worker')
-  #object_files=FileList[File.join(WORKER_OBJ_DIR,'*.o'), helper_obj.keys, File.join(YAML_OBJ_DIR,'*.o')]
-  object_files=FileList[File.join(WORKER_OBJ_DIR,'*.o'), File.join(HELPER_OBJ_DIR,'*.o')]
+  out_file = File.join(BIN_DIR,'webroar-worker')
+  object_files = FileList[File.join(WORKER_OBJ_DIR,'*.o'), File.join(HELPER_OBJ_DIR,'*.o')]
   # -rdynamic option to get function name in stacktrace
   cmd = "#{COMPILER} -o #{out_file} #{object_files} -rdynamic #{lib_flags}"
   sh cmd
@@ -270,18 +230,15 @@ file head_bin do
     webroar_config
   end
   #libraries for making executable  
-  #$libs += ' '+CONFIG["LIBRUBYARG"]  
-  #$libs += ' -lpthread '
   lib_flags = ''
-  lib_flags += " #{ENV['library_flags']}" if ENV['library_flags']
+  lib_flags << " #{ENV['library_flags']}" if ENV['library_flags']
   if ENV['ssl'].eql?("yes")
     puts "Compiling with gnutls library."
-    lib_flags += ' -L' + Config::CONFIG['libdir'] + ' -lgnutls '
+    lib_flags << ' -L' + Config::CONFIG['libdir'] + ' -lgnutls '
   end
-  lib_flags += $libs + $LIBS # + ' -L' + Config::expand($libdir,CONFIG)  + ' ' + Config::expand($LIBRUBYARG_SHARED,CONFIG)
-  out_file=File.join(BIN_DIR,'webroar-head')
-  #object_files=FileList[File.join(OBJ_DIR,'*.o'),File.join(YAML_OBJ_DIR,'*.o')]
-  object_files=FileList[File.join(HEAD_OBJ_DIR,'*.o'), File.join(HELPER_OBJ_DIR,'*.o')]
+  lib_flags << $libs + $LIBS # + ' -L' + Config::expand($libdir,CONFIG)  + ' ' + Config::expand($LIBRUBYARG_SHARED,CONFIG)
+  out_file = File.join(BIN_DIR,'webroar-head')
+  object_files = FileList[File.join(HEAD_OBJ_DIR,'*.o'), File.join(HELPER_OBJ_DIR,'*.o')]
   # -rdynamic option to get function name in stacktrace
   cmd="#{COMPILER} -o #{out_file} #{object_files} -rdynamic #{lib_flags}"
   sh cmd
@@ -293,7 +250,7 @@ task :default => :compile
 
 desc "Build with debug statements"
 task :debug_build do
-  $debug_flags<<" -DL_DEBUG "
+  $debug_flags << " -DL_DEBUG "
   d=Rake::Task[:default]
   d.invoke();
 end
