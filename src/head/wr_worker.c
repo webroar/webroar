@@ -158,8 +158,10 @@ void wr_wait_watcher_start(wr_wkr_t *worker) {
   wr_wkr_state_machine(worker, WKR_ACTION_REQ_PROCESSING);
   worker->trials_done = 0;
   // Clear WR_WKR_PING_SENT, WR_WKR_PING_REPLIED and WR_WKR_HANG state.
-  worker->t_wait.repeat = Config->Server.Worker.idle_time;
-  ev_timer_again(worker->loop, &worker->t_wait);
+  if(Config->Server.Worker.idle_time > 0){
+    worker->t_wait.repeat = Config->Server.Worker.idle_time;
+    ev_timer_again(worker->loop, &worker->t_wait);
+  }
 }
 
 void wr_wkr_req_processing(wr_wkr_t* worker, wr_req_t* req){
@@ -212,7 +214,9 @@ void wr_wkr_req_processed(wr_wkr_t *worker){
   worker->req = NULL;
   LOG_DEBUG(DEBUG,"Idle watcher stopped for worker %d", worker->id);
   // worker is done with current Request
-  ev_timer_stop(worker->loop,&worker->t_wait);
+  if(Config->Server.Worker.idle_time > 0){
+    ev_timer_stop(worker->loop,&worker->t_wait);
+  }
   wr_wkr_state_machine(worker, WKR_ACTION_REQ_PROCESSED);
 }
 
@@ -506,7 +510,9 @@ wr_wkr_t* wr_wkr_new(wr_ctl_t *ctl) {
   worker->trials_done = 0;
   worker->t_wait.data = worker;
   worker->loop = ctl->svr->ebb_svr.loop;
-  ev_timer_init(&worker->t_wait, wr_wkr_wait_cb, 0., Config->Server.Worker.idle_time);
+  if(Config->Server.Worker.idle_time > 0){
+    ev_timer_init(&worker->t_wait, wr_wkr_wait_cb, 0., Config->Server.Worker.idle_time);
+  }
   return worker;
 }
 
@@ -742,7 +748,7 @@ int wr_wkr_create(wr_svr_t *server, config_application_list_t *app_conf) {
 void wr_wkr_free(wr_wkr_t *worker) {
   LOG_FUNCTION
   
-  if(ev_is_active(&worker->t_wait))
+  if(Config->Server.Worker.idle_time > 0 && ev_is_active(&worker->t_wait))
     ev_timer_stop(worker->loop,&worker->t_wait);
 
   if(ev_is_active(&worker->watcher))

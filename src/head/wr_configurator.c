@@ -884,9 +884,9 @@ void wr_worker_conf_read(node_t *root){
   wr_set_numeric_value(root, "Worker/pending_workers", &Config->Server.Worker.pending, FALSE);
   wr_set_numeric_value(root, "Worker/add_trials", &Config->Server.Worker.add_trials, FALSE);
   wr_set_numeric_value(root, "Worker/add_wait", &Config->Server.Worker.add_wait, FALSE);
-  wr_set_numeric_value(root, "Worker/add_timeout", &Config->Server.Worker.add_timeout, FALSE);
+  wr_set_numeric_value(root, "Worker/add_timeout", &Config->Server.Worker.add_timeout, TRUE);
   wr_set_numeric_value(root, "Worker/kill_timeout", &Config->Server.Worker.kill_timeout, FALSE);
-  wr_set_numeric_value(root, "Worker/idle_time", &Config->Server.Worker.idle_time, FALSE);
+  wr_set_numeric_value(root, "Worker/idle_time", &Config->Server.Worker.idle_time, TRUE);
   wr_set_numeric_value(root, "Worker/ping_timeout", &Config->Server.Worker.ping_timeout, FALSE);
   wr_set_numeric_value(root, "Worker/ping_trials", &Config->Server.Worker.ping_trials, FALSE);
 }

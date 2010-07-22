@@ -357,7 +357,10 @@ int wr_app_wkr_add(wr_app_t *app) {
       *pending = retval;
       wr_queue_insert(app->q_pending_workers, pending);
       app->high_ratio = TOTAL_WORKER_COUNT(app) * Config->Application.max_req_ratio;
-      ev_timer_again(app->svr->ebb_svr.loop, &app->t_add_timeout);
+      if (Config->Server.Worker.add_timeout > 0) {
+        ev_timer_again(app->svr->ebb_svr.loop, &app->t_add_timeout);
+      }
+      
       LOG_INFO("PID of created worker = %d", retval);
       return TRUE;
     }else{
@@ -415,7 +418,9 @@ int wr_app_insert(wr_svr_t* server, config_application_list_t* config, wr_ctl_t 
   
   ev_timer_init (&app->t_add, wr_app_wkr_add_cb, 0., Config->Application.high_load);
   ev_timer_init (&app->t_remove, wr_app_wkr_remove_cb, 0., Config->Application.low_load);
-  ev_timer_init (&app->t_add_timeout, wr_app_wkr_add_timeout_cb, 0., Config->Server.Worker.add_timeout);
+  if (Config->Server.Worker.add_timeout > 0) {
+    ev_timer_init (&app->t_add_timeout, wr_app_wkr_add_timeout_cb, 0., Config->Server.Worker.add_timeout);
+  }
   
   LOG_DEBUG(4,"%s() Application Added:%s", __FUNCTION__, config->name.str);
 
@@ -461,8 +466,9 @@ void wr_app_free(wr_app_t* app) {
 
     ev_timer_stop(app->svr->ebb_svr.loop, &app->t_add);
     ev_timer_stop(app->svr->ebb_svr.loop, &app->t_remove);
-    ev_timer_stop(app->svr->ebb_svr.loop, &app->t_add_timeout);
-
+    if (Config->Server.Worker.add_timeout > 0) {
+      ev_timer_stop(app->svr->ebb_svr.loop, &app->t_add_timeout);
+    }
     free(app);
     app = tmp_app;
   }
@@ -524,7 +530,7 @@ int wr_app_wkr_error(wr_svr_t *server, const wr_ctl_msg_t *ctl_msg) {
     if(pending != NULL)     free(pending);
     app->timeout_counter = 0;
       
-    if(WR_QUEUE_SIZE(app->q_pending_workers) <= 0)
+    if(WR_QUEUE_SIZE(app->q_pending_workers) <= 0 && Config->Server.Worker.add_timeout > 0)
       ev_timer_stop(app->svr->ebb_svr.loop, &app->t_add_timeout);
   }
   return 0;
@@ -562,7 +568,7 @@ int wr_app_wkr_insert(wr_svr_t *server, wr_wkr_t *worker,const wr_ctl_msg_t *ctl
     
     app->timeout_counter = 0;
       
-    if(WR_QUEUE_SIZE(app->q_pending_workers) <= 0)
+    if(WR_QUEUE_SIZE(app->q_pending_workers) <= 0 && Config->Server.Worker.add_timeout > 0)
       ev_timer_stop(app->svr->ebb_svr.loop, &app->t_add_timeout);
 
     if(app->state == WR_APP_RESTART){

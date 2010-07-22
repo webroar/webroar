@@ -36,9 +36,9 @@ Worker:
   pending_workers: 10               # Default is 10
   add_trials: 3                     # Default is 3
   add_wait: 1800                    # Default is 1800
-  add_timeout: 25                   # Default is 25
+  add_timeout: 25                   # Default is 25. Set value to 0 to disable add timeout.
   kill_timeout: 10                  # Default is 10
-  idle_time: 60                     # Default is 60
+  idle_time: 60                     # Default is 60. Set value to 0 to disable idle timer.
   ping_timeout: 15                  # Default is 15
   ping_trials: 2                    # Default is 2  
   
