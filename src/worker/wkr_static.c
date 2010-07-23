@@ -322,9 +322,6 @@ int file_compress(http_t *h, static_file_t *ext){
 #ifdef W_REGEX
      if(h->stat->r_content_type){
       if(regexec(h->stat->r_content_type, ext->mime_type, 0, NULL, 0) !=0 )   return FALSE;
-     }else if(strstr(ext->mime_type, "text") == NULL && strstr(ext->mime_type, "xml") == NULL){
-      // Encode assets having Content-Type either 'text' or 'xml'. 
-      return FALSE;
      }
      
      if(h->stat->r_user_agent && h->stat->user_agent){
@@ -332,7 +329,8 @@ int file_compress(http_t *h, static_file_t *ext){
      }
 #else
     // Encode assets having Content-Type either 'text' or 'xml'.
-    if(strstr(ext->mime_type, "text") == NULL && strstr(ext->mime_type, "xml") == NULL){
+    if(strstr(ext->mime_type, "text") == NULL && strstr(ext->mime_type, "xml") == NULL 
+       && strstr(ext->mime_type, "css") == NULL && strstr(ext->mime_type, "javascript") == NULL){
       return FALSE;
     }
 #endif

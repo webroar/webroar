@@ -459,7 +459,10 @@ void application_config_read_cb(wkr_t* w, scgi_t *scgi){
     str = (char*) scgi_header_value_get(scgi, "CONTENT_TYPE");
     if(str){
       wr_string_new(w->tmp->r_content_type, str, strlen(str));
+    }else {
+      wr_string_new(w->tmp->r_content_type, DEFAULT_CONTENT_TYPE, strlen(DEFAULT_CONTENT_TYPE));
     }
+
 
     str = (char*) scgi_header_value_get(scgi, "USER_AGENT");
     if(str){

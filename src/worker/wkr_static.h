@@ -25,6 +25,7 @@
 #endif
 
 #define MAP_SIZE 36
+#define DEFAULT_CONTENT_TYPE "javascript|css|xml|text"
 
 typedef struct static_file_s{
     char ext[10];
