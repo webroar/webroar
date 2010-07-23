@@ -24,11 +24,6 @@ Application:
   low_load_time: 600        # Default is 600
   maximum_hosts: 16         # Default is 16
 
-## Encoding Configuration ##
-Encoding:
-  lower_limit: 10240      # Default is 10KB
-  upper_limit: 1048576   # Default is 1MB
-
 ## Worker Configuration ##
 Worker:
   maximum_request_body_size: 65536  # Default is 35536

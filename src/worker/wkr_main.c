@@ -24,6 +24,9 @@
 #include <rubysig.h>
 #include <execinfo.h>
 
+#define DEFAULT_LOWER_LIMIT 1024
+#define DEFAULT_UPPER_LIMIT 10485760
+
 static wkr_t        *worker = NULL;
 config_t            *Config = NULL;
 
@@ -127,10 +130,10 @@ void wr_worker_config_read(){
   }
   
   wr_set_numeric_value(root, "Worker/maximum_request_body_size", &Config->Worker.max_body_size, FALSE);
-  wr_set_numeric_value(root, "Encoding/lower_limit", &Config->Worker.Compress.lower_limit, FALSE);
-  wr_set_numeric_value(root, "Encoding/upper_limit", &Config->Worker.Compress.upper_limit, FALSE);
-  
   node_free(root);
+  
+  Config->Worker.Compress.lower_limit = DEFAULT_LOWER_LIMIT;
+  Config->Worker.Compress.upper_limit = DEFAULT_UPPER_LIMIT;
 }
 
 /** Parse command line arguments */

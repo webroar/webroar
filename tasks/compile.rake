@@ -49,9 +49,7 @@ def webroar_config
   end
   
   $flags = $flags.join(" ")
-  ruby_version_code = RUBY_VERSION.gsub(/\D/, '')
-  $flags << " -DRUBY_VERSION=#{ruby_version_code}"
-
+  
   $webroar_config_called = true
 end
 
@@ -77,6 +75,8 @@ def create_directories(required_directories)
   rv
 end
 
+ruby_version_code = RUBY_VERSION.gsub(/\D/, '')
+$flags << " -DRUBY_VERSION=#{ruby_version_code}"
 
 ## Include for ruby files
 if ruby_version_code.to_i < 190

@@ -110,14 +110,14 @@
 #          3) Range of Content-Length (optional)
 #             Elements:
 #                I) Lower limit of Content-Length (optional) (default is 1024 i.e. 1KB) 
-#               II) Upper limit of Content-Length (optional) (default is 12328960 i.e. 10MB)
+#               II) Upper limit of Content-Length (optional) (default is 10485760 i.e. 10MB)
 #        Example:
 #          Encoding:
 #            Content-Type: text|xml|javascript
 #            User-Agent: .*
 #            Size Limit:
-#              lower_limit: 2094
-#              upper_limit: 12328960
+#              lower_limit: 1024
+#              upper_limit: 10485760
 #
 ######################################################################################
 --- 
