@@ -26,107 +26,89 @@
 
 require 'mkmf'
 
-#Boolean to keep check method webroar_config has been called or not
-$webroar_config_called=false
-
-## Set compilation flags needed by libebb & libev. Courtesy libebb
-$flags = []
-
-def webroar_config
-  #add flag to compile libev
-  
-  $flags << '-DEV_USE_SELECT' if have_header('sys/select.h')
-  $flags << '-DEV_USE_POLL' if have_header('poll.h')
-  $flags << '-DEV_USE_EPOLL' if have_header('sys/epoll.h')
-  $flags << '-DEV_USE_KQUEUE' if have_header('sys/event.h') and have_header('sys/queue.h')
-  $flags << '-DEV_USE_PORT' if have_header('port.h')
-  $flags << '-DEV_USE_INOTIFY' if have_header('sys/inotify.h')
-  $flags << '-DEV_USE_MONOTONIC=0'
-
-  if ENV['ssl'].eql?("yes")
-    puts "Adding HAVE_GNUTLS flag."
-    $flags << '-DHAVE_GNUTLS' 
-  end
-  
-  $flags = $flags.join(" ")
-  
-  $webroar_config_called = true
-end
-
-#Create directories if they don't exists
-def create_directories(required_directories)
-  rv = true
-  for directory in required_directories
-    #check to see if it exists
-    unless File.exists?(directory)
-      begin
-        print "#{directory} doesn't exist. Creating it..."
-        FileUtils.mkdir_p(directory)
-      rescue Exception => e
-        puts "Failed."
-        puts e
-        puts e.backtrace
-        rv = false
-        next
-      end
-      puts "Created."
-    end
-  end
-  rv
-end
-
-ruby_version_code = RUBY_VERSION.gsub(/\D/, '')
-$flags << " -DRUBY_VERSION=#{ruby_version_code}"
-
-## Include for ruby files
-if ruby_version_code.to_i < 190
-  $inc_flags = Config::expand($INCFLAGS,CONFIG.merge('hdrdir' => $hdrdir.quote, 'srcdir' => $srcdir.quote))
-else
-  $inc_flags = Config::expand($INCFLAGS,CONFIG.merge('hdrdir' => $hdrdir.quote, 'srcdir' => $srcdir.quote, 'arch_hdrdir' => "#$arch_hdrdir", 'top_srcdir' => $top_srcdir.quote))
-end
-
-$inc_flags << " #{Config::CONFIG['cppflags']}" if Config::CONFIG['cppflags']
-
-$c_flags = Config::expand($CFLAGS,CONFIG)
-if RUBY_PLATFORM =~ /darwin/
-  $c_flags += " -g -O2 "
-end
-$debug_flags = " -DL_ERROR -DL_INFO "
-
-## Set static veriables
-
-COMPILER = CONFIG['CC']
-DIR = File.expand_path(File.join(File.dirname(__FILE__), '..')).freeze
-SRC_DIR = File.join(DIR, 'src').freeze
-VENDOR_DIR = File.join(SRC_DIR, 'vendor').freeze
-LIBEV_DIR = File.join(VENDOR_DIR, 'libev').freeze
-EBB_DIR = File.join(VENDOR_DIR, 'libebb').freeze
-BIN_DIR = File.join(DIR,'bin').freeze
-OBJ_DIR = File.join(DIR,'obj').freeze
-HEAD_DIR = File.join(SRC_DIR, 'head').freeze
-HEAD_OBJ_DIR = File.join(OBJ_DIR, 'head').freeze
-HELPER_DIR = File.join(SRC_DIR, 'helper').freeze
-HELPER_OBJ_DIR = File.join(OBJ_DIR, 'helper').freeze
-WORKER_DIR = File.join(SRC_DIR, 'worker').freeze
-WORKER_OBJ_DIR = File.join(OBJ_DIR, 'worker').freeze
-YAML_DIR = File.join(VENDOR_DIR, 'libyaml').freeze
-CONF_DIR = File.join(SRC_DIR, 'conf').freeze
-UNIT_TEST_DIR = File.join(DIR, 'test', 'unit').freeze
-TEST_OBJ_DIR = File.join(OBJ_DIR, 'test').freeze
+CC = CONFIG['CC']
+ROOT_DIR = File.expand_path(File.join(File.dirname(__FILE__), '..')).freeze
+LIBEV_DIR = File.join(ROOT_DIR, 'src', 'vendor', 'libev').freeze
+EBB_DIR = File.join(ROOT_DIR, 'src', 'vendor', 'libebb').freeze
+YAML_DIR = File.join(ROOT_DIR, 'src', 'vendor', 'libyaml').freeze
+BIN_DIR = File.join(ROOT_DIR,'bin').freeze
+HEAD_DIR = File.join(ROOT_DIR, 'src', 'head').freeze
+HELPER_DIR = File.join(ROOT_DIR, 'src', 'helper').freeze
+WORKER_DIR = File.join(ROOT_DIR, 'src', 'worker').freeze
+CONF_DIR = File.join(ROOT_DIR, 'conf').freeze
+UNIT_TEST_DIR = File.join(ROOT_DIR, 'test', 'unit').freeze
+HEAD_OBJ_DIR = File.join(ROOT_DIR, 'obj', 'head').freeze
+HELPER_OBJ_DIR = File.join(ROOT_DIR, 'obj', 'helper').freeze
+WORKER_OBJ_DIR = File.join(ROOT_DIR, 'obj', 'worker').freeze
+TEST_OBJ_DIR = File.join(ROOT_DIR, 'obj', 'test').freeze
 LOG_FILES = File.join('','var','log','webroar').freeze
 TMP_FILES = File.join('','tmp').freeze
+RUBY_VERSION_CODE = RUBY_VERSION.gsub(/\D/, '').freeze
 
-include_dir = ["#{LIBEV_DIR}","#{EBB_DIR}","#{HEAD_DIR}","#{YAML_DIR}","#{HELPER_DIR}","#{UNIT_TEST_DIR}", "#{WORKER_DIR}"]
-include_dir << " Config::CONFIG['includedir']" if Config::CONFIG['includedir']
+#Boolean to keep check method webroar_config has been called or not
+$webroar_config_called = false
 
-include_dir.each do |dir|
-  $inc_flags << " -I#{dir} "
+## Set compilation flags needed by libebb & libev. Courtesy libebb
+$flags = ""
+
+## Set library flags needed
+$lib_flags = ""
+
+CLEAN.include(File.join(WORKER_OBJ_DIR,'*.o'), File.join(HEAD_OBJ_DIR,'*.o'), File.join(HELPER_OBJ_DIR,'*.o'), File.join(TEST_OBJ_DIR,'*.o'))
+CLOBBER.include(File.join(BIN_DIR,'webroar-head'),File.join(BIN_DIR,'webroar-worker'), File.join(UNIT_TEST_DIR,'*.so'))
+
+def set_flags
+  flags = []
+  flags << '-DEV_USE_SELECT' if have_header('sys/select.h')
+  flags << '-DEV_USE_POLL' if have_header('poll.h')
+  flags << '-DEV_USE_EPOLL' if have_header('sys/epoll.h')
+  flags << '-DEV_USE_KQUEUE' if have_header('sys/event.h') and have_header('sys/queue.h')
+  flags << '-DEV_USE_PORT' if have_header('port.h')
+  flags << '-DEV_USE_INOTIFY' if have_header('sys/inotify.h')
+  flags << '-DEV_USE_MONOTONIC=0'
+  flags << '-DHAVE_GNUTLS' if ENV['ssl'].eql?("yes")
+  flags << "-DRUBY_VERSION=#{RUBY_VERSION_CODE}"
+  flags << Config::expand($CFLAGS,CONFIG)
+  flags << "-g -O2" if RUBY_PLATFORM =~ /darwin/
+  flags << "-DL_ERROR -DL_INFO"
+  $flags << flags.join(" ")
 end
 
-$inc_flags << " #{ENV['include_flags']}" if ENV['include_flags']
+def set_include_flags
+  inc_flags = [" "]
+  inc_flags << " #{ENV['include_flags']}" if ENV['include_flags']
+  
+  if RUBY_VERSION_CODE.to_i < 190
+    inc_flags << Config::expand($INCFLAGS,CONFIG.merge('hdrdir' => $hdrdir.quote, 'srcdir' => $srcdir.quote))
+  else
+    inc_flags << Config::expand($INCFLAGS,CONFIG.merge('hdrdir' => $hdrdir.quote, 'srcdir' => $srcdir.quote, 'arch_hdrdir' => "#$arch_hdrdir", 'top_srcdir' => $top_srcdir.quote))
+  end
+  
+  inc_flags << " #{Config::CONFIG['cppflags']}" if Config::CONFIG['cppflags']
+  
+  include_dir = ["#{LIBEV_DIR}","#{EBB_DIR}","#{HEAD_DIR}","#{YAML_DIR}","#{HELPER_DIR}","#{UNIT_TEST_DIR}", "#{WORKER_DIR}"]
+  include_dir << Config::CONFIG['includedir'] if Config::CONFIG['includedir']
+  
+  include_dir.each do |dir|
+    inc_flags << " -I#{dir} "
+  end
+  $flags << inc_flags.join(" ")
+end
 
-CLEAN.include(File.join(OBJ_DIR,'*.o'), File.join(WORKER_OBJ_DIR,'*.o'), File.join(HEAD_OBJ_DIR,'*.o'), File.join(HELPER_OBJ_DIR,'*.o'), File.join(TEST_OBJ_DIR,'*.o'))
-CLOBBER.include(File.join(BIN_DIR,'webroar-head'),File.join(BIN_DIR,'webroar-worker'), File.join(UNIT_TEST_DIR,'*.so'))
+def set_lib_flags
+  lib_flags = [$libs, $LIBS]
+  lib_flags << " #{ENV['library_flags']}" if ENV['library_flags']
+  lib_flags <<  "-L" + Config::expand($libdir,CONFIG)
+  lib_flags << " "
+  $lib_flags << lib_flags.join(" ")
+end
+
+def webroar_config
+  set_flags
+  set_include_flags
+  set_lib_flags
+  $webroar_config_called = true
+end
 
 head_bin = File.join(BIN_DIR,"webroar-head")
 worker_bin = File.join(BIN_DIR,"webroar-worker")
@@ -155,10 +137,8 @@ end
 
 head_obj.each { |obj_file,src_file|
   file obj_file => src_file do
-    unless $webroar_config_called
-      webroar_config
-    end
-    cmd = "#{COMPILER}  #$inc_flags #$c_flags #$flags #$debug_flags -c #{src_file} -o #{obj_file} "
+    webroar_config unless $webroar_config_called
+    cmd = "#{CC}  #{$flags} -c #{src_file} -o #{obj_file} "
     sh cmd
   end
 }
@@ -177,10 +157,11 @@ end
 
 worker_obj.each { |obj_file,src_file|
   file obj_file => src_file do
-    unless $webroar_config_called
-      webroar_config
-    end
-    cmd = "#{COMPILER} #$inc_flags #{ ENV['zlib']=='yes' ? '-DW_ZLIB' : '' } #{ ENV['regex']=='yes' ? '-DW_REGEX' : '' } #$c_flags #$flags #$debug_flags -c  #{src_file} -o #{obj_file} "
+    webroar_config unless $webroar_config_called
+    flags = $flags
+    flags << ' -DW_ZLIB' if ENV['zlib']=='yes'
+    flags << ' -DW_REGEX' if ENV['regex']=='yes'
+    cmd = "#{CC} #{flags} -c  #{src_file} -o #{obj_file} "
     sh cmd
   end
 }
@@ -199,48 +180,32 @@ end
 
 helper_obj.each { |obj_file,src_file|
   file obj_file => src_file do
-    unless $webroar_config_called
-      webroar_config
-    end
-    cmd = "#{COMPILER}  #$inc_flags #$c_flags #$flags #$debug_flags -c #{src_file} -o #{obj_file} "
+    webroar_config unless $webroar_config_called
+    cmd = "#{CC} #{$flags} -c #{src_file} -o #{obj_file} "
     sh cmd
   end
 }
 
 file worker_bin do
-  unless $webroar_config_called
-    webroar_config
-  end
-  #libraries for making executable
-  lib_flags = ' -L' + Config::expand($libdir,CONFIG)  + ' '
+  puts $lib_flags
+  lib_flags = String.new($lib_flags)
   lib_flags << Config::expand($LIBRUBYARG_SHARED,CONFIG) if CONFIG["ENABLE_SHARED"] == "yes"
   lib_flags << Config::expand($LIBRUBYARG_STATIC, CONFIG) if CONFIG["ENABLE_SHARED"] == "no"
-  lib_flags << " #{ENV['library_flags']}" if ENV['library_flags']
-  lib_flags << (' ' + $libs + $LIBS )
   lib_flags << " -lz" if ENV['zlib'] == "yes"
+  #libraries for making executable
   out_file = File.join(BIN_DIR,'webroar-worker')
   object_files = FileList[File.join(WORKER_OBJ_DIR,'*.o'), File.join(HELPER_OBJ_DIR,'*.o')]
   # -rdynamic option to get function name in stacktrace
-  cmd = "#{COMPILER} -o #{out_file} #{object_files} -rdynamic #{lib_flags}"
+  cmd = "#{CC} -o #{out_file} #{object_files} -rdynamic #{lib_flags}"
   sh cmd
 end
 
 file head_bin do
-  unless $webroar_config_called
-    webroar_config
-  end
-  #libraries for making executable  
-  lib_flags = ''
-  lib_flags << " #{ENV['library_flags']}" if ENV['library_flags']
-  if ENV['ssl'].eql?("yes")
-    puts "Compiling with gnutls library."
-    lib_flags << ' -L' + Config::CONFIG['libdir'] + ' -lgnutls '
-  end
-  lib_flags << $libs + $LIBS # + ' -L' + Config::expand($libdir,CONFIG)  + ' ' + Config::expand($LIBRUBYARG_SHARED,CONFIG)
+  puts $lib_flags
   out_file = File.join(BIN_DIR,'webroar-head')
   object_files = FileList[File.join(HEAD_OBJ_DIR,'*.o'), File.join(HELPER_OBJ_DIR,'*.o')]
   # -rdynamic option to get function name in stacktrace
-  cmd="#{COMPILER} -o #{out_file} #{object_files} -rdynamic #{lib_flags}"
+  cmd="#{CC} -o #{out_file} #{object_files} -rdynamic #{$lib_flags} #{ENV['ssl'].eql?("yes")? ' -lgnutls ' : '' } "
   sh cmd
 end
 
@@ -250,16 +215,14 @@ task :default => :compile
 
 desc "Build with debug statements"
 task :debug_build do
-  $debug_flags << " -DL_DEBUG "
+  $flags << " -DL_DEBUG "
   d=Rake::Task[:default]
   d.invoke();
 end
 
-$sbin_flag=true
-
 desc "Creates required folders for compilation."
 task :create_obj_dirs do
-  if create_directories([OBJ_DIR, WORKER_OBJ_DIR, HEAD_OBJ_DIR, HELPER_OBJ_DIR, TMP_FILES]) == true
+  if create_directories([WORKER_OBJ_DIR, HEAD_OBJ_DIR, HELPER_OBJ_DIR, TMP_FILES]) == true
     puts 'Required directories created successfully. Building executables...'
   else
     puts 'Required directories could not be created. Can not continue...'
@@ -272,4 +235,26 @@ task :create_install_dirs do
   else
     puts 'Required directories could not be created. Can not continue...'
   end
+end
+
+#Create directories if they don't exists
+def create_directories(required_directories)
+  rv = true
+  for directory in required_directories
+    #check to see if it exists
+    unless File.exists?(directory)
+      begin
+        print "#{directory} doesn't exist. Creating it..."
+        FileUtils.mkdir_p(directory)
+      rescue Exception => e
+        puts "Failed."
+        puts e
+        puts e.backtrace
+        rv = false
+        next
+      end
+      puts "Created."
+    end
+  end
+  rv
 end
