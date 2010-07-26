@@ -121,8 +121,9 @@ class ApplicationSpecificationController < ApplicationController
   end
 
   def set_error(reply, err_log)
+    # flash data is being stored in Session, and causing cookie overflow error when total session data exceeds 4K
     flash[:error] = reply if reply
-    flash[:error] += "<br/><br/><div align='left'><font color='red'" + err_log.gsub("\n","<br/>") + "</font></div>" if err_log
+    flash[:error] += "<br/><br/><div align='left'><font color='red'>" + err_log.gsub("\n","<br/>") + "</font></div>" if err_log    
   end
 
 end

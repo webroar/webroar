@@ -20,15 +20,25 @@
 
 #This class contructs and parse the SCGI request.
 class SCGI
-  @hash #Instance variable to store SCGI headers.
-  @request #Instance variable to store SCGI request in single string value.
-  @body #Instance variable to store SCGI request body.
-  
+#  @hash #Instance variable to store SCGI headers.
+#  @request #Instance variable to store SCGI request in single string value.
+#  @body #Instance variable to store SCGI request body.
+
   #This is the constructor function for SCGI class.
   def initialize
     @hash = Hash.new
+    @body = ''
+    @tmp_headers_length = ''
+    @headers_length = 0
+    @curr_state = :SCGI_NONE
+    @curr_key = ''
+    @curr_value = ''
+    @done = false
   end
   
+  def parsing_done?
+    @done    
+  end
   #Getter setter for request in SCGI class.
   def request
     @request
@@ -46,7 +56,7 @@ class SCGI
   
   #Adds SCGI request body.
   def body_add(body)
-    @body = body
+    @body += body
   end
   
   #Getter method for receiving SCGI headers.
@@ -56,7 +66,7 @@ class SCGI
   
   #Construct SCGI request.
   def build
-    if(@body == nil)
+    if(@body == '')
       @request = "CONTENT_LENGTH\0"+"0"+"\0"
     else
       @request = "CONTENT_LENGTH\0#{body.length}\0"
@@ -79,19 +89,61 @@ class SCGI
   end
   
   #Parse the string and build SCGI request.
-  def parse(req)
-    arr = req.split(":")
-    key = ""
-    len = arr[0]	#TODO if len.to_i == 0 then error
-    arr = arr[1].split("\0", len.to_i)
-    arr.each_index {|i|
-      if(i % 2 == 0)
-        key = arr[i]
-      else
-        header_add(key, arr[i])
-      end
-    }
-    arr = arr[-1].split(",")
-    body_add(arr[-1])
-  end
+  def parse(req)    
+    index = 0
+    req.each_char do |c|      
+      case @curr_state
+        when :SCGI_NONE
+          if c == ':'
+            @headers_length = @tmp_headers_length.to_i
+            @curr_state = :HEADER_KEY
+          elsif c < '0' or c > '9' 
+            @curr_state = :INVALID
+          else
+            @tmp_headers_length += c
+          end
+        when :HEADER_KEY
+          if c == "\0"            
+            @curr_state = :HEADER_VAL
+          elsif c == ","
+            if header('CONTENT_LENGTH').to_i == 0
+              @done = true
+              @curr_state = :DONE
+            else
+              @curr_state = :BODY
+              body_add(req[index+1, req.length])
+              if @body.length == header('CONTENT_LENGTH').to_i
+                @curr_state = :DONE
+                @done = true
+              else
+                @curr_state = :BODY
+              end
+              break
+            end
+          else
+            @curr_key += c            
+          end
+        when :HEADER_VAL
+          if c == "\0"            
+            header_add(@curr_key, @curr_value)
+            @curr_key = ''
+            @curr_value = ''
+            @curr_state = :HEADER_KEY
+          else
+            @curr_value += c
+          end
+        when :BODY
+          body_add(req[index, req.length])
+          if @body.length == header('CONTENT_LENGTH').to_i
+            @curr_state = :DONE
+            @done = true
+          end
+          break
+        when :DONE
+          @done = true
+          return
+      end    
+      index += 1
+    end    
+  end  
 end

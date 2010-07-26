@@ -79,11 +79,14 @@ class Control
     streamSock.send(@req.request, 0)
     start_time = DateTime.parse(Time.now.strftime("%a %b %d %H:%M:%S %Y"))
     str = streamSock.recv(2048)
-    end_time = DateTime.parse(Time.now.strftime("%a %b %d %H:%M:%S %Y"))
-    streamSock.close
     @resp = SCGI.new
     @resp.parse(str)
-    
+    until @resp.parsing_done?
+      str = streamSock.recv(2048)
+      @resp.parse(str)
+    end
+    end_time = DateTime.parse(Time.now.strftime("%a %b %d %H:%M:%S %Y"))
+    streamSock.close
     if @resp.header("STATUS") == "OK" or @resp.header("STATUS") == "ok"
       return nil, nil
     else
