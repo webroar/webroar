@@ -106,12 +106,10 @@ task :build_unit_test do
     test_obj[obj_file]=sfn
   end
   
-  unless $webroar_config_called
-    webroar_config
-  end
-  
+  webroar_config unless $webroar_config_called
+    
   test_obj.each { |obj_file,src_file|
-    cmd = "#{COMPILER}  #$inc_flags  #$CFLAGS #$flags #$debug_flags -c #{src_file} -o #{obj_file}"
+    cmd = "#{CC} #$flags #$debug_flags -c #{src_file} -o #{obj_file}"
     sh cmd
   }
   
@@ -119,12 +117,10 @@ task :build_unit_test do
   
   if RUBY_PLATFORM =~ /darwin/
     out_file = File.join(UNIT_TEST_DIR, 'test_ext.dylib')
-    lib_flags = $libs + $LIBS 
-    lib_flags += " #{ENV['library_flags']}" if ENV['library_flags']
-    cmd = "#{COMPILER} #$libs #{tests_obj_files} -dynamiclib -o #{out_file}"
+    cmd = "#{CC} #$lib_flags #{tests_obj_files} -dynamiclib -o #{out_file}"
   else
     out_file = File.join(UNIT_TEST_DIR, 'test_ext.so')
-    cmd = "#{COMPILER} #$libs #{tests_obj_files} -shared -o #{out_file}"
+    cmd = "#{CC} #$lib_flags #{tests_obj_files} -shared -o #{out_file}"
   end
   
   sh cmd
@@ -159,7 +155,7 @@ task :unit_test => [:create_test_dirs] do
         Test::Test.run
       end
       
-      puts "\nPlease refer 'test\\unit\\test.log' for the detailed report."
+      puts "\nPlease refer '#{File.join(UNIT_TEST_REPORT, 'test.log')}' for the detailed report."
     else
       puts "Compilation error. Please refer 'testcases.log' for details."
     end
