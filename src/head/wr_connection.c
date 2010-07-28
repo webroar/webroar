@@ -40,7 +40,8 @@ static wr_http_status_t http_status [] ={
   {413, "413 Request Entity Too Large", "The request entity is too large"},
   {414, "414 Request-URI Too Large", "The request URI is too large"},
   {500, "500 Internal Server Error", "The server encountered an unexpected condition which prevented it from fulfilling the request."},
-  {501, "501 Not Implemented", "The server does not support the functionality required to fulfill the request."}
+  {501, "501 Not Implemented", "The server does not support the functionality required to fulfill the request."},
+  {503, "503 Service Unavailable", "The server is currently unable to handle the request due to a temporary overloading or maintenance of the server."}
 };
 
 #define WR_RESP_BODY "<!DOCTYPE HTML PUBLIC \"-//IETF//DTD HTML 2.0//EN\">\r\n\
@@ -276,6 +277,7 @@ void wr_conn_err_resp(wr_conn_t *conn, wr_resp_status_t resp_code) {
   case WR_HTTP_STATUS_414:
   case WR_HTTP_STATUS_500:
   case WR_HTTP_STATUS_501:
+  case WR_HTTP_STATUS_503:
     if(conn->req && conn->req->resp_buf_len > 0) {
       body_len = sprintf(response_body, WR_RESPONSE_ERR_BODY,
                          http_status[resp_code].phrase,http_status[resp_code].phrase+4,

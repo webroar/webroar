@@ -464,8 +464,11 @@ void wr_req_complete_cb(ebb_request * request) {
     WR_QUEUE_INSERT(req->app->q_messages, req, rv)
     if(rv == 0){
       wr_wkr_dispatch_req(req);
-      return;
+    }else{
+      LOG_ERROR(WARN,"Application pending message queue overflow.", req->id, req->req_uri.str);
+      wr_req_invalid(req->conn, WR_HTTP_STATUS_503);
     }
+    return;
   }
   LOG_ERROR(WARN,"Failed to dispatch req no %d to any application. Request PATH is %s", req->id, req->req_uri.str);
   wr_req_invalid(req->conn, WR_HTTP_STATUS_404);
