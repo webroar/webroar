@@ -22,6 +22,6 @@ SUDO     = "sudo"
 require 'rubygems'
 require 'rake'
 require 'rake/clean'
-require 'src/ruby_lib/ruby_interface/version'
+require './src/ruby_lib/ruby_interface/version'
 
 Dir['tasks/*.rake'].each { |rake| load rake }
