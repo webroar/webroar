@@ -101,6 +101,7 @@ module Webroar
         require 'rbconfig'
         require 'mkmf'
         arr += [Config::CONFIG['includedir'], Config::CONFIG['archdir'], Config::CONFIG['sitearchdir']]
+        arr << Config::CONFIG['rubyhdrdir'] if Config::CONFIG['rubyhdrdir']
       end
 
       arr += ["/usr/include"]
