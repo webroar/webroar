@@ -138,7 +138,9 @@ time_t httpdate_to_c_time(const char *httpdate){
     //LOG_DEBUG(DEBUG,"Counld not parse httpdate %s.", httpdate);
     return -1;
   }
-  return mktime(&tm_info);
+
+  //return mktime(&tm_info);
+  return timegm(&tm_info);
 }
 
 /** Convert C 'time_t' to HTTP date */
