@@ -368,9 +368,6 @@ void wr_wkr_req_sent(wr_wkr_t *worker){
     req->upload_file = NULL;
   }
 
-  scgi_free(req->scgi);
-  req->scgi = NULL;
-
   ev_io_init(&worker->watcher, wr_resp_len_read_cb, worker->fd, EV_READ);
   ev_io_start(worker->loop,&worker->watcher);
   //We are waiting for response from worker, start idle watcher for it
