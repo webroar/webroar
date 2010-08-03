@@ -283,6 +283,7 @@ class CommandRunner
 
     opts.on( '-D', '--path DIR', 'Path for the web application root directory') do |value|
       @options[:path] = value.lstrip.gsub(/^=/,"")
+      @options[:path] = File.expand_path(@options[:path])
     end
 
     opts.on( '-T', '--type APPTYPE', 'Type of the application either rack or rails') do |value|
