@@ -43,7 +43,7 @@ class Headers < PseudoModel
       end
       @conf['Headers'].delete('expires_by_type') if @conf['Headers']['expires_by_type'].empty?
       @conf.delete('Headers') if @conf['Headers'].empty?
-      YAMLWriter.write(@conf, CONFIG_FILE_PATH, Config::CONFIG) 
+      YAMLWriter.write(@conf, CONFIG_FILE_PATH, YAMLConfig::CONFIG) 
     end
     
     def validate_and_write_expires_value(old_value, data)
@@ -94,7 +94,7 @@ class Headers < PseudoModel
       @conf['Headers'] = Hash.new unless @conf['Headers']
       @conf['Headers']['expires_by_type'] = Array.new unless @conf['Headers']['expires_by_type']
       @conf['Headers']['expires_by_type'].push(Hash['ext' => ext, 'expires' => expires])
-      YAMLWriter.write(@conf, CONFIG_FILE_PATH, Config::CONFIG)
+      YAMLWriter.write(@conf, CONFIG_FILE_PATH, YAMLConfig::CONFIG)
     end
     
     def write_expires_value(expires)
@@ -109,7 +109,7 @@ class Headers < PseudoModel
         @conf['Headers']['expires'] = expires
       end
             
-      YAMLWriter.write(@conf, CONFIG_FILE_PATH, Config::CONFIG)      
+      YAMLWriter.write(@conf, CONFIG_FILE_PATH, YAMLConfig::CONFIG)      
     end
     
   end  

@@ -18,7 +18,7 @@
 # along with WebROaR.  If not, see <http://www.gnu.org/licenses/>.
 #++
 
-module Config
+module YAMLConfig
   CONFIG = 1
   USER = 2
   SMTP = 3
@@ -33,7 +33,7 @@ class YAMLWriter
     def write(hash, file_path, type)
       yaml_obj = YAML::dump(hash)
       file = File.open(file_path,"w")
-      if type == Config::CONFIG
+      if type == YAMLConfig::CONFIG
         header_string = get_header()
         file.puts(header_string)
       end

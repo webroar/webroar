@@ -50,7 +50,7 @@ class ApplicationSpecification < PseudoModel
     
     info['Application Specification'].push(obj_to_hash)
     
-    YAMLWriter.write(info, CONFIG_FILE_PATH, Config::CONFIG)
+    YAMLWriter.write(info, CONFIG_FILE_PATH, YAMLConfig::CONFIG)
   
   end
 
@@ -66,7 +66,7 @@ class ApplicationSpecification < PseudoModel
       info.delete('Application Specification') if info['Application Specification'].length == 0
     end
 
-    YAMLWriter.write(info, CONFIG_FILE_PATH, Config::CONFIG)
+    YAMLWriter.write(info, CONFIG_FILE_PATH, YAMLConfig::CONFIG)
   end
 
   def remove
@@ -84,7 +84,7 @@ class ApplicationSpecification < PseudoModel
   def update(app_id)
     info = YAML::load_file(CONFIG_FILE_PATH) rescue nil
     info['Application Specification'][app_id] = obj_to_hash	
-    YAMLWriter.write(info, CONFIG_FILE_PATH, Config::CONFIG)
+    YAMLWriter.write(info, CONFIG_FILE_PATH, YAMLConfig::CONFIG)
   end
   
   #this method is used to validate the various fields of the apps model.
@@ -298,7 +298,7 @@ class ApplicationSpecification < PseudoModel
       info['Application Specification'].delete_at(app_id)
       info.delete('Application Specification') if info['Application Specification'].length == 0 
 
-      YAMLWriter.write(info,CONFIG_FILE_PATH, Config::CONFIG)
+      YAMLWriter.write(info,CONFIG_FILE_PATH, YAMLConfig::CONFIG)
       return app_name
     end
     

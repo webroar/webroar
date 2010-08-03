@@ -51,7 +51,7 @@ class MailSpecification
     def save_sendmail_specification(sendmail)
       data = sendmail_specification_hash(sendmail) 
       data = {'sendmail' => data, 'email_notification' => 'enabled'}
-      YAMLWriter.write(data, MAIL_FILE_PATH, Config::SENDMAIL)
+      YAMLWriter.write(data, MAIL_FILE_PATH, YAMLConfig::SENDMAIL)
     end
     
     def sendmail_specification_hash(sendmail=nil)
@@ -107,7 +107,7 @@ class MailSpecification
     def save_smtp_specification(smtp)
       data = smtp_specification_hash(smtp) 
       data = {'smtp' => data, 'email_notification' => 'enabled'}
-      YAMLWriter.write(data, MAIL_FILE_PATH, Config::SMTP)
+      YAMLWriter.write(data, MAIL_FILE_PATH, YAMLConfig::SMTP)
     end
     
     def smtp_specification_hash(smtp=nil)
