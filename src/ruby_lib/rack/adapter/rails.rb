@@ -33,7 +33,7 @@ module Webroar
           CgiApp.new
         end
         
-        @file_server = ::Rack::File.new(::File.join(RAILS_ROOT, "public"))
+        @file_server = ::Rack::File.new(::File.join(@root, "public"))
       end
       
       def load_application
