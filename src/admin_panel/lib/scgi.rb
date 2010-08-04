@@ -18,6 +18,7 @@
 # along with WebROaR.  If not, see <http://www.gnu.org/licenses/>.
 #++
 
+require 'jcode' if RUBY_VERSION.gsub(/\D/,'').to_i < 187
 #This class contructs and parse the SCGI request.
 class SCGI
 #  @hash #Instance variable to store SCGI headers.
