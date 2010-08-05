@@ -209,6 +209,9 @@ class Installer
       str = set_install_options
   
       check_dependencies || exit(1)
+      
+      str << " zlib=yes" if @zlib
+      str << " regex=yes" if(@zlib and @regex)
         
       @port, @import, gem_name = UserInteraction.new(@options).user_input
       @port = import_files(gem_name) if @import
@@ -688,13 +691,11 @@ exit 0"
 
     if @options[:ssl]
       @ssl = true
-      str = "ssl=yes "
+      str << "ssl=yes "
     end
 
-    str += " include_flags=\"#{@options[:include_paths]}\"" if @options[:include_paths].length > 0
-    str += " library_flags=\"#{@options[:library_paths]}\"" if @options[:library_paths].length > 0
-    str += " zlib=yes" if @zlib
-    str += " regex=yes" if(@zlib and @regex)
+    str << " include_flags=\"#{@options[:include_paths]}\"" if @options[:include_paths].length > 0
+    str << " library_flags=\"#{@options[:library_paths]}\"" if @options[:library_paths].length > 0
     str
   end
 
