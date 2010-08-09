@@ -109,5 +109,5 @@ After restarting the server, admin panel would now also be accessible over SSL.
 Known Issue
 -----------
 
-WebROaR with SSL build crash on Ubuntu 10.04. The server crash on function call 
-to 'gnutls_handshake' by second secure connection.
+WebROaR with SSL build crashes on Ubuntu 10.04 upon execution of 
+'gnutls_handshake' by secure connection.
