@@ -32,7 +32,7 @@ Worker:
   add_trials: 3                     # Number of consecutive tries to add worker. Default is 3
   add_wait: 1800                    # Number of seconds to wait for creating new worker, if all consecutive trials are failed. Default is 1800
   add_timeout: 25                   # Number of seconds to wait for a response form newly created worker. Default is 25. Set value to 0 to disable add timeout.
-  kill_timeout: 10                  # Number of seconds to wait before killing worker. Default is 10
+  kill_timeout: 10                  # Number of seconds to wait before killing stucked worker. Default is 10
   idle_time: 60                     # If worker is unable to process request within this time, send PING signal. Default is 60. Set value to 0 to disable idle timer.
   ping_timeout: 15                  # Number of seconds to wait for a response of PING signal. Default is 15
   ping_trials: 2                    # Number of PING signals to identify stuck workers. Default is 2  
