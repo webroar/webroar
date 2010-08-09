@@ -25,13 +25,14 @@ Ruby on Rails applications.
 * Generates notifications in case any exceptions occur in any of the deployed
  applications.
 * Zero Downtime Application Upgrades.
+* Static assets encoding.
 * SSL support. 
 
 == Supported Operating Systems ==
 
-WebROaR has been tested on Ubuntu 8.10/9.04/9.10, Debian 5 (64 Bit), Mac OS X 
-(v10.5 & v10.6), Arch Linux 2009.08 and Cent OS 5.2. Basically, it should be 
-able to run on any *IX OS.  
+WebROaR has been tested on Ubuntu 8.10/9.04/9.10/10.04, Debian 5 (64 Bit), 
+Mac OS X (v10.5 & v10.6), Arch Linux 2009.08 and Cent OS 5.2. Basically, it 
+should be able to run on any *IX OS.
 
 Currently it does not support Microsoft(R) Windows.
 
@@ -52,16 +53,6 @@ Currently it does not support Microsoft(R) Windows.
 - gnutls 2.4.1 or later (Only necessary in case SSL support is required) 
 - gnutls-dev 2.4.1 or later (Only necessary in case SSL support is required) 
 
-[NOTE]
-.Ruby Shared Library
-===============================
-The server needs the shared library - libruby.so to run the ruby web 
-applications.
-
-If you are building ruby from source, please ensure you pass the flag 
-*--enable-shared* while executing its ./configure script.
-
-===============================
 
 === Procedure ===
 
@@ -245,6 +236,10 @@ directory. This can be used to troubleshoot the issues, if any.
 in */var/log/webroar*. In the unfortunate event of the server crashing, a core 
 dump file would be created in /tmp if 'gcore' is available on that machine.
 
+=== Know Issue ===
+ 
+* WebROaR with SSL build crashes on Ubuntu 10.04 upon execution of 
+*gnutls_handshake* by secure connection.
 
 === Setting up database for server admin panel ===
 
