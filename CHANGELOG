@@ -1,3 +1,50 @@
+v0.4.0 - 09-Aug-2010
+--------------------
+
+New Features
+~~~~~~~~~~~~
+
+* Supports deflat encoding for static assets.
+* Support for passing environment variables to application.
+* Support to build server with static Ruby library.
+
+Fixes
+~~~~~
+
+* Tested on Ruby 1.9.2 RC2
+* Tested on Ubuntu 10.04.
+* Directory path expanded when application is added from command line. (It
+would allow to pass relative path)
+* Fixed incorrect response code of static assets by using 'timegm' function 
+instead of 'mktime'.
+* Requiring version.rb using relative path, to work with Ruby 1.9.2.
+* Added Config::CONFIG['rubyhdrdir'] in ruby headers search path for Ruby 1.9.
+* Sends '503 Service Unavailable' response, if pending message queue overflows.
+* Code cleanup in Rake tasks.
+* Enhanced SCGI request parsing in Admin Panel to handle chunked request.
+* Added tests for application add, remove and zero down time during restart.
+* Added Config::CONFIG['includedir'] in include directory list.
+* Supports Rails 3 application.
+* Created 'config.yml' file with default configuration if it is not found while
+importing.
+* Added support to start/stop/restart static-worker.
+* Support to view analytics data for all the application, earlier it was only 
+for the application which has analytics enabled.
+* Saving log files after executing load test.
+* Improved rake task to execute test-suite.
+* Set Expires headers from Admin Panel.
+* Server specification code cleanup in Admin Panel.
+* Passing application configuration parameters to worker using SCGI.
+* Email notification for the captured exceptions made configurable.
+* Made many server parameters configurable through config file 
+'server_internal_config.yml'.
+* Sends ERROR control message, if application could not be loaded by worker.
+* Wait for 30 minutes before creating new worker, if three consecutive newly 
+created worker got timed out.
+* Removed 'Cache-Control' response header from static assets. Its incorrect 
+handling chocking IE 6.
+
+
 v0.3.1 - 22-Mar-2010
 --------------------
 
