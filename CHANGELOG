@@ -42,7 +42,7 @@ for the application which has analytics enabled.
 * Wait for 30 minutes before creating new worker, if three consecutive newly 
 created worker got timed out.
 * Removed 'Cache-Control' response header from static assets. Its incorrect 
-handling chocking IE 6.
+handling choking IE 6.
 
 
 v0.3.1 - 22-Mar-2010
