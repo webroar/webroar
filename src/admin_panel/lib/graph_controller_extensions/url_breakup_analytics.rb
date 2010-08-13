@@ -127,8 +127,8 @@ module Analytics
       start_time = params[:start_time]
       end_time = params[:end_time]
       url = params[:url_name]
-      if params[:urls]
-        @url_rank = params[:urls].rindex(url) + 1
+      if params[:index]
+        @url_rank = params[:index].to_i + 1
         @suffix = get_suffix(@url_rank)
       end
       @data_x, @data_y, @url_breakup_graph, @data_actual_time = get_url_breakup_graph_data(start_time, end_time, app_id, Array[url])
