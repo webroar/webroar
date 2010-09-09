@@ -19,7 +19,9 @@
 #++
 
 #Model class for App Exceptions. This model helps to show the details of the exceptions tracked by the server.
-class AppException < ActiveRecord::Base
+class AppException < ActiveRecord::Base 
+  has_many :exception_details, :order => 'wall_time DESC'
+  has_one :latest_detail, :class_name => "ExceptionDetail", :order => 'wall_time DESC'
   class << self
     #Gives the array of the five (open|closed|ignored) exceptions starting from the value of varriable 'start' for an application.
     def get_all(exception_status, app_id, page = 1, per_page = 5)
