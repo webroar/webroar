@@ -172,38 +172,46 @@ module Webroar
               end
               if exception 
                 status = exception.exception_status.to_i
-                if status == CLOSED_EXCEPTION
+                if status == CLOSED_EXCEPTION                 
+                  # if its been closed, mark entry as open
                   status = OPEN_EXCEPTION
-                  # if its been closed, mark each entry as open
-                  exceptions = nil
-                  with_exception_handling("Exception entry - Update existing entries status to OPEN") do
-                    AppException.update_status_to(status, app_id, exception_hash[:exception_message])                    
+                  with_exception_handling("Exception entry - Update existing entry status to OPEN") do
+                    exception.exception_status = OPEN_EXCEPTION
+                    exception.save!
                   end                 
                 end
               else
                 # New exception,  set it as Open
                 status = OPEN_EXCEPTION
+                with_exception_handling("Exception entry AppException.create") do
+                  exception = AppException.create({:app_id => app_id,  :exception_message => exception_hash[:exception_message],
+                                       :exception_class => exception_hash[:exception_class], :exception_status => status})                                     
+                         
+                end
               end
               with_exception_handling("Exception entry AppException.create") do
-                AppException.create({:app_id => app_id, :app_env => exception_hash[:app_env], :controller => exception_hash[:controller],
-                                      :method => exception_hash[:method], :exception_message => exception_hash[:exception_message],
-                                      :exception_class => exception_hash[:exception_class], :exception_backtrace => exception_hash[:exception_backtrace],
-                                      :exception_status => status, :wall_time => exception_hash[:wall_time], :chunked => exception_hash[:chunked],
-                                      :content_length => exception_hash[:content_length], :http_accept => exception_hash[:http_accept],
-                                      :http_accept_charset => exception_hash[:http_accept_charset], :http_accept_encoding => exception_hash[:http_accept_encoding],
-                                      :http_accept_language => exception_hash[:http_accept_language], :http_connection => exception_hash[:http_connection],
-                                      :http_cookie => exception_hash[:http_cookie], :http_host => exception_hash[:http_host], 
-                                      :http_keep_alive => exception_hash[:http_keep_alive], :http_user_agent => exception_hash[:http_user_agent],
-                                      :http_version => exception_hash[:http_version], :path_info => exception_hash[:path_info],
-                                      :query_string => exception_hash[:query_string], :remote_addr => exception_hash[:remote_addr],
-                                      :request_method => exception_hash[:request_method], :request_path => exception_hash[:request_path],
-                                      :request_uri => exception_hash[:request_uri], :script_name => exception_hash[:script_name],
-                                      :server_name => exception_hash[:server_name], :server_port => exception_hash[:server_port],
-                                      :server_protocol => exception_hash[:server_protocol], :server_software => exception_hash[:server_software],
-                                      :rack_errors => exception_hash[:rack_errors], :rack_input => exception_hash[:rack_input],
-                                      :rack_multiprocess => exception_hash[:rack_multiprocess], :rack_multithread => exception_hash[:rack_multithread],
-                                      :rack_run_once => exception_hash[:rack_run_once], :rack_url_scheme => exception_hash[:rack_url_scheme],
-                                      :rack_version => exception_hash[:rack_version]})                
+                exception.exception_details.create({
+                        :app_env => exception_hash[:app_env], :controller => exception_hash[:controller],
+                        :method => exception_hash[:method],
+                        :exception_backtrace => exception_hash[:exception_backtrace],
+                         :wall_time => exception_hash[:wall_time], :chunked => exception_hash[:chunked],
+                        :content_length => exception_hash[:content_length], :http_accept => exception_hash[:http_accept],
+                        :http_accept_charset => exception_hash[:http_accept_charset], :http_accept_encoding => exception_hash[:http_accept_encoding],
+                        :http_accept_language => exception_hash[:http_accept_language], :http_connection => exception_hash[:http_connection],
+                        :http_cookie => exception_hash[:http_cookie], :http_host => exception_hash[:http_host], 
+                        :http_keep_alive => exception_hash[:http_keep_alive], :http_user_agent => exception_hash[:http_user_agent],
+                        :http_version => exception_hash[:http_version], :path_info => exception_hash[:path_info],
+                        :query_string => exception_hash[:query_string], :remote_addr => exception_hash[:remote_addr],
+                        :request_method => exception_hash[:request_method], :request_path => exception_hash[:request_path],
+                        :request_uri => exception_hash[:request_uri], :script_name => exception_hash[:script_name],
+                        :server_name => exception_hash[:server_name], :server_port => exception_hash[:server_port],
+                        :server_protocol => exception_hash[:server_protocol], :server_software => exception_hash[:server_software],
+                        :rack_errors => exception_hash[:rack_errors], :rack_input => exception_hash[:rack_input],
+                        :rack_multiprocess => exception_hash[:rack_multiprocess], :rack_multithread => exception_hash[:rack_multithread],
+                        :rack_run_once => exception_hash[:rack_run_once], :rack_url_scheme => exception_hash[:rack_url_scheme],
+                        :rack_version => exception_hash[:rack_version]
+                        })                                     
+                         
               end            
               
               if mail_configuration and status != IGNORED_EXCEPTION

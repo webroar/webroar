@@ -22,150 +22,150 @@ along with WebROaR.  If not, see <http://www.gnu.org/licenses/>.
   <table width = 90% cellpadding = 5px style = "word-wrap: break-word;">
     <tr>
       <td width = 15%><b>Exception:-</b></td>
-      <td><%=h @excep.exception_message%></td>
+      <td><%=h @exception.exception_message%></td>
     </tr>
     <tr>
       <td><b>Class :-</b></td>
-      <td><%=h @excep.exception_class%></td>
+      <td><%=h @exception.exception_class%></td>
     </tr>
     <tr>
       <td><b>URL :-</b></td>
-      <td><%=h @excep.controller%>/<%=h @excep.method%></td>
+      <td><%=h @exception.latest_detail.controller%>/<%=h @exception.latest_detail.method%></td>
     </tr>
     <tr>
       <td><b>Occurrences :-</b></td>
-      <td><%=h @exceptions.size%></td>
+      <td><%=h @exception.exceptions_count%></td>
     </tr>
-    <%@exceptions.each do |exception|%>
+    <%@exception.occurrences.each do |occurrence|%>
     <tr>
       <td>&nbsp;</td>
-      <td><%=h exception.wall_time.strftime("%d-%b-%Y %H:%M:%S")%></td>
+      <td><%=h occurrence.wall_time.strftime("%d-%b-%Y %H:%M:%S")%></td>
     </tr>
     <%end%>
     <tr>
       <td  colspan = 2><b>Backtrace :-</b> </td>
     </tr>
     <tr>
-      <td  colspan = 2><%= @excep.exception_backtrace.gsub(/\n/, '<br>')%></td>
+      <td  colspan = 2><%= @exception.latest_detail.exception_backtrace.gsub(/\n/, '<br>')%></td>
     </tr>
     <tr>
       <td  colspan = 2><b>Environment :-</b> </td>
     </tr>
     <tr>
       <td><b>CHUNKED :-</b></td>
-      <td  colspan = 2><%=h @excep.chunked%></td>
+      <td  colspan = 2><%=h @exception.latest_detail.chunked%></td>
     </tr>
     <tr>
       <td><b>CONTENT_LENGTH :-</b></td>
-      <td  colspan = 2><%=h @excep.content_length%></td>
+      <td  colspan = 2><%=h @exception.latest_detail.content_length%></td>
     </tr>
     <tr>
       <td><b>HTTP_ACCEPT :-</b></td>
-      <td  colspan = 2><%=h @excep.http_accept%></td>
+      <td  colspan = 2><%=h @exception.latest_detail.http_accept%></td>
     </tr>
     <tr>
       <td><b>HTTP_ACCEPT_CHARSET :-</b></td>
-      <td  colspan = 2><%=h @excep.http_accept_charset%></td>
+      <td  colspan = 2><%=h @exception.latest_detail.http_accept_charset%></td>
     </tr>
     <tr>
       <td><b>HTTP_ACCEPT_ENCODING :-</b></td>
-      <td  colspan = 2><%=h @excep.http_accept_encoding%></td>
+      <td  colspan = 2><%=h @exception.latest_detail.http_accept_encoding%></td>
     </tr>
     <tr>
       <td><b>HTTP_CONNECTION :-</b></td>
-      <td  colspan = 2><%=h @excep.http_connection%></td>
+      <td  colspan = 2><%=h @exception.latest_detail.http_connection%></td>
     </tr>
     <tr>
       <td><b>HTTP_COOKIE :-</b></td>
-      <td  colspan = 2><div style="width:650px;overflow-x:auto;"><%=h @excep.http_cookie%></div></td>
+      <td  colspan = 2><div style="width:650px;overflow-x:auto;"><%=h @exception.latest_detail.http_cookie%></div></td>
     </tr>
     <tr>
       <td><b>HTTP_HOST :-</b></td>
-      <td  colspan = 2><%=h @excep.http_host%></td>
+      <td  colspan = 2><%=h @exception.latest_detail.http_host%></td>
     </tr>
     <tr>
       <td><b>HTTP_KEEP_ALIVE :-</b></td>
-      <td  colspan = 2><%=h @excep.http_keep_alive%></td>
+      <td  colspan = 2><%=h @exception.latest_detail.http_keep_alive%></td>
     </tr>
     <tr>
       <td><b>HTTP_USER_AGENT :-</b></td>
-      <td  colspan = 2><%=h @excep.http_user_agent%></td>
+      <td  colspan = 2><%=h @exception.latest_detail.http_user_agent%></td>
     </tr>
     <tr>
       <td><b>HTTP_VERSION :-</b></td>
-      <td  colspan = 2><%=h @excep.http_version%></td>
+      <td  colspan = 2><%=h @exception.latest_detail.http_version%></td>
     </tr>
     <tr>
       <td><b>PATH_INFO :-</b></td>
-      <td  colspan = 2><%=h @excep.path_info%></td>
+      <td  colspan = 2><%=h @exception.latest_detail.path_info%></td>
     </tr>
     <tr>
       <td><b>QUERY_STRING :-</b></td>
-      <td  colspan = 2><%=h @excep.query_string%></td>
+      <td  colspan = 2><%=h @exception.latest_detail.query_string%></td>
     </tr>
     <tr>
       <td><b>REMOTE_ADDR :-</b></td>
-      <td  colspan = 2><%=h @excep.remote_addr%></td>
+      <td  colspan = 2><%=h @exception.latest_detail.remote_addr%></td>
     </tr>
     <tr>
       <td><b>REQUEST_METHOD :-</b></td>
-      <td  colspan = 2><%=h @excep.request_method%></td>
+      <td  colspan = 2><%=h @exception.latest_detail.request_method%></td>
     </tr>
     <tr>
       <td><b>REQUEST_PATH :-</b></td>
-      <td  colspan = 2><%=h @excep.request_path%></td>
+      <td  colspan = 2><%=h @exception.latest_detail.request_path%></td>
     </tr>
     <tr>
       <td><b>REQUEST_URI :-</b></td>
-      <td  colspan = 2><%=h @excep.request_uri%></td>
+      <td  colspan = 2><%=h @exception.latest_detail.request_uri%></td>
     </tr>
     <tr>
       <td><b>SCRIPT_NAME :-</b></td>
-      <td  colspan = 2><%=h @excep.script_name%></td>
+      <td  colspan = 2><%=h @exception.latest_detail.script_name%></td>
     </tr>
     <tr>
       <td><b>SERVER_NAME :-</b></td>
-      <td  colspan = 2><%=h @excep.server_name%></td>
+      <td  colspan = 2><%=h @exception.latest_detail.server_name%></td>
     </tr>
     <tr>
       <td><b>SERVER_PORT :-</b></td>
-      <td  colspan = 2><%=h @excep.server_port%></td>
+      <td  colspan = 2><%=h @exception.latest_detail.server_port%></td>
     </tr>
     <tr>
       <td><b>SERVER_PROTOCOL :-</b></td>
-      <td  colspan = 2><%=h @excep.server_protocol%></td>
+      <td  colspan = 2><%=h @exception.latest_detail.server_protocol%></td>
     </tr>
     <tr>
       <td><b>SERVER_SOFTWARE :-</b></td>
-      <td  colspan = 2><%=h @excep.server_software%></td>
+      <td  colspan = 2><%=h @exception.latest_detail.server_software%></td>
     </tr>
     <tr>
       <td><b>rack.errors :-</b></td>
-      <td  colspan = 2><%=h @excep.rack_errors%></td>
+      <td  colspan = 2><%=h @exception.latest_detail.rack_errors%></td>
     </tr>
     <tr>
       <td><b>rack.input :-</b></td>
-      <td  colspan = 2><%=h @excep.rack_input%></td>
+      <td  colspan = 2><%=h @exception.latest_detail.rack_input%></td>
     </tr>
     <tr>
       <td><b>rack.multiprocess :-</b></td>
-      <td  colspan = 2><%=h @excep.rack_multiprocess%></td>
+      <td  colspan = 2><%=h @exception.latest_detail.rack_multiprocess%></td>
     </tr>
     <tr>
       <td><b>rack.multithread :-</b></td>
-      <td  colspan = 2><%=h @excep.rack_multithread%></td>
+      <td  colspan = 2><%=h @exception.latest_detail.rack_multithread%></td>
     </tr>
     <tr>
       <td><b>rack.run_once :-</b></td>
-      <td  colspan = 2><%=h @excep.rack_run_once%></td>
+      <td  colspan = 2><%=h @exception.latest_detail.rack_run_once%></td>
     </tr>
     <tr>
       <td><b>rack.url_scheme :-</b></td>
-      <td  colspan = 2><%=h @excep.rack_url_scheme%></td>
+      <td  colspan = 2><%=h @exception.latest_detail.rack_url_scheme%></td>
     </tr>
     <tr>
       <td><b>rack.version :-</b></td>
-      <td  colspan = 2><%=h @excep.rack_version%></td>
+      <td  colspan = 2><%=h @exception.latest_detail.rack_version%></td>
     </tr>
   </table>
   <br/>

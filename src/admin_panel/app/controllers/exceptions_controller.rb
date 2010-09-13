@@ -42,10 +42,8 @@ class ExceptionsController < ApplicationController
   end  
   
   #This method is to display the information of the specific exception.
-  def show
-    app_id = App.get_application_data(params[:app_name]).id
-    @excep = AppException.get_exception_details_by_id(params[:id])
-    @exceptions = AppException.get_exception_details_by_exception_message(@excep.exception_message, app_id)
+  def show    
+    @exception = AppException.first(:conditions => ["id = ?", params[:id]]) # found include bug with eager loading, its fetching all the associated records     
     render :partial => 'show', :locals => { :status_name => params[:status_name], :app_name => params[:app_name], :page => params[:page] }
   end
   
@@ -91,8 +89,8 @@ class ExceptionsController < ApplicationController
   #Method is used to update the status for selected exceptions.
   def change_status    
     if request.method == :put
-      @application_name = params[:app_name]
-      app_id = App.get_application_data(@application_name).id  
+      @application_name = params[:app_name]    
+      app_id = App.get_application_data(@application_name).id
       if params[:exception_ids] and params[:status_name]        
         params[:exception_ids].collect! do |e|
           e.to_i
@@ -101,11 +99,11 @@ class ExceptionsController < ApplicationController
           when 'delete'
             
           when 'ignore'
-            AppException.update_all_status_to(IGNORED_EXCEPTION, params[:exception_ids], app_id)
+            AppException.update_all_status_to(IGNORED_EXCEPTION, params[:exception_ids])
           when 'close'
-            AppException.update_all_status_to(CLOSED_EXCEPTION, params[:exception_ids], app_id)
+            AppException.update_all_status_to(CLOSED_EXCEPTION, params[:exception_ids])
           when 'open'
-            AppException.update_all_status_to(OPEN_EXCEPTION, params[:exception_ids], app_id)
+            AppException.update_all_status_to(OPEN_EXCEPTION, params[:exception_ids])
         end
       end
       status = get_status_const(params[:current_status])
