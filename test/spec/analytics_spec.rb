@@ -85,7 +85,7 @@ describe "Analytics" do
   end
   
   it "there should be exceptions captured" do
-    result_set = AppException.find(:all, :conditions => ["wall_time >= ? and wall_time <= ?",@t1,@t2])
+    result_set = ExceptionDetail.find(:all, :conditions => ["wall_time >= ? and wall_time <= ?",@t1,@t2])
     result_set.should_not be_empty
     post_req = result_set.select { |a| a['request_method'] == 'POST'}
     post_req.should_not be_empty
@@ -93,16 +93,16 @@ describe "Analytics" do
     post_req['app_env'].should == 'test'
     post_req['controller'].should == 'application'
     post_req['method'].should == 'index'
-    post_req['exception_message'].should == 'No route matches "/users/does/not/exists" with {:method=>:post}'
-    post_req['exception_class'].should == 'ActionController::RoutingError'
+    post_req.app_exception['exception_message'].should == 'No route matches "/users/does/not/exists" with {:method=>:post}'
+    post_req.app_exception['exception_class'].should == 'ActionController::RoutingError'
     get_req = result_set.select { |a| a['request_method'] == 'GET'}
     get_req.should_not be_empty
     get_req = get_req.first
     get_req['app_env'].should == 'test'
     get_req['controller'].should == 'application'
     get_req['method'].should == 'index'
-    get_req['exception_message'].should == 'No route matches "/users/does/not/exists" with {:method=>:get}'
-    get_req['exception_class'].should == 'ActionController::RoutingError'
+    get_req.app_exception['exception_message'].should == 'No route matches "/users/does/not/exists" with {:method=>:get}'
+    get_req.app_exception['exception_class'].should == 'ActionController::RoutingError'
   end
   
   after(:all) do
