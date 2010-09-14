@@ -1,5 +1,86 @@
 Revision history for libev, a high-performance and full-featured event loop.
 
+3.9  Thu Dec 31 07:59:59 CET 2009
+	- signalfd is no longer used by default and has to be requested
+          explicitly - this means that easy to catch bugs become hard to
+          catch race conditions, but the users have spoken.
+        - point out the unspecified signal mask in the documentation, and
+          that this is a race condition regardless of EV_SIGNALFD.
+	- backport inotify code to C89.
+        - inotify file descriptors could leak into child processes.
+        - ev_stat watchers could keep an errornous extra ref on the loop,
+          preventing exit when unregistering all watchers (testcases
+          provided by ry@tinyclouds.org).
+        - implement EV_WIN32_HANDLE_TO_FD and EV_WIN32_CLOSE_FD configuration
+          symbols to make it easier for apps to do their own fd management.
+        - support EV_IDLE_ENABLE being disabled in ev++.h
+          (patch by Didier Spezia).
+        - take advantage of inotify_init1, if available, to set cloexec/nonblock
+          on fd creation, to avoid races.
+        - the signal handling pipe wasn't always initialised under windows
+          (analysed by lekma).
+        - changed minimum glibc requirement from glibc 2.9 to 2.7, for
+          signalfd.
+        - add missing string.h include (Denis F. Latypoff).
+        - only replace ev_stat.prev when we detect an actual difference,
+          so prev is (almost) always different to attr. this might
+          have caused the probems with 04_stat.t.
+        - add ev::timer->remaining () method to C++ API.
+
+3.8  Sun Aug  9 14:30:45 CEST 2009
+	- incompatible change: do not necessarily reset signal handler
+          to SIG_DFL when a sighandler is stopped.
+        - ev_default_destroy did not properly free or zero some members,
+          potentially causing crashes and memory corruption on repated
+          ev_default_destroy/ev_default_loop calls.
+	- take advantage of signalfd on GNU/Linux systems.
+	- document that the signal mask might be in an unspecified
+          state when using libev's signal handling.
+        - take advantage of some GNU/Linux calls to set cloexec/nonblock
+          on fd creation, to avoid race conditions.
+
+3.7  Fri Jul 17 16:36:32 CEST 2009
+	- ev_unloop and ev_loop wrongly used a global variable to exit loops,
+          instead of using a per-loop variable (bug caught by accident...).
+	- the ev_set_io_collect_interval interpretation has changed.
+        - add new functionality: ev_set_userdata, ev_userdata,
+          ev_set_invoke_pending_cb, ev_set_loop_release_cb,
+          ev_invoke_pending, ev_pending_count, together with a long example
+          about thread locking.
+        - add ev_timer_remaining (as requested by Denis F. Latypoff).
+        - add ev_loop_depth.
+        - calling ev_unloop in fork/prepare watchers will no longer poll
+          for new events.
+	- Denis F. Latypoff corrected many typos in example code snippets.
+        - honor autoconf detection of EV_USE_CLOCK_SYSCALL, also double-
+          check that the syscall number is available before trying to
+          use it (reported by ry@tinyclouds).
+        - use GetSystemTimeAsFileTime instead of _timeb on windows, for
+          slightly higher accuracy.
+        - properly declare ev_loop_verify and ev_now_update even when
+          !EV_MULTIPLICITY.
+        - do not compile in any priority code when EV_MAXPRI == EV_MINPRI.
+        - support EV_MINIMAL==2 for a reduced API.
+        - actually 0-initialise struct sigaction when installing signals.
+        - add section on hibernate and stopped processes to ev_timer docs.
+
+3.6  Tue Apr 28 02:49:30 CEST 2009
+	- multiple timers becoming ready within an event loop iteration
+          will be invoked in the "correct" order now.
+	- do not leave the event loop early just because we have no active
+          watchers, fixing a problem when embedding a kqueue loop
+          that has active kernel events but no registered watchers
+          (reported by blacksand blacksand).
+	- correctly zero the idx values for arrays, so destroying and
+          reinitialising the default loop actually works (patch by
+          Malek Hadj-Ali).
+        - implement ev_suspend and ev_resume.
+        - new EV_CUSTOM revents flag for use by applications.
+        - add documentation section about priorites.
+        - add a glossary to the dcoumentation.
+        - extend the ev_fork description slightly.
+        - optimize a jump out of call_pending.
+
 3.53 Sun Feb 15 02:38:20 CET 2009
 	- fix a bug in event pipe creation on win32 that would cause a
           failed assertion on event loop creation (patch by Malek Hadj-Ali).
