@@ -20,16 +20,22 @@
 
 class MigrateTmpExceptions < ActiveRecord::Migration
   def self.up
-    #t1 = Time.now
-    #puts t1
-    puts "Inserting records in app_exceptions..."
-    execute("insert into 
-                    app_exceptions(app_id, exception_message, exception_class, exception_status, exceptions_count) 
-                    select app_id, exception_message, exception_class, exception_status, count(exception_message)
+    if ActiveRecord::Base.connection.tables.include?("tmp_exceptions")
+
+      say_with_time "migrate_table(tmp_exceptions, :app_exceptions) ..." do
+        suppress_messages do
+          execute("insert into 
+                    app_exceptions(app_id, exception_message, exception_class, 
+                    exception_status, exceptions_count) 
+                    select app_id, exception_message, exception_class, 
+                    exception_status, count(exception_message)
                     from tmp_exceptions group by app_id, exception_message") 
-                    
-    puts "Inserting records in exception_details..."
-    execute("insert into 
+        end
+      end
+                     
+      say_with_time "migrate_table(:tmp_exceptions, :exception_details) ..." do
+        suppress_messages do
+          execute("insert into 
                     exception_details(app_exception_id,app_env,controller,method,
                     exception_backtrace,chunked,content_length,http_accept,
                     http_accept_charset,http_accept_encoding,http_accept_language,
@@ -53,12 +59,9 @@ class MigrateTmpExceptions < ActiveRecord::Migration
                     from app_exceptions as a, tmp_exceptions t
                     where a.app_id = t.app_id 
                     and a.exception_message = t.exception_message")
-    
-    #t2 = Time.now
-    #puts t2
-    puts "Migration of data to new tables completed successfully."
-    #puts t2-t1
-
+        end
+      end    
+    end
   end
 
   def self.down

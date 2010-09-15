@@ -20,7 +20,7 @@
 
 class DropTmpExceptions < ActiveRecord::Migration
   def self.up
-    drop_table :tmp_exceptions
+    drop_table :tmp_exceptions if ActiveRecord::Base.connection.tables.include?("tmp_exceptions")
   end
 
   def self.down

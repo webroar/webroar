@@ -20,7 +20,8 @@
 
 class RenameAppExceptions < ActiveRecord::Migration
   def self.up
-    rename_table :app_exceptions, :tmp_exceptions
+    rename_table :app_exceptions, :tmp_exceptions if AppException.exists?
+    drop_table :app_exceptions unless AppException.exists?
   end
 
   def self.down
