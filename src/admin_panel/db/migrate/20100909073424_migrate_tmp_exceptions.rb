@@ -22,7 +22,7 @@ class MigrateTmpExceptions < ActiveRecord::Migration
   def self.up
     if ActiveRecord::Base.connection.tables.include?("tmp_exceptions")
 
-      say_with_time "migrate_table(tmp_exceptions, :app_exceptions) ..." do
+      say_with_time "migrate_table(:tmp_exceptions, :app_exceptions) ..." do
         suppress_messages do
           execute("insert into 
                     app_exceptions(app_id, exception_message, exception_class, 
