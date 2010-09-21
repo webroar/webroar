@@ -29,7 +29,7 @@ along with WebROaR.  If not, see <http://www.gnu.org/licenses/>.
       </tr>
       <tr>
         <td  class = 'BG_dark_gray'>CPU Usage</td>
-        <td  class = 'BG_dark_gray'><span id = 'server_cpu_usage'><%=@server_resource_usage[0]%></span> %</td>
+        <td  class = 'BG_dark_gray'><span id = 'server_cpu_usage'><%="%.2f" % @server_resource_usage[0]%></span> %</td>
       </tr>
       <tr>
         <td  class = 'BG_white'>Memory Usage</td>
