@@ -307,7 +307,7 @@ void wr_ctl_msg_read_cb(struct ev_loop *loop, struct ev_io *w, int revents) {
 
   scgi_t* request = NULL;
   request = scgi_parse(ctl->msg, ctl->ctl_nbytes);
-  if(request == NULL ) {
+  if(request == NULL || request->body_length != atoi(scgi_header_value_get(request, "CONTENT_LENGTH"))) {
     LOG_ERROR(SEVERE,"Cannot parse control message.");
     return;
   }
