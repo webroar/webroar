@@ -314,6 +314,14 @@ int file_compress(http_t *h, static_file_t *ext){
   LOG_FUNCTION  
   h->stat->encoding = scgi_header_value_get(h->req->scgi, "HTTP_ACCEPT_ENCODING");
   h->stat->user_agent = scgi_header_value_get(h->req->scgi, "HTTP_USER_AGENT");
+  /*  Skip compressing entity body if user agent is IE6
+      refer http://schroepl.net/projekte/mod_gzip/browser.htm and 
+      http://support.microsoft.com/default.aspx?scid=kb;en-us;Q313712
+      for problem details
+  */
+  if(strstr(h->stat->user_agent, "MSIE 6.0")) {
+    return FALSE;
+  }
   
   if(h->stat->buf.st_size >= Config->Worker.Compress.lower_limit 
      && h->stat->buf.st_size <= Config->Worker.Compress.upper_limit
@@ -379,7 +387,7 @@ void http_resp_200(http_t *h) {
   LOG_FUNCTION
   char str[STR_SIZE512], expire_date[STR_SIZE64] = "", current_date[STR_SIZE64] = "", modify_date[STR_SIZE64] = "";
   int len;
-  int ret_val;
+  int ret_val = FALSE;
   time_t t;
   
   static_file_t *ext = get_mime_type(h->stat);
