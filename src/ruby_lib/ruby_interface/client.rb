@@ -23,7 +23,7 @@ module Webroar
     BASE_ENV = {
       SERVER_NAME => WEBROAR,
       SCRIPT_NAME => EMPTY_STRING,
-      QUERY_STRING => EMPTY_STRING,
+      #QUERY_STRING => EMPTY_STRING,
       SERVER_SOFTWARE => Webroar::SERVER,
       SERVER_PROTOCOL => HTTP_1_1,
       RACK_VERSION => [0, 1],
