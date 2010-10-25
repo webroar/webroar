@@ -22,7 +22,7 @@ module Webroar
   class Client
     BASE_ENV = {
       SERVER_NAME => WEBROAR,
-      SCRIPT_NAME => EMPTY_STRING,
+      #SCRIPT_NAME => EMPTY_STRING,
       #QUERY_STRING => EMPTY_STRING,
       SERVER_SOFTWARE => Webroar::SERVER,
       SERVER_PROTOCOL => HTTP_1_1,
@@ -36,7 +36,9 @@ module Webroar
     def env
       #puts "in env "
       env = Webroar::client_env(self).update(BASE_ENV)
-      env[HTTP_HOST] ||= BASE_ENV[SERVER_NAME]
+      env[SCRIPT_NAME] ||= EMPTY_STRING
+      env[QUERY_STRING] ||= EMPTY_STRING
+      env[HTTP_HOST] ||= env[SERVER_NAME]
       env[RACK_INPUT] = RequestBody.new(self)
       env[CONTENT_TYPE] = env.delete(HTTP_CONTENT_TYPE) if env[HTTP_CONTENT_TYPE] #deleting to comply with Rack standard
       env[CONTENT_LENGTH] = env.delete(HTTP_CONTENT_LENGTH) if env[HTTP_CONTENT_LENGTH] #deleting to comply with Rack standard
