@@ -116,7 +116,7 @@ module Webroar
             @response['Content-Length']   = options.delete('Content-Length').to_s if options['Content-Length']
             
             @response['Content-Type']     = options.delete('type') || "text/html"
-            @response['Content-Type']    += "; charset=" + options.delete('charset') if options['charset']
+            @response['Content-Type']    <<  "; charset=" + options.delete('charset') if options['charset']
             
             @response['Content-Language'] = options.delete('language') if options['language']
             @response['Expires']          = options.delete('expires') if options['expires']

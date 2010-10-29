@@ -87,16 +87,16 @@ module Webroar
       headers.each { |field, values|
         if values.is_a?(String)
           values.each_line { |v|
-            resp_header += field + ": " + v.chomp + "\r\n"
+            resp_header << field + ": " + v.chomp + "\r\n"
           }
         else
           values.each { |v|
-            resp_header += field + ": " + v.chomp + "\r\n"   
+            resp_header << field + ": " + v.chomp + "\r\n"   
           }
         end
       }
       
-      resp_header += "\r\n"
+      resp_header << "\r\n"
       
       Webroar::client_write_headers(self, status, resp_header, content_length)
       if(content_length <= 0)
