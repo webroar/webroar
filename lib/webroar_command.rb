@@ -48,9 +48,14 @@ class WebroarCommand
   # Stop and remove the application
   def remove(args)
     return unless CheckUser.check
+    rails_app = false
     if args.length < 2
-      puts "Application name is missing."
-      return
+      if File.exists?(File.join(Dir.getwd, "config/environment.rb"))
+        rails_app = true
+      else
+        puts "Application name is missing."
+        return
+      end
     end
 
 #    gem 'activesupport', '>= 2.3.5'
@@ -66,6 +71,7 @@ class WebroarCommand
 
     load_files(files)
 
+    args[1] = Dir.pwd.match(/[^\/]*$/).to_s if(args[1] == nil and rails_app)
     reply, err_log = App.stop(args[1])
     ApplicationSpecification::remove(args[1]) if reply.nil?
     
@@ -77,9 +83,15 @@ class WebroarCommand
   # Add and start the application
   def add(options, args)
     return unless CheckUser.check
+    rails_app = false
+    
     if args.length < 2
-      puts "Application name is missing."
-      return
+      if File.exists?(File.join(Dir.getwd, "config/environment.rb"))
+        rails_app = true
+      else
+        puts "Application name is missing."
+        return
+      end      
     end
 
     sockFile = File.join("","tmp","webroar.sock")
@@ -101,6 +113,11 @@ class WebroarCommand
     files << File.join(ADMIN_PANEL_ROOT, 'config','initializers','application_constants.rb')
     files << File.join(ADMIN_PANEL_ROOT, 'lib','yaml_writer.rb')
     load_files(files)
+    
+    args[1] = Dir.pwd.match(/[^\/]*$/).to_s if(args[1] == nil and rails_app)
+    options[:path] = Dir.pwd if(options[:path] == nil and rails_app)
+    options[:resolver] = "/" if(options[:resolver] == nil and rails_app)
+    options[:run_as_user] = Etc.getpwuid(File.stat(File.join(Dir.getwd, "config/environment.rb")).uid).name if(options[:run_as_user] == nil and rails_app)     
     
     params = {:app_id => nil,
       :name => args[1],
