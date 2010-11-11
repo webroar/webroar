@@ -49,13 +49,16 @@ class WebroarCommand
   def remove(args)
     return unless CheckUser.check
     rails_app = false
+    rack_app =false
     if args.length < 2
-      if File.exists?(File.join(Dir.getwd, "config/environment.rb"))
+      if File.exists?(File.join(Dir.getwd, "config", "environment.rb"))
         rails_app = true
+      elsif File.exists?(File.join(Dir.getwd, "config.ru")) 
+        rack_app = true
       else
         puts "Application name is missing."
         return
-      end
+      end      
     end
 
 #    gem 'activesupport', '>= 2.3.5'
@@ -71,7 +74,7 @@ class WebroarCommand
 
     load_files(files)
 
-    args[1] = Dir.pwd.match(/[^\/]*$/).to_s if(args[1] == nil and rails_app)
+    args[1] = Dir.pwd.match(/[^\/]*$/).to_s if(args[1] == nil and (rails_app or rack_app ))
     reply, err_log = App.stop(args[1])
     ApplicationSpecification::remove(args[1]) if reply.nil?
     
@@ -84,10 +87,13 @@ class WebroarCommand
   def add(options, args)
     return unless CheckUser.check
     rails_app = false
+    rack_app = false
     
     if args.length < 2
-      if File.exists?(File.join(Dir.getwd, "config/environment.rb"))
+      if File.exists?(File.join(Dir.getwd, "config", "environment.rb"))
         rails_app = true
+      elsif File.exists?(File.join(Dir.getwd, "config.ru")) 
+        rack_app = true
       else
         puts "Application name is missing."
         return
@@ -114,10 +120,12 @@ class WebroarCommand
     files << File.join(ADMIN_PANEL_ROOT, 'lib','yaml_writer.rb')
     load_files(files)
     
-    args[1] = Dir.pwd.match(/[^\/]*$/).to_s if(args[1] == nil and rails_app)
-    options[:path] = Dir.pwd if(options[:path] == nil and rails_app)
-    options[:resolver] = "/" if(options[:resolver] == nil and rails_app)
-    options[:run_as_user] = Etc.getpwuid(File.stat(File.join(Dir.getwd, "config/environment.rb")).uid).name if(options[:run_as_user] == nil and rails_app)     
+    args[1] = Dir.pwd.match(/[^\/]*$/).to_s if(args[1] == nil and (rails_app or rack_app ))
+    options[:path] = Dir.pwd if(options[:path] == nil and (rails_app or rack_app ))
+    options[:resolver] = ("/" << args[1].gsub(/[^a-zA-Z0-9_\-.~]/,'_').downcase) if(options[:resolver] == nil and (rails_app or rack_app ))
+    options[:type1] = "Rack" if (options[:type1] == nil and rack_app)
+    options[:run_as_user] = Etc.getpwuid(File.stat(File.join(Dir.getwd, "config", "environment.rb")).uid).name if(options[:run_as_user] == nil and rails_app)
+    options[:run_as_user] = Etc.getpwuid(File.stat(File.join(Dir.getwd, "config.ru")).uid).name if(options[:run_as_user] == nil and rack_app)
     
     params = {:app_id => nil,
       :name => args[1],
