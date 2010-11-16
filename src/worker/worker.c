@@ -109,6 +109,7 @@ wkr_t* worker_new(struct ev_loop *loop, wkr_tmp_t *tmp) {
   w->loop = loop;
   wr_string_null(w->sock_path);
   w->listen_port = 0;
+  w->w_accept.active = 0;
 
   w->tmp = tmp;
   assert(w->tmp!=NULL);
@@ -154,15 +155,11 @@ void worker_free(wkr_t **wrk) {
       unlink(w->sock_path.str);
       wr_string_free(w->sock_path);
     }
-    ev_io_stop(w->loop, &(w->w_accept));
-    ev_io_stop(w->loop, &(w->ctl->w_read));
-    if(w->http)
-      http_free(&w->http);    
-    if(w->tmp)
-      wkr_tmp_free(&w->tmp);
-    if(w->ctl)
-      wkr_ctl_free(&w->ctl);
-
+    if(ev_is_active(&w->w_accept)) ev_io_stop(w->loop, &(w->w_accept));
+    if(ev_is_active(&w->ctl->w_read)) ev_io_stop(w->loop, &(w->ctl->w_read));
+    if(w->http)       http_free(&w->http);
+    if(w->tmp)        wkr_tmp_free(&w->tmp);
+    if(w->ctl)        wkr_ctl_free(&w->ctl);
     wr_string_list_free(w->env_var);
     free(w);
   }

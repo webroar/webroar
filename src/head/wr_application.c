@@ -91,8 +91,12 @@ void wr_app_add_error_msg(wr_app_t* app){
     scgi_header_add(app->ctl->scgi, "STATUS", strlen("STATUS"), "ERROR", strlen("ERROR"));
     err_msg_len = sprintf(err_msg,"The application could not be started due to the following error. Please refer '/var/log/webroar/%s.log' and the application log file for more details.", app->conf->name.str);
     scgi_body_add(app->ctl->scgi, err_msg, err_msg_len);
-    wr_ctl_resp_write(app->ctl);        
+    wr_ctl_resp_write(app->ctl);
+    LOG_ERROR(SEVERE, "%s", err_msg);
+  }else {
+    LOG_ERROR(SEVERE, "Some problem occurred while starting Application %s.", app->conf->name.str);
   }
+  
   app->timeout_counter = 0;
   app->ctl = NULL; 
 }
