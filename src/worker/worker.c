@@ -110,6 +110,8 @@ wkr_t* worker_new(struct ev_loop *loop, wkr_tmp_t *tmp) {
   wr_string_null(w->sock_path);
   w->listen_port = 0;
   w->w_accept.active = 0;
+  w->w_req.active = 0;
+  w->http = NULL;
 
   w->tmp = tmp;
   assert(w->tmp!=NULL);

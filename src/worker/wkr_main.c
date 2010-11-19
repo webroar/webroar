@@ -274,7 +274,7 @@ int main(int argc, char **argv) {
   w = worker_new(loop, tmp);
   
   if(w==NULL){
-    wr_worker_config_free(Config);
+    cleanup();
     return -1;
   }
 
