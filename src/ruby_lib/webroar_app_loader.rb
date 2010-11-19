@@ -16,6 +16,9 @@
 # You should have received a copy of the GNU General Public License
 # along with WebROaR.  If not, see <http://www.gnu.org/licenses/>.
 begin
+  require 'rubygems'
+  gem 'starling', '>=0.10.0'
+  require 'starling'
   require File.join(File.expand_path(File.dirname(__FILE__)), 'ruby_interface', 'ruby_interface')
   
   #turn it on to see the Ruby exception

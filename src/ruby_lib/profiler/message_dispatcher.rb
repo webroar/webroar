@@ -17,9 +17,11 @@
 # along with WebROaR.  If not, see <http://www.gnu.org/licenses/>.
 
 require 'singleton'
-gem 'starling', '>=0.10.0'
-require 'starling'
 require 'yaml'
+#$: << Bundler.bundle_path.join("gems", "starling-0.10.1", "lib")
+#gem 'starling', '>=0.10.0'
+#require 'starling'
+
 module Webroar
   module Profiler
     class MessageDispatcher
