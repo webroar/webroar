@@ -365,14 +365,16 @@ int file_compress(http_t *h, static_file_t *ext){
 
     //zlib states that the source buffer must be at least 0.1 times larger than 
     //the source buffer plus 12 bytes to cope with the overhead of zlib data streams
-    wr_buffer_create(h->resp->resp_body, h->stat->buf.st_size + h->stat->buf.st_size*0.1 + 12);
-    h->resp->resp_body->len = h->resp->resp_body->size;
+    wr_buffer_create(h->resp->resp_body, h->stat->buf.st_size * 1.01 + 12);
+    //h->resp->resp_body->len = h->resp->resp_body->size;
     //now compress the data
-    if(compress2((Bytef*)h->resp->resp_body->str, (uLongf*)&h->resp->resp_body->len,
+    if(compress2((Bytef*)h->resp->resp_body->str, (uLongf*)&h->resp->resp_body->size,
                 (const Bytef*)h->stat->buffer->str, (uLongf)h->stat->buffer->len, Z_DEFAULT_COMPRESSION) != Z_OK){
       wr_buffer_null(h->stat->buffer);
       wr_buffer_null(h->resp->resp_body);
       return FALSE;
+    } else {
+      h->resp->resp_body->len = h->resp->resp_body->size;
     }
     wr_buffer_null(h->stat->buffer);
 
