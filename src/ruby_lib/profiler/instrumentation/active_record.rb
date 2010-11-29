@@ -18,13 +18,15 @@
 
 module Webroar
   module Profiler
-    trace_database_method(:find, ActiveRecord::Base, 'c')
-    trace_database_method(:delete_all, ActiveRecord::Base, 'c')
-    trace_database_method(:save, ActiveRecord::Base, 'i')
-    trace_database_method(:destroy, ActiveRecord::Base, 'i')
-    trace_database_method(:all, ActiveRecord::Base, 'c')  if ::Rails::VERSION::MAJOR > 2
-    trace_database_method(:first, ActiveRecord::Base, 'c')  if ::Rails::VERSION::MAJOR > 2
-    trace_database_method(:last, ActiveRecord::Base, 'c')  if ::Rails::VERSION::MAJOR > 2
+    if defined? ActiveRecord
+      trace_database_method(:find, ActiveRecord::Base, 'c')
+      trace_database_method(:delete_all, ActiveRecord::Base, 'c')
+      trace_database_method(:save, ActiveRecord::Base, 'i')
+      trace_database_method(:destroy, ActiveRecord::Base, 'i')
+      trace_database_method(:all, ActiveRecord::Base, 'c')  if ::Rails::VERSION::MAJOR > 2
+      trace_database_method(:first, ActiveRecord::Base, 'c')  if ::Rails::VERSION::MAJOR > 2
+      trace_database_method(:last, ActiveRecord::Base, 'c')  if ::Rails::VERSION::MAJOR > 2
+    end
     
     # Comment out following lines, if you not interested in detailed analysis of ActiveRecord Models
 #    exclude_list = [Object, ActiveRecord::Base]

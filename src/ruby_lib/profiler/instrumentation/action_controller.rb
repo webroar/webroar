@@ -18,9 +18,11 @@
 
 module Webroar
   module Profiler
-    trace_perform_action_equivalent(:perform_action, ActionController::Base, 'i') if ::Rails::VERSION::MAJOR < 3
-    trace_perform_action_equivalent(:process_action, ActionController::Base, 'i') if ::Rails::VERSION::MAJOR > 2
-    trace_render_equivalent(:render, ActionController::Base, 'i')
+    if defined? ActionController
+      trace_perform_action_equivalent(:perform_action, ActionController::Base, 'i') if ::Rails::VERSION::MAJOR < 3
+      trace_perform_action_equivalent(:process_action, ActionController::Base, 'i') if ::Rails::VERSION::MAJOR > 2
+      trace_render_equivalent(:render, ActionController::Base, 'i')
+    end
   end # Profiler
 end # Webroar
 
