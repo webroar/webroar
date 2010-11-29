@@ -16,9 +16,6 @@
 # You should have received a copy of the GNU General Public License
 # along with WebROaR.  If not, see <http://www.gnu.org/licenses/>.
 
-require 'rubygems'
-require 'rack'
-
 module Webroar  
   
   class Deflater < Rack::Deflater

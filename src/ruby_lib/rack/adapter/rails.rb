@@ -1,6 +1,4 @@
 require 'cgi'
-require 'rubygems'
-require 'rack'
 #require 'ruby-debug' #for debugging
 #Debugger.start #for debugging
 
@@ -32,7 +30,7 @@ module Webroar
         else
           CgiApp.new
         end
-        
+        require 'rack'
         @file_server = ::Rack::File.new(::File.join(@root, "public"))
       end
       

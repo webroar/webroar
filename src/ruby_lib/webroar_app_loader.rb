@@ -44,6 +44,7 @@ begin
       }
       ADAPTER = Adapter.get($g_options["app_type"])
       $app = ADAPTER.new($g_options)
+      require File.expand_path(File.join($g_options["webroar_root"], 'src', 'ruby_lib', 'ruby_interface', 'deflater'))
       $app = Webroar::Deflater.new($app)
       
       #left over for debugging  

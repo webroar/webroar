@@ -23,7 +23,7 @@ require File.expand_path(File.join($g_options["webroar_root"], 'src', 'ruby_lib'
 require File.expand_path(File.join($g_options["webroar_root"], 'src', 'ruby_lib', 'ruby_interface', 'logger'))
 require File.expand_path(File.join($g_options["webroar_root"], 'src', 'ruby_lib', 'ruby_interface', 'adapter'))
 require File.expand_path(File.join($g_options["webroar_root"], 'src', 'ruby_lib', 'ruby_interface', 'utils'))
-require File.expand_path(File.join($g_options["webroar_root"], 'src', 'ruby_lib', 'ruby_interface', 'deflater'))
+#require File.expand_path(File.join($g_options["webroar_root"], 'src', 'ruby_lib', 'ruby_interface', 'deflater'))
 require File.expand_path(File.join($g_options["webroar_root"], 'src', 'ruby_lib', 'ruby_interface', 'request_handler'))
 require File.expand_path(File.join($g_options["webroar_root"], 'src', 'ruby_lib', 'ruby_interface', 'client'))
 require File.expand_path(File.join($g_options["webroar_root"], 'src', 'ruby_lib', 'ruby_interface', 'request_body'))
