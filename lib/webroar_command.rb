@@ -127,6 +127,14 @@ class WebroarCommand
     options[:run_as_user] = Etc.getpwuid(File.stat(File.join(Dir.getwd, "config", "environment.rb")).uid).name if(options[:run_as_user] == nil and rails_app)
     options[:run_as_user] = Etc.getpwuid(File.stat(File.join(Dir.getwd, "config.ru")).uid).name if(options[:run_as_user] == nil and rack_app)
     
+    if(!options[:min_worker] or !options[:max_worker])
+      info = YAML::load_file(CONFIG_FILE_PATH)
+      if info
+        options[:min_worker] = info['Server Specification']['min_worker'].to_i unless options[:min_worker] 
+        options[:max_worker] = info['Server Specification']['max_worker'].to_i unless options[:max_worker]
+      end
+    end
+      
     params = {:app_id => nil,
       :name => args[1],
       :host_names => nil,
