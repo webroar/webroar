@@ -38,7 +38,7 @@ void wr_queue_free(wr_queue_t* queue);
 #define WR_QUEUE_MAX_SIZE(queue) queue->q_max_size
 
 /** Insert element in Queue */
-#define WR_QUEUE_INSERT(queue, element, retval) \
+#define WR_QUEUE_INSERT(queue, element, retval) do {\
   retval = -1;\
   if(queue->q_count < queue->q_max_size){\
     queue->q_count++;\
@@ -46,10 +46,10 @@ void wr_queue_free(wr_queue_t* queue);
     if(queue->q_front == -1) queue->q_front = 0;\
     queue->q_elements[queue->q_rear] = element;\
     retval = 0;\
-  }
+  } } while(0);
 
 /** Fetch message from Message Queue */
-#define WR_QUEUE_FETCH(queue, element) \
+#define WR_QUEUE_FETCH(queue, element) do {\
   element = NULL;\
   if(queue->q_count > 0){\
     element = queue->q_elements[queue->q_front];\
@@ -59,6 +59,6 @@ void wr_queue_free(wr_queue_t* queue);
       queue->q_front = (queue->q_front + 1) % queue->q_max_size;\
     }\
     queue->q_count --;\
-  }
+  } } while(0);
 
 #endif /*WR_QUEUE_H_*/

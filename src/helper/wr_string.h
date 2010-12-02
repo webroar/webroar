@@ -33,13 +33,13 @@ typedef struct {
   char    *str;
 }wr_str_t;
 
-#define wr_string_is_empty(_str) _str.str == NULL
-#define wr_string_new(_str,str1,_len) _str.len = _len; _str.str = (char*) malloc(sizeof(char)*(_len+1)); memcpy(_str.str, str1, _len); _str.str[_len] = 0
-#define wr_string_null(_str) _str.len = 0; _str.str = NULL
-#define wr_string_append(_str, str1, _len)  {char *str2 =(char*) realloc(_str.str,sizeof(char)*(_str.len+_len+1));\
-        if(str2){memcpy(str2+_str.len, str1, _len); _str.len+=_len;str2[_str.len]=0;_str.str=str2;}}
-#define wr_string_free(_str) if(_str.str) free(_str.str); _str.len = 0; _str.str = NULL
-#define wr_string_dump(_str,_str1) _str.len = _str1.len;_str.str = (char*) malloc(sizeof(char)*(_str.len+1)); memcpy(_str.str, _str1.str, _str.len); _str.str[_str.len] = 0
+#define wr_string_is_empty(_str) do { _str.str == NULL ;} while (0)
+#define wr_string_new(_str,str1,_len) do { _str.len = _len; _str.str = (char*) malloc(sizeof(char)*(_len+1)); memcpy(_str.str, str1, _len); _str.str[_len] = 0; } while (0)
+#define wr_string_null(_str) do { _str.len = 0; _str.str = NULL; } while (0)
+#define wr_string_append(_str, str1, _len)  do { {char *str2 =(char*) realloc(_str.str,sizeof(char)*(_str.len+_len+1));\
+        if(str2){memcpy(str2+_str.len, str1, _len); _str.len+=_len;str2[_str.len]=0;_str.str=str2;}} } while (0)
+#define wr_string_free(_str) do { if(_str.str) free(_str.str); _str.len = 0; _str.str = NULL; } while (0)
+#define wr_string_dump(_str,_str1) do { _str.len = _str1.len;_str.str = (char*) malloc(sizeof(char)*(_str.len+1)); memcpy(_str.str, _str1.str, _str.len); _str.str[_str.len] = 0; } while (0)
 
 typedef struct {
   wr_str_t  key;
@@ -75,12 +75,12 @@ struct wr_buffer_s{
   wr_buffer_t  *next;
 };
 
-#define wr_buffer_new(_buf) _buf = wr_malloc(wr_buffer_t); _buf->len = _buf->size = 0; _buf->str = NULL
-#define wr_buffer_create(_buf,_size) _buf->len = 0; _buf->size = _size; _buf->str = (char*) malloc(sizeof(char)*(_size+1))
-#define wr_buffer_null(_buf) _buf->len = 0; if(_buf->str) free(_buf->str); _buf->str = NULL; _buf->size = 0
-#define wr_buffer_add(_buf, _str, _len) memcpy(_buf->str + _buf->len, _str, wr_min(_len, _buf->size - _buf->len)); _buf->len += wr_min(_len, _buf->size-_buf->len)
-#define wr_buffer_free(_buf) wr_buffer_null(_buf); free(_buf); _buf = NULL
-#define wr_buffer_set_zero(_buf) memset(_buf->str, 0, _buf->size)
+#define wr_buffer_new(_buf) do { _buf = wr_malloc(wr_buffer_t); _buf->len = _buf->size = 0; _buf->str = NULL; } while (0)
+#define wr_buffer_create(_buf,_size) do { _buf->len = 0; _buf->size = _size; _buf->str = (char*) malloc(sizeof(char)*(_size+1)); } while (0)
+#define wr_buffer_null(_buf) do { _buf->len = 0; if(_buf->str) free(_buf->str); _buf->str = NULL; _buf->size = 0; } while (0)
+#define wr_buffer_add(_buf, _str, _len) do { memcpy(_buf->str + _buf->len, _str, wr_min(_len, _buf->size - _buf->len)); _buf->len += wr_min(_len, _buf->size-_buf->len); } while (0)
+#define wr_buffer_free(_buf) do { wr_buffer_null(_buf); free(_buf); _buf = NULL; } while (0)
+#define wr_buffer_set_zero(_buf) do { memset(_buf->str, 0, _buf->size); } while (0)
 
 typedef struct {
   wr_buffer_t    *front;

@@ -49,11 +49,11 @@ void time_to_httpdate(time_t time, char *date, size_t len);
 /** Convert HTTP Date to C 'time_t' */
 time_t httpdate_to_c_time(const char *httpdate);
 
-#define URI_HASH_LEN(str, length, hash) \
+#define URI_HASH_LEN(str, length, hash) do {\
   hash = 5381;\
   int i;\
   for( i = 0; i < length && str[i] != 0 && str[i] != '/' ; i++){\
     hash = ((hash << 5) + hash) + str[i]; /* hash * 33 + c */\
-  }
+  } } while(0);
 
 #endif //WR_UTIL_H_

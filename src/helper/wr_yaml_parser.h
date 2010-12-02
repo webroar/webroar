@@ -35,17 +35,17 @@
 #define NODE_NEXT(node) node->next_result
 #define NODE_VALUE(node) node->value
 
-#define STR_NEW(new, str, len) new = (char*) malloc(sizeof(char)*(len+1));\
-  strcpy(new, str);
+#define STR_NEW(new, str, len) do { new = (char*) malloc(sizeof(char)*(len+1));\
+  strcpy(new, str); } while(0);
 
-#define NODE_NEW(node) node = (node_t*) malloc(sizeof(node_t));\
+#define NODE_NEW(node) do { node = (node_t*) malloc(sizeof(node_t));\
   node->name = NULL;\
   node->name_len =0;\
   node->value = NULL;\
   node->value_len = 0;\
   node->child = NULL;\
   node->next = NULL;\
-  node->next_result = NULL;
+  node->next_result = NULL; } while(0);
 
 typedef struct node_s node_t;
 
