@@ -29,6 +29,7 @@ struct http_resp_s {
   size_t            bytes_write;
   scgi_t    *scgi;
   wr_buffer_t       *resp_body;
+  int content_encoding;
   wr_str_t          header;
 #ifdef _POSIX_C_SOURCE
   int              file;

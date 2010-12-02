@@ -39,6 +39,9 @@ extern config_t *Config;
 #define EXPIRES_BY_TYPE_EXPIRES "expires_by_type/expires"
 #define HTTP_HEADER_IF_MODIFIED_SINCE "HTTP_IF_MODIFIED_SINCE"
 #define HTTP_HEADER_CONNECTION "HTTP_CONNECTION"
+#define WR_NO_ENCODING 0
+#define WR_DEFLATE_ENCODING 1
+#define WR_GZIP_ENCODING 2
 
 #define CONNECTION_CLOSE "Close"
 #define CONNECTION_KEEP_ALIVE "Keep-Alive"
@@ -46,6 +49,15 @@ extern config_t *Config;
 #define WR_MSG_QUEUE_SERVER_HOST "starling/host"
 #define WR_MSG_QUEUE_SERVER_PORT "starling/port"
 #define WR_PID_MSG_QUEUE_NAME "starling/pid_queue_name"
+
+/* from zutil.h */
+#ifndef DEF_MEM_LEVEL
+#if MAX_MEM_LEVEL >= 8
+#define DEF_MEM_LEVEL  8
+#else
+#define DEF_MEM_LEVEL  MAX_MEM_LEVEL
+#endif
+#endif
 
 typedef enum {
   HTTP_STATUS_200 = 0,
@@ -306,12 +318,93 @@ void set_expires_by_type(static_server_t *s, node_t *root) {
 
 #ifdef W_ZLIB
 
+int deflate_file_compression(http_t *h) {
+  if(compress2((Bytef*)h->resp->resp_body->str, (uLongf*)&h->resp->resp_body->size,
+              (const Bytef*)h->stat->buffer->str, (uLongf)h->stat->buffer->len, Z_DEFAULT_COMPRESSION) != Z_OK){
+    wr_buffer_null(h->stat->buffer);
+    wr_buffer_null(h->resp->resp_body);
+    return FALSE;
+  } else {
+    h->resp->resp_body->len = h->resp->resp_body->size;
+    return TRUE;
+  } 
+}
+
+int gzip_file_compression(http_t *h) {  
+  z_stream c_stream;
+  int err;
+
+  c_stream.zalloc = NULL;
+  c_stream.zfree = NULL;
+  c_stream.opaque = NULL;
+  c_stream.total_out = 0;
+
+  err = deflateInit2(&c_stream, Z_DEFAULT_COMPRESSION, Z_DEFLATED,
+                     15+16, DEF_MEM_LEVEL, Z_DEFAULT_STRATEGY);
+                     
+  if (err != Z_OK) {
+    LOG_ERROR(WARN,"Deflate Init error"); 
+    return FALSE;
+  }
+
+  c_stream.next_in = (Bytef*) h->stat->buffer->str;
+  c_stream.avail_in = h->stat->buffer->len;
+  c_stream.next_out = (Bytef*) h->resp->resp_body->str;
+  c_stream.avail_out = h->resp->resp_body->size;
+  
+  do {      
+    c_stream.next_out = (Bytef*) (h->resp->resp_body->str + c_stream.total_out);
+
+    // Calculate the amount of remaining free space in the output buffer
+    // by subtracting the number of bytes that have been written so far
+    // from the buffer's total capacity
+    c_stream.avail_out = h->resp->resp_body->size - c_stream.total_out;
+    err = deflate(&c_stream, Z_FINISH);   
+  } while (err == Z_OK);
+  
+  if (err = Z_STREAM_END) {      
+    err = deflateEnd(&c_stream);
+    if ( err != Z_OK) {
+      LOG_ERROR(WARN, "Deflate End error"); 
+      return FALSE;
+    } else {
+      h->resp->resp_body->len = c_stream.total_out;
+      return TRUE;
+    }     
+  } else {
+    switch (err) {
+    case Z_ERRNO:
+      LOG_ERROR(WARN, "Error occured while reading file.");
+      break;
+    case Z_STREAM_ERROR:
+      LOG_ERROR(WARN, "The stream state was inconsistent (e.g., next_in or next_out was NULL).");
+      break;
+    case Z_DATA_ERROR:
+      LOG_ERROR(WARN, "The deflate data was invalid or incomplete.");
+      break;
+    case Z_MEM_ERROR:
+      LOG_ERROR(WARN, "Memory could not be allocated for processing.");
+      break;
+    case Z_BUF_ERROR:
+      LOG_ERROR(WARN, "Ran out of output buffer for writing compressed bytes.");
+      break;
+    case Z_VERSION_ERROR:
+      LOG_ERROR(WARN, "The version of zlib.h and the version of the library linked do not match.");
+      break;
+    default:
+      LOG_ERROR(WARN, "Unknown error code.");
+      break;
+    }
+    return FALSE;
+  }  
+}
 /** Compress file */
 /* Compress file if its size is >10kb and < 1mb and its mime-type has either
  * text or xml */
 
-int file_compress(http_t *h, static_file_t *ext){
-  LOG_FUNCTION  
+int file_compress(http_t *h, static_file_t *ext) {
+  LOG_FUNCTION
+  int rv=0;
   h->stat->encoding = scgi_header_value_get(h->req->scgi, "HTTP_ACCEPT_ENCODING");
   h->stat->user_agent = scgi_header_value_get(h->req->scgi, "HTTP_USER_AGENT");
   /*  Skip compressing entity body if user agent is IE6
@@ -322,10 +415,22 @@ int file_compress(http_t *h, static_file_t *ext){
   if(strstr(h->stat->user_agent, "MSIE 6.0")) {
     return FALSE;
   }
-  
-  if(h->stat->buf.st_size >= Config->Worker.Compress.lower_limit 
-     && h->stat->buf.st_size <= Config->Worker.Compress.upper_limit
-     && h->stat->encoding && strstr(h->stat->encoding,"deflate")){
+
+  if(h->stat->buf.st_size >= Config->Worker.Compress.lower_limit
+      && h->stat->buf.st_size <= Config->Worker.Compress.upper_limit
+      && h->stat->encoding) {
+    //TODO: look into Cache-Control request header and q value of Accept-Encoding request header
+    // to decide correct encoding
+    if (strstr(h->stat->encoding, "gzip")) {
+      h->resp->content_encoding = WR_GZIP_ENCODING;
+    }
+    else if (strstr(h->stat->encoding, "deflate")) {
+      h->resp->content_encoding = WR_DEFLATE_ENCODING;
+    }
+    else {
+      h->resp->content_encoding = WR_NO_ENCODING;
+      return FALSE;
+    }
 
 #ifdef W_REGEX
      if(h->stat->r_content_type){
@@ -346,6 +451,11 @@ int file_compress(http_t *h, static_file_t *ext){
     wr_u_int read;
     FILE *file;
     wr_buffer_create(h->stat->buffer, h->stat->buf.st_size);
+    
+    if(h->stat->buffer->str == NULL) {
+      return FALSE;
+    }
+    
     file = fopen(h->stat->path, "r");
 
     if(file == NULL) return FALSE;
@@ -366,19 +476,25 @@ int file_compress(http_t *h, static_file_t *ext){
     //zlib states that the source buffer must be at least 0.1 times larger than 
     //the source buffer plus 12 bytes to cope with the overhead of zlib data streams
     wr_buffer_create(h->resp->resp_body, h->stat->buf.st_size * 1.01 + 12);
-    //h->resp->resp_body->len = h->resp->resp_body->size;
-    //now compress the data
-    if(compress2((Bytef*)h->resp->resp_body->str, (uLongf*)&h->resp->resp_body->size,
-                (const Bytef*)h->stat->buffer->str, (uLongf)h->stat->buffer->len, Z_DEFAULT_COMPRESSION) != Z_OK){
-      wr_buffer_null(h->stat->buffer);
-      wr_buffer_null(h->resp->resp_body);
-      return FALSE;
-    } else {
-      h->resp->resp_body->len = h->resp->resp_body->size;
+    
+    switch(h->resp->content_encoding) {
+      case WR_GZIP_ENCODING:
+        rv = gzip_file_compression(h);        
+        LOG_DEBUG(DEBUG, "Done gzip encoding rv = %d", rv);        
+        break;
+      case WR_DEFLATE_ENCODING:
+        rv = deflate_file_compression(h);
+        LOG_DEBUG(DEBUG, "Done deflate encoding rv = %d", rv);
+        break;  
     }
+    
     wr_buffer_null(h->stat->buffer);
-
-    return TRUE;
+    
+    if(rv == FALSE) {
+      wr_buffer_null(h->resp->resp_body);
+    }
+    
+    return rv;
   }
   return FALSE; 
 } 
@@ -417,16 +533,16 @@ void http_resp_200(http_t *h) {
     t += ext->expires;
     time_to_httpdate(t, expire_date, STR_SIZE64);
     len = sprintf(str, "HTTP/1.1 200 OK\r\nDate: %s\r\nServer: %s-%s\r\nLast-Modified: %s\r\nExpires: %s\r\nConnection: %s\r\n%sContent-Type: %s\r\nContent-Length: %d\r\n\r\n",
-            current_date, Config->Worker.Server.name.str, Config->Worker.Server.version.str, modify_date, expire_date,
-            (conn_header ? conn_header : CONNECTION_CLOSE),
-            (ret_val == TRUE ? "Content-Encoding: deflate\r\n" : ""),
-            ext->mime_type, h->resp->resp_body->len);
-  }else {
+                  current_date, Config->Worker.Server.name.str, Config->Worker.Server.version.str, modify_date, expire_date,
+                  (conn_header ? conn_header : CONNECTION_CLOSE),
+                  (ret_val == TRUE ? (h->resp->content_encoding == WR_GZIP_ENCODING ? "Content-Encoding: gzip\r\n" : "Content-Encoding: deflate\r\n") : ""),
+                  ext->mime_type, h->resp->resp_body->len);
+  } else {
     len = sprintf(str, "HTTP/1.1 200 OK\r\nDate: %s\r\nServer: %s-%s\r\nLast-Modified: %s\r\nConnection: %s\r\n%sContent-Type: %s\r\nContent-Length: %d\r\n\r\n",
-             current_date, Config->Worker.Server.name.str, Config->Worker.Server.version.str, modify_date,
-            (conn_header ? conn_header : CONNECTION_CLOSE),
-            (ret_val == TRUE ? "Content-Encoding: deflate\r\n" : ""), 
-            ext->mime_type, h->resp->resp_body->len);
+                  current_date, Config->Worker.Server.name.str, Config->Worker.Server.version.str, modify_date,
+                  (conn_header ? conn_header : CONNECTION_CLOSE),
+                  (ret_val == TRUE ? (h->resp->content_encoding == WR_GZIP_ENCODING ? "Content-Encoding: gzip\r\n" : "Content-Encoding: deflate\r\n") : ""),
+                  ext->mime_type, h->resp->resp_body->len);
   }
 
   wr_string_new(h->resp->header, str, len);
