@@ -33,7 +33,7 @@ typedef struct {
   char    *str;
 }wr_str_t;
 
-#define wr_string_is_empty(_str) do { _str.str == NULL ;} while (0)
+#define wr_string_is_empty(_str) _str.str == NULL 
 #define wr_string_new(_str,str1,_len) do { _str.len = _len; _str.str = (char*) malloc(sizeof(char)*(_len+1)); memcpy(_str.str, str1, _len); _str.str[_len] = 0; } while (0)
 #define wr_string_null(_str) do { _str.len = 0; _str.str = NULL; } while (0)
 #define wr_string_append(_str, str1, _len)  do { {char *str2 =(char*) realloc(_str.str,sizeof(char)*(_str.len+_len+1));\
