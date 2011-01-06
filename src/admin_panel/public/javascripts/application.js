@@ -324,31 +324,66 @@ window.onload = function() {
 }
 
 
-function checkall(element) {
-  allCheckboxes = $('form_exception_list').getInputs('checkbox')
-    
-  if (element.checked == true) {
-      for (i = 0; i < allCheckboxes.length; i++) {          
-          allCheckboxes[i].checked = true;
-      }
-  }
-  else {
-      for (i = 0; i < allCheckboxes.length; i++) {
-          allCheckboxes[i].checked = false;
-      }
-  }
+function uncheckMain(element)
+{	
+	var main_checkbox = document.getElementById("check_all");
+	var check = false;
+	if (element.checked == false) {
+		
+		main_checkbox.checked = check;
+	}
+	else 
+	{
+		var input_elements = document.form_exception_list.exception_ids_;
+		for (i = 0; i < input_elements.length; i++) 
+		{						
+			if (input_elements[i].checked == true) 
+				check = true;			
+			else 
+			{
+				check = false;
+				break;
+			}
+		}
+		if(!input_elements.length)
+			if(input_elements.checked==true)
+				check=true;	
+		main_checkbox.checked = check;
+	}
+	
+}
+
+function checkAll(self,element) {
+      
+  	if (self.checked == true) {
+		element.checked=true;
+        for (i = 0; i < element.length; i++)
+		element[i].checked = true ;
+		
+    }
+    else {
+		element.checked=false;
+       for (i = 0; i < element.length; i++)
+		element[i].checked = false ;
+    }	
 }
 
 function checkMarked(arg) {
-	allCheckboxes = $('form_exception_list').getInputs('checkbox')
-	for (i = 0; i < allCheckboxes.length; i++)
-	  if ( allCheckboxes[i].checked == true)
-		  if(arg == 'delete') 
-				return confirm("Are you sure to delete selected exceptions?")				  
-			else 
-			 return true	
-						
-		  
-	alert('No exception selected')
-	return false
+	var input_elements = document.form_exception_list.exception_ids_;
+	if (!input_elements) {
+		alert('No exception selected...!');
+		return false;
+	}
+	for (i = 0; i < input_elements.length; i++)
+	{
+		if (input_elements[i].checked == true) {
+			return (confirm("Are you sure to "+arg+" selected exception(s)?"));
+		}
+	}
+	if(input_elements.checked==true)
+	{
+			return (confirm("Are you sure to "+arg+" selected exception(s)?"));
+	}             
+    alert('No exception selected...!');	
+    return false;
 }
