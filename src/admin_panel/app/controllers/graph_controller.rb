@@ -100,7 +100,7 @@ class GraphController < ApplicationController
       else
         flash[:notice] = NO_URL_HITS
       end              
-      render :partial => 'url_breakup_graph'
+      render :partial => 'get_url_breakup_data'
     else
       render :text => rv, :status => 404
     end
@@ -116,7 +116,7 @@ class GraphController < ApplicationController
       # for entime we would change it 23:59:59  by adding 86399 seconds 
       check_and_set_query_period(rv[0], rv[1] + 86399)      
       @url_hits_graph, @slowest_url_graph, @time_consuming_url_graph, @db_consuming_url_graph = get_url_calls_graph(@app_id)
-      render :partial => 'url_calls_graph'      
+      render :partial => 'get_url_data'      
     else
       render :text => rv, :status => 404
     end       
@@ -131,7 +131,7 @@ class GraphController < ApplicationController
     if rv.class == Array
       check_and_set_query_date(rv[0])      
       @percentage_db_usage_graph = get_database_usage_graph(@app_id)
-      render :partial => 'database_usage_graph'
+      render :partial => 'get_database_data'
       #puts @percentage_db_usage_graph      
     else
       render :text => rv, :status => 404
@@ -147,7 +147,7 @@ class GraphController < ApplicationController
     if rv.class == Array
       check_and_set_query_date(rv[0])      
       @app_cpu_usage_graph,@app_memory_usage_graph = get_resource_usage_graph_app(@app_id)
-      render :partial=> 'resource_usage_graph_app'      
+      render :partial=> 'get_resource_usage_data_app'      
     else
       render :text => rv, :status => 404
     end    
@@ -163,7 +163,7 @@ class GraphController < ApplicationController
     if rv.class == Array
       check_and_set_query_date(rv[0])      
       @avg_res_time_graph,@app_throughput_graph = get_throughput_graph(@app_id)   
-      render :partial => 'throughput_graph'   
+      render :partial => 'get_throughput_data'   
     else
       render :text => rv, :status => 404
     end
@@ -177,7 +177,7 @@ class GraphController < ApplicationController
     if rv.class == Array
       check_and_set_query_date(rv[0])      
       @server_cpu_usage_graph, @server_memory_usage_graph = get_resource_usage_graph_server()
-      render :partial => 'resource_usage_graph_server'
+      render :partial => 'get_resource_usage_data_server'
     else
       render :text => rv, :status => 404
     end    
