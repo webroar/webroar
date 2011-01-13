@@ -21,7 +21,7 @@ along with WebROaR.  If not, see <http://www.gnu.org/licenses/>.
 <table width = 95% cellpadding = "4" id = 'headers_table'>
     <tr>
         <td class = 'table_header' colspan = 3>
-            Headers&nbsp;&nbsp;&nbsp;<span class = 'help_link'><%=link_to_function "Help", :onclick => "addHelp('headers')" %></span>
+            Headers&nbsp;&nbsp;&nbsp;<span class = 'help_link'><%=link_to_function "Help", :onclick => "addHelp('headers',event)" %></span>
             <br/>
             <div id = 'headers' class = 'font_size_12'>
             </div>
@@ -29,7 +29,7 @@ along with WebROaR.  If not, see <http://www.gnu.org/licenses/>.
     </tr>    
     <tr>
         <td width = 40% class = 'BG_white'>
-            Expires&nbsp;&nbsp;&nbsp;<span class = 'help_link'><%=link_to_function "Help", :onclick => "addHelp('expires')" %>
+            Expires&nbsp;&nbsp;&nbsp;<span class = 'help_link'><%=link_to_function "Help", :onclick => "addHelp('expires',event)" %>
             </span>
             <br/>
             <div id = 'expires' class = 'font_size_12'>
@@ -46,7 +46,7 @@ along with WebROaR.  If not, see <http://www.gnu.org/licenses/>.
     </tr>
 		<tr>
 			<td class = 'sub_header' colspan = 3>
-				Expires By Type&nbsp;&nbsp;&nbsp;<span class = 'help_link'><%=link_to_function "Help", :onclick => "addHelp('expires_by_type')" %></span>
+				Expires By Type&nbsp;&nbsp;&nbsp;<span class = 'help_link'><%=link_to_function "Help", :onclick => "addHelp('expires_by_type',event)" %></span>
             <br/>
             <div id = 'expires_by_type' class = 'font_size_12'>
             </div>
@@ -56,14 +56,14 @@ along with WebROaR.  If not, see <http://www.gnu.org/licenses/>.
 		<% if expires_by_type_array.length > 0 %>
 		<tr>
 			<td class = 'sub_header'>
-				Extension&nbsp;&nbsp;&nbsp;<span class = 'help_link'><%=link_to_function "Help", :onclick => "addHelp('expires_by_type_ext')" %></span>
+				Extension&nbsp;&nbsp;&nbsp;<span class = 'help_link'><%=link_to_function "Help", :onclick => "addHelp('expires_by_type_ext',event)" %></span>
         &nbsp;&nbsp;&nbsp;        
             <br/>
             <div id = 'expires_by_type_ext' class = 'font_size_12'>
             </div>
 			</td>
 			<td class = 'sub_header'>
-				Expires&nbsp;&nbsp;&nbsp;<span class = 'help_link'><%=link_to_function "Help", :onclick => "addHelp('expires_by_type_expires_value')" %></span>
+				Expires&nbsp;&nbsp;&nbsp;<span class = 'help_link'><%=link_to_function "Help", :onclick => "addHelp('expires_by_type_expires_value',event)" %></span>
         &nbsp;&nbsp;&nbsp;        
             <br/>
             <div id = 'expires_by_type_expires_value' class = 'font_size_12'>

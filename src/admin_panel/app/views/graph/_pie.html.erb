@@ -68,7 +68,7 @@ along with WebROaR.  If not, see <http://www.gnu.org/licenses/>.
 					<td>III</td>
 					<td colspan = 2><b>Remaining Time</b>&nbsp;&nbsp;&nbsp;
       			<span class = 'help_link'>
-			      	<%=link_to_function "Help", :onclick => "addHelp('remaining_time')"%>
+			      	<%=link_to_function "Help", :onclick => "addHelp('remaining_time',event)"%>
 			      </span>
       			<br/> <div id = 'remaining_time' class = 'font_size_12'></div></td>
 					<td><b><%=format("%.2f", @data_y[@data_x.size - 1].to_f)%>%</b></td>

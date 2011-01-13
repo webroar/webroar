@@ -30,7 +30,7 @@ along with WebROaR.  If not, see <http://www.gnu.org/licenses/>.
 		<tr>
       <td width = 40% class = 'BG_white'>
       	<span style = "height:20px;float:left">
-        Extension&nbsp;&nbsp;&nbsp;<span class = 'help_link'><%=link_to_function "Help", :onclick => "addHelp('expires_by_type_ext')" %></span>
+        Extension&nbsp;&nbsp;&nbsp;<span class = 'help_link'><%=link_to_function "Help", :onclick => "addHelp('expires_by_type_ext',event)" %></span>
 				&nbsp;&nbsp;&nbsp;
 				<%=text_field :data, :ext, :size => '20' %>
 				</span>
@@ -41,7 +41,7 @@ along with WebROaR.  If not, see <http://www.gnu.org/licenses/>.
       </td>
       <td width = 40% class = 'BG_white'>
       	<span style = "height:20px;float:left">
-        Expires&nbsp;&nbsp;&nbsp;<span class = 'help_link'><%=link_to_function "Help", :onclick => "addHelp('expires_by_type_expires_value')" %></span>
+        Expires&nbsp;&nbsp;&nbsp;<span class = 'help_link'><%=link_to_function "Help", :onclick => "addHelp('expires_by_type_expires_value',event)" %></span>
 				&nbsp;&nbsp;&nbsp;
 				<%=text_field :data, :expires, :size => '10' %>
 				</span>
