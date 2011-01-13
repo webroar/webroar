@@ -32,14 +32,11 @@ function addHelp(id)
 	}
 	if(id=='runasuser')
 	{
-		str="Please enter the name of the user with whose privileges you would like to run this application. (root can be dangerous!). This user should have all the necessary permissions to get your web application working properly. (e.g. write access on required files and directories etc)."
-  $("application_specification_type1").hide();
-  $("application_specification_analytics").hide();
+		str="Please enter the name of the user with whose privileges you would like to run this application. (root can be dangerous!). This user should have all the necessary permissions to get your web application working properly. (e.g. write access on required files and directories etc)." 
 	}	
 	if(id=='analytics')
 	{
-		str="Set this to enabled if you would like to get detailed numbers about the run time performance of this application. This number gathering adds a very small overhead on your application. (Typically it adds < 3ms of additional processing time to the request)."
-  $("application_specification_environment").hide();
+		str="Set this to enabled if you would like to get detailed numbers about the run time performance of this application. This number gathering adds a very small overhead on your application. (Typically it adds < 3ms of additional processing time to the request)."  
 	}
 	if(id=='minworker')
 	{
@@ -96,9 +93,7 @@ function addHelp(id)
   }
   if(id=='type')
   {
-    str="In case you are deploying a rack compliant application (merb, sinatra, mack etc), please do create a config.ru file in it's root directory. Please refer the README or the user guide for more details."
-    $("application_specification_environment").hide();
-    $("application_specification_analytics").hide();
+    str="In case you are deploying a rack compliant application (merb, sinatra, mack etc), please do create a config.ru file in it's root directory. Please refer the README or the user guide for more details."    
   }
   if(id=='app_minworker')
   {
@@ -164,24 +159,9 @@ function addHelp(id)
   {
     str = "Expires value in no. of seconds."
   }
-  if(id=='runasuser')
-  {
-	  str=str+"<div style='width:99%;text-align:right'><a href=# onClick=\" $('application_specification_type1').show(); $('application_specification_analytics').show(); $('"+id+"').hide(); return false;\" class='calendar_link'>Close</a></div>"
-  }
-  else if (id=='analytics')
-  {
-	  str=str+"<div style='width:99%;text-align:right'><a href=# onClick=\" $('application_specification_environment').show(); $('"+id+"').hide(); return false;\" class='calendar_link'>Close</a></div>"
-  }
-  else if (id=='type') 
-  {   
-	  str=str+"<div style='width:99%;text-align:right'><a href=# onClick=\" $('application_specification_environment').show(); $('application_specification_analytics').show(); $('"+id+"').hide(); return false;\" class='calendar_link'>Close</a></div>"
-  }
-  else
-  {
-	  str=str+"<div style='width:99%;text-align:right'><a href=# onClick=\"$('"+id+"').hide(); return false;\" class='calendar_link'>Close</a></div>"
-  }  
-	$(id).show();
-	$(id).update(str).addClassName('popup_container').show();
+  str=str+"<div style='width:99%;text-align:right'><a href=# onClick=\"$('"+id+"').hide(); return false;\" class='calendar_link'>Close</a></div>"
+  $j(".font_size_12").hide();
+  $(id).update(str).addClassName('popup_container').show();
 }
 
 
