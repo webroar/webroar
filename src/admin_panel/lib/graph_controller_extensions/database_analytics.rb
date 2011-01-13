@@ -32,15 +32,22 @@ module Analytics
     # This method renders the partial containing Database Usage Graphs.
     def get_database_data(app_id)
       @app_id = app_id
-      check_and_set_query_date      
-      @percentage_db_usage_graph = get_database_usage_graph(@app_id)
+      check_and_set_query_date 
+      start_date = session[:start_time].strftime("%Y-%m-%d")+" 00:00:00"
+      end_date = session[:start_time].strftime("%Y-%m-%d")+" 23:59:59"
+      urls = UrlTimeSample.get_urls(start_date, end_date, app_id)
+      if urls.size > 0            
+        @percentage_db_usage_graph = get_database_usage_graph(@app_id)
+      else
+        flash[:notice] = NO_DATA_FOUND
+      end      
       render :partial => 'database_usage_graph'
     end
     
     # This method is called for getting the percentage time spent graph for a specific date and time.
     def percentage_time_spent_in_db_layer
         app_id = params[:app_id]
-	time_array = get_start_end_time(params[:date], params[:start_time], params[:end_time])
+	      time_array = get_start_end_time(params[:date], params[:start_time], params[:end_time])
         if time_array.size > 1
             @percentage_db_usage_graph = plot_graph("graph/get_percentage_db_usage_data/#{app_id}?time_slab=#{time_array[0]}.#{time_array[1]}", 'percentage_db_usage')
            render :text => @percentage_db_usage_graph

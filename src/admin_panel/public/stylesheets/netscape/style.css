@@ -321,6 +321,7 @@ body
 #graph_div
 {
 	text-align:-moz-center;
+	min-height:600px;
 }
 
 #exceptions_listing_div

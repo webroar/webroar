@@ -18,7 +18,9 @@ You should have received a copy of the GNU General Public License
 along with WebROaR.  If not, see <http://www.gnu.org/licenses/>.
 -->
 <%= render :partial => 'query_period', :locals => {:update_div => 'url_calls_graph', :submit_action => 'url_calls_graph'} %>
-
+<% if flash[:notice] %>
+  <%= flash[:notice] %>
+<% else%>
 <%# this section is for Ploting Most Time Consuming url bar Graph for an application%>
 <div id = 'time_consuming_url_graph' class = 'graph_div'>
   <%=@time_consuming_url_graph%>
@@ -60,3 +62,4 @@ along with WebROaR.  If not, see <http://www.gnu.org/licenses/>.
 <div id='db' class='font_size_12'></div>
 <br/>
 <br/>
+<% end %>

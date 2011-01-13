@@ -116,7 +116,7 @@ module Analytics
         @suffix = get_suffix(@url_rank)
         @data_x, @data_y, @url_breakup_graph, @data_actual_time = get_url_breakup_graph_data(@start_time, @end_time, @app_id, @urls)
       else
-        flash[:notice] = NO_URL_HITS
+        flash[:notice] = NO_DATA_FOUND
       end
       render :partial => "url_breakup_graph"
     end

@@ -18,7 +18,9 @@ You should have received a copy of the GNU General Public License
 along with WebROaR.  If not, see <http://www.gnu.org/licenses/>.
 -->
 <%= render :partial => 'query_date', :locals => {:graph_id => 1, :update_div => 'database_usage_graph', :submit_action => 'database_usage_graph'} %>
-
+<% if flash[:notice] %>
+  <%= flash[:notice] %>
+<% else%>
 <%app_id = @app_id || 0 %>
 <%=render :partial => 'javascript_partial', :locals=> {:count => 'first', :start_hour => @start_hour, :end_hour => @end_hour, :app_id => app_id, :type => "percentage_db_usage_graph"}%>
 
@@ -28,3 +30,4 @@ along with WebROaR.  If not, see <http://www.gnu.org/licenses/>.
 </div>
 <br/><br/>
 <%=render :partial=>'slider_partial',:locals=>{:count=>'first'}%>
+<% end %>
