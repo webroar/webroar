@@ -22,6 +22,7 @@
 class AdminController < ApplicationController
   before_filter :login_required, :except => ['index', 'login'] #This method checks whether user is authenticated or not.
   before_filter :check_session_timeout, :except => ['index', 'login', 'get_latest_app_cpu_usage', 'get_latest_app_memory_usage', 'get_latest_server_cpu_usage', 'get_latest_server_memory_usage', 'get_latest_time']
+  before_filter :clear_flash_notice ,:only => [:change_password_form]
   #before_filter :clear_flash_notice #This methos clear the flash notice messages before navigating to next action.
   protect_from_forgery :only => [:change_password ]
   ssl_required :index, :login, :change_password, :change_password_form if SSL_ON
