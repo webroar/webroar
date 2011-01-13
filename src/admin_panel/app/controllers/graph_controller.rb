@@ -98,7 +98,7 @@ class GraphController < ApplicationController
         @suffix = get_suffix(@url_rank)
         @data_x,@data_y,@url_breakup_graph,@data_actual_time = get_url_breakup_graph_data(@start_time, @end_time, @app_id, @urls)       
       else
-        flash[:notice] = NO_URL_HITS
+        flash[:notice] = NO_DATA_FOUND
       end              
       render :partial => 'get_url_breakup_data'
     else
@@ -113,9 +113,14 @@ class GraphController < ApplicationController
     rv = check_for_valid_period(from_date_str, to_date_str)
     if rv.class == Array  
       # check_for_valid_period method would set Time object having hour minute and second value to zero
-      # for entime we would change it 23:59:59  by adding 86399 seconds 
-      check_and_set_query_period(rv[0], rv[1] + 86399)      
-      @url_hits_graph, @slowest_url_graph, @time_consuming_url_graph, @db_consuming_url_graph = get_url_calls_graph(@app_id)
+      # for entime we would change it 23:59:59  by adding 86399 seconds
+      check_and_set_query_period(rv[0], rv[1] + 86399)
+      urls = UrlTimeSample.get_urls(session[:from_date], session[:to_date], @app_id)      
+      if urls.size > 0               
+        @url_hits_graph, @slowest_url_graph, @time_consuming_url_graph, @db_consuming_url_graph = get_url_calls_graph(@app_id)
+      else
+        flash[:notice] = NO_DATA_FOUND
+      end
       render :partial => 'get_url_data'      
     else
       render :text => rv, :status => 404
@@ -129,10 +134,16 @@ class GraphController < ApplicationController
     date_str = params[:date].strip
     rv = check_for_valid_query_date(date_str)
     if rv.class == Array
-      check_and_set_query_date(rv[0])      
-      @percentage_db_usage_graph = get_database_usage_graph(@app_id)
-      render :partial => 'get_database_data'
-      #puts @percentage_db_usage_graph      
+      check_and_set_query_date(rv[0])
+      start_date = session[:start_time].strftime("%Y-%m-%d")+" 00:00:00"
+      end_date = session[:start_time].strftime("%Y-%m-%d")+" 23:59:59"
+      urls = UrlTimeSample.get_urls(start_date, end_date, @app_id)      
+      if urls.size > 0              
+        @percentage_db_usage_graph = get_database_usage_graph(@app_id)  
+      else
+        flash[:notice] = NO_DATA_FOUND
+      end            
+      render :partial => 'get_database_data'           
     else
       render :text => rv, :status => 404
     end    
@@ -161,8 +172,15 @@ class GraphController < ApplicationController
     date_str = params[:date].strip
     rv = check_for_valid_query_date(date_str)
     if rv.class == Array
-      check_and_set_query_date(rv[0])      
-      @avg_res_time_graph,@app_throughput_graph = get_throughput_graph(@app_id)   
+      check_and_set_query_date(rv[0])
+      start_date = session[:start_time].strftime("%Y-%m-%d")+" 00:00:00"
+      end_date = session[:start_time].strftime("%Y-%m-%d")+" 23:59:59"
+      urls = UrlTimeSample.get_urls(start_date, end_date, @app_id)
+      if urls.size > 0             
+        @avg_res_time_graph,@app_throughput_graph = get_throughput_graph(@app_id)   
+      else
+        flash[:notice] = NO_DATA_FOUND
+      end      
       render :partial => 'get_throughput_data'   
     else
       render :text => rv, :status => 404
@@ -409,9 +427,21 @@ class GraphController < ApplicationController
       @app_id = application.id
       case session[:graph_type]
       when "URL-Calls"
-        @url_hits_graph, @slowest_url_graph, @time_consuming_url_graph, @db_consuming_url_graph = get_url_calls_graph(@app_id)
+        urls = UrlTimeSample.get_urls(session[:from_date], session[:to_date], @app_id)
+        if urls.size > 0       
+          @url_hits_graph, @slowest_url_graph, @time_consuming_url_graph, @db_consuming_url_graph = get_url_calls_graph(@app_id)
+        else
+          flash[:notice] = NO_DATA_FOUND
+        end        
       when "Database-Usage"
-        @percentage_db_usage_graph = get_database_usage_graph(@app_id)
+        start_date = session[:start_time].strftime("%Y-%m-%d")+" 00:00:00"
+        end_date = session[:start_time].strftime("%Y-%m-%d")+" 23:59:59"
+        urls = UrlTimeSample.get_urls(start_date, end_date, @app_id)
+        if urls.size > 0
+          @percentage_db_usage_graph = get_database_usage_graph(@app_id)
+        else
+          flash[:notice] = NO_DATA_FOUND
+        end 
       when "URL-Breakup"
         @start_time = session[:from_date].strftime("%Y/%m/%d")
         start_time = session[:from_date]
@@ -424,7 +454,14 @@ class GraphController < ApplicationController
           @data_x, @data_y, @url_breakup_graph, @data_actual_time = get_url_breakup_graph_data(@start_time, @end_time, @app_id, @urls)
         end
       when "Throughput"
-        @avg_res_time_graph, @app_throughput_graph = get_throughput_graph(@app_id)
+        start_date = session[:start_time].strftime("%Y-%m-%d")+" 00:00:00"
+        end_date = session[:start_time].strftime("%Y-%m-%d")+" 23:59:59"
+        urls = UrlTimeSample.get_urls(start_date, end_date, @app_id)
+        if urls.size > 0
+          @avg_res_time_graph, @app_throughput_graph = get_throughput_graph(@app_id)
+        else
+          flash[:notice] = NO_DATA_FOUND
+        end         
       when "Resource-Usage"
         @app_cpu_usage_graph, @app_memory_usage_graph = get_resource_usage_graph_app(@app_id)
       else

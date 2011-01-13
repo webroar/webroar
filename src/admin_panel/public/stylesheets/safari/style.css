@@ -357,6 +357,7 @@ body
 
 #graph_div
 {
+  min-height:600px;
 	text-align:center;
 }
 

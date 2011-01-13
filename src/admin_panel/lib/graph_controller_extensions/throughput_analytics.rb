@@ -35,7 +35,14 @@ module Analytics
     def get_throughput_data(app_id)
       @app_id = app_id
       check_and_set_query_date
-      @avg_res_time_graph, @app_throughput_graph = get_throughput_graph(@app_id)
+      start_date = session[:start_time].strftime("%Y-%m-%d")+" 00:00:00"
+      end_date = session[:start_time].strftime("%Y-%m-%d")+" 23:59:59"
+      urls = UrlTimeSample.get_urls(start_date, end_date, app_id)
+      if urls.size > 0        
+        @avg_res_time_graph, @app_throughput_graph = get_throughput_graph(@app_id)
+      else
+        flash[:notice] = NO_DATA_FOUND
+      end      
       render :partial => 'throughput_graph'
     end
     

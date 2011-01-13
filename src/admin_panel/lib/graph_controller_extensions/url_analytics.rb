@@ -35,8 +35,13 @@ module Analytics
     
     # This method renders the partial containing url call Graphs for an application.
     def get_url_data(app_id)
-      @app_id = app_id
-      @url_hits_graph, @slowest_url_graph, @time_consuming_url_graph, @db_consuming_url_graph = get_url_calls_graph(app_id)
+      @app_id = app_id      
+      urls = UrlTimeSample.get_urls(session[:from_date], session[:to_date], app_id)
+      if urls.size > 0        
+        @url_hits_graph, @slowest_url_graph, @time_consuming_url_graph, @db_consuming_url_graph = get_url_calls_graph(app_id)        
+      else
+        flash[:notice] = NO_DATA_FOUND
+      end      
       render :partial => 'url_calls_graph'
     end
        
