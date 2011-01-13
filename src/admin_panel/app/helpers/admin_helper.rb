@@ -29,25 +29,18 @@ module AdminHelper
     if (@info['Application Specification'])
       while(@info['Application Specification'][i] and i < start+5)
         application = ApplicationSpecification.get_hash(i)
-        if index == 1
-          bg_class = "BG_dark_gray"
-          index = 0
-        else
-          bg_class = "BG_white"
-          index = 1
-        end
         #link="http://#{request.host}:#{request.port}#{h(application[:resolver])}"        
         str = "<tr>
-        <td class = #{bg_class}>#{h(application[:name])}</td>
-        <td class = #{bg_class}>#{h(application[:resolver])}</td>
-        <td class = #{bg_class}>#{h(application[:type1])}</td>
-        <td class = #{bg_class}>#{h(application[:analytics])}</td>
-        <td class = #{bg_class}>#{h(application[:environment])}</td>
-        <td class = #{bg_class}>#{h(application[:min_worker])}</td>
-        <td class = #{bg_class}>#{h(application[:max_worker])}</td>
-        <td class = #{bg_class}><center>#{link_to 'Edit', :controller => 'application_specification', :action => 'edit_application_form', :id => application[:name]}</center></td>
-      <td class = #{bg_class}><center>#{link_to_remote 'Delete', {:url => {:controller => 'application_specification', :action=>'delete_application', :id => application[:name]}, :before => "show_busy_div()", :complete => "hide_busy_div(request)", :update => "dummy_div", :confirm=>DELETE_APPLICATION_ALERT_MESSAGE, :oncontextmenu => 'return false;' }}</center></td>
-    <td class = #{bg_class}><center>#{link_to_remote 'Restart', {:url => {:controller => 'application_specification', :action => 'restart_application', :id => application[:name]}, :before => "show_busy_div()", :complete => "hide_busy_div(request)", :update => "dummy_div", :confirm=>RESTART_APPLICATION_ALERT_MESSAGE, :oncontextmenu => 'return false;'}}</center></td></tr>"
+        <td>#{h(application[:name])}</td>
+        <td>#{h(application[:resolver])}</td>
+        <td>#{h(application[:type1])}</td>
+        <td>#{h(application[:analytics])}</td>
+        <td>#{h(application[:environment])}</td>
+        <td>#{h(application[:min_worker])}</td>
+        <td>#{h(application[:max_worker])}</td>
+        <td><center>#{link_to 'Edit', :controller => 'application_specification', :action => 'edit_application_form', :id => application[:name]}</center></td>
+      <td><center>#{link_to_remote 'Delete', {:url => {:controller => 'application_specification', :action=>'delete_application', :id => application[:name]}, :before => "show_busy_div()", :complete => "hide_busy_div(request)", :update => "dummy_div", :confirm=>DELETE_APPLICATION_ALERT_MESSAGE, :oncontextmenu => 'return false;' }}</center></td>
+    <td><center>#{link_to_remote 'Restart', {:url => {:controller => 'application_specification', :action => 'restart_application', :id => application[:name]}, :before => "show_busy_div()", :complete => "hide_busy_div(request)", :update => "dummy_div", :confirm=>RESTART_APPLICATION_ALERT_MESSAGE, :oncontextmenu => 'return false;'}}</center></td></tr>"
         list_array[i] = str
         i += 1
       end
@@ -71,31 +64,24 @@ module AdminHelper
           cpu_usage = "0.00"
           memory_usage = "0.00"
         end	
-        if index == 1
-          bg_class = "BG_dark_gray"
-          index = 0
-        else
-          bg_class = "BG_white"
-          index = 1
-        end
         exception_count = App.exceptions_count(application[:name])
         if exception_count > 0 
           link_text = "Yes (#{exception_count})"
-          exception_td_data = "<span id='#{application[:name]}_exception' class='exception_link'>#{link_to link_text, :controller => 'exceptions', :action => 'get_exceptions_list', :application_name => application[:name]}</span>"
+          exception_td_data = "<span id='#{application[:name]}_exception'>#{link_to link_text, :controller => 'exceptions', :action => 'get_exceptions_list', :application_name => application[:name]}</span>"
         else
           exception_td_data = "<span id='#{application[:name]}_exception'>No</span>"
         end
         #link="http://#{request.host}:#{request.port}#{h(application[:resolver])}"
         list_array[i] = "<tr>
-				<td width = 25% class = #{bg_class}>#{h(application[:name])}</td>
-				<td width = 15% class = #{bg_class}><span id = '#{application[:name]}_cpu'>#{h cpu_usage}</span> %</td>
-				<td width = 15% class = #{bg_class}><span id = '#{application[:name]}_memory'>#{h memory_usage}</span> MB</td>
-				<td width = 15% class = #{bg_class}>#{h application[:min_worker]}</td>
-				<td width = 15% class = #{bg_class}>#{h application[:max_worker]}</td>"
+				<td width = 25%>#{h(application[:name])}</td>
+				<td width = 15%><span id = '#{application[:name]}_cpu'>#{h cpu_usage}</span> %</td>
+				<td width = 15%><span id = '#{application[:name]}_memory'>#{h memory_usage}</span> MB</td>
+				<td width = 15%>#{h application[:min_worker]}</td>
+				<td width = 15%>#{h application[:max_worker]}</td>"
         if  application[:type1].downcase == 'rails'
-          list_array[i] = list_array[i]+ " <th width = 15% class = #{bg_class}>#{exception_td_data}</th></tr>"
+          list_array[i] = list_array[i]+ " <td width = 15%>#{exception_td_data}</td></tr>"
         else
-          list_array[i] = list_array[i]+  "<th width = 15% class = #{bg_class}>--</th></tr>"
+          list_array[i] = list_array[i]+  "<td width = 15%>--</td></tr>"
         end
         i += 1		
       end
@@ -130,50 +116,42 @@ module AdminHelper
   #To help the configuration page to display the ssl information.
   def ssl_block(info, ssl_port, certificate, key)
     if info['Server Specification']['SSL Specification']
-      block = "<table id = 'ssl_table' width = 95% cellpadding = '4'>
+      block = "<table width = 95% >
 			      <tr>
-      				<td class = 'table_header' width = 80%>SSL Support</td>
-              <td class = 'table_header_link'>"
+      				<th width = 80%>SSL Support</th>
+              <th>"
       if info['Server Specification']['SSL Specification']['ssl_support'] == 'enabled'
         block = block + "#{link_to('Disable', :controller => 'server_specification', :action => 'disable_ssl_support', :id => 0)}"
-        block = block + "</td>
-                  </tr>
-              </table>"
-        block = block + "<table width = 95% cellpadding = '4'>
-          			  <tr>
-            				  <td width = 40% class = 'BG_dark_gray'>SSL Port&nbsp;&nbsp;&nbsp;
-                    			<span class = 'help_link'>
-                      				#{link_to_function('Help', :onclick => 'addHelp("ssl_port");')}
-                    			</span>
+        block = block + "</th>
+                  </tr>"
+        block = block + "<tr>
+            				  <td width = 40% >SSL Port&nbsp;&nbsp;&nbsp;
+                      				#{link_to_function('Help', :onclick => 'addHelp("ssl_port",event);')}
                     			<br/> <div id = 'ssl_port' class = 'font_size_12'></div>
                       </td>
-            				  <td width = 40% class = 'BG_dark_gray'><div id = 'ssl_port_div'>#{ssl_port}</td>
-	            			  <td width = 40% class = 'BG_dark_gray'>#{link_to_remote 'Edit', :update => 'ssl_port_div', :url => {:action => 'add_text_box', :div_id => 'ssl_port_div'}}</td>
+            				  <td width = 40%><div id = 'ssl_port_div'>#{ssl_port}</td>
+	            			  <td width = 40%>#{link_to_remote 'Edit', :update => 'ssl_port_div', :url => {:action => 'add_text_box', :div_id => 'ssl_port_div'}}</td>
 	          		  </tr>
 	          		  <tr>
-	            			  <td class = 'BG_white'>SSL Certificate Path&nbsp;&nbsp;&nbsp;
-                    			<span class = 'help_link'>
-                      				#{link_to_function('Help', :onclick => 'addHelp("ssl_certificate");')}
-                    			</span>
+	            			  <td>SSL Certificate Path&nbsp;&nbsp;&nbsp;
+                      				#{link_to_function('Help', :onclick => 'addHelp("ssl_certificate",event);')}
                     			<br/> <div id = 'ssl_certificate' class = 'font_size_12'></div>
                       </td>
-	            			  <td class = 'BG_white'><div id = 'certificate_div'>#{certificate}</div></td>
-            				  <td class = 'BG_white'>#{link_to_remote 'Edit', :update => 'certificate_div', :url => {:action => 'add_text_box', :div_id => 'certificate_div'}}</td>
+	            			  <td><div id = 'certificate_div'>#{certificate}</div></td>
+            				  <td>#{link_to_remote 'Edit', :update => 'certificate_div', :url => {:action => 'add_text_box', :div_id => 'certificate_div'}}</td>
           			  </tr>
           			  <tr>
-				              <td class = 'BG_dark_gray'>Machine key path&nbsp;&nbsp;&nbsp;
-                    			<span class = 'help_link'>
-                      				#{link_to_function('Help', :onclick => 'addHelp("ssl_key");')}
-                    			</span>
+				              <td>Machine key path&nbsp;&nbsp;&nbsp;
+                      				#{link_to_function('Help', :onclick => 'addHelp("ssl_key",event);')}
                     			<br/> <div id = 'ssl_key' class = 'font_size_12'></div>
                       </td>
-            				  <td class = 'BG_dark_gray'><div id = 'key_div'>#{key}</td>
-            				  <td class = 'BG_dark_gray'>#{link_to_remote 'Edit', :update => 'key_div', :url => {:action => 'add_text_box', :div_id => 'key_div'}}</td>
+            				  <td><div id = 'key_div'>#{key}</td>
+            				  <td>#{link_to_remote 'Edit', :update => 'key_div', :url => {:action => 'add_text_box', :div_id => 'key_div'}}</td>
           			  </tr>
             	  </table>"
       else
         block = block + "#{link_to_remote 'Enable', :update => 'ssl_div', :url => {:controller => 'server_specification', :action => 'ssl_support_form', :id => 1}}"
-        block = block + "</td>
+        block = block + "</th>
                   </tr>
               </table>"
       end
