@@ -24,7 +24,7 @@ along with WebROaR.  If not, see <http://www.gnu.org/licenses/>.
       <tr>
         <td class = 'table_header_link' width = 80 colspan = 3%><b>Mail Settings</b>&nbsp;&nbsp;&nbsp;
           <span class = 'help_link'>
-            <%=link_to_function('Help', :onclick => 'addHelp("mail");')%>
+            <%=link_to_function('Help', :onclick => 'addHelp("mail",event);')%>
           </span>
           <br/> <div id = 'mail' class = 'font_size_12'></div>
         </td>
@@ -36,7 +36,7 @@ along with WebROaR.  If not, see <http://www.gnu.org/licenses/>.
       <tr>
         <td class = "BG_dark_gray">SMTP Server<span id = 'needed'>*</span> &nbsp;&nbsp;&nbsp;
           <span class = 'help_link'>
-            <%=link_to_function('Help', :onclick => 'addHelp("smtp_server");')%>
+            <%=link_to_function('Help', :onclick => 'addHelp("smtp_server",event);')%>
           </span>
           <br/> <div id = 'smtp_server' class = 'font_size_12'></div>
         </td>
@@ -47,14 +47,14 @@ along with WebROaR.  If not, see <http://www.gnu.org/licenses/>.
       <tr>
         <td class = "BG_white">SMTP Domain<span id = 'needed'>*</span> &nbsp;&nbsp;&nbsp;
           <span class = 'help_link'>
-            <%=link_to_function('Help', :onclick => 'addHelp("smtp_domain");')%>
+            <%=link_to_function('Help', :onclick => 'addHelp("smtp_domain",event);')%>
           </span>
           <br/> <div id = 'smtp_domain' class = 'font_size_12'></div>
         </td>
         <td class = "BG_white"><%=text_field :smtp, :domain, :size => 20, :value => @smtp_old['domain']%></td>
         <td class = "BG_white">SMTP Authentication<span id = 'needed'>*</span>
           <span class = 'help_link'>
-            <%=link_to_function('Help', :onclick => 'addHelp("smtp_authentication");')%>
+            <%=link_to_function('Help', :onclick => 'addHelp("smtp_authentication",event);')%>
           </span>
           <br/> <div id = 'smtp_authentication' class = 'font_size_12'></div>
         </td>
@@ -63,14 +63,14 @@ along with WebROaR.  If not, see <http://www.gnu.org/licenses/>.
       <tr>
         <td class = "BG_dark_gray">SMTP Username<span id = 'needed'>*</span> &nbsp;&nbsp;&nbsp;
           <span class = 'help_link'>
-            <%=link_to_function('Help', :onclick => 'addHelp("smtp_username");')%>
+            <%=link_to_function('Help', :onclick => 'addHelp("smtp_username",event);')%>
           </span>
           <br/> <div id = 'smtp_username' class = 'font_size_12'></div>
         </td>
         <td class = "BG_dark_gray"><%=text_field :smtp, :user_name, :size => 20, :value => @smtp_old['user_name']%></td>
         <td class = "BG_dark_gray">SMTP Password<span id = 'needed'>*</span> &nbsp;&nbsp;&nbsp;
           <span class = 'help_link'>
-            <%=link_to_function('Help', :onclick => 'addHelp("smtp_password");')%>
+            <%=link_to_function('Help', :onclick => 'addHelp("smtp_password",event);')%>
           </span>
           <br/> <div id = 'smtp_password' class = 'font_size_12'></div>
         </td>
@@ -81,7 +81,7 @@ along with WebROaR.  If not, see <http://www.gnu.org/licenses/>.
         <td class = "BG_white"><%=text_field :smtp, :from, :size => 20, :value => @smtp_old['from']%></td>
         <td class = "BG_white">Recipient Email Addresses<span id = 'needed'>*</span> &nbsp;&nbsp;&nbsp;
           <span class = 'help_link'>
-            <%=link_to_function('Help', :onclick => 'addHelp("smtp_recipients_id");')%>
+            <%=link_to_function('Help', :onclick => 'addHelp("smtp_recipients_id",event);')%>
           </span>
           <br/> <div id = 'smtp_recipients_id' class = 'font_size_12'></div>
         </td>

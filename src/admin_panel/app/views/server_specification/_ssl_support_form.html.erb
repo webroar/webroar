@@ -27,7 +27,7 @@ along with WebROaR.  If not, see <http://www.gnu.org/licenses/>.
       <tr>
         <td class = "BG_dark_gray">SSl Port<span id = 'needed'>*</span> &nbsp;&nbsp;&nbsp;
           <span class = 'help_link'>
-            <%=link_to_function "Help", :onclick => "addHelp('ssl_port')"%>
+            <%=link_to_function "Help", :onclick => "addHelp('ssl_port',event)"%>
           </span>
           <br/> <div id = 'ssl_port' class = 'font_size_12'></div>
         </td>
@@ -36,7 +36,7 @@ along with WebROaR.  If not, see <http://www.gnu.org/licenses/>.
       <tr>
         <td class = 'BG_white'>SSL Certificate path <span id = 'needed'>*</span> &nbsp;&nbsp;&nbsp;
           <span class = 'help_link'>
-            <%=link_to_function "Help", :onclick => "addHelp('ssl_certificate')"%>
+            <%=link_to_function "Help", :onclick => "addHelp('ssl_certificate',event)"%>
           </span>
           <br/> <div id = 'ssl_certificate' class = 'font_size_12'></div>
         </td>
@@ -45,7 +45,7 @@ along with WebROaR.  If not, see <http://www.gnu.org/licenses/>.
       <tr>
         <td class = "BG_dark_gray">SSl Key Path <span id = 'needed'>*</span>  &nbsp;&nbsp;&nbsp;
           <span class = 'help_link'>
-            <%=link_to_function "Help", :onclick => "addHelp('ssl_key')"%>
+            <%=link_to_function "Help", :onclick => "addHelp('ssl_key',event)"%>
           </span>
           <br/> <div id = 'ssl_key' class = 'font_size_12'></div>
         </td>

@@ -20,7 +20,7 @@ along with WebROaR.  If not, see <http://www.gnu.org/licenses/>.
 */
 
 
-function addHelp(id)
+function addHelp(id,event)
 {
 	if(id=='resolver')
 	{
@@ -162,6 +162,19 @@ function addHelp(id)
   str=str+"<div style='width:99%;text-align:right'><a href=# onClick=\"$('"+id+"').hide(); return false;\" class='calendar_link'>Close</a></div>"
   $j(".font_size_12").hide();
   $(id).update(str).addClassName('popup_container').show();
+  var x = getX(event) - $("container").offsetLeft;
+  var y = getY(event) - $("container").offsetTop;
+  if(x > 470)
+	  x = 470;
+  $(id).setStyle({left :x,top :y});
+}
+function getX(event)
+{
+	return event.clientX + document.body.scrollLeft + document.documentElement.scrollLeft;
+}
+function getY(event)
+{
+	return event.clientY + document.body.scrollTop + document.documentElement.scrollTop;
 }
 
 

@@ -143,7 +143,7 @@ module AdminHelper
           			  <tr>
             				  <td width = 40% class = 'BG_dark_gray'>SSL Port&nbsp;&nbsp;&nbsp;
                     			<span class = 'help_link'>
-                      				#{link_to_function('Help', :onclick => 'addHelp("ssl_port");')}
+                      				#{link_to_function('Help', :onclick => 'addHelp("ssl_port",event);')}
                     			</span>
                     			<br/> <div id = 'ssl_port' class = 'font_size_12'></div>
                       </td>
@@ -153,7 +153,7 @@ module AdminHelper
 	          		  <tr>
 	            			  <td class = 'BG_white'>SSL Certificate Path&nbsp;&nbsp;&nbsp;
                     			<span class = 'help_link'>
-                      				#{link_to_function('Help', :onclick => 'addHelp("ssl_certificate");')}
+                      				#{link_to_function('Help', :onclick => 'addHelp("ssl_certificate",event);')}
                     			</span>
                     			<br/> <div id = 'ssl_certificate' class = 'font_size_12'></div>
                       </td>
@@ -163,7 +163,7 @@ module AdminHelper
           			  <tr>
 				              <td class = 'BG_dark_gray'>Machine key path&nbsp;&nbsp;&nbsp;
                     			<span class = 'help_link'>
-                      				#{link_to_function('Help', :onclick => 'addHelp("ssl_key");')}
+                      				#{link_to_function('Help', :onclick => 'addHelp("ssl_key",event);')}
                     			</span>
                     			<br/> <div id = 'ssl_key' class = 'font_size_12'></div>
                       </td>

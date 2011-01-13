@@ -43,7 +43,7 @@ along with WebROaR.  If not, see <http://www.gnu.org/licenses/>.
       <tr>
         <td class = 'BG_white' style = "height:30px;">Resolver<span id = 'needed'>*</span> &nbsp;&nbsp;&nbsp;
           <span class = 'help_link'>
-            <%= link_to_function "Help",:onclick => "addHelp('resolver')" %>
+            <%= link_to_function "Help",:onclick => "addHelp('resolver',event)" %>
           </span>
           <br/> <div id = 'resolver' class = 'font_size_12'></div>
         </td>
@@ -52,7 +52,7 @@ along with WebROaR.  If not, see <http://www.gnu.org/licenses/>.
       <tr>
         <td class = "BG_dark_gray" style = "height:30px;">Path<span id = 'needed'>*</span> &nbsp;&nbsp;&nbsp;
           <span class = 'help_link'>
-            <%= link_to_function "Help", :onclick=>"addHelp('path')" %>
+            <%= link_to_function "Help", :onclick=>"addHelp('path',event)" %>
           </span>
           <br/> <div id = 'path' class = 'font_size_12' ></div>
         </td>
@@ -61,7 +61,7 @@ along with WebROaR.  If not, see <http://www.gnu.org/licenses/>.
       <tr>
         <td class = 'BG_white' style = "height:30px;">RunAsUser<span id = 'needed'>*</span> &nbsp;&nbsp;&nbsp;
           <span class = 'help_link'>
-            <%= link_to_function "Help", :onclick => "addHelp('runasuser')" %>
+            <%= link_to_function "Help", :onclick => "addHelp('runasuser',event)" %>
           </span>
           <br/> <div id = 'runasuser' class = 'font_size_12'></div>
         </td>
@@ -70,7 +70,7 @@ along with WebROaR.  If not, see <http://www.gnu.org/licenses/>.
       <tr>
         <td class = "BG_dark_gray" style = "height:30px;">Type &nbsp;&nbsp;&nbsp;
           <span class = 'help_link'>
-            <%= link_to_function "Help", :onclick => "addHelp('type')" %>
+            <%= link_to_function "Help", :onclick => "addHelp('type',event)" %>
           </span>
           <br/> <div id = 'type' class = 'font_size_12'></div>
         </td>
@@ -79,7 +79,7 @@ along with WebROaR.  If not, see <http://www.gnu.org/licenses/>.
       <tr>
         <td class = 'BG_white' style = "height:30px;">Analytics &nbsp;&nbsp;&nbsp;
           <span class = 'help_link'>
-            <%= link_to_function "Help", :onclick => "addHelp('analytics')" %>
+            <%= link_to_function "Help", :onclick => "addHelp('analytics',event)" %>
           </span>
           <br/> <div id = 'analytics' class = 'font_size_12'></div>
         </td>
@@ -92,7 +92,7 @@ along with WebROaR.  If not, see <http://www.gnu.org/licenses/>.
       <tr>
         <td class = 'BG_white' style = "height:30px;">Minimum number of workers &nbsp;&nbsp;&nbsp;			
           <span class = 'help_link'>
-            <%= link_to_function "Help", :onclick => "addHelp('app_minworker')" %>
+            <%= link_to_function "Help", :onclick => "addHelp('app_minworker',event)" %>
           </span>
           <br/> <div id = 'app_minworker' class = 'font_size_12'></div>
         </td>
@@ -101,7 +101,7 @@ along with WebROaR.  If not, see <http://www.gnu.org/licenses/>.
       <tr>
         <td class = "BG_dark_gray" style = "height:30px;">Maximum number of workers &nbsp;&nbsp;&nbsp;
           <span class = 'help_link'>
-            <%= link_to_function "Help", :onclick => "addHelp('app_maxworker')" %>
+            <%= link_to_function "Help", :onclick => "addHelp('app_maxworker',event)" %>
           </span>
           <br/> <div id = 'app_maxworker' class = 'font_size_12'></div>
         </td>

@@ -24,7 +24,7 @@ along with WebROaR.  If not, see <http://www.gnu.org/licenses/>.
       <tr>
         <td class = 'table_header_link' width = 50%><b>Mail Settings</b>&nbsp;&nbsp;&nbsp;
           <span class='help_link'>
-            <%=link_to_function('Help', :onclick => 'addHelp("mail");')%>
+            <%=link_to_function('Help', :onclick => 'addHelp("mail",event);')%>
           </span>
         <br/> <div id = 'mail' class = 'font_size_12'></div></td>
         <td class = 'table_header_link' width = 50%><%=link_to_remote 'SMTP', :update => 'mail_div', :url => {:controller => 'mail_specification', :action => 'smtp_form'}%></td>
@@ -35,7 +35,7 @@ along with WebROaR.  If not, see <http://www.gnu.org/licenses/>.
       <tr>
         <td class = "BG_dark_gray">Sendmail Location<span id = 'needed'>*</span> &nbsp;&nbsp;&nbsp;
           <span class = 'help_link'>
-            <%=link_to_function('Help', :onclick => 'addHelp("sendmail_location");')%>
+            <%=link_to_function('Help', :onclick => 'addHelp("sendmail_location",event);')%>
           </span>
           <br/> <div id = 'sendmail_location' class = 'font_size_12'></div>
         </td>
@@ -48,7 +48,7 @@ along with WebROaR.  If not, see <http://www.gnu.org/licenses/>.
       <tr>  
         <td class = "BG_dark_gray">Recipient Email Addresses<span id = 'needed'>*</span> &nbsp;&nbsp;&nbsp;
           <span class = 'help_link'>
-            <%=link_to_function('Help', :onclick => 'addHelp("sendmail_recipients_id");')%>
+            <%=link_to_function('Help', :onclick => 'addHelp("sendmail_recipients_id",event);')%>
           </span>
           <br/> <div id = 'sendmail_recipients_id' class = 'font_size_12'></div>
         </td>
