@@ -19,17 +19,10 @@ along with WebROaR.  If not, see <http://www.gnu.org/licenses/>.
 -->
 
 <%old_value = Headers.get_expires_value()%>  
-
-<div  id = 'div_add_expires_text_box'>
-  <span style = "height:20px;float:left">
-    <%remote_form_for :data, :update => params[:div_id], :url => {:controller => 'headers', :action => 'save_expires_value', :div_id => params[:div_id], :old_value => old_value}do%>
-      <%=text_field :data, :value, :size => '10', :value => h(old_value)%> 
-    <%=submit_tag 'Save'%>
-    <%end%> 
-  </span>
-  <span style = "height:20px;float:left;">
-    <%remote_form_for :cancel, :update => params[:div_id], :url => {:controller => 'headers', :action => 'cancel_expires_value_edit', :div_id => params[:div_id], :old_value => old_value} do%>
-      <%=submit_tag 'Cancel'%>
-    <%end%> 
-  </span>
-</div>
+<%remote_form_for :data, :update => params[:div_id], :url => {:controller => 'headers', :action => 'save_expires_value', :div_id => params[:div_id], :old_value => old_value}do%>
+  <%=text_field :data, :value, :size => '10', :value => h(old_value)%> 
+&nbsp;&nbsp;&nbsp;<%=submit_tag 'Save'%>&nbsp;&nbsp;&nbsp;
+<%end%> 
+<%remote_form_for :cancel, :update => params[:div_id], :url => {:controller => 'headers', :action => 'cancel_expires_value_edit', :div_id => params[:div_id], :old_value => old_value} do%>
+  <%=submit_tag 'Cancel'%>
+<%end%> 

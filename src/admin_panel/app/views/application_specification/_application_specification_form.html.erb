@@ -25,99 +25,85 @@ along with WebROaR.  If not, see <http://www.gnu.org/licenses/>.
 <% end %>
 <%form_remote_for :application_specification, :url => url, :before => "show_busy_div()", :complete => "hide_busy_div(request)", :update => "application_specification_form" do %>	
   <div class = "text_align_center">
-    <table width = 60% cellpadding = '4'>
+    <table width = 60% >
       <tr>
-        <th class = 'table_header' colspan = 2><%= type %> Application</th>
+        <th colspan = 2><%= type %> Application</th>
       </tr>
       <tr>
-        <th colspan = 2><div id = 'error_div'><%= error_messages_for 'application_specification' %></div></th>
+        <td colspan = 2><div id = 'error_div'><%= error_messages_for 'application_specification' %></div></td>
       </tr>
       <tr>
-        <td class = "BG_dark_gray"  style = "width:60%;">Application Name<span id = 'needed'>*</span></td>
+        <td>Application Name<span id = 'needed'>*</span></td>
         <% if controller.action_name == "edit_application_form" or controller.action_name == "edit_application" %>
-          <td class = "BG_dark_gray"> <%= @application_specification.name%><%=hidden_field :application_specification, :name %></td>
+          <td > <%= @application_specification.name%><%=hidden_field :application_specification, :name %></td>
         <% else %>     
-          <td class = "BG_dark_gray"><%= text_field :application_specification, :name, :size => 20, :tabindex => "1" %></td>
+          <td><%= text_field :application_specification, :name, :size => 20, :tabindex => "1" %></td>
         <% end %>
       </tr>
       <tr>
-        <td class = 'BG_white' style = "height:30px;">Resolver<span id = 'needed'>*</span> &nbsp;&nbsp;&nbsp;
-          <span class = 'help_link'>
+        <td>Resolver<span id = 'needed'>*</span> &nbsp;&nbsp;&nbsp;
             <%= link_to_function "Help",:onclick => "addHelp('resolver',event)" %>
-          </span>
           <br/> <div id = 'resolver' class = 'font_size_12'></div>
         </td>
-        <td class = 'BG_white'><%= text_field :application_specification, :resolver, :size => 20, :tabindex => "2" %></td>
+        <td><%= text_field :application_specification, :resolver, :size => 20, :tabindex => "2" %></td>
       </tr>
       <tr>
-        <td class = "BG_dark_gray" style = "height:30px;">Path<span id = 'needed'>*</span> &nbsp;&nbsp;&nbsp;
-          <span class = 'help_link'>
+        <td>Path<span id = 'needed'>*</span> &nbsp;&nbsp;&nbsp;
             <%= link_to_function "Help", :onclick=>"addHelp('path',event)" %>
-          </span>
           <br/> <div id = 'path' class = 'font_size_12' ></div>
         </td>
-        <td class = "BG_dark_gray"><%= text_field :application_specification, :path, :size => 20, :tabindex => "3" %></td>
+        <td ><%= text_field :application_specification, :path, :size => 20, :tabindex => "3" %></td>
       </tr>
       <tr>
-        <td class = 'BG_white' style = "height:30px;">RunAsUser<span id = 'needed'>*</span> &nbsp;&nbsp;&nbsp;
-          <span class = 'help_link'>
+        <td>RunAsUser<span id = 'needed'>*</span> &nbsp;&nbsp;&nbsp;
             <%= link_to_function "Help", :onclick => "addHelp('runasuser',event)" %>
-          </span>
           <br/> <div id = 'runasuser' class = 'font_size_12'></div>
         </td>
-        <td class = 'BG_white'><%= text_field :application_specification, :run_as_user, :size=>20, :tabindex => "4" %></td>
+        <td><%= text_field :application_specification, :run_as_user, :size=>20, :tabindex => "4" %></td>
       </tr>
       <tr>
-        <td class = "BG_dark_gray" style = "height:30px;">Type &nbsp;&nbsp;&nbsp;
-          <span class = 'help_link'>
+        <td>Type &nbsp;&nbsp;&nbsp;
             <%= link_to_function "Help", :onclick => "addHelp('type',event)" %>
-          </span>
           <br/> <div id = 'type' class = 'font_size_12'></div>
         </td>
-        <td class = "BG_dark_gray"><%= select :application_specification, :type1,%w{Rails Rack}, {}, {:onChange => 'disableAnalytics(this.value);', :tabindex => "5"} %></td>
+        <td><%= select :application_specification, :type1,%w{Rails Rack}, {}, {:onChange => 'disableAnalytics(this.value);', :tabindex => "5"} %></td>
       </tr>
       <tr>
-        <td class = 'BG_white' style = "height:30px;">Analytics &nbsp;&nbsp;&nbsp;
-          <span class = 'help_link'>
+        <td>Analytics &nbsp;&nbsp;&nbsp;
             <%= link_to_function "Help", :onclick => "addHelp('analytics',event)" %>
-          </span>
           <br/> <div id = 'analytics' class = 'font_size_12'></div>
         </td>
-        <td class = 'BG_white'><%= select :application_specification, :analytics, @analytics, {}, {:tabindex => "6"} %></td>
+        <td><%= select :application_specification, :analytics, @analytics, {}, {:tabindex => "6"} %></td>
       </tr>
       <tr>
-        <td class = "BG_dark_gray" style = "height:30px;">Environment</td>
-        <td class = "BG_dark_gray"><%= text_field :application_specification, :environment, :size => 20, :tabindex => "7" %></td>
+        <td>Environment</td>
+        <td><%= text_field :application_specification, :environment, :size => 20, :tabindex => "7" %></td>
       </tr>
       <tr>
-        <td class = 'BG_white' style = "height:30px;">Minimum number of workers &nbsp;&nbsp;&nbsp;			
-          <span class = 'help_link'>
+        <td>Minimum number of workers &nbsp;&nbsp;&nbsp;			
             <%= link_to_function "Help", :onclick => "addHelp('app_minworker',event)" %>
-          </span>
           <br/> <div id = 'app_minworker' class = 'font_size_12'></div>
         </td>
-        <td class = 'BG_white'><%=text_field :application_specification, :min_worker, :size=>20, :tabindex => "8"%></td>
+        <td ><%=text_field :application_specification, :min_worker, :size=>20, :tabindex => "8"%></td>
       </tr>
       <tr>
-        <td class = "BG_dark_gray" style = "height:30px;">Maximum number of workers &nbsp;&nbsp;&nbsp;
-          <span class = 'help_link'>
+        <td>Maximum number of workers &nbsp;&nbsp;&nbsp;
             <%= link_to_function "Help", :onclick => "addHelp('app_maxworker',event)" %>
-          </span>
           <br/> <div id = 'app_maxworker' class = 'font_size_12'></div>
         </td>
-        <td class = "BG_dark_gray"><%=text_field :application_specification, :max_worker, :size => 20, :tabindex => "9"%></td>
+        <td ><%=text_field :application_specification, :max_worker, :size => 20, :tabindex => "9"%></td>
       </tr>
       <tr>
         <%if type == "Edit"%>
-          <th class = 'BG_white' colspan = 2><%= hidden_field :application_specification, :app_id, :size => 20 %><br/>
-          <%= submit_tag 'Save and Restart', :tabindex => "10" %></th>
+          <td colspan = 2 align='center'><%= hidden_field :application_specification, :app_id %>
+          <%= submit_tag 'Save and Restart', :tabindex => "10" %></td>
         <%else%>			
-          <th class = 'BG_white' colspan = 2><%=hidden_field :application_specification, :app_id, :size => 20%><br/>
-          <%= submit_tag 'Deploy', :tabindex => "10" %></th>
+          <td colspan = 2 align='center'><%=hidden_field :application_specification, :app_id %>
+          <%= submit_tag 'Deploy', :tabindex => "10" %></td>
         <%end%>	
       </tr>	
       <tr>
-        <td colspan = 2 class = "BG_dark_gray"><%= link_to 'Back', configuration_path, :tabindex => "11" %></td>
+        <td colspan = 2 ><%= link_to 'Back', configuration_path, :tabindex => "11" %></td>
       </tr>	
     </table>
   </div>

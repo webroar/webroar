@@ -18,20 +18,18 @@ You should have received a copy of the GNU General Public License
 along with WebROaR.  If not, see <http://www.gnu.org/licenses/>.
 -->
 
-<div id = 'container_graphs_data'>
 	<br/>
 	<div id = "page_name"><%=image_tag("tit_exceptions_ad.gif")%></div>
 	<br/>
   <%if @application_name.nil?%>
-    <div id = 'exceptions_listing_div' style = "min-height:590px;">
+    <div id = 'exceptions_listing_div'>
       <%=NO_DEPLOYED_APPLICATION_MESSAGE%><br/> Please use <%=link_to 'Configuration',:controller=>'admin',:action=>'configuration'%> tab to deploy applications.
     </div>  
   <%else%>
-	  <center><div id = 'reload'>Select Application: <%=select :application, :name, @apps, :selected => @application_name%></div></center>
+	  <div class="text_align_right">Select Application : <%=select :application, :name, @apps, :selected => @application_name%></div>
 	  <div id = 'exceptions_listing_div'>
 		   <%=render :partial => 'exceptions_listing_partial'%>
 	  </div>
 	  <br>
 	  <%= observe_field 'application_name', :update => 'exceptions_listing_div', :url => {:controller => 'exceptions', :action => 'list' }, :with => 'application_name'%>
   <%end%>
-</div>

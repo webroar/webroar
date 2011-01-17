@@ -18,22 +18,22 @@ You should have received a copy of the GNU General Public License
 along with WebROaR.  If not, see <http://www.gnu.org/licenses/>.
 -->
 
-<table width = 95% cellpadding = "4">
+<table width = 95%>
   <%if @info and @info['Application Specification']%>
     <tr>
-      <td class = 'table_header' colspan = 10>Application Specifications</td>
+      <th colspan = 10>Application Specifications</th>
     </tr>
     <tr>
-      <td class = 'sub_header'><b>Application Name</b> </td>
-      <td class = 'sub_header'><b>Resolver</b> </td>
-      <td class = 'sub_header' width = '10px'><b>Type</b> </td>
-      <td class = 'sub_header' width = '10px'><b>Analytics</b> </td>
-      <td class = 'sub_header' width = '10px'><b>Environment</b> </td>	
-      <td class = 'sub_header' width = '10%'><b>Minimum Workers</b> </td>
-      <td class = 'sub_header' width = '10%'><b>Maximum Workers</b> </td>	
-      <td class = 'sub_header' width = '50px'>&nbsp;</td>	
-      <td class = 'sub_header' width = '50px'>&nbsp;</td>	
-      <td class = 'sub_header' width = '50px'>&nbsp;</td>
+      <td class = 'sub_header text_align_center'><b>Application Name</b> </td>
+      <td class = 'sub_header text_align_center'><b>Resolver</b> </td>
+      <td class = 'sub_header text_align_center' width = '10px'><b>Type</b> </td>
+      <td class = 'sub_header text_align_center' width = '10px'><b>Analytics</b> </td>
+      <td class = 'sub_header text_align_center' width = '10px'><b>Environment</b> </td>	
+      <td class = 'sub_header text_align_center' width = '10%'><b>Minimum Workers</b> </td>
+      <td class = 'sub_header text_align_center' width = '10%'><b>Maximum Workers</b> </td>	
+      <td class = 'sub_header text_align_center' width = '50px'>&nbsp;</td>	
+      <td class = 'sub_header text_align_center' width = '50px'>&nbsp;</td>	
+      <td class = 'sub_header text_align_center' width = '50px'>&nbsp;</td>
     </tr>
     <%=application_list(start)%>
     <tr>
@@ -56,7 +56,7 @@ along with WebROaR.  If not, see <http://www.gnu.org/licenses/>.
     </tr>
   <%else%>
     <tr>
-      <td colspan = 9 align = center class = 'table_header'>&nbsp;</td>
+      <th colspan = 9>&nbsp;</td>
     </tr>
     <tr>
       <td colspan = 9 align = center><%=NO_DEPLOYED_APPLICATION_MESSAGE%></td>

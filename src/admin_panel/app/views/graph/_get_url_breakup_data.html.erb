@@ -21,12 +21,11 @@ along with WebROaR.  If not, see <http://www.gnu.org/licenses/>.
 <%= render :partial => 'query_period', :locals => {:update_div => 'pie_graphs_div', :submit_action => 'url_breakup_graph'} %>
 
 <%if @urls.size > 0%>
-	<div id = 'reload'>Select URL:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<%=select :url, :name, @urls, {},
+	<div class='text_align_right'>Select URL : <%=select :url, :name, @urls, {},
     :onchange => remote_function(:update => 'pie_graphs', :method => "put", :with => "'url_name=' + value + '&index=' + this.selectedIndex",
     :url => {:action => 'get_url_breakdown',:id=>@app_id,:start_time=>@start_time, :end_time => @end_time}) %></div>	 
-
-
 <%end%>
+
 <div id = 'pie_graphs'>
 	<%=render :partial => 'pie' %>
 </div>

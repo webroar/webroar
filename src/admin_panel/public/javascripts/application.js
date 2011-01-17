@@ -159,7 +159,7 @@ function addHelp(id,event)
   {
     str = "Expires value in no. of seconds."
   }
-  str=str+"<div style='width:99%;text-align:right'><a href=# onClick=\"$('"+id+"').hide(); return false;\" class='calendar_link'>Close</a></div>"
+  str=str+"<div class='text_align_right'><a href=# onClick=\"$('"+id+"').hide(); return false;\" class='calendar_link'>Close</a></div>"
   $j(".font_size_12").hide();
   $(id).update(str).addClassName('popup_container').show();
   var x = getX(event) - $("container").offsetLeft;

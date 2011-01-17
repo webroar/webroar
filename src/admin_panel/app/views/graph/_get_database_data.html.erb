@@ -25,7 +25,7 @@ along with WebROaR.  If not, see <http://www.gnu.org/licenses/>.
 <%=render :partial => 'javascript_partial', :locals=> {:count => 'first', :start_hour => @start_hour, :end_hour => @end_hour, :app_id => app_id, :type => "percentage_db_usage_graph"}%>
 
 <%# this section is for Ploting % of time spent in Data Base Layer by an application%>
-<div id = 'percentage_db_usage_graph' class = 'graph_div'>
+<div id = 'percentage_db_usage_graph'>
 	<%=@percentage_db_usage_graph%>
 </div>
 <br/><br/>

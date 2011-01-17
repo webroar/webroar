@@ -19,10 +19,10 @@ along with WebROaR.  If not, see <http://www.gnu.org/licenses/>.
 -->
 
 <div id = 'err_msg_div'></div>
-<div id = "query_date" style = "position:relative;text-align:right;width:920px;">
+<div class='text_align_right'>
 
 	<%form_remote_tag :update => {:failure => 'err_msg_div', :success => update_div}, :url=>{:controller=>'graph', :action=> submit_action , :app_id=>@app_id} do%>
-		Date: <%= calendar_date_select_tag "date",
+		Date : <%= calendar_date_select_tag "date",
                                  session[:start_time].strftime("%B %d, %Y"),
 	                             :year_range => 3.years.ago..0.years.ago,
 						         :valid_date_check => "date <= (new Date()).stripTime()"
@@ -32,7 +32,6 @@ along with WebROaR.  If not, see <http://www.gnu.org/licenses/>.
 
 		<%=submit_tag 'Get Data'%>
 	
-	<%end%>	
-	<div ID = "calender_div" STYLE = "position:absolute;visibility:hidden;background-color:white;layer-background-color:white;"></div>	
+	<%end%>			
 </div>	
 <br/>

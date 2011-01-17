@@ -22,7 +22,7 @@ along with WebROaR.  If not, see <http://www.gnu.org/licenses/>.
 		<%=flash[:notice]%>	
 	<%else%>	
 		<%if @url_rank%>
-			<div id = 'reload'><span style = "color:red"><%=@url_rank%><%=@suffix%> in the most time consuming urls list.</span></div>
+			<div class='text_align_right error'><%=@url_rank%><%=@suffix%> in the most time consuming urls list.</div>
 		<%end%>
 		<%= @url_breakup_graph%>
 		<br/>
@@ -67,9 +67,7 @@ along with WebROaR.  If not, see <http://www.gnu.org/licenses/>.
 				<tr>
 					<td>III</td>
 					<td colspan = 2><b>Remaining Time</b>&nbsp;&nbsp;&nbsp;
-      			<span class = 'help_link'>
 			      	<%=link_to_function "Help", :onclick => "addHelp('remaining_time',event)"%>
-			      </span>
       			<br/> <div id = 'remaining_time' class = 'font_size_12'></div></td>
 					<td><b><%=format("%.2f", @data_y[@data_x.size - 1].to_f)%>%</b></td>
 					<td><b><%=format("%.2f", @data_actual_time[@data_x.size - 1].to_f)%></b></td>

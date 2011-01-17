@@ -125,7 +125,7 @@ module AdminHelper
         block = block + "</th>
                   </tr>"
         block = block + "<tr>
-            				  <td width = 40% >SSL Port&nbsp;&nbsp;&nbsp;
+            				  <td width = 40%>SSL Port&nbsp;&nbsp;&nbsp;
                       				#{link_to_function('Help', :onclick => 'addHelp("ssl_port",event);')}
                     			<br/> <div id = 'ssl_port' class = 'font_size_12'></div>
                       </td>

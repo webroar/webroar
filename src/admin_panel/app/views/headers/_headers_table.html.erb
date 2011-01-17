@@ -18,95 +18,86 @@ You should have received a copy of the GNU General Public License
 along with WebROaR.  If not, see <http://www.gnu.org/licenses/>.
 -->
 <% expires = Headers.get_expires_value() %>  
-<table width = 95% cellpadding = "4" id = 'headers_table'>
+<table width = 95% >
     <tr>
-        <td class = 'table_header' colspan = 3>
-            Headers&nbsp;&nbsp;&nbsp;<span class = 'help_link'><%=link_to_function "Help", :onclick => "addHelp('headers',event)" %></span>
+        <th colspan = 3>
+            Headers&nbsp;&nbsp;&nbsp;<%=link_to_function "Help", :onclick => "addHelp('headers',event)" %>
             <br/>
             <div id = 'headers' class = 'font_size_12'>
             </div>
         </td>
     </tr>    
     <tr>
-        <td width = 40% class = 'BG_white'>
-            Expires&nbsp;&nbsp;&nbsp;<span class = 'help_link'><%=link_to_function "Help", :onclick => "addHelp('expires',event)" %>
-            </span>
+        <td width = 40% >
+            Expires&nbsp;&nbsp;&nbsp;<%=link_to_function "Help", :onclick => "addHelp('expires',event)" %>            
             <br/>
             <div id = 'expires' class = 'font_size_12'>
             </div>
         </td>
-        <td width = 40% class = 'BG_white'>
+        <td width = 40% >
             <div id = 'expires_div'>
                 <%= h(expires) %>
             </div>
         </td>
-        <td width = 20% class = 'BG_white'>
+        <td width = 20% >
             <%= link_to_remote 'Edit', :update => 'expires_div', :url => {:controller => 'headers', :action => 'add_expires_text_box', :div_id => 'expires_div'} %>
         </td>
     </tr>
 		<tr>
-			<td class = 'sub_header' colspan = 3>
-				Expires By Type&nbsp;&nbsp;&nbsp;<span class = 'help_link'><%=link_to_function "Help", :onclick => "addHelp('expires_by_type',event)" %></span>
+			<th colspan = 3>
+				Expires By Type&nbsp;&nbsp;&nbsp;<%=link_to_function "Help", :onclick => "addHelp('expires_by_type',event)" %>
             <br/>
             <div id = 'expires_by_type' class = 'font_size_12'>
             </div>
-			</td>
+			</th>
 		</tr>
 		<% expires_by_type_array = Headers.get_expires_by_type_array() %>		
 		<% if expires_by_type_array.length > 0 %>
 		<tr>
-			<td class = 'sub_header'>
-				Extension&nbsp;&nbsp;&nbsp;<span class = 'help_link'><%=link_to_function "Help", :onclick => "addHelp('expires_by_type_ext',event)" %></span>
-        &nbsp;&nbsp;&nbsp;        
+			<td class = 'sub_header text_align_center'>
+				Extension&nbsp;&nbsp;&nbsp;<%=link_to_function "Help", :onclick => "addHelp('expires_by_type_ext',event)" %>                
             <br/>
             <div id = 'expires_by_type_ext' class = 'font_size_12'>
             </div>
 			</td>
-			<td class = 'sub_header'>
-				Expires&nbsp;&nbsp;&nbsp;<span class = 'help_link'><%=link_to_function "Help", :onclick => "addHelp('expires_by_type_expires_value',event)" %></span>
-        &nbsp;&nbsp;&nbsp;        
+			<td class = 'sub_header text_align_center'>
+				Expires&nbsp;&nbsp;&nbsp;<%=link_to_function "Help", :onclick => "addHelp('expires_by_type_expires_value',event)" %>                
             <br/>
             <div id = 'expires_by_type_expires_value' class = 'font_size_12'>
             </div>
 			</td>
-			<td class = 'sub_header'>
+			<td class = 'sub_header text_align_center'>
 				
 			</td>
 		</tr>
 		<% index = 0 %>
 		<% expires_by_type_array.each do |item| %>
 		  <tr>
-		  	<td class = 'BG_white'>
+		  	<td >
 		  		<%=h item['ext'] %>
 		  	</td>
-				<td class = 'BG_white'>
+				<td >
           <%=h item['expires'] %>
         </td>
-				<td class = 'BG_white'>
+				<td >
           <%=link_to_remote "Delete", :update => 'headers_div', :url => {:controller => 'headers', :action => 'delete_expires_by_type', :id => index}, :confirm => "Are you sure to delete?", :oncontextmenu => 'return false;' %>
         </td>
 		  </tr>
 			<% index += 1%>
 		  <% end %>
 		<% end %>
-		
-</table>
-
-<div id = 'expires_by_type_form'>
-</div>
-
-<table width = 95% cellpadding = "4">		
-	<% if @restart_server_message %>
 		<tr>
-	   <td align = 'left'>
-      <span id='error_div'>
-      	<%= @restart_server_message%>
-		  </span>			
+		  <td style="padding:0px;" colspan='3'><div id = 'expires_by_type_form'></div></td>
+		</tr>
+  	<% if @restart_server_message %>
+		<tr>
+	   <td class='error' colspan='3'>      
+      	<%= @restart_server_message%>		  			
      </td>		
 		</tr>
 		<% end %>			
 		<tr>
-			<td align = 'right'>
+			<td align = 'right' colspan='3'>
 				<%=link_to_remote "Add Expires By Type", :update => 'expires_by_type_form', :url => {:controller => 'headers', :action => 'add_expires_by_type_form'} %>			  
 			</td>
 		</tr>

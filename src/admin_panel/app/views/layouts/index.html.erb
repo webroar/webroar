@@ -26,14 +26,23 @@ along with WebROaR.  If not, see <http://www.gnu.org/licenses/>.
 		<script>
 		<!--
 			var browserName=navigator.appName; 
-			if (browserName=="Netscape")
-			{ 
-				 document.write('<%= stylesheet_link_tag 'netscape/login.css' %>'); 
-			}
-			 else
-			  {
-				 document.write('<%= stylesheet_link_tag 'other/login.css' %>'); 
-			   }
+      if (browserName=="Netscape")
+      { 
+        if(navigator.userAgent.match("Safari"))
+        {
+         document.write('<%= stylesheet_link_tag 'safari/login.css' %>'); 
+      
+        }
+        else
+        {
+         document.write('<%= stylesheet_link_tag 'netscape/login.css' %>'); 
+        }
+      }
+       else
+        {
+         document.write('<%= stylesheet_link_tag 'other/login.css' %>'); 
+         }
+    
 			function setFocus()
       {
         $('user_name').focus();
@@ -43,13 +52,9 @@ along with WebROaR.  If not, see <http://www.gnu.org/licenses/>.
     <%= link_tag("/favicon.ico", :rel => "shortcut icon") %>
 	</head>
 	<body onload = 'setFocus();'>
-		<table width = 100% height = 100%>
-			<tr align = center>
-				<td>
-					<%=yield%>
-				</td>
-			</tr>
-		</table> 
+		<div id='container'>
+		  <%=yield%>
+		</div>
 	</body> 
 	<head>
 		<META HTTP-EQUIV = "PRAGMA" CONTENT = "NO-CACHE">

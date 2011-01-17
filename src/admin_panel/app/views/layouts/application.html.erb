@@ -24,14 +24,10 @@ along with WebROaR.  If not, see <http://www.gnu.org/licenses/>.
 		<%= javascript_include_tag :defaults %>
 		<%= javascript_include_tag 'application' %>
 		<%= javascript_include_tag 'swfobject' %>
-                <%= stylesheet_link_tag 'ui.all.css' %>
-	        <%= javascript_include_tag 'jquery-1.3.2'%>
-	        <%= javascript_include_tag 'ui.core.js'%>
-	        <%= javascript_include_tag 'ui.slider.js'%>
-
-
-
-
+    <%= stylesheet_link_tag 'ui.all.css','netscape/style.css' %>
+    <%= javascript_include_tag 'jquery-1.3.2'%>
+    <%= javascript_include_tag 'ui.core.js'%>
+    <%= javascript_include_tag 'ui.slider.js'%>
 		<script>
       $j=jQuery.noConflict();
 		<!--
@@ -41,7 +37,7 @@ along with WebROaR.  If not, see <http://www.gnu.org/licenses/>.
 				if(navigator.userAgent.match("Safari"))
 				{
 				 document.write('<%= stylesheet_link_tag 'safari/style.css' %>'); 
-
+			
 				}
 				else
 				{
@@ -64,17 +60,12 @@ along with WebROaR.  If not, see <http://www.gnu.org/licenses/>.
     </script>
     <%= link_tag("/favicon.ico", :rel => "shortcut icon") %>
 	</head>
-	<body>
+	<body class='text_align_center'>
 		<div id = "body_container">
 			<div id = 'header'>
-				<div id = 'container_logo'>
-					<%#=link_to image_tag("webroar-logo.gif", :border => 0), home_path%>
-					<span id = 'version_div'>
 						<%=link_to image_tag("logout.gif", :border => 0, :size => '17x17'), logout_path%>
-						&nbsp;<%=link_to 'Logout', logout_path, :class => 'lightgray'%>
+						&nbsp;<%=link_to 'Logout', logout_path%><br>
 					<div id = 'time_div'><%=Time.now.strftime("%d-%b-%Y %H:%M")%></div>
-					</span>
-				</div>
 			</div>
 				<div id = 'container_menu'>
           <div id = 'logo_div'>
@@ -116,18 +107,11 @@ along with WebROaR.  If not, see <http://www.gnu.org/licenses/>.
 					</div>
 				</div>
 			<div id = 'container'>
-				<div id = 'sub_container'>
-						<%=yield%>
-				</div>
-			</div>	
-				<div id = 'bottom_link_div'>
-				<table border = 0 width = 100% cellpadding = 5>
-          <tr>
-						<td>&nbsp;&nbsp;&nbsp;&nbsp;Copyright © 2009 Goonj LLC</td>
-					</tr>
-				</table>
-				</div>
-			
+					<%=yield%>
+			</div>
+			<div id = 'bottom_link_div'>
+			  Copyright © 2009 Goonj LLC
+			</div>
 		</div>
 				<%if flash[:server_message] or flash[:error]%>
 	  <div id = "overlay">  			
@@ -137,13 +121,13 @@ along with WebROaR.  If not, see <http://www.gnu.org/licenses/>.
 			  <tr>
 				  <td align="center" valign="center">
 					  <div id = 'message_box_header'>  			
-						    <%=link_to image_tag('close.gif', :size => '15x15', :border => 0), '#' , :class => 'white', :onClick => '$("message_box").hide(); $("overlay").hide(); return false;' %>
+						    <%=link_to image_tag('close.gif', :size => '15x15', :border => 0), '#' , :onClick => '$("message_box").hide(); $("overlay").hide(); return false;' %>
   				  </div>
   				  <div id = 'message_box_body'>
               <%=flash[:server_message]%><br/>
               <%=flash[:error]%>
               <br/>
-              <%= button_to_function 'Ok', :onClick => '$("message_box").hide(); $("overlay").hide(); return false;', :style => 'width : 40px;'%>
+              <%= button_to_function 'Ok', :onClick => '$("message_box").hide(); $("overlay").hide(); return false;'%>
   	       </div>
      			</td>
 			  </tr>
@@ -160,7 +144,6 @@ along with WebROaR.  If not, see <http://www.gnu.org/licenses/>.
 				</td>
 			</tr>
 			</table>
-			  		
 		</div>
 		<div id = "dummy_div"></div>
 	</body> 

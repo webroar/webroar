@@ -20,39 +20,33 @@ along with WebROaR.  If not, see <http://www.gnu.org/licenses/>.
 
 <div class = "text_align_center">
   <%form_for :ssl, :url => {:controller => 'server_specification', :action => 'enable_ssl_support'} do%>
-    <table width = 95% cellpadding = '4'>
+    <table width = 95%>
       <tr>
-        <th colspan = 2><div id = 'error_div'><%=flash[:ssl_errors]%></div></th>
+        <td colspan = 2><div id = 'error_div'><%=flash[:ssl_errors]%></div></td>
       </tr>
       <tr>
-        <td class = "BG_dark_gray">SSl Port<span id = 'needed'>*</span> &nbsp;&nbsp;&nbsp;
-          <span class = 'help_link'>
+        <td>SSl Port<span id = 'needed'>*</span> &nbsp;&nbsp;&nbsp;
             <%=link_to_function "Help", :onclick => "addHelp('ssl_port',event)"%>
-          </span>
           <br/> <div id = 'ssl_port' class = 'font_size_12'></div>
         </td>
-        <td class = "BG_dark_gray"><%=text_field :ssl, :port, :size => 20, :value => @ssl_spec[:port]%></td>
+        <td ><%=text_field :ssl, :port, :size => 20, :value => @ssl_spec[:port]%></td>
       </tr>
       <tr>
-        <td class = 'BG_white'>SSL Certificate path <span id = 'needed'>*</span> &nbsp;&nbsp;&nbsp;
-          <span class = 'help_link'>
+        <td >SSL Certificate path <span id = 'needed'>*</span> &nbsp;&nbsp;&nbsp;
             <%=link_to_function "Help", :onclick => "addHelp('ssl_certificate',event)"%>
-          </span>
           <br/> <div id = 'ssl_certificate' class = 'font_size_12'></div>
         </td>
-        <td class = 'BG_white'><%=text_field :ssl, :certificate_path, :size => 20, :value => @ssl_spec[:certificate_path]%></td>
+        <td ><%=text_field :ssl, :certificate_path, :size => 20, :value => @ssl_spec[:certificate_path]%></td>
       </tr>
       <tr>
-        <td class = "BG_dark_gray">SSl Key Path <span id = 'needed'>*</span>  &nbsp;&nbsp;&nbsp;
-          <span class = 'help_link'>
+        <td >SSl Key Path <span id = 'needed'>*</span>  &nbsp;&nbsp;&nbsp;
             <%=link_to_function "Help", :onclick => "addHelp('ssl_key',event)"%>
-          </span>
           <br/> <div id = 'ssl_key' class = 'font_size_12'></div>
         </td>
-        <td class = "BG_dark_gray"><%=text_field :ssl, :key_path, :size => 20,:value => @ssl_spec[:key_path]%></td>
+        <td ><%=text_field :ssl, :key_path, :size => 20,:value => @ssl_spec[:key_path]%></td>
       </tr>
       <tr>
-        <th class = 'BG_white' colspan = 2><%=submit_tag 'Save'%>&nbsp;&nbsp;&nbsp;&nbsp;<%=button_to_function 'Cancel', 'window.location.reload();'%></th>
+        <td  colspan = 2 align='center'><%=submit_tag 'Save'%>&nbsp;&nbsp;&nbsp;&nbsp;<%=button_to_function 'Cancel', 'window.location.reload();'%></td>
       </tr>
     </table>
   <%end%>
