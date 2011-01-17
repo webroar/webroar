@@ -23,20 +23,16 @@ along with WebROaR.  If not, see <http://www.gnu.org/licenses/>.
 
 <%= render :partial => 'query_date', :locals => {:graph_id => 4, :update_div => 'resource_usage_graph_server', :submit_action => 'resource_usage_graph_server'} %>
 <%# this section is for Ploting CPU Usage of server%>
-<div id = 'server_cpu_usage_graph' class = 'graph_div'>
+<div id = 'server_cpu_usage_graph' >
     <%=@server_cpu_usage_graph%> 
 </div>
-<br/>
-<br/>
+<br/><br/><br>
 <%=render :partial => 'slider_partial', :locals => {:count => 'first'}%>
-
 <hr>	
 <br/>
 <%# this section is for Ploting Memory Usage of server%>
-
-<div id = 'server_memory_usage_graph' class = 'graph_div'>
+<div id = 'server_memory_usage_graph' >
 	<%=@server_memory_usage_graph%>
 </div>
-<br/>
-<br/>
+<br/><br/><br>
 <%=render :partial => 'slider_partial', :locals => {:count => 'second'}%>

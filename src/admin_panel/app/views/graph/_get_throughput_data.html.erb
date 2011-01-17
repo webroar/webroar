@@ -26,18 +26,17 @@ along with WebROaR.  If not, see <http://www.gnu.org/licenses/>.
 <%=render :partial => 'javascript_partial', :locals => {:count => 'first', :start_hour => @start_hour, :end_hour => @end_hour,:app_id => app_id, :type => "avg_res_time_graph"}%>
 <%=render :partial => 'javascript_partial', :locals => {:count => 'second', :start_hour => @start_hour, :end_hour => @end_hour, :app_id => app_id, :type => "app_throughput_graph"}%>
 <%# this section is for Ploting average response time Graph for an application%>
-<div id = 'avg_res_time_graph' class = 'graph_div'>
+<div id = 'avg_res_time_graph' >
 	<%=@avg_res_time_graph%>
 </div>
-<br/><br/>
+<br/><br/><br>
 <%=render :partial => 'slider_partial', :locals => {:count => 'first'}%>
-
 <hr>	
 <br/>
 <%# this section is for Ploting throughput Graph for an application%>
-<div id='app_throughput_graph' class='graph_div'>
+<div id='app_throughput_graph' >
 	<%=@app_throughput_graph%>
 </div>
-<br/><br/>
+<br/><br/><br>
 <%=render :partial => 'slider_partial', :locals => {:count => 'second'}%>
 <% end %>

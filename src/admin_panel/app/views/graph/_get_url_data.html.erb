@@ -22,10 +22,10 @@ along with WebROaR.  If not, see <http://www.gnu.org/licenses/>.
   <%= flash[:notice] %>
 <% else%>
 <%# this section is for Ploting Most Time Consuming url bar Graph for an application%>
-<div id = 'time_consuming_url_graph' class = 'graph_div'>
+<div id = 'time_consuming_url_graph'>
   <%=@time_consuming_url_graph%>
 </div>
-<div style="width:80%;text-align:right;"><%=link_to_function "Help",:class=>"calendar_link",:onclick=>"addHelp('most',event)"%></div>
+<div class='text_align_right'><%=link_to_function "Help",:onclick=>"addHelp('most',event)"%></div>
 <div id='most' class='font_size_12'></div>
 <br/>
 <br/>
@@ -33,10 +33,10 @@ along with WebROaR.  If not, see <http://www.gnu.org/licenses/>.
 <br/>
 <br/>
 <%# this section is for Ploting Url Hits bar Graph for an application%>
-<div id = 'url_hits_graph' class = 'graph_div'>
+<div id = 'url_hits_graph'>
   <%=@url_hits_graph%>
 </div>
-<div style="width:80%;text-align:right;"><%=link_to_function "Help",:class=>"calendar_link",:onclick=>"addHelp('hits',event)"%></div>
+<div class='text_align_right'><%=link_to_function "Help",:onclick=>"addHelp('hits',event)"%></div>
 <div id='hits' class='font_size_12'></div>
 <br/>
 <br/>
@@ -44,10 +44,10 @@ along with WebROaR.  If not, see <http://www.gnu.org/licenses/>.
 <br/>
 <br/>
 <%# this section is for Ploting Slowest Url bar Graph for an application%>
-<div id = 'slowest_url_graph' class = 'graph_div'>
+<div id = 'slowest_url_graph'>
   <%=@slowest_url_graph%>
 </div>
-<div style="width:80%;text-align:right;"><%=link_to_function "Help",:class=>"calendar_link",:onclick=>"addHelp('slowest',event)"%></div>
+<div class='text_align_right'><%=link_to_function "Help",:onclick=>"addHelp('slowest',event)"%></div>
 <div id='slowest' class='font_size_12'></div>
 <br/>
 <br/>
@@ -55,10 +55,10 @@ along with WebROaR.  If not, see <http://www.gnu.org/licenses/>.
 <br/>
 <br/>
 <%# this section is for Ploting Top DataBase Using Urls Usage for an application%>
-<div id = 'db_consuming_url_graph' class = 'graph_div'>
+<div id = 'db_consuming_url_graph'>
   <%=@db_consuming_url_graph%>
 </div>
-<div style="width:80%;text-align:right;"><%=link_to_function "Help",:class=>"calendar_link",:onclick=>"addHelp('db',event)"%></div>
+<div class='text_align_right'><%=link_to_function "Help",:onclick=>"addHelp('db',event)"%></div>
 <div id='db' class='font_size_12'></div>
 <br/>
 <br/>

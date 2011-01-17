@@ -19,15 +19,15 @@ along with WebROaR.  If not, see <http://www.gnu.org/licenses/>.
 -->
 <%= calendar_date_select_includes "red" %>
 <% CalendarDateSelect.format = :natural %>
-<div id = 'container_graphs_data'>
 	<br/>
 	<div id = "page_name">
 		<%=image_tag("tit_analytics_ad.gif", :border => '0')%>
 	</div>
-	<div id = 'reload'>Select Application: <%=select :application, :name, @apps, :selected => @application_name%></div>
+	<div class='text_align_right'>Select Application : <%=select :application, :name, @apps, :selected => @application_name%><br>
 	<%if @apps.size == 1%>
-		<div style = "width:98%;color:#3C5C97;text-align:right;"><%=NO_APPLICATION_FOR_ANALYTICS%></div>
+		<span class='error'><%=NO_APPLICATION_FOR_ANALYTICS%></span>
 	<%end%>
+	</div>
 	<div id = 'graph_div'>
 		 <%=render :partial=>'graph_page'%>
 	</div>

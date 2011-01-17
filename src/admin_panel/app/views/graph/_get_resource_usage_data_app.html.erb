@@ -22,16 +22,16 @@ along with WebROaR.  If not, see <http://www.gnu.org/licenses/>.
 <%app_id = @app_id || 0 %>
 <%=render :partial => 'javascript_partial', :locals => {:count => 'first', :start_hour => @start_hour, :end_hour => @end_hour, :app_id => app_id, :type => "app_cpu_usage_graph"}%>
 <%=render :partial => 'javascript_partial', :locals => {:count => 'second', :start_hour => @start_hour, :end_hour => @end_hour, :app_id => app_id, :type => "app_memory_usage_graph"}%>
-<div id = 'app_cpu_usage_graph' class = 'graph_div'>
+<div id = 'app_cpu_usage_graph'>
 	<%=@app_cpu_usage_graph%>
 </div>
-<br/><br/>
+<br/><br/><br>
 <%=render :partial => 'slider_partial', :locals => {:count => 'first'}%>
 <hr>	
 <br/>
 <%# this section is for Ploting memory Usage Graph for an application%>
-<div id = 'app_memory_usage_graph' class = 'graph_div'>
+<div id = 'app_memory_usage_graph'>
 	<%=@app_memory_usage_graph%>
 </div>
-<br/><br/>
+<br/><br/><br>
 <%=render :partial => 'slider_partial', :locals => {:count => 'second'}%>

@@ -19,74 +19,40 @@ You should have received a copy of the GNU General Public License
 along with WebROaR.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-body
-{
-	background-color:#FFFFFF;
-	margin : 0px;	
-	text-align:-moz-center;
-	height:100%;
-	width:100%'
-	font-family:verdana;
-	font-size:8pt;
+body {
+    background-color:#FFFFFF;
+    margin : 0px;    
+    text-align:-moz-center;
+    font-family:verdana;
+    font-size:14px;
 }
-
-#login_window
-{
-	font-family:Verdana;
-	font-size:11px;
-	border: 2px solid #E0E0E0;
-	background-color:#FFFFFF;
-	width:350px;
-	height:280px;
+#container {
+    display:table-cell;
+    vertical-align: middle;
+    height:700px;
 }
-
-#login_window td
-{
-	font-family:Verdana;
-	font-size:11px;
+#login_window {
+    border: 2px solid #E0E0E0;
+    width:350px;
+    height:280px;
 }
-
-#login_header
-{
-	border-bottom: 2px solid #E0E0E0;
-	background-color:#DADADA;
-	font-family:Verdana;
-	font-size:13px;
-	font-weight:bold;
-	text-align:left;
-	padding:5px;
-	color:#585555;
+#login_window td {
+    font-size:11px;
+    padding-left:30px;
 }
-
-#login_logo
-{
-	height:100px;
-	background:url("../../images/webroar-logo.gif") no-repeat center;
+#login_header {    
+    background-color:#DADADA;
+    font-weight:bold;
+    text-align:left;
+    padding:5px;
+    color:#585555;
 }
-
-#login_form
-{
-	padding:5px;
-}	
-
-.login_text input
-{
-	font-family:Verdana;
-	width:150px;
-	font-size:11px;
+#login_logo {
+    height:100px;
+    background:url("../../images/webroar-logo.gif") no-repeat center;
 }
-
-.login_button input
-{
-	font-family:Verdana;
-	width:70px;
-	font-size:11px;
-}
-
-
-#error_div
-{
-	font-family:verdana;
-	font-size:10px;
-	color:red;	
+#error_div {
+    font-family:verdana;
+    font-size:10px;
+    color:red;
 }

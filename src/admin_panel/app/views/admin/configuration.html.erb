@@ -17,50 +17,45 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with WebROaR.  If not, see <http://www.gnu.org/licenses/>.
 -->
-<div id = 'container_data'>
+  <style>
+    form { margin:0px;display:inline;}
+  </style>
   <br/>
   <div id = "page_name"><%=image_tag("tit_configuration_ad.gif", :border => '0')%></div>
   <%port, min_worker, max_worker, log_level, ssl_support, ssl_port, certificate, key, access_log = ServerSpecification.get_fields %>	
-  <br/>
-  <div class = "text_align_center">
-    <table width = 95% cellpadding = "4">
+  <br/>  
+    <table width = 95% >
       <tr>
-        <td class = 'table_header' colspan = 3>Server Specifications</td>
+        <th  colspan = 3>Server Specifications</th>
       </tr>
       <tr>
-        <td width = 40% class = 'BG_dark_gray'> Port&nbsp;&nbsp;&nbsp;</td>	
-        <td width = 40% class = 'BG_dark_gray'><div id = 'port_div'><%=h(port)%></div></td>
-        <td width = 20% class = 'BG_dark_gray'><%=link_to_remote 'Edit', :update => 'port_div', :url => {:controller => 'server_specification', :action => 'add_text_box', :div_id => 'port_div'}%></td>
+        <td width = 40% > Port</td>	
+        <td width = 40% ><div id = 'port_div'><%=h(port)%></div></td>
+        <td width = 20% ><%=link_to_remote 'Edit', :update => 'port_div', :url => {:controller => 'server_specification', :action => 'add_text_box', :div_id => 'port_div'}%></td>
       </tr>
       <tr>
-        <td class = 'BG_white'>Minimum number of workers&nbsp;&nbsp;&nbsp;
-          <span class = 'help_link'>
+        <td >Minimum number of workers&nbsp;&nbsp;&nbsp;
             <%=link_to_function "Help", :onclick => "addHelp('minworker',event)"%>
-          </span>
           <br/> <div id = 'minworker' class = 'font_size_12'></div>
         </td>
-        <td class = 'BG_white'><div id = 'min_pro_div'><%=h(min_worker)%></div></td>
-        <td class = 'BG_white'><%=link_to_remote 'Edit', :update => 'min_pro_div', :url => {:controller => 'server_specification', :action => 'add_text_box', :div_id => 'min_pro_div'}%></td>
+        <td ><div id = 'min_pro_div'><%=h(min_worker)%></div></td>
+        <td ><%=link_to_remote 'Edit', :update => 'min_pro_div', :url => {:controller => 'server_specification', :action => 'add_text_box', :div_id => 'min_pro_div'}%></td>
       </tr>
       <tr>
-        <td class = 'BG_dark_gray'>Maximum number of workers&nbsp;&nbsp;&nbsp;
-          <span class = 'help_link'>
+        <td >Maximum number of workers&nbsp;&nbsp;&nbsp;
             <%=link_to_function "Help", :onclick => "addHelp('maxworker',event)"%>
-          </span>
           <br/> <div id = 'maxworker' class = 'font_size_12'></div>
         </td>
-        <td class = 'BG_dark_gray'><div id = 'max_pro_div'><%=h(max_worker)%></td>
-        <td class = 'BG_dark_gray'><%=link_to_remote 'Edit', :update => 'max_pro_div', :url => {:controller => 'server_specification', :action => 'add_text_box', :div_id => 'max_pro_div'}%></td>
+        <td ><div id = 'max_pro_div'><%=h(max_worker)%></div></td>
+        <td ><%=link_to_remote 'Edit', :update => 'max_pro_div', :url => {:controller => 'server_specification', :action => 'add_text_box', :div_id => 'max_pro_div'}%></td>
       </tr>
       <tr>
-        <td class = 'BG_white'>Log Level&nbsp;&nbsp;&nbsp;
-          <span class = 'help_link'>
+        <td >Log Level&nbsp;&nbsp;&nbsp;
             <%=link_to_function "Help", :onclick => "addHelp('log_level',event)"%>
-          </span>
           <br/> <div id = 'log_level' class = 'font_size_12'></div>
         </td>
-        <td class = 'BG_white'><div id = 'log_div'><%=h(log_level)%></div></td>
-        <td class = 'BG_white'><%=link_to_remote 'Edit', :update => 'log_div', :url => {:controller => 'server_specification', :action => 'add_text_box', :div_id => 'log_div'}%></td>
+        <td ><div id = 'log_div'><%=h(log_level)%></div></td>
+        <td ><%=link_to_remote 'Edit', :update => 'log_div', :url => {:controller => 'server_specification', :action => 'add_text_box', :div_id => 'log_div'}%></td>
       </tr>
     </table>
     <br/><br/>
@@ -73,15 +68,12 @@ along with WebROaR.  If not, see <http://www.gnu.org/licenses/>.
       <%else%>
         <%=render :partial => 'mail_specification/current_spec' %>    
       <%end%>  
-    </div>
-		<div id = 'headers_div'>
-			<%= render :partial => 'headers/headers_table' %>
-		</div>
-		<br/>
-		<br/>		
+    </div>   
+  	<div id = 'headers_div'>
+  		<%= render :partial => 'headers/headers_table' %>
+  	</div>
+  	<br/>
+  	<br/>		
     <div id = 'application_list_table'>
       <%=render :partial => 'application_table', :locals => {:start => 0}%>
     </div>
-  </div>
-  <br/><br/><br/>
-</div>

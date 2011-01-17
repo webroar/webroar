@@ -18,60 +18,55 @@ You should have received a copy of the GNU General Public License
 along with WebROaR.  If not, see <http://www.gnu.org/licenses/>.
 -->
 
-<div id = 'container_data'>
-  <br/>
-  <div id = "page_name"><%=image_tag("tit_home_ad.gif")%></div>
-  <br/>
-  <div class = "text_align_center">
-    <table width = 95%  border = 0 cellpadding = "4">
+    <br/>
+    <div id = "page_name"><%=image_tag("tit_home_ad.gif")%></div>
+    <br/>  
+    <table width = 95% >
       <tr>
-        <td  class = "table_header" colspan = 2> Server Snapshot </td>
+        <th colspan = 2>Server Snapshot </th>
       </tr>
       <tr>
-        <td  class = 'BG_dark_gray'>CPU Usage</td>
-        <td  class = 'BG_dark_gray'><span id = 'server_cpu_usage'><%="%.2f" % @server_resource_usage[0]%></span> %</td>
+        <td  >CPU Usage</td>
+        <td  ><span id = 'server_cpu_usage'><%="%.2f" % @server_resource_usage[0]%></span> %</td>
       </tr>
       <tr>
-        <td  class = 'BG_white'>Memory Usage</td>
-        <td  class = 'BG_white'><span id = 'server_memory_usage'><%=format("%.2f",@server_resource_usage[1]/1024.to_f)%></span> MB</td>
+        <td  >Memory Usage</td>
+        <td  ><span id = 'server_memory_usage'><%=format("%.2f",@server_resource_usage[1]/1024.to_f)%></span> MB</td>
       </tr>
     </table>
     <br/><br/>
-    <table width = 95%  border = 0 cellpadding = "4">
+    <table width = 95%>
       <%if @info and @info['Application Specification']%>						
         <tr>
-          <td  class = "table_header" colspan = 6>Deployed Applications</td>
+          <th colspan = 6>Deployed Applications</th>
         </tr>
         <tr>
-          <td class = "sub_header" width = "25%">Application Name</td>
-          <td class = "sub_header" width = "15%">CPU Usage</td>
-          <td class = "sub_header" width = "15%">Memory Usage</td>
-          <td class = "sub_header" width = "15%">Minimum Workers</td>
-          <td class = "sub_header" width = "15%">Maximum Workers</td>	
-          <td class = "sub_header" width = "15%">New Exceptions</td>	
+          <td class = "sub_header text_align_center" width = "25%">Application Name</td>
+          <td class = "sub_header text_align_center" width = "15%">CPU Usage</td>
+          <td class = "sub_header text_align_center" width = "15%">Memory Usage</td>
+          <td class = "sub_header text_align_center" width = "15%">Minimum Workers</td>
+          <td class = "sub_header text_align_center" width = "15%">Maximum Workers</td>	
+          <td class = "sub_header text_align_center" width = "15%">New Exceptions</td>	
         </tr> 	
         <%=application_list_home%>		
       <%else%>
         <tr>
-          <td  class = "table_header" colspan = 5>&nbsp;</td>
+          <th colspan = 5>&nbsp;</th>
         </tr>
         <tr>
-          <td colspan = 5 align = center class = 'header'><%=NO_DEPLOYED_APPLICATION_MESSAGE%><br/> Please use <%=link_to 'Configuration', :controller => 'admin', :action => 'configuration'%> tab to deploy applications.</td>
+          <td colspan = 5 align = center><%=NO_DEPLOYED_APPLICATION_MESSAGE%><br/> Please use <%=link_to 'Configuration', :controller => 'admin', :action => 'configuration'%> tab to deploy applications.</td>
         </tr>
       <%end%>
-    </table>
-  </div>
-</div>
-
-<% if (@info['Application Specification'])%>
-  <%i = 0%>
-  <%while(@info['Application Specification'][i])%>
-    <%= periodically_call_remote( :update => "#{@info['Application Specification'][i]['name']}_cpu", :url => { :controller => 'admin', :action => 'get_latest_app_cpu_usage', :app_name => @info['Application Specification'][i]['name']}, :frequency => 60)%>
-    <%= periodically_call_remote( :update => "#{@info['Application Specification'][i]['name']}_memory", :url => { :controller=>'admin',:action => 'get_latest_app_memory_usage', :app_name => @info['Application Specification'][i]['name']}, :frequency => 60)%>
-    <%= periodically_call_remote( :update => "#{@info['Application Specification'][i]['name']}_exception", :url => { :controller=>'exceptions',:action => 'get_exception',:app_name=>@info['Application Specification'][i]['name']},
+    </table>  
+  <% if (@info['Application Specification'])%>
+    <%i = 0%>
+    <%while(@info['Application Specification'][i])%>
+      <%= periodically_call_remote( :update => "#{@info['Application Specification'][i]['name']}_cpu", :url => { :controller => 'admin', :action => 'get_latest_app_cpu_usage', :app_name => @info['Application Specification'][i]['name']}, :frequency => 60)%>
+      <%= periodically_call_remote( :update => "#{@info['Application Specification'][i]['name']}_memory", :url => { :controller=>'admin',:action => 'get_latest_app_memory_usage', :app_name => @info['Application Specification'][i]['name']}, :frequency => 60)%>
+      <%= periodically_call_remote( :update => "#{@info['Application Specification'][i]['name']}_exception", :url => { :controller=>'exceptions',:action => 'get_exception',:app_name=>@info['Application Specification'][i]['name']},
       :frequency => 60)%>
-    <%i += 1%>
-  <%end%>	
-<%end%>
-<%= periodically_call_remote( :update => 'server_cpu_usage', :url => { :controller => 'admin', :action => 'get_latest_server_cpu_usage'}, :frequency => 60)%>
-<%= periodically_call_remote( :update => 'server_memory_usage', :url =>{ :controller => 'admin', :action => 'get_latest_server_memory_usage'}, :frequency => 60)%>
+      <%i += 1%>
+    <%end%>	
+  <%end%>
+  <%= periodically_call_remote( :update => 'server_cpu_usage', :url => { :controller => 'admin', :action => 'get_latest_server_cpu_usage'}, :frequency => 60)%>
+  <%= periodically_call_remote( :update => 'server_memory_usage', :url =>{ :controller => 'admin', :action => 'get_latest_server_memory_usage'}, :frequency => 60)%>
