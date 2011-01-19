@@ -17,11 +17,20 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with WebROaR.  If not, see <http://www.gnu.org/licenses/>.
 -->
-
+<script>
+function loadDivs(arr) {
+  for ( i = 0 ; i < arr.length ; i=i+2) {
+    if(document.getElementById(arr[i]) != null){
+      document.getElementById(arr[i]).innerHTML = arr[i+1];
+    }
+  }
+}
+</script>
 <div id = 'container_data'>
   <br/>
   <div id = "page_name"><%=image_tag("tit_home_ad.gif")%></div>
   <br/>
+  <span id='update_data'></span>
   <div class = "text_align_center">
     <table width = 95%  border = 0 cellpadding = "4">
       <tr>
@@ -63,15 +72,4 @@ along with WebROaR.  If not, see <http://www.gnu.org/licenses/>.
   </div>
 </div>
 
-<% if (@info['Application Specification'])%>
-  <%i = 0%>
-  <%while(@info['Application Specification'][i])%>
-    <%= periodically_call_remote( :update => "#{@info['Application Specification'][i]['name']}_cpu", :url => { :controller => 'admin', :action => 'get_latest_app_cpu_usage', :app_name => @info['Application Specification'][i]['name']}, :frequency => 60)%>
-    <%= periodically_call_remote( :update => "#{@info['Application Specification'][i]['name']}_memory", :url => { :controller=>'admin',:action => 'get_latest_app_memory_usage', :app_name => @info['Application Specification'][i]['name']}, :frequency => 60)%>
-    <%= periodically_call_remote( :update => "#{@info['Application Specification'][i]['name']}_exception", :url => { :controller=>'exceptions',:action => 'get_exception',:app_name=>@info['Application Specification'][i]['name']},
-      :frequency => 60)%>
-    <%i += 1%>
-  <%end%>	
-<%end%>
-<%= periodically_call_remote( :update => 'server_cpu_usage', :url => { :controller => 'admin', :action => 'get_latest_server_cpu_usage'}, :frequency => 60)%>
-<%= periodically_call_remote( :update => 'server_memory_usage', :url =>{ :controller => 'admin', :action => 'get_latest_server_memory_usage'}, :frequency => 60)%>
+<%= periodically_call_remote( :update => 'update_data', :url =>{ :controller => 'admin', :action => 'get_latest_updates'}, :frequency => 60)%>
