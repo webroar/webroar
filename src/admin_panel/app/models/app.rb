@@ -37,6 +37,12 @@ class App < ActiveRecord::Base
         0
       end
     end    
+
+    def get_all(page = 1, per_page = 5)
+      info = YAML::load_file(CONFIG_FILE_PATH) rescue nil
+      applications = info["Application Specification"].paginate(:page => page,:per_page => per_page) if info["Application Specification"]
+    end
+
   end
   
     # Start the application

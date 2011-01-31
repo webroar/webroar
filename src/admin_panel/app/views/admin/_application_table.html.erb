@@ -35,22 +35,32 @@ along with WebROaR.  If not, see <http://www.gnu.org/licenses/>.
       <td class = 'sub_header text_align_center' width = '50px'>&nbsp;</td>	
       <td class = 'sub_header text_align_center' width = '50px'>&nbsp;</td>
     </tr>
-    <%=application_list(start)%>
+    <% @applications.each do |application| %>
     <tr>
-      <td colspan = 10>
-        <%if start > 0%>
-          <%=link_to_remote 'Previous', :update => 'application_list_table', :url => {:controller => 'admin', :action => 'required_apps', :start => start - 5}%>
-        <%end%>
-        <%if start+5 < @info['Application Specification'].size  %>
-          <%=link_to_remote 'Next', :update => 'application_list_table', :url => {:controller => 'admin', :action => 'required_apps', :start => start + 5}%>
-        <%end%>
-        <%if start + 5 < @info['Application Specification'].size%>
-          (<%=start + 1%> to <%=start + 5 %> of <%=@info['Application Specification'].size %>)
-        <%else%>
-          (<%=start + 1%> to <%=@info['Application Specification'].size%> of <%=@info['Application Specification'].size %>)
-        <%end%>
+        <td><%= application['name'] %></td>
+        <td><%= application['baseuri'] %></td>
+        <td><%= application['type']%></td>
+        <td><%= application['analytics']%></td>
+        <td><%= application['environment']%></td>
+        <td><%= application['min_worker'] %></td>
+        <td><%= application['max_worker'] %></td>
+        <td><center><%= link_to 'Edit', :controller => 'application_specification', :action => 'edit_application_form', :id => application['name']%></center></td>
+        <td><center><%= link_to_remote 'Delete', {:url => {:controller => 'application_specification', :action=>'delete_application', :id => application['name']}, :before => "show_busy_div()", :complete => "hide_busy_div(request)", :update => "dummy_div", :confirm=>DELETE_APPLICATION_ALERT_MESSAGE, :oncontextmenu => 'return false;' }%></center></td>
+        <td><center><%= link_to_remote 'Restart', {:url => {:controller => 'application_specification', :action => 'restart_application', :id => application['name']}, :before => "show_busy_div()", :complete => "hide_busy_div(request)", :update => "dummy_div", :confirm=>RESTART_APPLICATION_ALERT_MESSAGE, :oncontextmenu => 'return false;'}%></center></td>
+    </tr>
+    <% end %>
+    <tr>
+      <td colspan = 10 align='center'>
+        ( <%= @applications.offset + 1 %> to <%= @applications.size + @applications.offset %> of <%= @applications.total_entries %> )
       </td>
     </tr>
+    <% if will_paginate @applications %>
+      <tr>
+        <td colspan=10>
+          <%= will_paginate @applications ,:params => {:controller => 'admin', :action => 'required_apps'} %>
+        </td>
+      </tr>
+    <% end %>
     <tr>
       <td colspan = 10 align = right><%=link_to 'Add Application', :controller => 'application_specification', :action => 'add_application_form'%></td>
     </tr>

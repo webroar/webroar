@@ -86,6 +86,7 @@ class AdminController < ApplicationController
   # This page contains the server settings and the application settings.
   def configuration			
     @info= YAML::load_file(CONFIG_FILE_PATH)	rescue nil
+    @applications = App.get_all(1)
     @ssl_spec = Hash[:certificate_path => params[:ssl][:certificate_path],
       :key_path => params[:ssl][:key_path],
       :port => params[:ssl][:port]] if params[:ssl]
@@ -165,7 +166,10 @@ class AdminController < ApplicationController
   #Used to paginate the list of deployed applications.
   def required_apps
     @info = YAML::load_file(CONFIG_FILE_PATH)	rescue nil
-    render :partial => 'application_table', :locals => {:start => params[:start].to_i}
+    @applications = App.get_all(params[:page] || 1)
+    render :update do |page|
+      page.replace_html 'application_list_table', :partial => 'application_table'
+    end
   end
   
   private

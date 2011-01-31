@@ -59,14 +59,19 @@ along with WebROaR.  If not, see <http://www.gnu.org/licenses/>.
 				<% unless current_status == IGNORED_EXCEPTION %>
 				<b><%=link_to_remote 'Ignore', :condition => "checkMarked('Ignore')", :url => {:controller => 'exceptions', :action => 'change_status', :status_name => "ignore", :current_status => status_name, :app_name => @application_name, :page => @exceptions.current_page }, :submit => 'form_exception_list', :method => :put  %></b>
 				<% end %>
+				<span style='margin-left:21%;'>
+				  ( <%= @exceptions.offset + 1 %> to <%= @exceptions.size + @exceptions.offset %> of <%= @exceptions.total_entries %> )
+				</span>
 				<%#=link_to_remote 'Delete', :condition => "checkMarked('delete')", :url => {:controller => 'exceptions', :action => 'change_status', :status_name => "delete", :current_status => status_name, :app_name => @application_name, :page => @exceptions.current_page }, :submit => 'form_exception_list', :method => :put  %>
     	</td>
 	  </tr>
-    <tr>
-      <td colspan = 6>        	
-      	<%= will_paginate @exceptions, :params => {:controller => 'exceptions', :action => 'list_statuswise_exceptions', :app_name => @application_name, :status_name => status_name} %>
-      </td>
-    </tr>    
+	  <% if will_paginate @exceptions %>
+      <tr>
+        <td colspan = 6>
+          <%= will_paginate @exceptions, :params => {:controller => 'exceptions', :action => 'list_statuswise_exceptions', :app_name => @application_name, :status_name => status_name} %>
+        </td>
+      </tr>
+    <% end %>
   </table>
 
 <%else%>
