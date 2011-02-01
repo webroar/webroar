@@ -36,9 +36,10 @@ class ExceptionsController < ApplicationController
       app = session[:exceptions_application_name]
     end  
     @application_name = app
-    app_id = App.get_application_data(app).id rescue nil    
+    app_id = App.get_application_data(app).id rescue nil
     @size = AppException.count_open(app_id)
-    @exceptions = AppException.get_all(OPEN_EXCEPTION, app_id, params[:page] || 1)
+    session[:per_page] = 5 if not session[:per_page]
+    @exceptions = AppException.get_all(OPEN_EXCEPTION, app_id, params[:page] || 1,session[:per_page])
   end  
   
   #This method is to display the information of the specific exception.
@@ -53,7 +54,8 @@ class ExceptionsController < ApplicationController
     session[:exceptions_application_name] = @application_name
     app_id = App.get_application_data(@application_name).id    
     @size = AppException.count_open(app_id)
-    @exceptions = AppException.get_all(OPEN_EXCEPTION, app_id, params[:page] || 1)
+    session[:per_page] = 5 if not session[:per_page]
+    @exceptions = AppException.get_all(OPEN_EXCEPTION, app_id, params[:page] || 1,session[:per_page])
     render :partial => 'exceptions_listing_partial'
   end
   
@@ -77,10 +79,11 @@ class ExceptionsController < ApplicationController
   
   #Method is used to list the exceptions with different status.
   def list_statuswise_exceptions
+    session[:per_page] = params[:per_page] if params[:per_page]     
     app_id = App.get_application_data(params[:app_name]).id
     @application_name = params[:app_name]
-    status = get_status_const(params[:status_name])      
-    @exceptions = AppException.get_all(status, app_id, params[:page] || 1)    
+    status = get_status_const(params[:status_name])
+    @exceptions = AppException.get_all(status, app_id, params[:page] || 1,session[:per_page])
     render :update do |page|
       page.replace_html 'data_div', :partial => 'exception_list_partial', :locals => { :current_status => status, :status_name => params[:status_name] }      
     end 
@@ -107,9 +110,10 @@ class ExceptionsController < ApplicationController
         end
       end
       status = get_status_const(params[:current_status])
-      @exceptions = AppException.get_all(status, app_id, params[:page])
+      session[:per_page] = 5 if not session[:per_page]
+      @exceptions = AppException.get_all(status, app_id, params[:page],session[:per_page])
       if @exceptions.out_of_bounds? and (page = params[:page].to_i - 1) > 0
-        @exceptions = AppException.get_all(status, app_id, page)
+        @exceptions = AppException.get_all(status, app_id, page,session[:per_page])
       end
       render :update do |page|
         page.replace_html 'data_div', :partial => 'exception_list_partial', :locals => { :current_status => status, :status_name => params[:current_status]}  

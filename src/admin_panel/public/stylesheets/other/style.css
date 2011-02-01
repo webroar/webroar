@@ -317,3 +317,6 @@ a:hover {
 .error {
     color:red;
 }
+#data_div select{
+  width:50px;
+}
