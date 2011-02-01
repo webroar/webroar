@@ -301,3 +301,6 @@ input[type='text'],input[type='password']
 {
   width:140px;
 }
+#data_div select{
+  width:50px;
+}

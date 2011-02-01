@@ -17,7 +17,6 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with WebROaR.  If not, see <http://www.gnu.org/licenses/>.
 -->
-
 <%if @exceptions.size >0 %>
 <% if current_status == OPEN_EXCEPTION %>
   <h3><center> Open Exceptions</center></h3>
@@ -68,10 +67,18 @@ along with WebROaR.  If not, see <http://www.gnu.org/licenses/>.
 	  <% if will_paginate @exceptions %>
       <tr>
         <td colspan = 6>
-          <%= will_paginate @exceptions, :params => {:controller => 'exceptions', :action => 'list_statuswise_exceptions', :app_name => @application_name, :status_name => status_name} %>
+          <%= will_paginate @exceptions, :params => {:controller => 'exceptions', :action => 'list_statuswise_exceptions', :app_name => @application_name, :status_name => status_name ,:per_page => session[:per_page]} %>
         </td>
       </tr>
     <% end %>
+    <tr>
+      <th colspan='6'>
+        <div class='text_align_right'>
+          Size : <%=select 'per', 'page',%w{5 10 15 20 25 30},:selected => params[:per_page] || session[:per_page]%>
+          <%= observe_field 'per_page',:url => {:controller => 'exceptions', :action => 'list_statuswise_exceptions', :app_name => @application_name, :status_name => status_name}, :with => 'per_page'%>
+        </div>
+      </th>
+    </tr>
   </table>
 
 <%else%>
