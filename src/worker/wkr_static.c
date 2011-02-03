@@ -405,6 +405,13 @@ int gzip_file_compression(http_t *h) {
 int file_compress(http_t *h, static_file_t *ext) {
   LOG_FUNCTION
   int rv=0;
+  char *cache_control=NULL;
+  
+  cache_control = scgi_header_value_get(h->req->scgi, "Cache-Control");
+  if(cache_control && strstr(cache_control, "no-transform")) {
+    return FALSE;
+  }
+  
   h->stat->encoding = scgi_header_value_get(h->req->scgi, "HTTP_ACCEPT_ENCODING");
   h->stat->user_agent = scgi_header_value_get(h->req->scgi, "HTTP_USER_AGENT");
   /*  Skip compressing entity body if user agent is IE6
