@@ -58,11 +58,11 @@ module AdminHelper
       while(@info['Application Specification'][i])
         application = ApplicationSpecification.get_hash(i)
         if @apps_resource_usage[application[:name]]
-          cpu_usage = @apps_resource_usage[application[:name]][0].to_s
-          memory_usage = format("%.2f",@apps_resource_usage[application[:name]][1]/1024).to_f
+          cpu_usage = format("%.2f", @apps_resource_usage[application[:name]][0])
+          memory_usage = format("%.2f", @apps_resource_usage[application[:name]][1].to_f/1024)
         else
-          cpu_usage = 0.0.to_s
-          memory_usage = 0.0.to_s
+          cpu_usage = "0.00"
+          memory_usage = "0.00"
         end	
         exception_count = App.exceptions_count(application[:name])
         if exception_count > 0 

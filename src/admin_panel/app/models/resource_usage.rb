@@ -29,7 +29,7 @@ class ResourceUsage < ActiveRecord::Base
       t2 = t1 - interval
       result = find(:first, :select => "sum(cpu_usage) as tot_cpu, sum(memory_usage) as tot_memory", :conditions => ["wall_time <= ? and wall_time >= ?",t1,t2])
       if !result
-        res = [0.0, 0]
+        res = [0.0, 0.0]
       else
         res = [result.tot_cpu.to_f, result.tot_memory.to_i]
       end
@@ -39,25 +39,42 @@ class ResourceUsage < ActiveRecord::Base
     #This method is used to get the latest state of the application i.e. its cpu usage and physical memory usage.
     # Returns hash with application name as key and 2 element array as value. In 2 element, first element is cpu usage, 2nd is memory usage in kb
     def get_latest_for_apps
+
+      apps = App.find(:all, :select => "id, name")
+
+      app_hash = Hash.new
+      result_hash = Hash.new
+
+      apps.each do |app|
+        app_hash[app.id] = app.name
+        result_hash[app.name] = [0.0, 0.0]
+      end
+
       t1 = Time.now
       interval = 60 # in seconds
       t2 = t1 - interval
+
       result_set = find(:all, :select => "app_id, sum(cpu_usage) as tot_cpu, sum(memory_usage) as tot_memory", :conditions => ["wall_time <= ? and wall_time >= ?",t1,t2], :group => 'app_id')
-      
-      if result_set.length == 0
-        {}
-      else
-        apps = App.find(:all, :select => "id, name")
-        app_hash = Hash.new
-        apps.each do |app|
-          app_hash[app.id] = app.name
-        end
-        result_hash = Hash.new
+
+      if result_set.length != 0
         result_set.each do |result|
           result_hash[app_hash[result.app_id]] = [result.tot_cpu.to_f, result.tot_memory.to_i]
         end # do |result|
-        result_hash
       end # if
+      result_hash
+    end
+
+    def get_latest_for_apps_with_exceptions
+      latest_apps = get_latest_for_apps
+      latest_apps.each_key do |key|
+        exception_count = App.exceptions_count(key)
+        if exception_count > 0
+          latest_apps[key][2] = "<a href=\"exceptions/get_exceptions_list?application_name=#{key}\">Yes (#{exception_count})</a>"
+        else
+          latest_apps[key][2] = "No"
+        end
+      end
+      latest_apps
     end
     
     #This method Returns the Resource Usage data for the server. This data is used to plot the graph for cpu usage and memory usage of the server.

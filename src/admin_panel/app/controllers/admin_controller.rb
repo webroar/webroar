@@ -21,8 +21,8 @@
 #This controller deals with all the actions related to the user handling and application configuration. 
 class AdminController < ApplicationController
   before_filter :login_required, :except => ['index', 'login'] #This method checks whether user is authenticated or not.
-  before_filter :check_session_timeout, :except => ['index', 'login', 'get_latest_app_cpu_usage', 'get_latest_app_memory_usage', 'get_latest_server_cpu_usage', 'get_latest_server_memory_usage', 'get_latest_time']
   before_filter :clear_flash_notice ,:only => [:change_password_form]
+  before_filter :check_session_timeout, :except => ['index', 'login', 'get_latest_updates', 'get_latest_time']
   #before_filter :clear_flash_notice #This methos clear the flash notice messages before navigating to next action.
   protect_from_forgery :only => [:change_password ]
   ssl_required :index, :login, :change_password, :change_password_form if SSL_ON
@@ -46,40 +46,6 @@ class AdminController < ApplicationController
     @server_resource_usage = ResourceUsage.get_latest_for_server #To get the resource usage by the server 
     @apps_resource_usage = ResourceUsage.get_latest_for_apps # to get the resource usage by the application
     set_application_name
-  end
-  
-  # This function is to dynamically update the server's CPU usage.
-  # After a minute it refreshes the cpu usage. 
-  def get_latest_server_cpu_usage
-    render :text => ResourceUsage.get_latest_for_server[0] 
-  end
-  
-  # This function is to dynamically update the server's memory usage.
-  # After a minute it refreshes the memory usage of the server.
-  def get_latest_server_memory_usage
-    render :text => format("%.2f",ResourceUsage.get_latest_for_server[1]/1024.to_f)
-  end
-  
-  # This function is to dynamically update the application's CPU usage
-  # After a minute it refreshes the cpu usage for a particalar application.	
-  def get_latest_app_cpu_usage
-    apps_resource_usage = ResourceUsage.get_latest_for_apps
-    if params[:app_name] and apps_resource_usage[params[:app_name]]
-      render :text => apps_resource_usage[params[:app_name]][0].to_s
-    else
-      render :text => "0.0"
-    end
-  end
-  
-  # This function is to dynamically update the application's Memory usage.
-  # After a minute it refreshes the memory usage for a particalar application.	
-  def get_latest_app_memory_usage
-    apps_resource_usage = ResourceUsage.get_latest_for_apps
-    if params[:app_name] and apps_resource_usage[params[:app_name]]
-      render :text => format("%.2f",apps_resource_usage[params[:app_name]][1] / 1024.to_f)	
-    else
-      render :text => "0.0"
-    end
   end
   
   # This function is to get the details of config file for configuration page.
@@ -157,6 +123,23 @@ class AdminController < ApplicationController
     set_application_name
   end
   
+  #Update all the dynamic values on home page
+  def get_latest_updates
+    server_usage = ResourceUsage.get_latest_for_server
+    apps_usage = ResourceUsage.get_latest_for_apps_with_exceptions
+    str = "<script>
+        loadDivs(new Array('server_cpu_usage','#{"%.2f" % server_usage[0]}','server_memory_usage','#{"%.2f" % (server_usage[1].to_f/1024)}'"
+
+         apps_usage.each do |key, val|
+          unless key[" "] or key == 'static-worker'
+            str<<",'#{key}_cpu','#{"%.2f" % val[0]}','#{key}_memory','#{"%.2f" % (val[1].to_f/1024)}','#{key}_exception','#{val[2]}'"
+          end
+        end
+        str << "));</script>"
+
+    render :text => str
+  end
+
   #This method is to return the server time.
   #The method refreshes the time after every minute.	
   def get_latest_time
