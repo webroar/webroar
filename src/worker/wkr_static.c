@@ -412,7 +412,7 @@ int file_compress(http_t *h, static_file_t *ext) {
       http://support.microsoft.com/default.aspx?scid=kb;en-us;Q313712
       for problem details
   */
-  if(strstr(h->stat->user_agent, "MSIE 6.0")) {
+  if(h->stat->user_agent && strstr(h->stat->user_agent, "MSIE 6.0")) {
     return FALSE;
   }
 
