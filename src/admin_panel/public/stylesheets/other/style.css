@@ -100,12 +100,13 @@ body {
 #log_div select{
     width:106px;
 }
-#error_div {
+#error_div,#error_div_smtp_form ,#error_div_sendmail_form ,#error_div_expire_by_type {
     font-size:11px;
     color:red;
     text-align:left;
 }
 #error_div h2 {
+	font-size:14px;
     color:black;    
 }
 #bottom_link_div {

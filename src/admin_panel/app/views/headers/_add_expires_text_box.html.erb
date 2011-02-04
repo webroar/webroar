@@ -19,7 +19,7 @@ along with WebROaR.  If not, see <http://www.gnu.org/licenses/>.
 -->
 
 <%old_value = Headers.get_expires_value()%>  
-<%remote_form_for :data, :update => params[:div_id], :url => {:controller => 'headers', :action => 'save_expires_value', :div_id => params[:div_id], :old_value => old_value}do%>
+<%remote_form_for :data, :update => params[:div_id], :html => { :onsubmit => 'if(!validate_headers_expire(this)){return false;}'} , :url => {:controller => 'headers', :action => 'save_expires_value', :div_id => params[:div_id], :old_value => old_value}do%>
   <%=text_field :data, :value, :size => '10', :value => h(old_value)%> 
 &nbsp;&nbsp;&nbsp;<%=submit_tag 'Save'%>&nbsp;&nbsp;&nbsp;
 <%end%> 

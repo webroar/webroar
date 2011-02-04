@@ -380,3 +380,390 @@ function checkMarked(arg) {
     alert('No exception selected...!');	
     return false;
 }
+function validate_user(frm)
+{
+	name = frm.user_name.value;	
+	password = frm.user_password.value;
+	rv = true;			
+	if(name.length == 0 && password.length == 0)
+	{								
+		document.getElementById("error_div").innerHTML = "Username/Password can't be blank.";
+		return false;	 		 
+	}
+	if(name.length == 0)
+	{			
+		rv = false ;	
+		document.getElementById("error_div").innerHTML = "Username can't be blank.";		
+	}
+	if(password.length == 0)
+	{		
+		rv = false;	
+		document.getElementById("error_div").innerHTML = "Password can't be blank."; 
+	}
+	return rv;
+}
+var temp = "";
+
+function validate_expire_by_type(frm)
+{
+	$j("#error_div_expire_by_type").css("padding","4");
+	temp = "";
+	var file_ext = frm.data_ext;
+	var file_expire_time = frm.data_expires;
+	
+	validates_presence(file_ext, "File Extension");
+	if(validates_presence(file_expire_time,"Expires Time"))
+		validates_number(file_expire_time,"Expires Time");
+
+	var error_div =	document.getElementById("error_div_expire_by_type");
+	if(error_div) 
+		error_div.innerHTML = temp; 
+	
+	if(temp.length > 4)
+		return false;
+	return true;
+
+}
+function validate_application(frm)
+{
+	$j("#error_div").css("padding","4");
+	temp = "";	
+	var app_name = frm.application_specification_name;
+	var app_resolver = frm.application_specification_resolver;
+	var app_path = frm.application_specification_path;
+	var app_user = frm.application_specification_run_as_user;
+	var app_env = frm.application_specification_environment;
+	var app_min_worker = frm.application_specification_min_worker;
+	var app_max_worker = frm.application_specification_max_worker;
+	
+	val = true;count = 0;
+	
+	val = validates_presence(app_name, "&nbsp;&nbsp;&nbsp;&nbsp; &#8226 Application Name");
+	if(val == false)	count++;
+	
+	val = validates_presence(app_resolver, "&nbsp;&nbsp;&nbsp;&nbsp; &#8226 Application Resolver");
+	if(val == false)	count++;
+	
+	val = validates_presence(app_path, "&nbsp;&nbsp;&nbsp;&nbsp; &#8226 Application Path");
+	if(val == false)	count++;
+	
+	val = validates_presence(app_user, "&nbsp;&nbsp;&nbsp;&nbsp; &#8226 Application RunAsUser");
+	if(val == false)	count++;
+	
+	val = validates_presence(app_env, "&nbsp;&nbsp;&nbsp;&nbsp; &#8226 Application Environment");
+	if(val == false)	count++;
+	
+	if(validates_presence(app_min_worker,"&nbsp;&nbsp;&nbsp;&nbsp; &#8226 Minimum Number of Workers"))
+	{	
+		if(validates_number(app_min_worker,"&nbsp;&nbsp;&nbsp;&nbsp; &#8226 Minimum Number of Workers"))
+		{
+			if(!validates_value(app_min_worker,1,20,"&nbsp;&nbsp;&nbsp;&nbsp; &#8226 Minimum Number of workers"))
+				count++;
+		}
+		else
+			count++;
+	}
+	else
+		count++;
+
+	
+	if(validates_presence(app_max_worker,"&nbsp;&nbsp;&nbsp;&nbsp; &#8226 Maximum Number of Workers"))
+	{
+		if(validates_number(app_max_worker,"&nbsp;&nbsp;&nbsp;&nbsp; &#8226 Maximum Number of Workers"))
+		{
+			if(!validates_value(app_max_worker,1,20,"&nbsp;&nbsp;&nbsp;&nbsp; &#8226 Maximum Number of workers"))
+				count++;
+		}
+		else
+			count++;
+	}
+	else
+		count++;
+	
+				
+	if(count > 1)
+	{
+		error_count_message = "<h2> "+count+" errors prohibited this application specification from being saved</h2> There were problems with following fields";
+		document.getElementById("error_div").innerHTML = error_count_message+"<br><br>"+temp;
+		val = false ;
+	}
+	if(count == 1)
+	{
+		error_count_message = "<h2> "+count+" error prohibited this application specification from being saved</h2> There were problems with following fields";
+		document.getElementById("error_div").innerHTML = error_count_message+"<br><br>"+temp;
+		val = false ;	
+	}		
+	return val;	
+}
+
+function validate_password(frm)
+{
+	$j("#error_div").css("padding","4");
+	temp = "";
+	var old_pass = frm.password_old;
+	var new_pass = frm.password_new;
+	var conf_pass= frm.password_confirm;	
+	validates_presence(old_pass,"Old password");	
+	if(validates_presence(new_pass,"New password"))
+		validates_length(new_pass,6,20,"New password is too short (minimum is 6 characters)");
+	if(validates_presence(conf_pass,"Confirm password"))
+		validates_length(conf_pass,6,20,"Confirm password is too short (minimum is 6 characters)");
+	
+	validates_confirmation(new_pass, conf_pass);
+	
+	if(temp.length > 0)
+	{
+		document.getElementById("error_div").innerHTML = temp;
+		return false;
+	}
+	return true;
+}
+
+
+//function to check presence of a field
+function validates_presence(fld,message)
+{		
+	var fld_value = $j.trim(fld.value);	
+	if(fld_value.length == 0)
+	{								
+		temp = temp +message+" can't be blank <br>";
+		return false;
+	}	
+	return true;
+}
+
+//function to check length of a field
+function validates_length(fld,min_length,max_length,message)
+{
+	fld_value = $j.trim(fld.value);	
+	if((fld_value.length < min_length || fld_value.length > max_length ) && fld_value.length!=0)
+	{						
+		temp = temp + message+"<br>";
+		return false;
+	}		
+	return true;	
+}
+
+//function to check confirmation of password
+function validates_confirmation(fld1,fld2)
+{	
+	fld1_value = $j.trim(fld1.value);
+	fld2_value = $j.trim(fld2.value);
+	if(fld1_value != fld2_value && fld1_value.length!=0 && fld2_value.length!=0 && fld1_value.length >= 6 && fld2_value.length >= 6) 
+	{							
+		temp = temp + "doesn't match confirmation <br>";
+		return false;
+	}	
+	return true;	
+}
+
+
+//function to check numerasity of a field
+function validates_number(fld,message)
+{			
+	var fld_value = $j.trim(fld.value);	
+	val = true;	
+	number = "0123456789";
+	fld_value = fld_value.split('');	
+	i = 0;	
+	while (i < fld_value.length) 
+	{	
+		if (number.indexOf(fld_value[i]) == -1) 
+		{
+			temp = temp + message+" is not a valid number<br>";			
+			val = false;
+			break;
+		}
+		i++;
+	}	
+	return val;
+}
+
+function validate_headers_expire(frm)
+{	
+	temp="";
+	var data_value = frm.data_value;
+	if(validates_presence(data_value,"Expires"))	
+		validates_expires(data_value,"Expires");
+	
+	var div =	document.getElementById("expires_div");
+	if(div)
+		var str = frm.action;	
+	
+	old_data_value = ((((str.split('?')[1]).split('&'))[1]).split('='))[1];
+	if(temp.length > 0)
+	{				
+		div.innerHTML =  old_data_value+"<span style='color:red;display:inline;'> "+temp+"</span>" ;
+		return false;
+	}
+	return true;
+}
+function validates_expires(fld,message)
+{		
+	var fld_value  = $j.trim(fld.value);
+	if((fld_value.toLowerCase()=="off" || fld_value.search(/^\d+$/)!=-1) || fld_value=="")
+		return true;
+	temp = temp + " Possible value for expires is no. of seconds or off<br>"; 
+	return false
+}
+function validates_email(fld,message)
+{
+	var fld = $j.trim(fld);
+	if(fld.length!=0)
+	{
+		if (fld.search(/^([^@\s]+)@((?:[-a-z0-9]+\.)+[a-z]{2,})$/i) == -1)
+		{
+			temp = temp + message+" is Invalid<br>";
+			return false;
+		}
+	}
+	return true;
+}
+function validate_smtp(frm)
+{
+	$j("#error_div_smtp_form").css("padding","4");
+	temp = "";	
+	var smtp_server = frm.smtp_address
+	var smtp_domain = frm.smtp_domain
+	var smtp_username = frm.smtp_user_name
+	var sender_email_addr = frm.smtp_from
+	var smtp_port = frm.smtp_port
+	var smtp_authentication = frm.smtp_authentication
+	var smtp_password = frm.smtp_password
+	var reciever_email_addrs = frm.smtp_recipients		
+	validates_presence(smtp_server, "SMTP Server");		
+	validates_presence(smtp_domain, "SMTP Domain");
+	validates_presence(smtp_username, "SMTP Username");
+	
+	if(validates_presence(sender_email_addr, "Senders Email Address"))
+		validates_email(sender_email_addr.value, "Senders Email Address");
+	
+	if(validates_presence(smtp_port, "SMTP Port"))
+		if(validates_number(smtp_port,"SMTP Port"))
+			validates_value(smtp_port,1,65535,"SMTP Port");
+	
+	validates_presence(smtp_authentication,"SMTP Authentication");
+	validates_presence(smtp_password,"SMTP Password");
+	if(validates_presence(reciever_email_addrs,"Recipients Email Addresses"))
+	{
+		email_ids = reciever_email_addrs.value.split(',');
+		i = 0 ;	
+		while(i < email_ids.length)
+		{
+			validates_email(email_ids[i], "Recipients Email Addresse "+(i+1));
+			i++;
+		}
+	}
+	var error_div =	document.getElementById("error_div_smtp_form");
+	
+	if(error_div) 
+		error_div.innerHTML = temp;
+	
+	if(temp.length > 0)
+		return false;
+	return true;
+	
+	
+}
+function validate_sendmail(frm)
+{
+	$j("#error_div_sendmail_form").css("padding","4");
+	temp = "";	
+	var sendmail_location = frm.sendmail_location;
+	var sendmail_from = frm.sendmail_from;
+	var sendmail_recipients = frm.sendmail_recipients;
+			
+	validates_presence(sendmail_location, "Sendmail Location");		
+	
+	if(validates_presence(sendmail_from, "Sender's Email Address"))
+		validates_email(sendmail_from.value, "Sender's Email Address");
+	
+	if(validates_presence(sendmail_recipients, "Recipient Email Addresses"))
+	{
+		email_ids = sendmail_recipients.value.split(',');
+		i = 0;
+		while(i < email_ids.length)
+		{
+			validates_email(email_ids[i], "Recipients Email Addresse "+(i+1));
+			i++;
+		}
+	}
+	var error_div =	document.getElementById("error_div_sendmail_form");	
+	if(error_div) 
+		error_div.innerHTML = temp;
+	
+	if(temp.length > 0)
+		return false;
+	return true;
+	
+	
+}
+function validates_value(fld,min_range,max_range,message)
+{
+	fld_value = $j.trim(fld.value);
+	if((fld_value < min_range || fld_value > max_range ) && fld_value.length!=0)
+	{		
+		temp = temp + message+" should be a number between "+min_range+" and "+max_range +"<br>";
+		return false;
+	}	
+	return true;	
+}
+
+function validate_server_specification(frm)
+{			
+	temp = "";
+	var str = frm.action;
+
+	var div_id= ((((str.split('?')[1]).split('&'))[0]).split('='))[1];
+	var old_data_value = ((((str.split('?')[1]).split('&'))[1]).split('='))[1];	
+	var data_value = frm.data_value;			
+	if(!(div_id=="log_div"))
+	{
+		if(div_id == "min_pro_div")
+		{
+			if(validates_presence(data_value,"Minimum Workers"))	
+				if(validates_number(data_value,"Minimum Workers"))
+					validates_value(data_value,1,20,"Minimum Workers");
+		}
+		else if(div_id== "max_pro_div")
+		{
+			if(validates_presence(data_value,"Maximum Workers"))	
+				if(validates_number(data_value,"Maximum Workers"))
+					validates_value(data_value,1,20,"Maximum Workers");
+		}
+		else if(div_id = "port_div")
+		{			
+			if(validates_presence(data_value,"Port Number"))		
+				if(validates_number(data_value,"Port Number"))
+					validates_value(data_value,1,65535,"Port Number");
+		}
+						
+	}
+	
+	var div =	document.getElementById(div_id);		
+	if(temp.length > 0)
+	{				
+		div.innerHTML =  old_data_value +" <span style='color:red;display:inline'>"+temp+"</span>" ;
+		return false;
+	}
+	return true;
+}
+
+function validate_ssl(frm)
+{			
+	temp = "";
+	var ssl_port = frm.ssl_port;
+	var ssl_certificate_path = frm.ssl_certificate_path;
+	var ssl_key_path = frm.ssl_key_path;
+	if(validates_presence(ssl_port, "SMTP Port"))
+		if(validates_number(ssl_port,"SMTP Port"))
+			validates_value(ssl_port,1,65535,"SMTP Port");
+	validates_presence(ssl_certificate_path, "SSL Certificate Path");
+	validates_presence(ssl_key_path, "SSL Key Path");
+	var error_div =	document.getElementById("error_div_ssl_form");	
+	if(error_div)
+		error_div.innerHTML = temp;
+	if(temp.length > 0)
+		return false;
+	return true;
+}

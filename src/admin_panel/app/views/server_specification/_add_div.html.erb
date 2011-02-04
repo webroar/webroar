@@ -19,7 +19,7 @@ along with WebROaR.  If not, see <http://www.gnu.org/licenses/>.
 -->
 
 <%old_value = get_old_value_for_div(params[:div_id])%>	
-<%remote_form_for :data, :update => params[:div_id], :url => {:controller => 'server_specification', :action => 'save_data', :div_id => params[:div_id], :old_value => old_value}do%>
+<%remote_form_for :data, :update => params[:div_id],:html => {:onsubmit => "if(!validate_server_specification(this)){return false;}"}, :url => {:controller => 'server_specification', :action => 'save_data', :div_id => params[:div_id], :old_value => old_value}do%>
   <%if params[:div_id] == 'log_div'%>
     <%=select :data, :value, %w{INFO WARN SEVERE FATAL}, :selected => old_value%>
   <%elsif params[:div_id] == 'access_log_div' %>

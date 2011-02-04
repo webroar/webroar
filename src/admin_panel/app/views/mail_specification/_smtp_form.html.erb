@@ -18,7 +18,7 @@ You should have received a copy of the GNU General Public License
 along with WebROaR.  If not, see <http://www.gnu.org/licenses/>.
 -->
 
-  <%form_for :smtp,:url => {:controller => 'mail_specification', :action => 'save_smtp_settings'} do%>
+  <%form_for :smtp, :html => { :onsubmit => 'return validate_smtp(this)'},:url => {:controller => 'mail_specification', :action => 'save_smtp_settings'} do%>
     <table width = 95%>
       <tr>
         <th width = 50% colspan = 2><b>Mail Settings</b>&nbsp;&nbsp;&nbsp;
@@ -28,7 +28,7 @@ along with WebROaR.  If not, see <http://www.gnu.org/licenses/>.
         <th wdth = 50% colspan = 2><%=link_to_remote 'Sendmail', :update => 'mail_div', :url => {:controller => 'mail_specification', :action => 'sendmail_form'}%></th>
       </tr>
       <tr>
-        <td colspan = 4><div id = 'error_div'><%=flash[:smtp_errors]%></div></td>
+        <td colspan = 4 id = 'error_div_smtp_form' style="padding:0px;"><%=flash[:smtp_errors]%></td>
       </tr>
       <tr>
         <td >SMTP Server<span id = 'needed'>*</span> &nbsp;&nbsp;&nbsp;

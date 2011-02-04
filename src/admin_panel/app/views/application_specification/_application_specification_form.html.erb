@@ -23,14 +23,14 @@ along with WebROaR.  If not, see <http://www.gnu.org/licenses/>.
 <% else %>
   <% url = {:controller => 'application_specification', :action => 'add_application'} %>
 <% end %>
-<%form_remote_for :application_specification, :url => url, :before => "show_busy_div()", :complete => "hide_busy_div(request)", :update => "application_specification_form" do %>	
+<%form_remote_for :application_specification, :url => url, :html => { :onsubmit => 'if(!validate_application(this)){return false;}'} ,:before => "show_busy_div()", :complete => "hide_busy_div(request)", :update => "application_specification_form" do %>	
   <div class = "text_align_center">
     <table width = 60% >
       <tr>
         <th colspan = 2><%= type %> Application</th>
       </tr>
       <tr>
-        <td colspan = 2><div id = 'error_div'><%= error_messages_for 'application_specification' %></div></td>
+        <td colspan = 2 id = 'error_div' style="padding:0px;"><%= error_messages_for 'application_specification' %></td>
       </tr>
       <tr>
         <td>Application Name<span id = 'needed'>*</span></td>
