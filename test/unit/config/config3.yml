@@ -3,11 +3,8 @@ Item List:
     - item: keybord
       price: 100
       model:
-          - company: iball
-            keys: 58
-
-          - company: sony
-            keys: 54
+          - iball
+          - sony
 
     - item: mouse
       price: 50
