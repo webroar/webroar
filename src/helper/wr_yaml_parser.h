@@ -23,6 +23,8 @@
 /**
  * Parse the YAML file and generate node tree.
  * These node tree used by 'configurator' module.
+ *
+ * NOTE: Anchors and Aliases are not handled.
  */
 
 #ifndef WR_YAML_PARSER_H_
@@ -32,37 +34,40 @@
 #include <string.h>
 
 /** Macro definitions */
-#define NODE_NEXT(node) node->next_result
-#define NODE_VALUE(node) node->value
 
 #define STR_NEW(new, str, len) do { new = (char*) malloc(sizeof(char)*(len+1));\
   strcpy(new, str); } while(0);
 
-#define NODE_NEW(node) do { node = (node_t*) malloc(sizeof(node_t));\
-  node->name = NULL;\
-  node->name_len =0;\
-  node->value = NULL;\
-  node->value_len = 0;\
-  node->child = NULL;\
-  node->next = NULL;\
-  node->next_result = NULL; } while(0);
+typedef enum type_e {
+  TYPE_NONE = 0, TYPE_VALUE, TYPE_PAIR, TYPE_LIST, TYPE_ARRAY
+} type_t;
 
 typedef struct node_s node_t;
 
 struct node_s {
-  char* name;    /**< Node name */
-  int name_len;  /**< Name length */
-  char* value;  /**< Node value */
-  int value_len;  /**< Value length */
-  node_t* next;  /**< Pointer to sibling */
-  node_t* child;  /**< Pointer to child nodes*/
-  node_t* next_result;  /**< Pointer used by 'get_nodes' method*/
+  type_t type;
+  char *key, *value;
+  int key_len, value_len;
+  short level;
+  node_t *child, *next;
 };
 
+/** Print YAML structure */
+void yaml_display(node_t *);
+
+/** Parse the YAML file and create node structure */
 node_t* yaml_parse(const char*);
-node_t* get_nodes(node_t *root, char* xpath);
-char* get_node_value(node_t *root, char* xpath);
-void node_free(node_t* node);
-char* wr_validate_string(const char* str);
+
+/** Release node memory */
+void yaml_node_free(node_t*);
+
+/** Search node */
+node_t* yaml_get_node(node_t *root, char *xpath);
+
+/** Search node and get value */
+char* yaml_get_value(node_t *root, char* xpath);
+
+/** Validate YAML token */
+char* yaml_validate_string(const char* str);
 
 #endif /*WR_YAML_PARSER_H_*/

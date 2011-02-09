@@ -34,9 +34,9 @@
 extern config_t *Config;
 
 #define DEFAULT_EXPIRES "Headers/expires"
-#define EXPIRES_BY_TYPE "Headers/expires_by_type"
-#define EXPIRES_BY_TYPE_EXT "expires_by_type/ext"
-#define EXPIRES_BY_TYPE_EXPIRES "expires_by_type/expires"
+#define EXPIRES_BY_TYPE "Headers/expires_by_type/*"
+#define EXPIRES_BY_TYPE_EXT "ext"
+#define EXPIRES_BY_TYPE_EXPIRES "expires"
 #define HTTP_HEADER_IF_MODIFIED_SINCE "HTTP_IF_MODIFIED_SINCE"
 #define HTTP_HEADER_CONNECTION "HTTP_CONNECTION"
 #define WR_NO_ENCODING 0
@@ -225,7 +225,7 @@ short get_resp_code(static_server_t *s) {
 }
 
 long int get_default_expires(node_t *root) {
-  char *node_value = get_node_value(root, DEFAULT_EXPIRES);
+  char *node_value = yaml_get_value(root, DEFAULT_EXPIRES);
 
   if (node_value == NULL) {
     //return EXPIRES_DURATION;
@@ -253,7 +253,7 @@ int create_dictionary(static_server_t *s, const char *mapping_file, long int exp
     return -1;
   }
 
-  node = get_nodes(root, "File Extensions");
+  node = yaml_get_node(root, "File Extensions");
 
   if (root == NULL || node->child == NULL) {
     LOG_ERROR(SEVERE, "Could not read 'File Extensions' from the file %s", mapping_file);
@@ -264,7 +264,7 @@ int create_dictionary(static_server_t *s, const char *mapping_file, long int exp
 
   while (node) {
     ext = wr_malloc(static_file_t);
-    strcpy(ext->ext, node->name);
+    strcpy(ext->ext, node->key);
     strcpy(ext->mime_type, node->value);
     ext->expires = expires;
     int index;
@@ -285,7 +285,7 @@ int create_dictionary(static_server_t *s, const char *mapping_file, long int exp
     }
     node = node->next;
   }
-  node_free(root);
+  yaml_node_free(root);
 
   // Set default mime type
   ext = wr_malloc(static_file_t);
@@ -299,19 +299,19 @@ int create_dictionary(static_server_t *s, const char *mapping_file, long int exp
 }
 
 void set_expires_by_type(static_server_t *s, node_t *root) {
-  node_t *node = get_nodes(root, EXPIRES_BY_TYPE);
+  node_t *node = yaml_get_node(root, EXPIRES_BY_TYPE);
   long int expires;
   char *types, *expires_str, *type;
   while (node) {
-    types = get_node_value(node, EXPIRES_BY_TYPE_EXT);
-    expires_str = get_node_value(node, EXPIRES_BY_TYPE_EXPIRES);
+    types = yaml_get_value(node->child, EXPIRES_BY_TYPE_EXT);
+    expires_str = yaml_get_value(node->child, EXPIRES_BY_TYPE_EXPIRES);
     expires = atol(expires_str);
     type = strtok(types, " ,");
     while (type != NULL) {
       set_expires_time(s, type, expires);
       type = strtok(NULL, " ,");
     }
-    node = NODE_NEXT(node);
+    node = node->next;
   }
 }
 
@@ -640,9 +640,9 @@ void send_static_worker_pid() {
     char msg_value[STR_SIZE32];
     int rv;
     
-    host = get_node_value(root, WR_MSG_QUEUE_SERVER_HOST);
-    port = get_node_value(root, WR_MSG_QUEUE_SERVER_PORT);
-    queue_name = get_node_value(root, WR_PID_MSG_QUEUE_NAME);    
+    host = yaml_get_value(root, WR_MSG_QUEUE_SERVER_HOST);
+    port = yaml_get_value(root, WR_MSG_QUEUE_SERVER_PORT);
+    queue_name = yaml_get_value(root, WR_PID_MSG_QUEUE_NAME);
     if (!host || !port || !queue_name) {
       LOG_ERROR(SEVERE, "Error getting message queue configuration");
       goto err; 
@@ -670,7 +670,7 @@ void send_static_worker_pid() {
       LOG_INFO("PID sent to queue successfully."); 
     }
 err:    
-    node_free(root);
+    yaml_node_free(root);
     wr_msg_queue_conn_free(msg_queue_conn);
     wr_msg_queue_server_free(msg_queue_server);
     return;
@@ -692,13 +692,13 @@ int static_module_init(static_server_t *s) {
   expires = get_default_expires(root);
   
   if (create_dictionary(s, Config->Worker.File.mime_type.str, expires) != 0) {
-    node_free(root);
+    yaml_node_free(root);
     return FALSE;
   }
 
   set_expires_by_type(s, root);
 
-  node_free(root);
+  yaml_node_free(root);
   
   send_static_worker_pid();
   return TRUE;

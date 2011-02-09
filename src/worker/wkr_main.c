@@ -130,7 +130,7 @@ void wr_worker_config_read(){
   }
   
   wr_set_numeric_value(root, "Worker/maximum_request_body_size", &Config->Worker.max_body_size, FALSE);
-  node_free(root);
+  yaml_node_free(root);
   
   Config->Worker.Compress.lower_limit = DEFAULT_LOWER_LIMIT;
   Config->Worker.Compress.upper_limit = DEFAULT_UPPER_LIMIT;

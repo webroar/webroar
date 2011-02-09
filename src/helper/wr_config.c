@@ -303,7 +303,7 @@ void wr_worker_config_free(config_t *Config){
 }
 
 void wr_set_numeric_value(node_t *root, const char *path, void *value, wr_u_short flag){
-  char *str = wr_validate_string(get_node_value(root, path));
+  char *str = yaml_validate_string(yaml_get_value(root, path));
   long *lvalue = (long*) value;
   if(str) {
     wr_u_long val = atoi(str);

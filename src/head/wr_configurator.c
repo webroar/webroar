@@ -70,28 +70,28 @@ int wr_app_conf_req_set(config_application_list_t *app, node_t *app_node){
   if(!wr_string_is_empty(app->baseuri))
     scgi_header_add(app->scgi, "BASE_URI", strlen("BASE_URI"), app->baseuri.str, app->baseuri.len);
  
-  str = wr_validate_string(get_node_value(app_node->child, "type"));
+  str = yaml_validate_string(yaml_get_value(app_node->child, "type"));
   scgi_header_add(app->scgi, "TYPE", strlen("TYPE"), str, strlen(str));
     
-  str = wr_validate_string(get_node_value(app_node->child, "analytics"));
+  str = yaml_validate_string(yaml_get_value(app_node->child, "analytics"));
   scgi_header_add(app->scgi, "ANALYTICS", strlen("ANALYTICS"), str, strlen(str));
   
-  str = wr_validate_string(get_node_value(app_node->child, "run_as_user"));
+  str = yaml_validate_string(yaml_get_value(app_node->child, "run_as_user"));
   scgi_header_add(app->scgi, "USER", strlen("USER"), str, strlen(str));
 
   // Set application environment
-  str = wr_validate_string(get_node_value(app_node->child, "environment"));
+  str = yaml_validate_string(yaml_get_value(app_node->child, "environment"));
   if(str){
     scgi_header_add(app->scgi, "ENV", strlen("ENV"), str, strlen(str));
   }else{
     scgi_header_add(app->scgi, "ENV", strlen("ENV"), Config->Application.Default.env.str, Config->Application.Default.env.len);
   }
   
-  node_t *nodes = get_nodes(app_node->child, "environment_variables/set_env");
+  node_t *node = yaml_get_node(app_node->child, "environment_variables/*");
   wr_str_t val;
   wr_string_null(val);
-  while(nodes){
-    str = wr_validate_string(NODE_VALUE(nodes));
+  while(node){
+    str = yaml_validate_string(node->key);
     if(str){      
       if(wr_string_is_empty(val)){
         wr_string_new(val, str, strlen(str));
@@ -100,7 +100,7 @@ int wr_app_conf_req_set(config_application_list_t *app, node_t *app_node){
         wr_string_append(val, str, strlen(str));
       }
     }
-    nodes = NODE_NEXT(nodes);
+    node = node->next;
   }
   if(!wr_string_is_empty(val)){
    scgi_header_add(app->scgi, "ENV_VAR", strlen("ENV_VAR"), val.str, val.len); 
@@ -149,19 +149,19 @@ int wr_config_server_set(node_t *root) {
   }
 
   // Set logging level
-  str = wr_validate_string(get_node_value(root, "Server Specification/log_level"));
+  str = yaml_validate_string(yaml_get_value(root, "Server Specification/log_level"));
   if(str)
     Config->Server.log_level = get_log_severity(str); 
     
   // Set access log flag
-  str = wr_validate_string(get_node_value(root, "Server Specification/access_log"));
+  str = yaml_validate_string(yaml_get_value(root, "Server Specification/access_log"));
 
   if(str && strcmp(str,"enabled")==0 ) {
     Config->Server.flag |= SERVER_ACCESS_LOG;
   }
 
   //check ssl support
-  str = wr_validate_string(get_node_value(root, "Server Specification/SSL Specification/ssl_support"));
+  str = yaml_validate_string(yaml_get_value(root, "Server Specification/SSL Specification/ssl_support"));
   if(str && strcmp(str,"enabled")==0 ) {
     Config->Server.flag |= SERVER_SSL_SUPPORT;
   }
@@ -172,7 +172,7 @@ int wr_config_server_set(node_t *root) {
   	size_t len;
     struct stat buff;
     // Set certificate path
-    str = wr_validate_string(get_node_value(root, "Server Specification/SSL Specification/certificate_file"));
+    str = yaml_validate_string(yaml_get_value(root, "Server Specification/SSL Specification/certificate_file"));
     if(str) {
       if(stat(str,&buff)!=0) {
         LOG_ERROR(SEVERE,"SSL certificate file path(%s) invalid. Server can not run on SSL.",str);
@@ -189,7 +189,7 @@ int wr_config_server_set(node_t *root) {
     }
 
     // Set certificate path
-    str = wr_validate_string(get_node_value(root, "Server Specification/SSL Specification/key_file"));
+    str = yaml_validate_string(yaml_get_value(root, "Server Specification/SSL Specification/key_file"));
     if(str) {
       if(stat(str,&buff)!=0) {
         LOG_ERROR(SEVERE,"SSL key file path(%s) invalid. Server can not run on SSL.",str);
@@ -384,7 +384,7 @@ config_application_list_t* wr_config_application_set(node_t* app_node, char* err
   }
   
   //Set application name
-  str = wr_validate_string(get_node_value(app_node->child, "name"));
+  str = yaml_validate_string(yaml_get_value(app_node->child, "name"));
   len = strlen(str);  
   if(str && len > 0 && len < WR_CONF_MAX_LEN_APP_NAME) {    
     wr_string_new(app->name, str, len);
@@ -407,7 +407,7 @@ config_application_list_t* wr_config_application_set(node_t* app_node, char* err
   }
 
   // Set application path
-  str = wr_validate_string(get_node_value(app_node->child, "path"));
+  str = yaml_validate_string(yaml_get_value(app_node->child, "path"));
   if(str && strlen(str) > 0) {
     //Check existence of application path
     if(stat(str,&buff)!=0) {
@@ -431,7 +431,7 @@ config_application_list_t* wr_config_application_set(node_t* app_node, char* err
   }
 
   // Set application type
-  str = wr_validate_string(get_node_value(app_node->child, "type"));
+  str = yaml_validate_string(yaml_get_value(app_node->child, "type"));
   if(str && strlen(str) > 0) {
     LOG_DEBUG(DEBUG, "Application Type = %s", str);
   } else {
@@ -444,7 +444,7 @@ config_application_list_t* wr_config_application_set(node_t* app_node, char* err
   }
 
   // Set application analytics
-  str = wr_validate_string(get_node_value(app_node->child, "analytics"));
+  str = yaml_validate_string(yaml_get_value(app_node->child, "analytics"));
   if(str && strlen(str) > 0) {
     len = strlen(str);
     LOG_DEBUG(DEBUG,"App analytics = %s", str);
@@ -458,7 +458,7 @@ config_application_list_t* wr_config_application_set(node_t* app_node, char* err
   }
 
   // Set application base uri
-  str = wr_validate_string(get_node_value(app_node->child, "baseuri"));
+  str = yaml_validate_string(yaml_get_value(app_node->child, "baseuri"));
   if(str && strlen(str) > 0) {
     len = strlen(str);
     wr_string_new(app->baseuri, str, len);
@@ -466,13 +466,13 @@ config_application_list_t* wr_config_application_set(node_t* app_node, char* err
   }
 
   // Set Host names (used for multiple host deployment and application identifiaction)
-  str = wr_validate_string(get_node_value(app_node->child, "host_names"));
+  str = yaml_validate_string(yaml_get_value(app_node->child, "host_names"));
   if(str && strlen(str) > 0) {
     wr_app_host_name_set(app, str, err_msg);
   }
 
   // Set application user & group id
-  str = wr_validate_string(get_node_value(app_node->child, "run_as_user"));
+  str = yaml_validate_string(yaml_get_value(app_node->child, "run_as_user"));
   if(str && strlen(str) > 0) {
     len = strlen(str);
     struct passwd *user_info=NULL;
@@ -512,7 +512,7 @@ config_application_list_t* wr_config_application_set(node_t* app_node, char* err
   }
 
   // Set application environment
-  str = wr_validate_string(get_node_value(app_node->child, "environment"));
+  str = yaml_validate_string(yaml_get_value(app_node->child, "environment"));
   if(str && strlen(str) > 0) {
     LOG_DEBUG(DEBUG, "Application environment = %s", str);
   }
@@ -553,7 +553,7 @@ config_application_list_t* wr_config_application_set(node_t* app_node, char* err
   }
 
   // Set logging level
-  str = wr_validate_string(get_node_value(app_node->child, "log_level"));
+  str = yaml_validate_string(yaml_get_value(app_node->child, "log_level"));
   if(str && strlen(str) > 0){
     app->log_level = get_log_severity(str);
   }
@@ -570,17 +570,17 @@ config_application_list_t* wr_config_application_set(node_t* app_node, char* err
 int wr_iterate_app_node(node_t *root) {
   LOG_FUNCTION
   config_application_list_t *app, *prev_app;
-  node_t* app_nodes;
+  node_t* app_node;
 
   LOG_DEBUG(DEBUG,"iterate_application_node()");
   //Fetch Application Specification nodes
-  app_nodes = get_nodes(root, "Application Specification");
+  app_node = yaml_get_node(root, "Application Specification/*");
 
   // Iterate application nodes
-  while(app_nodes) {
-    if(app_nodes->child) {
+  while(app_node) {
+    if(app_node->child) {
       // Create & fill application configuration structure
-      app = wr_config_application_set(app_nodes, NULL);
+      app = wr_config_application_set(app_node, NULL);
 
       if(app) {
         //return -1;
@@ -593,7 +593,7 @@ int wr_iterate_app_node(node_t *root) {
         prev_app = app;
       }
     }
-    app_nodes = NODE_NEXT(app_nodes);
+    app_node = app_node->next;
   }
   return 0;
 }
@@ -811,26 +811,26 @@ config_application_list_t* wr_conf_static_server_read() {
       if(!root) {
         LOG_ERROR(SEVERE, "Config file found with erroneous entries. Please correct it.");
       }else{
-        value = get_node_value(root,"Encoding/Content-Type");
+        value = yaml_get_value(root,"Encoding/Content-Type");
         if(value){
           scgi_header_add(app->scgi, "CONTENT_TYPE", strlen("CONTENT_TYPE"), value, strlen(value));
         }
 
-        value = get_node_value(root,"Encoding/User-Agent");
+        value = yaml_get_value(root,"Encoding/User-Agent");
         if(value){
           scgi_header_add(app->scgi, "USER_AGENT", strlen("USER_AGENT"), value, strlen(value));
         }
 
-        value = get_node_value(root,"Encoding/Size Limit/lower_limit");
+        value = yaml_get_value(root,"Encoding/Size Limit/lower_limit");
         if(value){
           scgi_header_add(app->scgi, "LOWER_LIMIT", strlen("LOWER_LIMIT"), value, strlen(value));
         }
 
-        value = get_node_value(root,"Encoding/Size Limit/upper_limit");
+        value = yaml_get_value(root,"Encoding/Size Limit/upper_limit");
         if(value){
           scgi_header_add(app->scgi, "UPPER_LIMIT", strlen("UPPER_LIMIT"), value, strlen(value));
         }
-        node_free(root);
+        yaml_node_free(root);
       }
 
       //Set max_worker & min_processsor
@@ -908,7 +908,7 @@ void wr_internal_conf_read(){
   wr_application_conf_read(root);
   wr_worker_conf_read(root);
   
-  node_free(root);
+  yaml_node_free(root);
 }
 
 /***********************************************************
@@ -973,7 +973,7 @@ int wr_conf_app_update(config_application_list_t *app) {
 config_application_list_t* wr_conf_app_read(const char *app_name, char* err_msg, int flag) {
   LOG_FUNCTION
   //Parse configuration file
-  node_t *root , *app_nodes = NULL;
+  node_t *root , *app_node = NULL;
   config_application_list_t *app = NULL, *old_app = NULL, *tmp;
   char *str;
   
@@ -1031,25 +1031,25 @@ config_application_list_t* wr_conf_app_read(const char *app_name, char* err_msg,
   }
 
   //  if(validate_application_baseuri_for_uniqueness(root, err_msg)!=0){
-  //    node_free(root);
+  //    yaml_node_free(root);
   //    return NULL;
   //  }
   //Fetch Application Specification nodes
-  app_nodes = get_nodes(root, "Application Specification");
+  app_node = yaml_get_node(root, "Application Specification/*");
 
   // Iterate application nodes
-  while(app_nodes) {
-    if(app_nodes->child) {
-      str = wr_validate_string(get_node_value(app_nodes->child, "name"));// Compare application name
+  while(app_node) {
+    if(app_node->child) {
+      str = yaml_validate_string(yaml_get_value(app_node->child, "name"));// Compare application name
       if(str && strcmp(str, app_name)==0) {
-        app = wr_config_application_set(app_nodes, err_msg);
+        app = wr_config_application_set(app_node, err_msg);
         break;
       }
     }
-    app_nodes = NODE_NEXT(app_nodes);
+    app_node = app_node->next;
   }
 
-  node_free(root);
+  yaml_node_free(root);
   if(app == NULL)   return NULL;
   
 
@@ -1116,7 +1116,7 @@ int wr_conf_read() {
   wr_remove_app_with_dup_host();
 
   //configuration_print(configuration);
-  node_free(root);
+  yaml_node_free(root);
   
   return TRUE;
 }
