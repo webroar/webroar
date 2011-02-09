@@ -26,25 +26,25 @@
 #define TEST_LOG_FILE "test.log"  //Result is logged in this file
 
 /** Assertion functions */
-void ut_assert_fun(int test, char* val1, char* val2, const char* file_name, const char* func, int line);
+void ut_assert_fun(int test, char* val1, char* val2, int len, const char* file_name, const char* func, int line);
 void ut_assert_int_fun(int test, int val1, int val2, const char* file_name, const char* func, int line);
 void ut_test_end_fun(const char* testcase, const char* file_name);
 
 /** Unit Test Macros */
 #define UT_TEST_START ut_failed = ut_passed = ut_total = 0;
 #define UT_TEST_END(testcase) ut_test_end_fun(testcase, __FILE__);
-#define UT_ASSERT(test, val1, val2) ut_assert_fun(test,val1, val2, __FILE__, __FUNCTION__, __LINE__);
+#define UT_ASSERT(test, val1, val2, len) ut_assert_fun(test, val1, val2, len, __FILE__, __FUNCTION__, __LINE__);
 #define UT_ASSERT_INT(test, val1, val2) ut_assert_int_fun(test,val1, val2, __FILE__, __FUNCTION__, __LINE__);
 #define UT_RUN_TEST(test) test();
 
 #define UT_ASSERT_INT_EQUAL(val1, val2) UT_ASSERT_INT((val1==val2), val1, val2)
 #define UT_ASSERT_INT_NOT_EQUAL(val1, val2) UT_ASSERT_INT((val1!=val2), val1, val2)
 
-#define UT_ASSERT_STRING_EQUAL(val1, val2) UT_ASSERT(!strcmp(val1, val2), val1, val2)
-#define UT_ASSERT_STRING_NOT_EQUAL(val1, val2) UT_ASSERT(strcmp(val1, val2), val1, val2)
+#define UT_ASSERT_STRING_EQUAL(val1, val2) UT_ASSERT(0, val1, val2, 0)
+#define UT_ASSERT_STRING_NOT_EQUAL(val1, val2) UT_ASSERT(1, val1, val2, 0)
 
-#define UT_ASSERT_STRNCMP_EQUAL(val1, val2, len) UT_ASSERT(!strncmp(val1, val2, len), val1, val2)
-#define UT_ASSERT_STRNCMP_NOT_EQUAL(val1, val2, len) UT_ASSERT(strncmp(val1, val2, len), var1, var2)
+#define UT_ASSERT_STRNCMP_EQUAL(val1, val2, len) UT_ASSERT(0, val1, val2, len)
+#define UT_ASSERT_STRNCMP_NOT_EQUAL(val1, val2, len) UT_ASSERT(1, val1, val2, len)
 
 #define UT_ASSERT_PTR_NOT_NULL(ptr) UT_ASSERT_INT((ptr!=NULL), 0, 0)
 #define UT_ASSERT_PTR_NULL(ptr) UT_ASSERT_INT((ptr==NULL), 0, 0)
