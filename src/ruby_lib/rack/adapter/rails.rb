@@ -38,9 +38,11 @@ module Webroar
         ENV['RAILS_ENV'] = @env
         
         require "#{@root}/config/environment"
-#        TODO: figure out way to set relative URL, following is not working on Rails3-beta4 for stylesheet_link_tag, javascript_include_tag
+#        TODO: figure out the way to set relative URL for images defined inside the css
         if ::Rails::VERSION::MAJOR >= 3
           ::Rails.application.config.relative_url_root = @prefix
+          # used to add prefix to asset_path (for image,stylesheet and javascript path)
+          ::Rails.application.config.action_controller.asset_path = proc { |asset_path| "#{@prefix}#{asset_path}" }
         else
           require 'dispatcher'
           if ActionController::Base.respond_to?('relative_url_root=') 
