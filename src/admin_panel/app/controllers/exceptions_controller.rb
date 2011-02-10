@@ -121,6 +121,59 @@ class ExceptionsController < ApplicationController
     end
   end
   
+  # This method is used to render the add_application_class_form partial with all the exception classes
+  # stored in configuration file, with respect to the selected application
+  def add_exception_class_form
+    app_name = params[:app_name]
+    app_id = ApplicationSpecification.get_application_id_from_name(app_name)
+    @exception_classes = get_exception_classes(app_id)
+    render :partial => "add_exception_class_form" , :locals =>{:app_name => params[:app_name]}
+  end
+
+  # This method is used to fetch the app_id and exception_class from user and
+  # call the add_exception_class_in_config_file method to save the exception classes
+  def save_exception_class
+    app_name = params[:app_name]
+    exception_class = params[:exception][:class]
+    app_id = ApplicationSpecification.get_application_id_from_name(app_name)
+    if exception_class != ""
+      exist = add_exception_class_in_config_file(app_id,exception_class)
+      if exist
+        flash[:notice] = "Exception class already exist."
+      end
+    else
+      flash[:notice] = "can't be blank."
+    end
+    @exception_classes = get_exception_classes(app_id)
+    render :partial => 'add_and_list_exception_classes', :locals => {:app_name => app_name}
+  end
+
+  # This method is used to add the exception classes into configuration file
+  def add_exception_class_in_config_file(app_id,exception_class)
+    info = YAML::load_file(CONFIG_FILE_PATH) rescue nil
+    if not info['Application Specification'][app_id]['permanently_ignored_list']
+      info['Application Specification'][app_id]['permanently_ignored_list'] = Array.new
+    end
+    if not info['Application Specification'][app_id]['permanently_ignored_list'].include?(exception_class)
+      info['Application Specification'][app_id]['permanently_ignored_list'].push(exception_class)
+      YAMLWriter.write(info, CONFIG_FILE_PATH, YAMLConfig::CONFIG)
+      return nil
+    end
+    return 1
+  end
+
+  # This method is used to remove the exception classes from configuration file
+  def delete_exception_class
+    app_name = params[:app_name]
+    exception_class = params[:exception_class]
+    app_id = ApplicationSpecification.get_application_id_from_name(app_name)
+    info = YAML::load_file(CONFIG_FILE_PATH) rescue nil
+    info['Application Specification'][app_id]['permanently_ignored_list'].delete(exception_class)
+    YAMLWriter.write(info, CONFIG_FILE_PATH, YAMLConfig::CONFIG)
+    @exception_classes = info['Application Specification'][app_id]['permanently_ignored_list']
+    render :partial => 'add_and_list_exception_classes', :locals => {:app_name => app_name}
+  end
+
 private
   def get_status_const(status_name)
     case status_name.downcase
@@ -130,6 +183,18 @@ private
         status = CLOSED_EXCEPTION
       when 'ignored', 'ignore'
         status = IGNORED_EXCEPTION
-    end  
+      when 'permanently-ignored', 'permanently-ignore'
+        status = PERMANENTLY_IGNORED_EXCEPTION
+    end
+  end
+
+  # This method is used to get all the exception classes from configuration file for the given app_id
+  def get_exception_classes(app_id)
+    info = YAML::load_file(CONFIG_FILE_PATH) rescue nil
+    if not info['Application Specification'][app_id]['permanently_ignored_list']
+      @exception_classes = Array.new
+    else
+      @exception_classes = info['Application Specification'][app_id]['permanently_ignored_list']
+    end
   end
 end

@@ -23,8 +23,13 @@ along with WebROaR.  If not, see <http://www.gnu.org/licenses/>.
 <% elsif current_status == CLOSED_EXCEPTION %>
   <h3><center> Closed Exceptions</center></h3>
 <% elsif current_status == IGNORED_EXCEPTION %>
-  <h3><center> Ignored Exceptions</center></h3> 
-<% end %> 
+  <h3><center> Ignored Exceptions</center></h3>
+<% elsif current_status == PERMANENTLY_IGNORED_EXCEPTION %>
+  <div class='text_align_right'>
+    <%=link_to_remote 'Exception Classes', :update => 'data_div', :url => {:controller => 'exceptions', :action => 'add_exception_class_form' , :app_name => @application_name}%>
+  </div>
+  <h3><center> Permanently Ignored Exceptions</center></h3>
+<% end %>
 <% form_tag '', :id => 'form_exception_list',:name => 'form_exception_list' do -%>
 <table width = 90%>
     <tr>
@@ -84,9 +89,14 @@ along with WebROaR.  If not, see <http://www.gnu.org/licenses/>.
 <%else%>
   <% if current_status == OPEN_EXCEPTION %>
     No open exceptions currently for this application.
-	<% elsif current_status == CLOSED_EXCEPTION %>
-	  No closed exceptions currently for this application.
-	<% elsif current_status == IGNORED_EXCEPTION %>
-	  No ignored exceptions currently for this application.
-	<% end %> 
+  <% elsif current_status == CLOSED_EXCEPTION %>
+	No closed exceptions currently for this application.
+  <% elsif current_status == IGNORED_EXCEPTION %>
+	No ignored exceptions currently for this application.
+  <% elsif current_status == PERMANENTLY_IGNORED_EXCEPTION %>
+	<div class='text_align_right'>
+      <%=link_to_remote 'Exception Classes', :update => 'data_div', :url => {:controller => 'exceptions', :action => 'add_exception_class_form' , :app_name => @application_name}%>
+    </div>
+	No permanently-ignored exceptions currently for this application.
+  <% end %>
 <%end%>
