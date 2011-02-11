@@ -152,6 +152,16 @@ module Webroar
         end
       end
       
+      # This method is used to check the class of incomming exceptions
+      # whether class is included in permanently ignored list or not.
+      def in_permanently_ignored_list?(app_name,class_type)
+        info = YAML::load_file("#{WEBROAR_ROOT}/conf/config.yml") rescue nil
+        app_data = info['Application Specification'].detect{|app_item| app_item["name"].eql?(app_name)}
+        if app_data["permanently_ignored_list"]
+          app_data["permanently_ignored_list"].include?(class_type)
+        end
+      end
+
       def process_exceptions
         begin 
           exception_hash = @message_reader.read_exception()
@@ -170,9 +180,17 @@ module Webroar
                   exception = AppException.find(:first,:conditions=>["exception_message=? and app_id=?",exception_hash[:exception_message],app_id])
                 end
               end
-              if exception 
+              if exception
                 status = exception.exception_status.to_i
-                if status == CLOSED_EXCEPTION                 
+                # if its class is in Permanently ignored list , change status as PERMANENTLY_IGNORED_EXCEPTION
+                if(in_permanently_ignored_list?(app_name,exception_hash[:exception_class]))
+                  status = PERMANENTLY_IGNORED_EXCEPTION
+                  with_exception_handling("Exception entry - Update existing entry status to PERMANENTLY_IGNORED_EXCEPTION") do
+                    exception.exception_status = PERMANENTLY_IGNORED_EXCEPTION
+                    exception.save!
+                  end
+                end
+                if status == CLOSED_EXCEPTION
                   # if its been closed, mark entry as open
                   status = OPEN_EXCEPTION
                   with_exception_handling("Exception entry - Update existing entry status to OPEN") do
@@ -181,12 +199,17 @@ module Webroar
                   end                 
                 end
               else
-                # New exception,  set it as Open
-                status = OPEN_EXCEPTION
+                # New exception,  set it as PERMANENTLY_IGNORED_EXCEPTION if exception class falls into
+                # PERMANENTLY_IGNORED_LIST otherwise set it as Open
+                if(in_permanently_ignored_list?(app_name,exception_hash[:exception_class]))
+                  status = PERMANENTLY_IGNORED_EXCEPTION
+                else
+                  status = OPEN_EXCEPTION
+                end
                 with_exception_handling("Exception entry AppException.create") do
                   exception = AppException.create({:app_id => app_id,  :exception_message => exception_hash[:exception_message],
                                        :exception_class => exception_hash[:exception_class], :exception_status => status})                                     
-                         
+
                 end
               end
               with_exception_handling("Exception entry AppException.create") do

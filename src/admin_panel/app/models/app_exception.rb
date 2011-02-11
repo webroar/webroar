@@ -50,5 +50,48 @@ class AppException < ActiveRecord::Base
     def update_all_status_to(status, exceptions_id_array)
       update_all(["exception_status = ?",status], ["id in (#{exceptions_id_array.join(',')})"])      
     end
+
+    # This method is used to check the existance of exception class
+    # and call save_exception_class_in_config_file method
+    def add_exception_class(app_name,exception_class)
+      app_id = ApplicationSpecification.get_application_id_from_name(app_name)
+      if exception_class != ""
+        save_exception_class_in_config_file(app_id,exception_class)
+      else
+        "can't be blank."
+      end
+    end
+
+    # This method is used to add the exception classes into configuration file
+    def save_exception_class_in_config_file(app_id,exception_class)
+      info = YAML::load_file(CONFIG_FILE_PATH) rescue nil
+      info['Application Specification'][app_id]['permanently_ignored_list'] = Array.new if not info['Application Specification'][app_id]['permanently_ignored_list']
+      if not info['Application Specification'][app_id]['permanently_ignored_list'].include?(exception_class)
+        info['Application Specification'][app_id]['permanently_ignored_list'].push(exception_class)
+        YAMLWriter.write(info, CONFIG_FILE_PATH, YAMLConfig::CONFIG)
+        return
+      end
+      "Exception class already exist."
+    end
+
+    # This method is used to delete the exception classes from configuration file
+    def delete_exception_class_from_config(app_name,exception_class)
+      app_id = ApplicationSpecification.get_application_id_from_name(app_name)
+      info = YAML::load_file(CONFIG_FILE_PATH) rescue nil
+      info['Application Specification'][app_id]['permanently_ignored_list'].delete(exception_class)
+      YAMLWriter.write(info, CONFIG_FILE_PATH, YAMLConfig::CONFIG)
+      exception_classes = info['Application Specification'][app_id]['permanently_ignored_list']
+    end
+
+    # This method is used to get all the exception classes from configuration file for the given app_id
+    def get_exception_classes(app_name)
+      info = YAML::load_file(CONFIG_FILE_PATH) rescue nil
+      app_data = info['Application Specification'].detect{|app_item| app_item["name"].eql?(app_name)}
+      if not app_data['permanently_ignored_list']
+        exception_classes = Array.new
+      else
+        exception_classes = app_data['permanently_ignored_list']
+      end
+    end
   end
 end

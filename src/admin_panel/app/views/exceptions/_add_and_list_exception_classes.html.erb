@@ -1,0 +1,55 @@
+<!--
+WebROaR - Ruby Application Server - http://webroar.in/
+Copyright (C) 2009  Goonj LLC
+
+This file is part of WebROaR.
+
+WebROaR is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+WebROaR is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with WebROaR.  If not, see <http://www.gnu.org/licenses/>.
+-->
+<%remote_form_for :data, :update => "add_and_list_exception_classes", :after => "exception_class.value=''", :url => {:controller => 'exceptions', :action => 'save_exception_class',:app_name => app_name}do%>
+  <table width="65%">  
+    <tr>
+     <th width="30%">Exception Class&nbsp;&nbsp;&nbsp;<%=link_to_function "Help", :onclick => "addHelp('exception_class',event)"%>
+       <br><div id = 'exception_class' class = 'font_size_12'></div>	
+     </th>
+     <td><%=text_field :exception, :class ,:size =>"20" %>
+       <% if flash[:notice] %>
+        <span class='error'><%= flash[:notice] %> </span>
+       <% end %>
+     </td>
+     <td width="10%"><%=submit_tag 'Add'%></td>
+    </tr>
+  </table>
+<%end%>
+<% if not @exception_classes.empty? %>  
+  <table width="65%">
+    <tr>      
+      <th>
+        Exception Classes
+      </th>        
+    </tr>
+    <% @exception_classes.each do |cls| %>   
+    <tr>
+      <td>
+        <%= cls %>
+      </td>
+      <td>
+        <%=link_to_remote image_tag('close.gif', :size => '15x15', :border => 0,:title => 'delete'), {:url => {:controller => 'exceptions', :action=>'delete_exception_class', :exception_class => cls ,:app_name => app_name},:update => "add_and_list_exception_classes"}%>
+      </td>
+    </tr>
+    <% end %>
+  </table>
+<% else %>
+  No exception class found
+<% end %>

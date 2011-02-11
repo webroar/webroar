@@ -159,6 +159,10 @@ function addHelp(id,event)
   {
     str = "Expires value in no. of seconds."
   }
+  if (id == 'exception_class')
+  {
+    str = "Exception falls into given Exception Class would not be notified(also it won't be listed in Open exception list). Please note that exception which already occurred would not be affected.";
+  }
   str=str+"<div class='text_align_right'><a href=# onClick=\"$('"+id+"').hide(); return false;\" class='calendar_link'>Close</a></div>"
   $j(".font_size_12").hide();
   $(id).update(str).addClassName('popup_container').show();

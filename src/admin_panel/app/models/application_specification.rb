@@ -83,7 +83,11 @@ class ApplicationSpecification < PseudoModel
   
   def update(app_id)
     info = YAML::load_file(CONFIG_FILE_PATH) rescue nil
-    info['Application Specification'][app_id] = obj_to_hash	
+    app_data = info['Application Specification'].detect{|app_item| app_item["name"].eql?(name)}
+    info['Application Specification'][app_id] = obj_to_hash
+    if app_data
+      info['Application Specification'][app_id]["permanently_ignored_list"] = app_data["permanently_ignored_list"]
+    end
     YAMLWriter.write(info, CONFIG_FILE_PATH, YAMLConfig::CONFIG)
   end
   
