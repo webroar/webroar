@@ -74,8 +74,8 @@ class Installer
 #         10) Run as user (mandatory)
 #         11) Hostnames(optional)
 #         12) Environment Variable(optional)
-#             It defines environment variables which can be used in the deployed application. It take following parameter.
-#               I) set_env(optional)(Value is key-value pair separated by equal sign('=') e.g. LOG_DIR=/var/log/webroar)             
+#             It defines list of environment variables which can be used in the deployed application. It take following parameter.
+#             Value is key-value pair separated by equal sign('=') e.g. LOG_DIR=/var/log/webroar
 #        Order of the above elements does not matter.
 #        Base-uri 'admin-panel' is reserved for 'Admin Panel'.
 #        Either host_names or baseuri(not both) must present to resolve HTTP request.
@@ -95,8 +95,8 @@ class Installer
 #              max_worker: 5
 #              log_level: SEVERE
 #              environment_variables: 
-#                - set_env: LOG_DIR=/var/log/webroar
-#                - set_env: TMP_DIR=/tmp
+#                - LOG_DIR=/var/log/webroar
+#                - TMP_DIR=/tmp
 #        Example with host_names:
 #          Application Specification:
 #            - name: Mephisto
