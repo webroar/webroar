@@ -54,21 +54,22 @@ class AppException < ActiveRecord::Base
     # This method is used to check the existance of exception class
     # and call save_exception_class_in_config_file method
     def add_exception_class(app_name,exception_class)
-      app_id = ApplicationSpecification.get_application_id_from_name(app_name)
       if exception_class != ""
-        save_exception_class_in_config_file(app_id,exception_class)
+        save_exception_class_in_config_file(app_name,exception_class)
       else
         "can't be blank."
       end
     end
 
     # This method is used to add the exception classes into configuration file
-    def save_exception_class_in_config_file(app_id,exception_class)
+    def save_exception_class_in_config_file(app_name,exception_class)
+      app_id = ApplicationSpecification.get_application_id_from_name(app_name)
       info = YAML::load_file(CONFIG_FILE_PATH) rescue nil
       info['Application Specification'][app_id]['permanently_ignored_list'] = Array.new if not info['Application Specification'][app_id]['permanently_ignored_list']
       if not info['Application Specification'][app_id]['permanently_ignored_list'].include?(exception_class)
         info['Application Specification'][app_id]['permanently_ignored_list'].push(exception_class)
         YAMLWriter.write(info, CONFIG_FILE_PATH, YAMLConfig::CONFIG)
+        update_all_status_by_exception_class(app_name,exception_class,PERMANENTLY_IGNORED_EXCEPTION)
         return
       end
       "Exception class already exist."
@@ -80,6 +81,7 @@ class AppException < ActiveRecord::Base
       info = YAML::load_file(CONFIG_FILE_PATH) rescue nil
       info['Application Specification'][app_id]['permanently_ignored_list'].delete(exception_class)
       YAMLWriter.write(info, CONFIG_FILE_PATH, YAMLConfig::CONFIG)
+      update_all_status_by_exception_class(app_name,exception_class,OPEN_EXCEPTION)
       exception_classes = info['Application Specification'][app_id]['permanently_ignored_list']
     end
 
@@ -92,6 +94,19 @@ class AppException < ActiveRecord::Base
       else
         exception_classes = app_data['permanently_ignored_list']
       end
+    end
+
+    # TODO Change function to fetch all exception records if we require all exception fields instead of id only  
+    def get_exceptions_by_class(app_id,exception_class)
+      find(:all,:select => :id,:conditions=>["app_id = ? and exception_class = ?",app_id, exception_class])
+    end
+
+    # This method is used to change status of exceptions by searching the exception with exception_class
+    def update_all_status_by_exception_class(app_name,exception_class,status)
+      app_id = App.get_application_data(app_name).id
+      app_id_array = get_exceptions_by_class(app_id,exception_class)
+      app_ids = app_id_array.collect { |a| a['id']}
+      update_all_status_to(status,app_ids)
     end
   end
 end

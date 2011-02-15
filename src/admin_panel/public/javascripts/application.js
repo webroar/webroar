@@ -161,7 +161,7 @@ function addHelp(id,event)
   }
   if (id == 'exception_class')
   {
-    str = "Exception falls into given Exception Class would not be notified(also it won't be listed in Open exception list). Please note that exception which already occurred would not be affected.";
+    str = "Exception falls into given Exception Class would not be notified and it will be listed in Permanently Ignored list.";
   }
   str=str+"<div class='text_align_right'><a href=# onClick=\"$('"+id+"').hide(); return false;\" class='calendar_link'>Close</a></div>"
   $j(".font_size_12").hide();
