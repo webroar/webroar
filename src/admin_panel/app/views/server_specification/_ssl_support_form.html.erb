@@ -27,21 +27,18 @@ along with WebROaR.  If not, see <http://www.gnu.org/licenses/>.
       <tr>
         <td>SSl Port<span id = 'needed'>*</span> &nbsp;&nbsp;&nbsp;
             <%=link_to_function "Help", :onclick => "addHelp('ssl_port',event)"%>
-          <br/> <div id = 'ssl_port' class = 'font_size_12'></div>
         </td>
         <td ><%=text_field :ssl, :port, :size => 20, :value => @ssl_spec[:port]%></td>
       </tr>
       <tr>
         <td >SSL Certificate path <span id = 'needed'>*</span> &nbsp;&nbsp;&nbsp;
             <%=link_to_function "Help", :onclick => "addHelp('ssl_certificate',event)"%>
-          <br/> <div id = 'ssl_certificate' class = 'font_size_12'></div>
         </td>
         <td ><%=text_field :ssl, :certificate_path, :size => 20, :value => @ssl_spec[:certificate_path]%></td>
       </tr>
       <tr>
         <td >SSl Key Path <span id = 'needed'>*</span>  &nbsp;&nbsp;&nbsp;
             <%=link_to_function "Help", :onclick => "addHelp('ssl_key',event)"%>
-          <br/> <div id = 'ssl_key' class = 'font_size_12'></div>
         </td>
         <td ><%=text_field :ssl, :key_path, :size => 20,:value => @ssl_spec[:key_path]%></td>
       </tr>

@@ -24,10 +24,7 @@ along with WebROaR.  If not, see <http://www.gnu.org/licenses/>.
 		    <tr>
 		        <th  width = 50% colspan = 2>
 		            <b>Mail Settings :- SMTP</b>&nbsp;&nbsp;&nbsp;<%=link_to_function('Help', :onclick => 'addHelp("mail",event);') %>
-		            <br/>
-		            <div id = 'mail' class = 'font_size_12'>
-		            </div>
-		        </t>
+		        </th>
 		        <th width = 50% colspan = 2 align = 'right'>
 		            <%=link_to_remote 'Sendmail', :update => 'mail_div', :url =>  {:controller => 'mail_specification', :action => 'sendmail_form'} %>&nbsp;&nbsp;&nbsp;
 		            <%=link_to_remote 'Edit', :update => 'mail_div', :url => {:controller => 'mail_specification', :action => 'edit_smtp', :smtp => info['smtp']} %>&nbsp;&nbsp;&nbsp;
@@ -104,9 +101,6 @@ along with WebROaR.  If not, see <http://www.gnu.org/licenses/>.
 		    <tr>
 		        <th width = 50%>
 		            <b>Mail Settings :- Sendmail</b>&nbsp;&nbsp;&nbsp;<%=link_to_function('Help', :onclick => 'addHelp("mail",event);') %>
-		            <br/>
-		            <div id = 'mail' class = 'font_size_12'>
-		            </div>
 		        </th>
 		        <th width = 50% colspan = 2 align = 'right'>
 		            <%=link_to_remote 'SMTP', :update => 'mail_div', :url => {:controller => 'mail_specification', :action => 'smtp_form'} %>&nbsp;&nbsp;&nbsp;
@@ -151,9 +145,6 @@ along with WebROaR.  If not, see <http://www.gnu.org/licenses/>.
 	    <tr>
 	        <th width = 80%>
 	            <b>Mail Settings</b>&nbsp;&nbsp;&nbsp;<%=link_to_function('Help', :onclick => 'addHelp("mail",event);') %>
-	            <br/>
-	            <div id = 'mail' class = 'font_size_12'>
-	            </div>
 	        </th>
 	        <th width = 10%>
 	            <%=link_to_remote 'SMTP', :update => 'mail_div', :url => {:controller => 'mail_specification', :action => 'smtp_form'} %>

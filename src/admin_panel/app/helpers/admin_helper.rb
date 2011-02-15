@@ -127,7 +127,6 @@ module AdminHelper
         block = block + "<tr>
             				  <td width = 40%>SSL Port&nbsp;&nbsp;&nbsp;
                       				#{link_to_function('Help', :onclick => 'addHelp("ssl_port",event);')}
-                    			<br/> <div id = 'ssl_port' class = 'font_size_12'></div>
                       </td>
             				  <td width = 40%><div id = 'ssl_port_div'>#{ssl_port}</td>
 	            			  <td width = 40%>#{link_to_remote 'Edit', :update => 'ssl_port_div', :url => {:action => 'add_text_box', :div_id => 'ssl_port_div'}}</td>
@@ -135,7 +134,6 @@ module AdminHelper
 	          		  <tr>
 	            			  <td>SSL Certificate Path&nbsp;&nbsp;&nbsp;
                       				#{link_to_function('Help', :onclick => 'addHelp("ssl_certificate",event);')}
-                    			<br/> <div id = 'ssl_certificate' class = 'font_size_12'></div>
                       </td>
 	            			  <td><div id = 'certificate_div'>#{certificate}</div></td>
             				  <td>#{link_to_remote 'Edit', :update => 'certificate_div', :url => {:action => 'add_text_box', :div_id => 'certificate_div'}}</td>
@@ -143,7 +141,6 @@ module AdminHelper
           			  <tr>
 				              <td>Machine key path&nbsp;&nbsp;&nbsp;
                       				#{link_to_function('Help', :onclick => 'addHelp("ssl_key",event);')}
-                    			<br/> <div id = 'ssl_key' class = 'font_size_12'></div>
                       </td>
             				  <td><div id = 'key_div'>#{key}</td>
             				  <td>#{link_to_remote 'Edit', :update => 'key_div', :url => {:action => 'add_text_box', :div_id => 'key_div'}}</td>

@@ -163,14 +163,13 @@ function addHelp(id,event)
   {
     str = "Exception falls into given Exception Class would not be notified and it will be listed in Permanently Ignored list.";
   }
-  str=str+"<div class='text_align_right'><a href=# onClick=\"$('"+id+"').hide(); return false;\" class='calendar_link'>Close</a></div>"
-  $j(".font_size_12").hide();
-  $(id).update(str).addClassName('popup_container').show();
-  var x = getX(event) - $("container").offsetLeft;
-  var y = getY(event) - $("container").offsetTop;
-  if(x > 470)
-	  x = 470;
-  $(id).setStyle({left :x,top :y});
+  str=str+"<div class='text_align_right'><a href=# onClick=\"$('dummy_div').hide(); return false;\">Close</a></div>"
+  $("dummy_div").update(str).addClassName('popup_container font_size_12').show();
+  var x = getX(event);
+  var y = getY(event);
+  if(x > 550)
+    x = 550;
+  $("dummy_div").setStyle({left :x,top :y});
 }
 function getX(event)
 {
@@ -299,9 +298,19 @@ function hide_busy_div(request){
 window.onload = function() {
   // the element in which we will observe all clicks and capture
   // ones originating from pagination links
-  var container = $(document.body)
+  var container = $j(document.body)
+  var items = $j("select",container);
 
   if (container) {
+	items.live("change",function(event) {
+		$("dummy_div").hide();
+	});
+	container.click(function(event) {
+		var element = Event.element(event);
+		if(element.innerHTML != "Help")
+			if(element.getAttribute("href") || element.match("Input") || element.match("Select"))
+				$("dummy_div").hide();
+    });
     var img = new Image
     img.src = '/admin-panel/images/spinner.gif'
 

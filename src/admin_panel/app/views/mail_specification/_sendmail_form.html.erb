@@ -23,7 +23,7 @@ along with WebROaR.  If not, see <http://www.gnu.org/licenses/>.
       <tr>
         <th width = 50%><b>Mail Settings</b>&nbsp;&nbsp;&nbsp;
             <%=link_to_function('Help', :onclick => 'addHelp("mail",event);')%>
-        <br/> <div id = 'mail' class = 'font_size_12'></div></th>
+        </th>
         <th  width = 50%><%=link_to_remote 'SMTP', :update => 'mail_div', :url => {:controller => 'mail_specification', :action => 'smtp_form'}%></th>
       </tr>
       <tr>
@@ -32,7 +32,6 @@ along with WebROaR.  If not, see <http://www.gnu.org/licenses/>.
       <tr>
         <td>Sendmail Location<span id = 'needed'>*</span> &nbsp;&nbsp;&nbsp;
             <%=link_to_function('Help', :onclick => 'addHelp("sendmail_location",event);')%>
-          <br/> <div id = 'sendmail_location' class = 'font_size_12'></div>
         </td>
         <td ><%=text_field :sendmail, :location, :size => 40, :value => @sendmail_old[:location]%></td>
       </tr>
@@ -43,7 +42,6 @@ along with WebROaR.  If not, see <http://www.gnu.org/licenses/>.
       <tr>  
         <td>Recipient Email Addresses<span id = 'needed'>*</span> &nbsp;&nbsp;&nbsp;
            <%=link_to_function('Help', :onclick => 'addHelp("sendmail_recipients_id",event);')%>
-          <br/> <div id = 'sendmail_recipients_id' class = 'font_size_12'></div>
         </td>
         <td><%=text_field :sendmail, :recipients, :size => 40, :value => @sendmail_old[:recipients]%></td>
       </tr>

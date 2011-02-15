@@ -43,35 +43,30 @@ along with WebROaR.  If not, see <http://www.gnu.org/licenses/>.
       <tr>
         <td>Resolver<span id = 'needed'>*</span> &nbsp;&nbsp;&nbsp;
             <%= link_to_function "Help",:onclick => "addHelp('resolver',event)" %>
-          <br/> <div id = 'resolver' class = 'font_size_12'></div>
         </td>
         <td><%= text_field :application_specification, :resolver, :size => 20, :tabindex => "2" %></td>
       </tr>
       <tr>
         <td>Path<span id = 'needed'>*</span> &nbsp;&nbsp;&nbsp;
             <%= link_to_function "Help", :onclick=>"addHelp('path',event)" %>
-          <br/> <div id = 'path' class = 'font_size_12' ></div>
         </td>
         <td ><%= text_field :application_specification, :path, :size => 20, :tabindex => "3" %></td>
       </tr>
       <tr>
         <td>RunAsUser<span id = 'needed'>*</span> &nbsp;&nbsp;&nbsp;
             <%= link_to_function "Help", :onclick => "addHelp('runasuser',event)" %>
-          <br/> <div id = 'runasuser' class = 'font_size_12'></div>
         </td>
         <td><%= text_field :application_specification, :run_as_user, :size=>20, :tabindex => "4" %></td>
       </tr>
       <tr>
         <td>Type &nbsp;&nbsp;&nbsp;
             <%= link_to_function "Help", :onclick => "addHelp('type',event)" %>
-          <br/> <div id = 'type' class = 'font_size_12'></div>
         </td>
         <td><%= select :application_specification, :type1,%w{Rails Rack}, {}, {:onChange => 'disableAnalytics(this.value);', :tabindex => "5"} %></td>
       </tr>
       <tr>
         <td>Analytics &nbsp;&nbsp;&nbsp;
             <%= link_to_function "Help", :onclick => "addHelp('analytics',event)" %>
-          <br/> <div id = 'analytics' class = 'font_size_12'></div>
         </td>
         <td><%= select :application_specification, :analytics, @analytics, {}, {:tabindex => "6"} %></td>
       </tr>
@@ -82,14 +77,12 @@ along with WebROaR.  If not, see <http://www.gnu.org/licenses/>.
       <tr>
         <td>Minimum number of workers &nbsp;&nbsp;&nbsp;			
             <%= link_to_function "Help", :onclick => "addHelp('app_minworker',event)" %>
-          <br/> <div id = 'app_minworker' class = 'font_size_12'></div>
         </td>
         <td ><%=text_field :application_specification, :min_worker, :size=>20, :tabindex => "8"%></td>
       </tr>
       <tr>
         <td>Maximum number of workers &nbsp;&nbsp;&nbsp;
             <%= link_to_function "Help", :onclick => "addHelp('app_maxworker',event)" %>
-          <br/> <div id = 'app_maxworker' class = 'font_size_12'></div>
         </td>
         <td ><%=text_field :application_specification, :max_worker, :size => 20, :tabindex => "9"%></td>
       </tr>
