@@ -1,3 +1,40 @@
+v0.5.0 - 16-Feb-2011
+--------------------
+
+New Features
+~~~~~~~~~~~~
+
+* Added support to filter out know exceptions.
+* The number of exceptions displayed in exception list made configurable.
+* Support gzip encoding for static assets.
+* Support for adding/removing applications from its root directory with 
+default parameters.
+
+Fixes
+~~~~~
+* Support to render static assets for Rails 3 application.
+* Updated test cases.
+* Implemented new YAML parser to handle lists and associative arrays.
+* Added client side validations on Admin Panel.
+* Code clean-up in Admin Panel.
+* Corrected rendering of graph partials.
+* Improve popup windows used to display help messages.
+* Corrected checkbox selection functionality on exception listing page.
+* Check Cache-Control header before choosing encoding. This fixes an issue of 
+static content encoding on IE6.
+* Update values on Admin Panel home page using single Ajax request.
+* Wrapped multi statement macros in do..while structure.
+* Fixed rack dependency issue.
+* Improve the logic of exiting worker gracefully if there is an error.
+* Fixed starling dependency issue with Rails 3 application.
+* Kept strict dependency for Rspec 1.3.x.
+* Fixed QUERY_STRING issue faced with Rails 3 application.
+* Clean-up and improve migration scripts.
+* Updated libyaml to v0.1.3
+* Upgraded Libev to v3.9.
+* Improved Ajax call on Analytics page.
+
+
 v0.4.0 - 09-Aug-2010
 --------------------
 
