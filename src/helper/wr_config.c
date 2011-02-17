@@ -87,8 +87,8 @@ int wr_config_server_init(config_t *Config, const char* root_path){
 }
 
 int wr_config_application_init(config_t *Config){
-  Config->Application.Default.max_workers = 4;
-  Config->Application.Default.min_workers = 8;
+  Config->Application.Default.min_workers = 4;
+  Config->Application.Default.max_workers = 8;
   wr_string_new(Config->Application.Default.env, "production", strlen("production"));
     
   wr_string_new(Config->Application.Admin_panel.name, "Admin Panel", strlen("Admin Panel"));
