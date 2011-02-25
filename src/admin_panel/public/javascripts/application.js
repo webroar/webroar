@@ -298,19 +298,12 @@ function hide_busy_div(request){
 window.onload = function() {
   // the element in which we will observe all clicks and capture
   // ones originating from pagination links
-  var container = $j(document.body)
+  var container = $(document.body)
   var items = $j("select",container);
-
   if (container) {
 	items.live("change",function(event) {
 		$("dummy_div").hide();
 	});
-	container.click(function(event) {
-		var element = Event.element(event);
-		if(element.innerHTML != "Help")
-			if(element.getAttribute("href") || element.match("Input") || element.match("Select"))
-				$("dummy_div").hide();
-    });
     var img = new Image
     img.src = '/admin-panel/images/spinner.gif'
 
@@ -318,12 +311,15 @@ window.onload = function() {
       return new Element('img', { src: img.src, 'class': 'spinner' })
     }
 
-		container.observe('click', function(e) {
-      var el = e.element()
-      if (el.match('.pagination a')) {
+    container.observe('click', function(e) {
+      var element = e.element();
+      if(element.innerHTML != "Help")
+        if(element.getAttribute("href") || element.match("Input") || element.match("Select"))
+          $("dummy_div").hide();
+      if(element.match('.pagination a')) {
         //el.up('.pagination').insert(createSpinner())
-        new Ajax.Request(el.href, { method: 'get' })
-        e.stop()
+        new Ajax.Request(element.href, { method: 'get' })
+        e.stop();
       }
     })
   }
