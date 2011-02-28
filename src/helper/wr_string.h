@@ -23,7 +23,7 @@
 #include <string.h>
 #include <stdlib.h>
 
-#include "wr_macro.h"
+#include <wr_macro.h>
 
 #define wr_tolower(c)      ((c >= 'A' && c <= 'Z') ? (c | 0x20) : c)
 #define wr_toupper(c)      ((c >= 'a' && c <= 'z') ? (c & ~0x20) : c)

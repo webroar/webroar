@@ -69,7 +69,7 @@ def set_flags
   flags << '-DHAVE_GNUTLS' if ENV['ssl'].eql?("yes")
   flags << "-DRUBY_VERSION=#{RUBY_VERSION_CODE}"
   flags << Config::expand($CFLAGS,CONFIG)
-  flags << "-g -O2" if RUBY_PLATFORM =~ /darwin/
+  flags << "-g -O2 -fnested-functions" if RUBY_PLATFORM =~ /darwin/
   flags << "-DL_ERROR -DL_INFO"
   $flags << flags.join(" ")
 end

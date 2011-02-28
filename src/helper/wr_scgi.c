@@ -25,7 +25,7 @@
 #include <stdlib.h>
 #include <string.h>
 
-#include "wr_logger.h"
+#include <wr_logger.h>
 
 #define SCGI_START_OFFSET 40
 #define SCGI_CONTENT_LENGTH_LEN    14

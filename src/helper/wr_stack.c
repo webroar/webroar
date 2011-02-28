@@ -21,7 +21,8 @@
  *****************************************************************************/
 
 #include <wr_stack.h>
-#include <malloc.h>
+#include <stdlib.h>
+#include <wr_macro.h>
 
 struct wr_stack_node_s{
   void *data;
@@ -30,7 +31,7 @@ struct wr_stack_node_s{
 
 int wr_stack_push(wr_stack_t *stack, void *data){
   wr_stack_node_t *new;
-  new = (wr_stack_node_t*) malloc(sizeof(wr_stack_node_t));
+  new = wr_malloc(wr_stack_node_t);
 
   if(!new){
     return -1;
