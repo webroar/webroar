@@ -20,6 +20,7 @@
 
 #This is the model class UrlBreakupTimeSample related to the url_breakup_samples table in the database.
 class UrlBreakupTimeSample < ActiveRecord::Base
+  belongs_to :app
   class << self
     #This method gives the data details for the url in the table. The url data is retrived with the help of url ids.
     #The array of url id is supplied as input to this method.

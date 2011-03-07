@@ -21,6 +21,12 @@
 require 'jcode' if RUBY_VERSION.gsub(/\D/,'').to_i < 187
 #This is the model class App which relates itself with the apps table in database.
 class App < ActiveRecord::Base
+  has_many :app_exceptions, :dependent => :destroy
+  has_many :app_time_samples, :dependent => :destroy
+  has_many :resource_usages, :dependent => :destroy
+  has_many :url_breakup_time_samples, :dependent => :destroy
+  has_many :url_time_samples, :dependent => :destroy
+  
   class<< self
     #This method is used to get the application data.
     #It needs name of the application as an input.

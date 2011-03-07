@@ -20,7 +20,8 @@
 
 #This is the model class UrlTimeSample related to the url_samples table in the database.
 class UrlTimeSample < ActiveRecord::Base
-  extend Webroar::Analyzer::WithExceptionHandling if defined? Webroar::Analyzer::WithExceptionHandling 
+  extend Webroar::Analyzer::WithExceptionHandling if defined? Webroar::Analyzer::WithExceptionHandling
+  belongs_to :app 
   class << self
     # This method returns a hash of data for the graphs Url HIts , Slowest Url and 
     # Most time Consuming Url for an application.

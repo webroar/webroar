@@ -20,7 +20,9 @@
 
 #This is the model class AppTimeSample related to the application_samples table in the database.
 class AppTimeSample < ActiveRecord::Base
-  extend Webroar::Analyzer::WithExceptionHandling if defined? Webroar::Analyzer::WithExceptionHandling 
+  extend Webroar::Analyzer::WithExceptionHandling if defined? Webroar::Analyzer::WithExceptionHandling
+  belongs_to :app
+   
   class << self
     #This method supplies the url and there statistics to the admin panel application. This data is used for the graph ploting.
     #This method supplies the data for database consumption by an application, throughtput and Average Response Time of an application.

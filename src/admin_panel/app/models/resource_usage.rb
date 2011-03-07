@@ -20,6 +20,7 @@
 
 #This is the model class ResourceUsage related to the resource_usages table in the database.
 class ResourceUsage < ActiveRecord::Base
+  belongs_to :app
   class << self
     #This method is used to get the latest state of the server i.e. its cpu usage and physical memory usage.
     # Returns array wtih 2 element, first element is cpu usage, 2nd is memory usage in kb
