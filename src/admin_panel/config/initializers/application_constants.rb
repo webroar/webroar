@@ -66,6 +66,7 @@ PASSWORD_BLANK = 'Password is blank.'
 SUCCESSFUL_LOGOUT="Successfully logged out."
 SESSION_EXPIRE_MESSAGE='Your previous login session for this application got timed out. Please login again.'
 DELETE_APPLICATION_ALERT_MESSAGE="Are you sure, remove this application deployment from the server?"
+STOP_APPLICATION_ALERT_MESSAGE="Are you sure, stop this application?"
 RESTART_APPLICATION_ALERT_MESSAGE="Are you sure, restart this application?"
 RESTART_SERVER_MESSAGE="Please restart the server to made the latest changes effective."
 NO_APPLICATION_FOR_ANALYTICS="No application has been configured for analytics."
