@@ -155,15 +155,15 @@ class YAMLWriter
 #          2) Regex value for supported Used-Agent (optional) (default is '.*')
 #          3) Range of Content-Length (optional)
 #             Elements:
-#                I) Lower limit of Content-Length (optional) (default is 1024 i.e. 1KB) 
-#               II) Upper limit of Content-Length (optional) (default is 12328960 i.e. 10MB)
+#                I) Lower limit of Content-Length (optional) (default is 10240 i.e. 10KB) 
+#               II) Upper limit of Content-Length (optional) (default is 1048576 i.e. 1MB)
 #        Example:
 #          Encoding:
 #            Content-Type: text|xml|javascript
 #            User-Agent: .*
 #            Size Limit:
-#              lower_limit: 2094
-#              upper_limit: 12328960
+#              lower_limit: 10240
+#              upper_limit: 1048576
 #
 ######################################################################################"
     end
