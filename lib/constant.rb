@@ -17,7 +17,6 @@
 # along with WebROaR.  If not, see <http://www.gnu.org/licenses/>.
 
 WEBROAR_TEST_DIR = File.expand_path(File.join(WEBROAR_ROOT, 'test', 'unit'))
-#WEBROAR_RUBY_LIB_DIR = File.expand_path(File.join(WEBROAR_ROOT, 'src', 'ruby_lib'))
 WEBROAR_BIN_DIR = File.expand_path(File.join(WEBROAR_ROOT, 'bin'))
 ADMIN_PANEL_DIR = File.join(WEBROAR_ROOT, 'src', 'admin_panel')
 ADMIN_PANEL_LIB_DIR = File.join(ADMIN_PANEL_DIR, 'lib')
@@ -31,16 +30,16 @@ PIDFILE = "/var/run/webroar.pid"
 TESTFILE = "/etc/profile"
 MESSAGE_DEPLOYMENT = "This command needs to be run as root. Please try again using 'sudo'.".freeze
 
-#$LOAD_PATH.unshift("#{WEBROAR_RUBY_LIB_DIR}")
 $LOAD_PATH.unshift("#{ADMIN_PANEL_LIB_DIR}")
 
-class CheckUser
+module Webroar
+    class CheckUser
+      # Check for root user
+      def self.check
+        return true if File.writable?(TESTFILE)
+        puts "#{MESSAGE_DEPLOYMENT}"
+        return false
+      end
 
-  # Check for root user
-  def self.check
-    return true if File.writable?(TESTFILE)
-    puts "#{MESSAGE_DEPLOYMENT}"
-    return false
-  end
-
-end #class CheckUser
+    end #class CheckUser
+end # module Webroar

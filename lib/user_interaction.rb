@@ -189,6 +189,6 @@ module Webroar
       file.close
     end
 
-  end #UserInteraction
+  end #class UserInteraction
 
-end #Webroar
+end #module Webroar

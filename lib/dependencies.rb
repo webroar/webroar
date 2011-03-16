@@ -20,16 +20,15 @@ require 'mkmf'
 
 module Webroar
   class Dependency
-  
     def initialize(name)
       @name = name
       @options = nil
     end
-  
+
     def name
       @name
     end
-  
+
     def find(options)
       @options = options
       case (@name)
@@ -56,8 +55,8 @@ module Webroar
         flag = "\e[32mfound\e[0m."
       else
         flag = find_lib(Config::CONFIG['LIBRUBY'])
-#      else
-#        flag="\e[31mnot found\e[0m.\nUnable to find #{Config::CONFIG['LIBRUBY']} at #{Config::CONFIG['libdir']}."
+        #      else
+        #        flag="\e[31mnot found\e[0m.\nUnable to find #{Config::CONFIG['LIBRUBY']} at #{Config::CONFIG['libdir']}."
       end
       return flag
     end
@@ -76,7 +75,7 @@ module Webroar
       end
       flag
     end
-    
+
     def find_command(name = @name)
       arr = ENV['PATH'].split(File::PATH_SEPARATOR)
       arr.delete("") if arr!= nil
@@ -116,13 +115,13 @@ module Webroar
       dirs.each do |dir|
         return "\e[32mfound\e[0m   at #{File.join(dir, file)}." if File.exist?(File.join(dir, file))
       end
-      
+
       return "\e[31mnot found\e[0m.\nUnable to find #{file} at #{dirs * ','}."
     end
 
   end
-  
-  module Dependencies 
+
+  module Dependencies
     GCC = Dependency.new(File.basename(Config::CONFIG['CC']))
     Gnutls = Dependency.new('gnutls/gnutls.h')
     Make = Dependency.new('make')
@@ -138,5 +137,5 @@ module Webroar
     RubyZlib = Dependency.new('zlib-ruby')
     Zlib = Dependency.new('zlib.h')
     Regex = Dependency.new('regex.h')
-  end
+  end # class Dependency
 end # module Webroar

@@ -36,4 +36,4 @@ require 'user_interaction'
 require 'installer'
 require 'command_runner'
 
-CommandRunner.new.run
+Webroar::Command::CommandRunner.new.run

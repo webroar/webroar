@@ -18,7 +18,9 @@
 
 require 'optparse'
 
-HELP =%{
+module Webroar
+  module Command
+    HELP =%{
   WebROaR - Ruby Application Server
 
     Usage:
@@ -35,7 +37,7 @@ HELP =%{
       webroar help <COMMAND>     show help on COMMAND
 }
 
-HELP_COMMAND =%{
+    HELP_COMMAND =%{
     install            Install the server
     uninstall          Uninstall the server
 
@@ -47,23 +49,22 @@ HELP_COMMAND =%{
     remove APPNAME     Remove an application from server
 
     test               Run the test suite
-    
 
   For help on a particular command, use 'webroar help COMMAND'.
   }
 
-HELP_INSTALL =%{
+    HELP_INSTALL =%{
   Usage:
     webroar install [options]
 
   Options:
-    -L                     Additional library paths to be used for linking of the server 
+    -L                     Additional library paths to be used for linking of the server
     -I                     Additional include paths to be used for linking of the server
     -s, --ssl-support      Install the server with SSL support
-    -d, --debug-build      Compile the server as a debug build to output extremely verbose logs 
+    -d, --debug-build      Compile the server as a debug build to output extremely verbose logs
 
   The following options would make the install non-interactive by suppressing the questions prompted by the installer
-    
+
     -P, --port             Server port number
     -i, --import           Import configuration, logs and admin panel data from the previous installation
         --no-import        Do not import configuration, logs and admin panel data from the previous installation
@@ -74,7 +75,7 @@ HELP_INSTALL =%{
     Install the server
   }
 
-HELP_UNINSTALL =%{
+    HELP_UNINSTALL =%{
   Usage:
     webroar uninstall
 
@@ -82,7 +83,7 @@ HELP_UNINSTALL =%{
     Uninstall the server
   }
 
-HELP_CLEAR =%{
+    HELP_CLEAR =%{
   Usage:
     webroar clear
 
@@ -93,54 +94,54 @@ HELP_CLEAR =%{
     Clear the log files from '/var/log/webroar' directory.
   }
 
-HELP_START =%{
+    HELP_START =%{
   Usage:
-    webroar start [APPNAME ...] 
+    webroar start [APPNAME ...]
 
   Arguments:
     APPNAME        Name of the application
 
   Summary:
-    Start the server or an application 
+    Start the server or an application
 
   Description:
     'start' command without any arguments starts the server. One can start
     multiple applications together by passing multiple names.
   }
 
-HELP_STOP =%{
+    HELP_STOP =%{
   Usage:
-    webroar stop [APPNAME ...] 
+    webroar stop [APPNAME ...]
 
   Arguments:
     APPNAME        Name of the application
 
   Summary:
-    Stop the server or an application 
+    Stop the server or an application
 
   Description:
     'stop' command without any arguments stops the server. One can stop multiple
     applications together by passing multiple names.
   }
 
-HELP_RESTART =%{
+    HELP_RESTART =%{
   Usage:
-    webroar restart [APPNAME ...] 
+    webroar restart [APPNAME ...]
 
   Arguments:
     APPNAME        Name of the application
 
   Summary:
-    Restart the server or an application 
+    Restart the server or an application
 
   Description:
     'restart' command without any arguments restarts the server. One can restart
     multiple applications together by passing multiple names.
   }
 
-HELP_TEST =%{
+    HELP_TEST =%{
   Usage:
-    webroar test [options] 
+    webroar test [options]
 
   Options:
     -r, --report-dir DIR    Report directory
@@ -151,7 +152,7 @@ HELP_TEST =%{
     Run the test suite
   }
 
-HELP_REMOVE = %{
+    HELP_REMOVE = %{
   Usage:
     webroar remove APPNAME
 
@@ -162,7 +163,7 @@ HELP_REMOVE = %{
     Remove the specified application from the server.
 }
 
-HELP_ADD = %{
+    HELP_ADD = %{
   Usage:
     webroar add APPNAME -R ... -D ... -U ... [options]
 
@@ -195,157 +196,156 @@ HELP_ADD = %{
   Summary:
     Deploy (and start) a new application on the server.
 }
+    class CommandRunner
+      def initialize
+        @options = {}
+        @options[:include_paths] = ""
+        @options[:library_paths] = ""
+      end
 
-class CommandRunner
+      def run
 
-  def initialize
-    @options = {}
-    @options[:include_paths] = ""
-    @options[:library_paths] = ""
-  end
+        return unless parse_args
 
-  def run
-
-    return unless parse_args
-    
-    if ARGV.length == 0
-      puts HELP
-      return
-    end
-
-    cmd = ARGV[0]
-
-    if @options[:help]
-      Help.new.run(cmd)
-      return
-    end
-
-    case cmd
-      when "help"; Help.new.run(ARGV[1])
-      when "install";
-        # When installation is interrupted on administrator account password input, terminal
-        # is set to echo the character
-        begin
-          Installer.new.install(@options)
-        ensure
-          system('stty echo')
+        if ARGV.length == 0
+          puts HELP
+          return
         end
-      when "uninstall"; Installer.new.uninstall
-      when "clear"; WebroarCommand.new.clear
-      when "start", "stop", "restart" ; WebroarCommand.new.operation(ARGV, cmd)
-      when "add" ; WebroarCommand.new.add(@options, ARGV)
-      when "remove" ; WebroarCommand.new.remove(ARGV)
-      when "test"; Installer.new.test(@options)
-    else
-      puts "ERROR:  Invalid command: #{cmd}.  See 'webroar help commands'."
-    end
-  end
 
-  private
+        cmd = ARGV[0]
 
-  def parse_args
+        if @options[:help]
+          Help.new.run(cmd)
+          return
+        end
 
-    optparse = OptionParser.new do|opts|
+        case cmd
+        when "help"; Help.new.run(ARGV[1])
+        when "install";
+          # When installation is interrupted on administrator account password input, terminal
+          # is set to echo the character
+          begin
+            Installer.new.install(@options)
+          ensure
+            system('stty echo')
+          end
+        when "uninstall"; Installer.new.uninstall
+        when "clear"; WebroarCommand.new.clear
+        when "start", "stop", "restart" ; WebroarCommand.new.operation(ARGV, cmd)
+        when "add" ; WebroarCommand.new.add(@options, ARGV)
+        when "remove" ; WebroarCommand.new.remove(ARGV)
+        when "test"; Installer.new.test(@options)
+        else
+          puts "ERROR:  Invalid command: #{cmd}.  See 'webroar help commands'."
+        end
+      end
 
-    opts.on( '-h', '--help', 'Version information') { @options[:help] = true }
-    opts.on( '-s', '--ssl-support', 'Install with SSL support') { @options[:ssl] = true }
-    opts.on( '-d', '--debug-build', 'Compile with debug mode') { @options[:debug_build] = true }
-    opts.on( '-n', '--no-report', 'Do not generate test report') { @options[:no_report] = true }
-    opts.on( '-l', '--load-test', 'Run load test') { @options[:load_test] = true }
-    opts.on( '-A', '--analytics', 'Enable the application analytics') { @options[:analytics] = 'Enabled' }
-    opts.on( '-i', '--import', 'Import configuration, logs and admin panel data from the previous installation') { @options[:import] = true }
-    opts.on( '--no-import', 'Do not import configuration, logs and admin panel data from the previous installation') { @options[:import] = false }
+      private
 
-    opts.on( '-v', '--version', 'Version information') do
-      Installer.new.version
-      return false
-    end
+      def parse_args
 
-    opts.on( '-u', '--username USERNAME', 'Username for the administrator account of server\'s admin panel') do |value|
-      @options[:username] = value.lstrip.gsub(/^=/,"")
-    end
+        optparse = OptionParser.new do|opts|
 
-    opts.on( '-p', '--password PASSWORD', 'Password for the administrator account of server\'s admin panel') do |value|
-      @options[:password] = value.lstrip.gsub(/^=/,"")
-    end
+          opts.on( '-h', '--help', 'Version information') { @options[:help] = true }
+          opts.on( '-s', '--ssl-support', 'Install with SSL support') { @options[:ssl] = true }
+          opts.on( '-d', '--debug-build', 'Compile with debug mode') { @options[:debug_build] = true }
+          opts.on( '-n', '--no-report', 'Do not generate test report') { @options[:no_report] = true }
+          opts.on( '-l', '--load-test', 'Run load test') { @options[:load_test] = true }
+          opts.on( '-A', '--analytics', 'Enable the application analytics') { @options[:analytics] = 'Enabled' }
+          opts.on( '-i', '--import', 'Import configuration, logs and admin panel data from the previous installation') { @options[:import] = true }
+          opts.on( '--no-import', 'Do not import configuration, logs and admin panel data from the previous installation') { @options[:import] = false }
 
-    opts.on( '-P', '--port PORT', 'Server port number') do |value|
-      @options[:port] = value.lstrip.gsub(/^=/,"")
-    end
+          opts.on( '-v', '--version', 'Version information') do
+            Installer.new.version
+            return false
+          end
 
-    opts.on( '-r', '--report-dir [DIR]', 'Report directory') do |value|
-      @options[:report_dir] = value.lstrip.gsub(/^=/,"")
-    end
+          opts.on( '-u', '--username USERNAME', 'Username for the administrator account of server\'s admin panel') do |value|
+            @options[:username] = value.lstrip.gsub(/^=/,"")
+          end
 
-    opts.on( '-R', '--resolver RESOLVER', 'Resolver to identify the application') do |value|
-      @options[:resolver] = value.lstrip.gsub(/^=/,"")
-    end
+          opts.on( '-p', '--password PASSWORD', 'Password for the administrator account of server\'s admin panel') do |value|
+            @options[:password] = value.lstrip.gsub(/^=/,"")
+          end
 
-    opts.on( '-D', '--path DIR', 'Path for the web application root directory') do |value|
-      @options[:path] = value.lstrip.gsub(/^=/,"")
-      @options[:path] = File.expand_path(@options[:path])
-    end
+          opts.on( '-P', '--port PORT', 'Server port number') do |value|
+            @options[:port] = value.lstrip.gsub(/^=/,"")
+          end
 
-    opts.on( '-T', '--type APPTYPE', 'Type of the application either rack or rails') do |value|
-      @options[:type1] = value.lstrip.gsub(/^=/,"").capitalize
-    end
+          opts.on( '-r', '--report-dir [DIR]', 'Report directory') do |value|
+            @options[:report_dir] = value.lstrip.gsub(/^=/,"")
+          end
 
-    opts.on( '-E', '--environment ENV', 'Environment in which you want to run the application') do |value|
-      @options[:environment] = value.lstrip.gsub(/^=/,"")
-    end
+          opts.on( '-R', '--resolver RESOLVER', 'Resolver to identify the application') do |value|
+            @options[:resolver] = value.lstrip.gsub(/^=/,"")
+          end
 
-    opts.on( '-N', '--min-workers WORKER', 'Minimum number of worker processes that should run for the deployed application.') do |value|
-      @options[:min_worker] = value.lstrip.gsub(/^=/,"")
-    end
+          opts.on( '-D', '--path DIR', 'Path for the web application root directory') do |value|
+            @options[:path] = value.lstrip.gsub(/^=/,"")
+            @options[:path] = File.expand_path(@options[:path])
+          end
 
-    opts.on( '-X', '--max-workers WORKER', 'Maximum number of worker processes that should run for the deployed application.') do |value|
-      @options[:max_worker] = value.lstrip.gsub(/^=/,"")
-    end
+          opts.on( '-T', '--type APPTYPE', 'Type of the application either rack or rails') do |value|
+            @options[:type1] = value.lstrip.gsub(/^=/,"").capitalize
+          end
 
-    opts.on( '-U', '--run-as-user USERNAME', 'Name of the user with whose privileges you would like to run the application') do |value|
-      @options[:run_as_user] = value.lstrip.gsub(/^=/,"")
-    end
+          opts.on( '-E', '--environment ENV', 'Environment in which you want to run the application') do |value|
+            @options[:environment] = value.lstrip.gsub(/^=/,"")
+          end
 
-    opts.on( '-L PATH', 'Additional library path') do |value|
-      @options[:library_paths] += " -L'#{value.lstrip.gsub(/^=/,"")}'"
-    end
+          opts.on( '-N', '--min-workers WORKER', 'Minimum number of worker processes that should run for the deployed application.') do |value|
+            @options[:min_worker] = value.lstrip.gsub(/^=/,"")
+          end
 
-    opts.on( '-I PATH', 'Additional include path') do |value|
-      @options[:include_paths] += " -I'#{value.lstrip.gsub(/^=/,"")}'"
-    end
+          opts.on( '-X', '--max-workers WORKER', 'Maximum number of worker processes that should run for the deployed application.') do |value|
+            @options[:max_worker] = value.lstrip.gsub(/^=/,"")
+          end
 
-    end
+          opts.on( '-U', '--run-as-user USERNAME', 'Name of the user with whose privileges you would like to run the application') do |value|
+            @options[:run_as_user] = value.lstrip.gsub(/^=/,"")
+          end
 
-    begin
-      optparse.parse!
-    rescue OptionParser::ParseError => err
-      puts "#{err}. See 'webroar --help'."
-      return false
-    end
+          opts.on( '-L PATH', 'Additional library path') do |value|
+            @options[:library_paths] += " -L'#{value.lstrip.gsub(/^=/,"")}'"
+          end
 
-    return true
+          opts.on( '-I PATH', 'Additional include path') do |value|
+            @options[:include_paths] += " -I'#{value.lstrip.gsub(/^=/,"")}'"
+          end
 
-  end
+        end
 
-end   # class Command
+        begin
+          optparse.parse!
+        rescue OptionParser::ParseError => err
+          puts "#{err}. See 'webroar --help'."
+          return false
+        end
 
-class Help
+        return true
 
-  def run (cmd)
-    case cmd
-      when nil, "help"; puts HELP
-      when "commands"; puts HELP_COMMAND
-      when "install"; puts HELP_INSTALL
-      when "uninstall"; puts HELP_UNINSTALL
-      when "clear"; puts HELP_CLEAR
-      when "start"; puts HELP_START
-      when "stop"; puts HELP_STOP
-      when "restart"; puts HELP_RESTART
-      when "add"; puts HELP_ADD
-      when "remove"; puts HELP_REMOVE
-      when "test"; puts HELP_TEST
-      else puts "WARNING:  Unknown command #{cmd}. See 'webroar help commands'."
-    end
-  end
+      end
 
-end  # class help
+    end   # class CommandRunner
+
+    class Help
+      def run (cmd)
+        case cmd
+        when nil, "help"; puts HELP
+        when "commands"; puts HELP_COMMAND
+        when "install"; puts HELP_INSTALL
+        when "uninstall"; puts HELP_UNINSTALL
+        when "clear"; puts HELP_CLEAR
+        when "start"; puts HELP_START
+        when "stop"; puts HELP_STOP
+        when "restart"; puts HELP_RESTART
+        when "add"; puts HELP_ADD
+        when "remove"; puts HELP_REMOVE
+        when "test"; puts HELP_TEST
+        else puts "WARNING:  Unknown command #{cmd}. See 'webroar help commands'."
+        end
+      end
+
+    end  # class Help
+  end # module Command
+end # module Webroar
