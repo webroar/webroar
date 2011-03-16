@@ -151,7 +151,7 @@ class YAMLWriter
 #  (d) Encoding (optional)
 #        It allows (deflate) encoding of static assets.
 #        Elements:
-#          1) Regex value for supported Content-Type (optional) (default is 'text|xml')
+#          1) Regex value for supported Content-Type (optional) (default is 'javascript|css|text|xml')
 #          2) Regex value for supported Used-Agent (optional) (default is '.*')
 #          3) Range of Content-Length (optional)
 #             Elements:

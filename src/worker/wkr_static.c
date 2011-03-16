@@ -756,7 +756,7 @@ static_server_t * static_server_new(void* ptr){
       LOG_ERROR(SEVERE, "Now Static Workers allow encoding for only 'text' and 'xml' Content-Type.");
       free(buffer);
       regfree(s->r_content_type);
-      if((err_no = regcomp(s->r_content_type, "text|xml", 1))!=0){
+      if((err_no = regcomp(s->r_content_type, "javascript|css|text|xml", 1))!=0){
         regfree(s->r_content_type);
         free(s->r_content_type);
         s->r_content_type = NULL;
