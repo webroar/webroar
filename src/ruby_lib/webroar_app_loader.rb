@@ -58,7 +58,7 @@ begin
 #      TODO: Add Exception tracking for Rails 3
       if $pid_sent and $g_options["app_name"].strip != 'Admin Panel' and $g_options["app_type"] == "rails" 
         require File.join(File.dirname(__FILE__), 'exception_tracker', 'webroar_exception.rb')
-      else
+      elsif $g_options["app_name"].strip != 'Admin Panel'
         Webroar.log_info("Exception notification would not work.")
       end
 #      TODO: Add profiling support for Rails 3
