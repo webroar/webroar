@@ -62,7 +62,7 @@ spec = Gem::Specification.new do |s|
     File.join('bin', 'webroar-analyzer'),
     File.join('conf', '*.yml'),
     File.join('doc', '**','*.{txt,html,png}'),
-    File.join('{src,lib,tasks}', '**', '**', '*'),
+    File.join('{src,lib,tasks}', '**',  '*'),
     File.join('src', 'admin_panel', 'lib', 'tasks'),
     File.join('src', 'admin_panel', 'test', 'integration','*'),
     File.join('src', 'admin_panel', 'tmp','*'),
@@ -70,18 +70,20 @@ spec = Gem::Specification.new do |s|
     File.join('src', 'admin_panel', 'tmp', 'pids','*'),
     File.join('src', 'admin_panel', 'tmp', 'sessions','*'),
     File.join('src', 'admin_panel', 'tmp', 'sockets','*')].exclude(
-                                                                    File.join('src', 'admin_panel', 'db','*.*'),
-                                                                    File.join('src', 'admin_panel', 'log','*.*'),
-                                                                    File.join('src', 'admin_panel', 'config','user.yml'),
+                                                                    File.join('src', 'admin_panel', 'db', '*.*'),
+                                                                    File.join('src', 'admin_panel', 'log', '*.*'),
+                                                                    File.join('src', 'admin_panel', 'config', 'user.yml'),
                                                                     File.join('src', 'admin_panel', 'test.log'),
                                                                     File.join('src', 'admin_panel', 'test_summary'),
-                                                                    File.join('conf','mail_config.yml'),
+                                                                    File.join('conf', 'mail_config.yml'),
                                                                     File.join('conf', 'config.yml'))
     
     s.test_files = FileList[File.join('test', '**', '*.{c,h,yml,rb,js,css,html,txt}'),
     File.join('test', 'spec','test_app','app','**','*'),
     File.join('test', 'spec','test_app','script','**','*'),
     File.join('test', 'spec', 'test_app', 'vendor', '.placeholder'),
+    File.join('test', 'spec','test_app','public','**','*'),
+    File.join('test', 'spec', 'test_app', 'README'),
     File.join('test', 'spec', 'test_app', 'Rakefile')].exclude(
                                                                 File.join('test', 'spec', 'test_app', 'test', '**', '*'),
                                                                 File.join('test', 'spec', 'test_app', 'db', 'schema.rb'))
