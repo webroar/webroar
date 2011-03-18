@@ -37,10 +37,11 @@ HELPER_DIR = File.join(ROOT_DIR, 'src', 'helper').freeze
 WORKER_DIR = File.join(ROOT_DIR, 'src', 'worker').freeze
 CONF_DIR = File.join(ROOT_DIR, 'conf').freeze
 UNIT_TEST_DIR = File.join(ROOT_DIR, 'test', 'unit').freeze
-HEAD_OBJ_DIR = File.join(ROOT_DIR, 'obj', 'head').freeze
-HELPER_OBJ_DIR = File.join(ROOT_DIR, 'obj', 'helper').freeze
-WORKER_OBJ_DIR = File.join(ROOT_DIR, 'obj', 'worker').freeze
-TEST_OBJ_DIR = File.join(ROOT_DIR, 'obj', 'test').freeze
+OBJ_DIR = File.join(ROOT_DIR, 'obj').freeze
+HEAD_OBJ_DIR = File.join(OBJ_DIR, 'head').freeze
+HELPER_OBJ_DIR = File.join(OBJ_DIR,  'helper').freeze
+WORKER_OBJ_DIR = File.join(OBJ_DIR, 'worker').freeze
+TEST_OBJ_DIR = File.join(OBJ_DIR, 'test').freeze
 LOG_FILES = File.join('','var','log','webroar').freeze
 TMP_FILES = File.join('','tmp').freeze
 RUBY_VERSION_CODE = RUBY_VERSION.gsub(/\D/, '').freeze
@@ -54,7 +55,7 @@ $flags = ""
 ## Set library flags needed
 $lib_flags = ""
 
-CLEAN.include(File.join(WORKER_OBJ_DIR,'*.o'), File.join(HEAD_OBJ_DIR,'*.o'), File.join(HELPER_OBJ_DIR,'*.o'), File.join(TEST_OBJ_DIR,'*.o'))
+CLEAN.include(OBJ_DIR)
 CLOBBER.include(File.join(BIN_DIR,'webroar-head'),File.join(BIN_DIR,'webroar-worker'), File.join(UNIT_TEST_DIR,'*.so'))
 
 def set_flags
