@@ -19,14 +19,15 @@
 #++
 
 require 'jcode' if RUBY_VERSION.gsub(/\D/,'').to_i < 187
+
 #This is the model class App which relates itself with the apps table in database.
 class App < ActiveRecord::Base
+  validates_uniqueness_of :name
   has_many :app_exceptions, :dependent => :destroy
   has_many :app_time_samples, :dependent => :destroy
   has_many :resource_usages, :dependent => :destroy
   has_many :url_breakup_time_samples, :dependent => :destroy
   has_many :url_time_samples, :dependent => :destroy
-  
   class<< self
     #This method is used to get the application data.
     #It needs name of the application as an input.
@@ -34,7 +35,7 @@ class App < ActiveRecord::Base
       app = find(:first, :conditions => ['name = ?', name])
       return app
     end
-    
+
     # Take Application Name as argument and returns count of distinct open exceptions
     def exceptions_count(name)
       if app = get_application_data(name)
@@ -42,54 +43,53 @@ class App < ActiveRecord::Base
       else
         0
       end
-    end    
+    end
 
     def get_all(page = 1, per_page = 5)
       info = YAML::load_file(CONFIG_FILE_PATH) rescue nil
       applications = info["Application Specification"].paginate(:page => page,:per_page => per_page) if info["Application Specification"]
     end
 
-  end
-  
     # Start the application
-  def self.start(app_name)
-    ctl = Control.new(app_name)
-    reply = nil
-    #err_obj = nil
-    err_log = nil
-    begin
-      reply, err_log = ctl.add
-    rescue Exception => e
-      #err_obj = e
-      reply = "An error occurred while sending 'start' request for application '#{app_name}'. Please refer the '/var/log/webroar/#{app_name}.log' file for details."
+    def start(app_name)
+      ctl = Control.new(app_name)
+      reply = nil
+      #err_obj = nil
+      err_log = nil
+      begin
+        reply, err_log = ctl.add
+      rescue Exception => e
+        #err_obj = e
+        reply = "An error occurred while sending 'start' request for application '#{app_name}'. Please refer the '/var/log/webroar/#{app_name}.log' file for details."
+      end
+      #return reply, e
+      return reply, err_log
     end
-    #return reply, e
-    return reply, err_log
+
+    # Stop the application
+    def stop(app_name)
+      ctl = Control.new(app_name)
+      reply = nil
+      err_log = nil
+      begin
+        reply, err_log = ctl.delete
+      rescue Exception => e
+        reply = "An error occurred while sending 'stop' request for application '#{app_name}'. Please refer the '/var/log/webroar/#{app_name}.log' file for details."
+      end
+      return reply, err_log
+    end
+
+    # Restart the application
+    def restart(app_name)
+      ctl = Control.new(app_name)
+      reply = nil
+      err_log = nil
+      begin
+        reply, err_log = ctl.restart
+      rescue Exception => e
+        reply = "An error occurred while sending 'restart' request for application '#{app_name}'. Please refer the '/var/log/webroar/#{app_name}.log' file for details."
+      end
+      return reply, err_log
+    end
   end
-  
-  # Stop the application
-  def self.stop(app_name)
-    ctl = Control.new(app_name)
-    reply = nil
-    err_log = nil
-    begin
-      reply, err_log = ctl.delete
-    rescue Exception => e
-      reply = "An error occurred while sending 'stop' request for application '#{app_name}'. Please refer the '/var/log/webroar/#{app_name}.log' file for details."
-    end
-    return reply, err_log
-  end
-  
-  # Restart the application
-  def self.restart(app_name)
-    ctl = Control.new(app_name)
-    reply = nil
-    err_log = nil
-    begin
-      reply, err_log = ctl.restart
-    rescue Exception => e
-      reply = "An error occurred while sending 'restart' request for application '#{app_name}'. Please refer the '/var/log/webroar/#{app_name}.log' file for details."
-    end
-    return reply, err_log
-  end    
 end

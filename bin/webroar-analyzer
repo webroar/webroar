@@ -19,5 +19,19 @@
 # along with WebROaR.  If not, see <http://www.gnu.org/licenses/>.
 
 require 'rubygems'
-WEBROAR_ROOT =  File.expand_path(File.join(File.dirname(__FILE__), '..')).freeze
-require File.expand_path(File.join(WEBROAR_ROOT, 'src', 'ruby_lib', 'analyzer', 'webroar_analyzer.rb'))
+require File.join(File.dirname(__FILE__), '..', 'lib', 'constant.rb')
+
+$LOAD_PATH.unshift("#{WEBROAR_LIB_DIR}")
+$LOAD_PATH.unshift("#{ANALYZER_DIR}")
+
+require 'db_connect'
+require 'wlogger'
+require 'process_helper'
+require 'user_defined_exception'
+require 'with_exception_handling'
+require 'message_reader'
+require 'message_analyzer'
+require 'resources_analyzer'
+require 'webroar_analyzer'
+
+Webroar::Analyzer::ScriptRunner.run

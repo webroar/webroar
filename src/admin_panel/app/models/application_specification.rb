@@ -18,6 +18,8 @@
 # along with WebROaR.  If not, see <http://www.gnu.org/licenses/>.
 #++
 
+require File.join(RAILS_ROOT, "lib", "helper.rb")
+
 class ApplicationSpecification < PseudoModel
   column :app_id,       :string
   column :name,         :string
@@ -34,29 +36,30 @@ class ApplicationSpecification < PseudoModel
   validates_presence_of :name, :resolver, :path, :run_as_user, :type1, :environment
   validates_numericality_of :min_worker, :max_worker, :greater_than_or_equal_to => 1, :less_than_or_equal_to => ALLOWED_MAX_WORKERS
   validates_format_of :name, :with => /^[A-Za-z0-9_\-]*$/i, :message => " must consist of A-Z, a-z, 0-9 , _ , -  and /."
-#  validates_format_of :path, :with => /^\/.*$/i, :message => "entered is not the complete path for your web application root directory."
+  #  validates_format_of :path, :with => /^\/.*$/i, :message => "entered is not the complete path for your web application root directory."
   validates_length_of :name, :maximum => 30, :allow_nil => true
   #validates_length_of :path, :maximum => 256
   validates_length_of :run_as_user, :maximum => 30, :allow_nil => true
   validates_length_of :environment, :maximum => 30, :allow_nil => true
   #  validates_format_of :baseuri, :with => /^\/[A-Za-z0-9_\-\/]*$/i, :message => "must start with '/' and contains characters A-Z, a-z, 0-9 , _ , -  and /."
-
   def write
-    
+
     info = YAML::load_file(CONFIG_FILE_PATH) rescue nil
     if not (info and info['Application Specification'])
       info['Application Specification'] = Array.new
     end
-    
+
     info['Application Specification'].push(obj_to_hash)
-    
+
     YAMLWriter.write(info, CONFIG_FILE_PATH, YAMLConfig::CONFIG)
-  
+    App.create({:name => name})
+    SignalHelper.send
+
   end
 
   def self.remove(app_name)
     info = YAML::load_file(CONFIG_FILE_PATH) rescue nil
-    
+
     if info and info['Application Specification']
       info['Application Specification'].each do |x|
         if x['name'].to_s.eql?(app_name.to_s)
@@ -66,13 +69,17 @@ class ApplicationSpecification < PseudoModel
       info.delete('Application Specification') if info['Application Specification'].length == 0
     end
 
+    app = App.find(:first, :conditions=>["name = ?", app_name])
+    app.destroy if app
+    SignalHelper.send
+
     YAMLWriter.write(info, CONFIG_FILE_PATH, YAMLConfig::CONFIG)
   end
 
   def remove
     ApplicationSpecification::remove(name)
   end
-    
+
   #Converting ApplicationSpecification obeject into a Hash.
   def obj_to_hash
     app = Hash["name" => name, "path" => path, "run_as_user" => run_as_user.downcase, "type" => type1.downcase, "analytics" => analytics.to_s.downcase, "environment" => environment.downcase, "min_worker" => min_worker.to_i, "max_worker" => max_worker.to_i]
@@ -80,7 +87,7 @@ class ApplicationSpecification < PseudoModel
     app["host_names"] = host_names if host_names
     return app
   end
-  
+
   def update(app_id)
     info = YAML::load_file(CONFIG_FILE_PATH) rescue nil
     app_data = info['Application Specification'].detect{|app_item| app_item["name"].eql?(name)}
@@ -90,14 +97,14 @@ class ApplicationSpecification < PseudoModel
     end
     YAMLWriter.write(info, CONFIG_FILE_PATH, YAMLConfig::CONFIG)
   end
-  
+
   #this method is used to validate the various fields of the apps model.
-  def validate     
-#    errors.add_to_base MIN_WORKERS_VALIDATION if min_worker.to_i > 20
+  def validate
+    #    errors.add_to_base MIN_WORKERS_VALIDATION if min_worker.to_i > 20
     if max_worker.to_i < min_worker.to_i
       errors.add_to_base MAX_WORKERS_VALIDATION_1
-#    elsif max_worker.to_i > 20
-#      errors.add_to_base MAX_WORKERS_VALIDATION_2
+      #    elsif max_worker.to_i > 20
+      #      errors.add_to_base MAX_WORKERS_VALIDATION_2
     end
     #errors.add_to_base APPLICATION_PATH_EXISTANCE_VALIDATION if !File.directory?(path)
     errors.add_to_base ANALYTICS_VALIDATION if type1=="Rails" and !(analytics.downcase == "enabled" or analytics.downcase == "disabled")
@@ -113,16 +120,16 @@ class ApplicationSpecification < PseudoModel
         unless File.exists?(File.join(path, 'config.ru'))
           errors.add_to_base "The entered application path is not a valid Rack application path."
         end
-      end      
-    end  
-    # Resolver take either baseuri or host_names, not both. 
+      end
+    end
+    # Resolver take either baseuri or host_names, not both.
     # baseuri starts with '/'
     if resolver
       tokens = resolver.split(/ /)
-      
+
       curr_host_names = []
       host_name_flag = 0
-      
+
       if (tokens.size == 1 and tokens[0].start_with?('/'))
         write_attribute(:baseuri, resolver)
         errors.add_to_base "BaseURI must start with '/' and contains characters A-Z, a-z, 0-9 , _ , -  and /." if !(baseuri.strip =~ /^\/[A-Za-z0-9_\-\/]*$/i)
@@ -294,22 +301,12 @@ class ApplicationSpecification < PseudoModel
       end
     end
   end
- 
-  class << self
-    def delete(app_id)
-      info = YAML::load_file(CONFIG_FILE_PATH) rescue nil
-      app_name = info['Application Specification'][app_id]["name"]
-      info['Application Specification'].delete_at(app_id)
-      info.delete('Application Specification') if info['Application Specification'].length == 0 
 
-      YAMLWriter.write(info,CONFIG_FILE_PATH, YAMLConfig::CONFIG)
-      return app_name
-    end
-    
+  class << self
     #This method is to get application specifications for a specific application from WebROaR config file.
     def get_hash(application_id = 1000)
       info = YAML::load_file(CONFIG_FILE_PATH) rescue nil
-      name = ""    
+      name = ""
       path = ""
       run_as_user = ""
       type = "Rails"
@@ -317,12 +314,12 @@ class ApplicationSpecification < PseudoModel
       environment = "Production"
       port, min_worker, max_worker, log_level = ServerSpecification.get_fields
       if !application_id.nil?
-        if info and info['Application Specification'] and info['Application Specification'][application_id] 
+        if info and info['Application Specification'] and info['Application Specification'][application_id]
           name = info['Application Specification'][application_id]['name'] if info['Application Specification'][application_id]['name']
-          baseuri = info['Application Specification'][application_id]['baseuri'] if info['Application Specification'][application_id]['baseuri']	
-          host_names = info['Application Specification'][application_id]['host_names'] if info['Application Specification'][application_id]['host_names']	
-          path = info['Application Specification'][application_id]['path'] if info['Application Specification'][application_id]['path']	
-          run_as_user = info['Application Specification'][application_id]['run_as_user'] if info['Application Specification'][application_id]['run_as_user']	
+          baseuri = info['Application Specification'][application_id]['baseuri'] if info['Application Specification'][application_id]['baseuri']
+          host_names = info['Application Specification'][application_id]['host_names'] if info['Application Specification'][application_id]['host_names']
+          path = info['Application Specification'][application_id]['path'] if info['Application Specification'][application_id]['path']
+          run_as_user = info['Application Specification'][application_id]['run_as_user'] if info['Application Specification'][application_id]['run_as_user']
           type = info['Application Specification'][application_id]['type'].capitalize if info['Application Specification'][application_id]['type']
           analytics = info['Application Specification'][application_id]['analytics'].capitalize if info['Application Specification'][application_id]['analytics']
           environment = info['Application Specification'][application_id]['environment'].capitalize if info['Application Specification'][application_id]['environment']
@@ -330,40 +327,40 @@ class ApplicationSpecification < PseudoModel
           max_worker = info['Application Specification'][application_id]['max_worker'] if info['Application Specification'][application_id]['max_worker']
         end
       end
-      app_hash = Hash[:app_id => application_id.to_i, 
-        :name => name,                
-        :path => path,
-        :run_as_user => run_as_user,
-        :type1 => type,
-        :analytics => analytics,
-        :environment => environment,
-        :min_worker => min_worker,
-        :max_worker => max_worker]
+      app_hash = Hash[:app_id => application_id.to_i,
+      :name => name,
+      :path => path,
+      :run_as_user => run_as_user,
+      :type1 => type,
+      :analytics => analytics,
+      :environment => environment,
+      :min_worker => min_worker,
+      :max_worker => max_worker]
       app_hash[:resolver] = baseuri if baseuri
       app_hash[:resolver] = host_names if host_names
 
-      return app_hash  
+      return app_hash
     end
 
     def get_application_id_from_name(application_name)
-        info = YAML::load_file(CONFIG_FILE_PATH) rescue nil
-        i = 0 
-        while info['Application Specification']
-          if info['Application Specification'][i]['name'] == application_name
-            break
-          end
-          i +=1
-        end  
-        return i
+      info = YAML::load_file(CONFIG_FILE_PATH) rescue nil
+      i = 0
+      while info['Application Specification']
+        if info['Application Specification'][i]['name'] == application_name
+          break
+        end
+        i +=1
+      end
+      return i
     end
-    
+
     def analytics_enabled?(application_name)
       info = YAML::load_file(CONFIG_FILE_PATH) rescue nil
-      i = 0 
+      i = 0
       while info['Application Specification']
         if info['Application Specification'][i]['name'] == application_name
           if info['Application Specification'][i]['analytics'].downcase == "enabled".downcase
-            return true 
+            return true
           else
             return false
           end
@@ -372,6 +369,6 @@ class ApplicationSpecification < PseudoModel
       end
       false
     end
-    
+
   end
 end

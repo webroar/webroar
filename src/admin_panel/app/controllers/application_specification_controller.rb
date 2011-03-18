@@ -71,12 +71,10 @@ class ApplicationSpecificationController < ApplicationController
   # This action is to delete the application specification from the WebROaR config file.
   #This method requires the id of the application specification to be deleted.
   def delete_application
-    application_name = params[:id]
-    application_id = ApplicationSpecification.get_application_id_from_name(application_name)
-    app_name = ApplicationSpecification.delete(application_id)
-    reply, err_log = App.stop(app_name)
+    ApplicationSpecification.remove(params[:id])
+    reply, err_log = App.stop(params[:id])
     # reply = nil indicate success
-    flash[:server_message] = "Application '#{app_name}' deleted successfully." if reply == nil
+    flash[:server_message] = "Application '#{params[:id]}' deleted successfully." if reply == nil
     set_error(reply, err_log)
     render :js => "<script>self.top.location='#{configuration_path}'</script>"
   end

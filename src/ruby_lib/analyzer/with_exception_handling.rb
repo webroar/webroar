@@ -25,29 +25,18 @@ module Webroar
         begin
           block.call
         rescue ActiveRecord::StatementInvalid, Exception => e
-          log_message_with_check(:info, log_message)        
-          log_message_with_check(:error, "#{e.message}. try no #{trial+1}")     
+          WLogger.info(log_message)        
+          WLogger.error("#{e.message}. try no #{trial+1}")     
           if trial < MAX_TRIAL
             trial += 1            
             sleep(2)          
             retry
           end
-          log_message_with_check(:info, log_message)  
-          log_message_with_check(:error, e) 
-          log_message_with_check(:error, e.backtrace.join("\n"))
+          WLogger.info(log_message)  
+          WLogger.error(e) 
+          WLogger.error(e.backtrace.join("\n"))
         end
-      end
-      
-      def log_message_with_check(level, message)
-        if defined? Webroar::Analyzer::Logger
-          case level
-            when :info
-              Webroar::Analyzer::Logger.info(message)
-            when :error
-              Webroar::Analyzer::Logger.error(message)
-          end  
-        end
-      end
+      end      
     end
   end
 end

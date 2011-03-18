@@ -17,9 +17,10 @@
 # along with WebROaR.  If not, see <http://www.gnu.org/licenses/>.
 
 require 'fileutils'
+
 module Webroar
   module Analyzer
-  # ScriptRunner class design inspired from Starling runner
+    # ScriptRunner class design inspired from Starling runner
     class ScriptRunner
       class ProcessHelper
         def initialize(log_file = nil, pid_file = nil, user = nil, group = nil)
@@ -84,13 +85,13 @@ module Webroar
             begin
               STDOUT.reopen(@log_file, "a")
               STDOUT.sync = true
-            rescue Exception          
+            rescue Exception
               begin; STDOUT.reopen('/dev/null'); rescue Exception; end
               system("echo Error redirecting STDOUT to '#{@log_file}'. Redirecting to '/dev/null'.")
             end
           else
             begin; STDOUT.reopen('/dev/null'); rescue Exception; end
-            system("echo Missing logfile path. You can set it from 'conf/server_internal_config.yml'. Redirecting STDOUT to '/dev/null'.")            
+            system("echo Missing logfile path. You can set it from 'conf/server_internal_config.yml'. Redirecting STDOUT to '/dev/null'.")
           end
 
           begin; STDERR.reopen(STDOUT); rescue Exception; end

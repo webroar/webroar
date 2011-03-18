@@ -1,5 +1,4 @@
-#!/usr/bin/env ruby
-
+#--
 # WebROaR - Ruby Application Server - http://webroar.in/
 # Copyright (C) 2009  Goonj LLC
 #
@@ -17,23 +16,19 @@
 #
 # You should have received a copy of the GNU General Public License
 # along with WebROaR.  If not, see <http://www.gnu.org/licenses/>.
+#++
 
-# Ruby script to control WebROaR
-
-require File.join(File.dirname(__FILE__), '..', 'lib', 'constant.rb')
-
-$LOAD_PATH.unshift("#{WEBROAR_LIB_DIR}")
-$LOAD_PATH.unshift("#{ADMIN_PANEL_LIB_DIR}")
-
-autoload :YAML, 'yaml'
-require 'digest/md5'
-require 'db_connect'
-require 'dependencies'
-require 'control'
-require 'scgi'
-require 'webroar_command'
-require 'user_interaction'
-require 'installer'
-require 'command_runner'
-
-Webroar::Command::CommandRunner.new.run
+class SignalHelper
+  # send signal
+  def self.send
+    pid_file = nil
+    config = YAML.load(File.open(File.join(RAILS_ROOT, '..', '..', 'conf', 'server_internal_config.yml')))
+    pid_file = config["webroar_analyzer_script"]["pid_file"] if config["webroar_analyzer_script"] and config["webroar_analyzer_script"]["pid_file"]
+    unless pid_file
+      Logger.erro("Either Webroar Analyzer is not started or 'webroar_analyzer.pid' not found")
+      return
+    end
+    pid = File.read(pid_file).chomp.to_i rescue nil
+    Process.kill("USR1", pid)
+  end
+end # class SignalHelper

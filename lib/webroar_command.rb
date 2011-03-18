@@ -16,8 +16,6 @@
 # You should have received a copy of the GNU General Public License
 # along with WebROaR.  If not, see <http://www.gnu.org/licenses/>.
 
-ADMIN_PANEL_ROOT = File.join(WEBROAR_ROOT, 'src', 'admin_panel').freeze
-
 module Webroar
   module Command
     # Basic WebROaR commands
@@ -49,6 +47,7 @@ module Webroar
       # Stop and remove the application
       def remove(args)
         return unless CheckUser.check
+        return unless server_started?
         rails_app = false
         rack_app =false
         if args.length < 2
@@ -62,18 +61,7 @@ module Webroar
           end
         end
 
-        #    gem 'activesupport', '>= 2.3.5'
-        #    gem 'activerecord', '>= 2.3.5'
-        #    require 'active_record'
-        $LOAD_PATH.unshift("#{File.join(ADMIN_PANEL_ROOT,'vendor', 'rails', 'activerecord', 'lib')}")
-        $LOAD_PATH.unshift("#{File.join(ADMIN_PANEL_ROOT,'vendor', 'rails', 'activesupport', 'lib')}")
-        require File.join(ADMIN_PANEL_ROOT,'vendor', 'rails', 'activerecord', 'lib', 'active_record')
-
-        files = Dir.glob(File.join(ADMIN_PANEL_ROOT, 'app', 'models', "{app,pseudo_model,application_specification,server_specification}.rb"))
-        files << File.join(ADMIN_PANEL_ROOT, 'config','initializers','application_constants.rb')
-        files << File.join(ADMIN_PANEL_ROOT, 'lib','yaml_writer.rb')
-
-        load_files(files)
+        load_models
 
         args[1] = Dir.pwd.match(/[^\/]*$/).to_s if(args[1] == nil and (rails_app or rack_app ))
         reply, err_log = App.stop(args[1])
@@ -87,6 +75,7 @@ module Webroar
       # Add and start the application
       def add(options, args)
         return unless CheckUser.check
+        return unless server_started?
         rails_app = false
         rack_app = false
 
@@ -101,25 +90,7 @@ module Webroar
           end
         end
 
-        sockFile = File.join("","tmp","webroar.sock")
-
-        unless File.exist?(sockFile)
-          puts "Either the server is not started or 'webroar.sock' file is deleted."
-          return
-        end
-
-        #    gem 'activesupport', '>= 2.3.5'
-        #    gem 'activerecord', '>= 2.3.5'
-        #    require 'active_record'
-
-        $LOAD_PATH.unshift("#{File.join(ADMIN_PANEL_ROOT,'vendor', 'rails', 'activerecord', 'lib')}")
-        $LOAD_PATH.unshift("#{File.join(ADMIN_PANEL_ROOT,'vendor', 'rails', 'activesupport', 'lib')}")
-        require File.join(ADMIN_PANEL_ROOT,'vendor', 'rails', 'activerecord', 'lib', 'active_record')
-
-        files = Dir.glob(File.join(ADMIN_PANEL_ROOT, 'app', 'models', "{app,pseudo_model,application_specification,server_specification}.rb"))
-        files << File.join(ADMIN_PANEL_ROOT, 'config','initializers','application_constants.rb')
-        files << File.join(ADMIN_PANEL_ROOT, 'lib','yaml_writer.rb')
-        load_files(files)
+        load_models
 
         args[1] = Dir.pwd.match(/[^\/]*$/).to_s if(args[1] == nil and (rails_app or rack_app ))
         options[:path] = Dir.pwd if(options[:path] == nil and (rails_app or rack_app ))
@@ -166,6 +137,31 @@ module Webroar
       end
 
       private
+
+      # Check the server status
+      def server_started?
+        sockFile = File.join("","tmp","webroar.sock")
+        return true if File.exist?(sockFile)
+        puts "Either the server is not started or 'webroar.sock' file is deleted."
+        return false
+      end
+
+      #Check server status and load models
+      def load_models
+        files = [File.join(ADMIN_PANEL_DIR, 'config','initializers','application_constants.rb'),
+          File.join(ADMIN_PANEL_DIR, 'lib','yaml_writer.rb')]
+
+        files.each do |f|
+          begin
+            require f
+          rescue NameError => e
+            puts e
+            puts e.backtrace.join("\n")
+          end
+        end
+
+        DBConnect.db_up
+      end
 
       def check_server_status
         pid = File.read(PIDFILE).chomp.to_i rescue nil
@@ -356,22 +352,6 @@ module Webroar
         else
           puts " failed."
           puts "Failed to retrieve pid. Unable to kill it."
-        end
-      end
-
-      # Load the list of files
-      def load_files(files)
-        unloaded = Array.new
-        files.each do |f|
-          begin
-            require f
-          rescue NameError
-            unloaded << f
-            next
-          end
-        end
-        unloaded.each do |f|
-          require f
         end
       end
 

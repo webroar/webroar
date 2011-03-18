@@ -16,9 +16,6 @@
 # You should have received a copy of the GNU General Public License
 # along with WebROaR.  If not, see <http://www.gnu.org/licenses/>.
 
-#ADMIN_PANEL_ROOT = File.join(WEBROAR_ROOT, 'src', 'admin_panel').freeze
-#arequire File.join(ADMIN_PANEL_ROOT,'vendor', 'rails', 'activerecord', 'lib', 'active_record')
-
 module Webroar
   module ExceptionTracker
     def trace_rescue_action(method_name, parent_name, method_type)
