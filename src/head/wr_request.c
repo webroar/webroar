@@ -470,7 +470,7 @@ void wr_req_complete_cb(ebb_request * request) {
     }
     return;
   }
-  LOG_ERROR(WARN,"Failed to dispatch req no %d to any application. Request PATH is %s", req->id, req->req_uri.str);
+  LOG_ERROR(DEBUG, "Failed to dispatch req no %d to any application. Request PATH is %s", req->id, req->req_uri.str);
   wr_req_invalid(req->conn, WR_HTTP_STATUS_404);
 }
 
