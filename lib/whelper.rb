@@ -1,5 +1,3 @@
-#!/usr/bin/env ruby
-
 # WebROaR - Ruby Application Server - http://webroar.in/
 # Copyright (C) 2009  Goonj LLC
 #
@@ -18,23 +16,12 @@
 # You should have received a copy of the GNU General Public License
 # along with WebROaR.  If not, see <http://www.gnu.org/licenses/>.
 
-# Ruby script to control WebROaR
-
-require File.join(File.dirname(__FILE__), '..', 'lib', 'constant.rb')
-
-$LOAD_PATH.unshift("#{WEBROAR_LIB_DIR}")
-$LOAD_PATH.unshift("#{ADMIN_PANEL_LIB_DIR}")
-
-autoload :YAML, 'yaml'
-require 'digest/md5'
-require 'whelper'
-require 'db_connect'
-require 'dependencies'
-require 'control'
-require 'scgi'
-require 'webroar_command'
-require 'user_interaction'
-require 'installer'
-require 'command_runner'
-
-Webroar::Command::CommandRunner.new.run
+module Webroar
+  class User
+    def self.permitted?
+      return true if File.writable?(TESTFILE)
+      puts "#{MESSAGE_DEPLOYMENT}"
+      return false
+    end
+  end 
+end  # module Webroar

@@ -32,15 +32,3 @@ WEBROAR_LOG_FILE = File.join('','var','log','webroar','webroar.log')
 PIDFILE = "/var/run/webroar.pid"
 TESTFILE = "/etc/profile"
 MESSAGE_DEPLOYMENT = "This command needs to be run as root. Please try again using 'sudo'.".freeze
-
-module Webroar
-    class CheckUser
-      # Check for root user
-      def self.check
-        return true if File.writable?(TESTFILE)
-        puts "#{MESSAGE_DEPLOYMENT}"
-        return false
-      end
-
-    end #class CheckUser
-end # module Webroar

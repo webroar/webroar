@@ -28,7 +28,7 @@ module Webroar
 
       # Clear log files
       def clear()
-        return unless CheckUser.check
+        return unless User.permitted?
         print "Clearing log files ..."
         log_file_pattern = File.join('','var','log','webroar','*.log')
         log_files = Dir.glob(log_file_pattern)
@@ -40,13 +40,13 @@ module Webroar
 
       # Start/Stop/Restart Command
       def operation(args, op)
-        return unless CheckUser.check
+        return unless User.permitted?
         (args.nil? or args.length == 1) ? server_operation(op) : application_operation(args, op)
       end
 
       # Stop and remove the application
       def remove(args)
-        return unless CheckUser.check
+        return unless User.permitted?
         return unless server_started?
         rails_app = false
         rack_app =false
@@ -74,7 +74,7 @@ module Webroar
 
       # Add and start the application
       def add(options, args)
-        return unless CheckUser.check
+        return unless User.permitted?
         return unless server_started?
         rails_app = false
         rack_app = false

@@ -203,7 +203,7 @@ module Webroar
       def install(options)
 
         begin
-          return -1 unless CheckUser.check
+          return -1 unless User.permitted?
           @options = options
 
           str = set_install_options
@@ -240,7 +240,7 @@ module Webroar
 
       # Start test cases
       def test(options)  # run test-suite comprises of unit test, functional test, admin-panel test, load test
-        return -1 unless CheckUser.check
+        return -1 unless User.permitted?
         @options = options
 
         # stopping the server.. its get started on installation.
@@ -260,7 +260,7 @@ module Webroar
 
       # Uninstall the server
       def uninstall
-        return -1 unless CheckUser.check
+        return -1 unless User.permitted?
 
         if !File.exist?(File.join(WEBROAR_BIN_DIR,"webroar-head")) or !File.exist?(File.join(WEBROAR_BIN_DIR,"webroar-worker"))
           puts "WebROaR is already uninstalled."
@@ -347,7 +347,7 @@ module Webroar
         filename = File.join(WEBROAR_ROOT, 'conf', 'server_internal_config.yml')
         pid_file = YAML.load(File.open(filename))["webroar_analyzer_script"]["pid_file"]
 
-        WebroarCommand.new.operation(nil, "stop") if File.exists?(PIDFILE) or File.exists?(pid_file)
+        WebroarCommand.new.operation(nil, "stop") if (File.exists?(PIDFILE) or File.exists?(pid_file))
       end
 
       def log_rotate_linux(add)
@@ -412,12 +412,8 @@ module Webroar
       end
 
       def write_server_port
-        info = Array.new
-        if @ssl
-          s = {'port' => @port, 'min_worker' => 4, 'max_worker' => 8, 'log_level' => "SEVERE",'access_log'=>'enabled','SSL Specification' => {'ssl_port' => 443, 'ssl_support' => "disabled", 'certificate_file' => nil, 'key_file' => nil}}
-        else
-          s = {'port' => @port, 'min_worker' => 4, 'max_worker' => 8, 'log_level' => "SEVERE",'access_log'=>'enabled'}
-        end
+        s = {'port' => @port, 'min_worker' => 4, 'max_worker' => 8, 'log_level' => "SEVERE",'access_log'=>'enabled'}
+        s['SSL Specification'] = {'ssl_port' => 443, 'ssl_support' => "disabled", 'certificate_file' => nil, 'key_file' => nil} if @ssl
         info = {'Server Specification' => s}
         write_server_config_file(info)
       end
@@ -646,6 +642,7 @@ exit 0"
         end
 
         info = YAML.load(File.open(File.join(import_dir,"conf","config.yml")))
+        ssl = nil
         ssl = info['Server Specification']['SSL Specification'] if info and info['Server Specification'] and info['Server Specification']['SSL Specification']
 
         # Check for ssl support
