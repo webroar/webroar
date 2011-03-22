@@ -130,6 +130,7 @@ SMTP_AUTHENTICATION_VALIDATION = "<li>Please enter a valid value for SMTP Authen
 SMTP_USER_NAME_VALIDATION = "<li>Please enter a valid SMTP user name.</li>"
 SMTP_PASSWORD_VALIDATION = "<li>Please enter a valid SMTP password.</li>"
 
+EXCEPTION_MESSAGE_SPLITER = /#</
 
 
 # Sendmail validations

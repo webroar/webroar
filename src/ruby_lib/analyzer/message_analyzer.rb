@@ -169,7 +169,7 @@ module Webroar
                 app_id = app.id
                 exception = nil
                 with_exception_handling("Exception entry AppException.find") do
-                  exception = AppException.find(:first,:conditions=>["exception_message=? and app_id=?",exception_hash[:exception_message],app_id])
+                  exception = AppException.get_exception_for_analyzer(exception_hash,app_id)
                 end
               end
               if exception

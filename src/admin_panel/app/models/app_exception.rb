@@ -109,5 +109,13 @@ class AppException < ActiveRecord::Base
       app_ids = app_id_array.collect { |a| a['id']}
       update_all_status_to(status,app_ids)
     end
+
+    # This function is used to fetch the first exception record for the given exception_message pattern ,
+    # exception_class, exception_details.controller , exception_details.method and app_id
+    def get_exception_for_analyzer(exception_hash,app_id)
+      AppException.find(:first,:conditions => ["exception_message like ? and exception_class = ? and controller = ? and method = ? and app_id = ?" ,
+        exception_hash[:exception_message].split(EXCEPTION_MESSAGE_SPLITER)[0] + "%",exception_hash[:exception_class],
+        exception_hash[:controller],exception_hash[:method],app_id])
+    end
   end
 end
