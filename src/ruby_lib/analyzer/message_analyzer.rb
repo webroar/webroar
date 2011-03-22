@@ -157,90 +157,83 @@ module Webroar
       def process_exceptions
         begin
           exception_hash = @message_reader.read_exception()
-          from,recipients, mail_configuration = Email.mail_settings
-          while exception_hash
-            if exception_hash[:app_name]
-              app_name = exception_hash[:app_name]
-              app = nil
-              with_exception_handling("Exception entry App.find") do
-                app = App.find(:first, :conditions=>["name = ?", app_name])
-              end
-              if app
-                app_id = app.id
-                exception = nil
-                with_exception_handling("Exception entry AppException.find") do
-                  exception = AppException.get_exception_for_analyzer(exception_hash,app_id)
-                end
-              end
-              if exception
-                status = exception.exception_status.to_i
-                # if its class is in Permanently ignored list , change status as PERMANENTLY_IGNORED_EXCEPTION
-                if(permanently_ignored?(app_name,exception_hash[:exception_class]))
-                  status = PERMANENTLY_IGNORED_EXCEPTION
-                  with_exception_handling("Exception entry - Update existing entry status to PERMANENTLY_IGNORED_EXCEPTION") do
-                    exception.exception_status = PERMANENTLY_IGNORED_EXCEPTION
-                    exception.save!
-                  end
-                end
-                if status == CLOSED_EXCEPTION
-                  # if its been closed, mark entry as open
-                  status = OPEN_EXCEPTION
-                  with_exception_handling("Exception entry - Update existing entry status to OPEN") do
-                    exception.exception_status = OPEN_EXCEPTION
-                    exception.save!
-                  end
-                end
-              else
-                # New exception,  set it as PERMANENTLY_IGNORED_EXCEPTION if exception class falls into
-                # PERMANENTLY_IGNORED_LIST otherwise set it as Open
-                if(permanently_ignored?(app_name,exception_hash[:exception_class]))
-                  status = PERMANENTLY_IGNORED_EXCEPTION
-                else
-                  status = OPEN_EXCEPTION
-                end
-                with_exception_handling("Exception entry AppException.create") do
-                  exception = AppException.create({:app_id => app_id,  :exception_message => exception_hash[:exception_message],
-                    :exception_class => exception_hash[:exception_class], :exception_status => status,
-                    :controller => exception_hash[:controller],:method => exception_hash[:method]})
-                end
-              end
-              with_exception_handling("Exception entry AppException.create") do
-                exception.exception_details.create({
-                  :app_env => exception_hash[:app_env],
-                  :exception_backtrace => exception_hash[:exception_backtrace],
-                  :wall_time => exception_hash[:wall_time], :chunked => exception_hash[:chunked],
-                  :content_length => exception_hash[:content_length], :http_accept => exception_hash[:http_accept],
-                  :http_accept_charset => exception_hash[:http_accept_charset], :http_accept_encoding => exception_hash[:http_accept_encoding],
-                  :http_accept_language => exception_hash[:http_accept_language], :http_connection => exception_hash[:http_connection],
-                  :http_cookie => exception_hash[:http_cookie], :http_host => exception_hash[:http_host],
-                  :http_keep_alive => exception_hash[:http_keep_alive], :http_user_agent => exception_hash[:http_user_agent],
-                  :http_version => exception_hash[:http_version], :path_info => exception_hash[:path_info],
-                  :query_string => exception_hash[:query_string], :remote_addr => exception_hash[:remote_addr],
-                  :request_method => exception_hash[:request_method], :request_path => exception_hash[:request_path],
-                  :request_uri => exception_hash[:request_uri], :script_name => exception_hash[:script_name],
-                  :server_name => exception_hash[:server_name], :server_port => exception_hash[:server_port],
-                  :server_protocol => exception_hash[:server_protocol], :server_software => exception_hash[:server_software],
-                  :rack_errors => exception_hash[:rack_errors], :rack_input => exception_hash[:rack_input],
-                  :rack_multiprocess => exception_hash[:rack_multiprocess], :rack_multithread => exception_hash[:rack_multithread],
-                  :rack_run_once => exception_hash[:rack_run_once], :rack_url_scheme => exception_hash[:rack_url_scheme],
-                  :rack_version => exception_hash[:rack_version]
-                })
-
-              end
-
-              if mail_configuration and status != IGNORED_EXCEPTION
-                subject = "#{exception_hash[:app_name]} : #{exception_hash[:controller]}# #{exception_hash[:method]} (#{exception_hash[:exception_class]}) ' #{exception_hash[:exception_message]}'"
-                body = "Application Name\n.................\n #{exception_hash[:app_name]}\n\nError Message \n------------------\n#{exception_hash[:exception_message]}\n\nError Class\n.............\n#{exception_hash[:exception_class]}\n\nTime\n..................\n#{exception_hash[:wall_time]}\n\nBacktrace \n-------------------\n#{exception_hash[:exception_backtrace]}\n\nEnvironment\n---------------------------\nCHUNKED : #{exception_hash[:chunked]}\nCONTENT_LENGTH : #{exception_hash[:content_length]}\nHTTP_ACCEPT : #{exception_hash[:http_accept]}\nHTTP_ACCEPT_CHARSET : #{exception_hash[:http_accept_charset]}\nHTTP_ACCEPT_ENCOADING : #{exception_hash[:http_accept_encoding]}\nHTTP_ACCEPT_LANGUAGE : #{exception_hash[:http_accept_language]}\nHTTP_CONNECTION : #{exception_hash[:http_connection]}\nHTTP_COOKIE : #{exception_hash[:http_cookie]}\nHTTP_HOST:#{exception_hash[:http_host]}\nHTTP_KEEP_ALIVE : #{exception_hash[:http_keep_alive]}\nHTTP_USER_AGENT : #{exception_hash[:http_user_agent]}\nHTTP_VERSION:#{exception_hash[:http_version]}\nPATH_INFO : #{exception_hash[:path_info]}\nQUERY_STRING : #{exception_hash[:query_string]}\nREMOTE_ADDR : #{exception_hash[:remote_addr]}\nREQUEST_METHOD : #{exception_hash[:request_method]}\nREQUEST_PATH : #{exception_hash[:request_path]}\nREQUEST_URI : #{exception_hash[:request_uri]}\nSCRIPT_NAME : #{exception_hash[:script_name]}\nSERVER_NAME : #{exception_hash[:server_name]}\nSERVER_PORT : #{exception_hash[:server_port]}\nSERVER_PROTOCOL : #{exception_hash[:server_protocol]}\nSERVER_SOFTWARE : #{exception_hash[:server_software]}\nrack.errors : #{exception_hash[:rack_errors]}\nrack.input : #{exception_hash[:rack_input]}\nrack.multiprocess : #{exception_hash[:rack_multiprocess]}\nrack.multithread : #{exception_hash[:rack_multithread]}\nrack.run_once : #{exception_hash[:rack_run_once]}\nrack.url_scheme : #{exception_hash[:rack_url_scheme]}\nrack.version : #{exception_hash[:rack_version]}"
-                EmailHandler.deliver_send_email(subject,body,from,recipients)
-              end
-            end
-            exception_hash = @message_reader.read_exception()
-          end
+          process_exception_hash(exception_hash)
         rescue Exception => e
           WLogger.error(e)
           WLogger.error(e.backtrace.join("\n"))
         end
       end
+
+      def process_exception_hash(exception_hash)
+        from,recipients, mail_configuration = Email.mail_settings
+        while exception_hash
+          if exception_hash[:app_name]
+            app = App.get_application_data(exception_hash[:app_name])
+            unless app
+              exception_hash = @message_reader.read_exception()
+              next
+            end
+            exception = AppException.get_exception_for_analyzer(exception_hash,app.id)
+            status = OPEN_EXCEPTION
+            if exception
+              change_status_to_open(exception) if exception.exception_status.to_i == CLOSED_EXCEPTION # if its been closed, mark entry as open
+            else
+              # New exception,  set it as PERMANENTLY_IGNORED_EXCEPTION if exception class falls into
+              # PERMANENTLY_IGNORED_LIST otherwise set it as Open
+              status = PERMANENTLY_IGNORED_EXCEPTION if(permanently_ignored?(exception_hash[:app_name],exception_hash[:exception_class]))
+              exception = save_exception(app.id,exception_hash,status)
+            end
+            save_exception_details(exception,exception_hash)
+            if mail_configuration and status == OPEN_EXCEPTION
+              subject = "#{exception_hash[:app_name]} : #{exception_hash.delete(:controller)}##{exception_hash.delete(:method)} (#{exception_hash[:exception_class]}) '#{exception_hash[:exception_message]}'"
+              body = "Application Name\n.................\n#{exception_hash.delete(:app_name)}\n\n"
+              body << "Error Message \n.................\n#{exception_hash.delete(:exception_message)}\n\n"
+              body << "Error Class\n.............\n#{exception_hash.delete(:exception_class)}\n\n"
+              body << "Time\n..................\n#{exception_hash.delete(:wall_time)}\n\n"
+              body << "Backtrace \n..................\n#{exception_hash.delete(:exception_backtrace)}\n\n"
+              body << "Environment\n.................\n"
+              exception_hash.each do |key, value|
+                body << "#{key.to_s.upcase} : #{value}\n"
+             end
+             EmailHandler.deliver_send_email(subject,body,from,recipients)
+            end
+          end
+          exception_hash = @message_reader.read_exception()
+        end
+      end
+
+      def change_status_to_open(exception)
+        with_exception_handling("Exception entry - Update existing entry status to OPEN") do
+          exception.exception_status = OPEN_EXCEPTION
+          exception.save!
+        end
+      end
+
+      def save_exception(app_id,exception_hash,status)
+        with_exception_handling("Exception entry AppException.create") do
+          exception = AppException.create({:app_id => app_id,  :exception_message => exception_hash[:exception_message],
+            :exception_class => exception_hash[:exception_class],:exception_status => status,
+            :controller => exception_hash[:controller],:method => exception_hash[:method]})
+        end
+      end
+
+      def get_exception_details_hash(exception_hash)
+        exception_details_hash = Hash.new
+        ExceptionDetail.columns.each { |column|  exception_details_hash[column.name] = nil }
+        exception_details_hash.delete("id")
+        exception_details_hash.each_key do |key|
+          exception_details_hash[key] = exception_hash[key.to_sym]
+        end
+        exception_details_hash
+      end
+
+      def save_exception_details(exception,exception_hash)
+        exception_details_hash = get_exception_details_hash(exception_hash)
+        with_exception_handling("ExceptionDetails entry exception.exception_details.create") do
+          exception.exception_details.create(exception_details_hash)
+        end
+      end
+
       private
 
       def load_apps
