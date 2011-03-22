@@ -46,7 +46,7 @@
     	<td> <%= check_box_tag 'exception_ids[]', exception.id,false, :onclick => "uncheckMain(this)" %> </td>
       <td><%= link_to_remote "#{h truncate(exception.exception_message, :length => 80)}", :update => 'data_div', :url => {:controller => 'exceptions', :action => 'show', :id => exception.id, :app_name => @application_name, :status_name => status_name, :page => @exceptions.current_page} %> </td>
       <td><%=h exception.exception_class%></td>
-      <td><%=h exception.latest_detail.controller%>/<%=exception.latest_detail.method%></td>
+      <td><%=h exception.controller%>/<%=exception.method%></td>
       <td><%=h exception.exceptions_count%></td>
       <td><%=h exception.latest_detail.wall_time.strftime("%d-%b-%Y %H:%M:%S")%></td>
     </tr>

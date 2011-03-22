@@ -200,14 +200,13 @@ module Webroar
                 end
                 with_exception_handling("Exception entry AppException.create") do
                   exception = AppException.create({:app_id => app_id,  :exception_message => exception_hash[:exception_message],
-                    :exception_class => exception_hash[:exception_class], :exception_status => status})
-
+                    :exception_class => exception_hash[:exception_class], :exception_status => status,
+                    :controller => exception_hash[:controller],:method => exception_hash[:method]})
                 end
               end
               with_exception_handling("Exception entry AppException.create") do
                 exception.exception_details.create({
-                  :app_env => exception_hash[:app_env], :controller => exception_hash[:controller],
-                  :method => exception_hash[:method],
+                  :app_env => exception_hash[:app_env],
                   :exception_backtrace => exception_hash[:exception_backtrace],
                   :wall_time => exception_hash[:wall_time], :chunked => exception_hash[:chunked],
                   :content_length => exception_hash[:content_length], :http_accept => exception_hash[:http_accept],
