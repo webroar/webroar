@@ -21,55 +21,56 @@ require 'optparse'
 module Webroar
   module Command
     HELP =%{
-  WebROaR - Ruby Application Server
+  Usage:
+    webroar [-v | --version] [-h | --version] COMMAND [ARGS]
 
-    Usage:
-      webroar -h/--help
-      webroar -v/--version
-      webroar command [argument] [options...]
-
-    Examples:
-      webroar install
-      webroar help
-
-    Further help:
-      webroar help commands      list all 'webroar' commands
-      webroar help <COMMAND>     show help on COMMAND
-}
-
-    HELP_COMMAND =%{
-    install            Install the server
-    uninstall          Uninstall the server
-
-    start [APPNAME]    Start the server or an application
-    stop [APPNAME]     Stop the server or an application
-    restart [APPNAME]  Restart the server or an application
-
-    add APPNAME        Deploy an application on server
-    remove APPNAME     Remove an application from server
-
-    test               Run the test suite
+  The available webroar commands are:
+    install       Install the server
+    uninstall     Uninstall the server
+    start         Start the server or an application
+    stop          Stop the server or an application
+    restart       Restart the server or an application
+    add           Deploy an application on the server
+    remove        Remove an application from the server
+    test          Run the test suite
 
   For help on a particular command, use 'webroar help COMMAND'.
-  }
+}
 
     HELP_INSTALL =%{
   Usage:
-    webroar install [options]
+    webroar install [-s] [ -L<library path>] [ -I<include path>] [-d] [ -i |
+                    [ --no-import] [ -P<port>] [ -u<user>] [-p<password>] ]
 
   Options:
-    -L                     Additional library paths to be used for linking of the server
-    -I                     Additional include paths to be used for linking of the server
-    -s, --ssl-support      Install the server with SSL support
-    -d, --debug-build      Compile the server as a debug build to output extremely verbose logs
+    -L
+        Additional library paths to be used for linking of the server
+
+    -I
+        Additional include paths to be used for linking of the server
+
+    -s, --ssl-support
+        Install the server with SSL support
+
+    -d, --debug-build
+        Compile the server as a debug build to output extremely verbose logs
 
   The following options would make the install non-interactive by suppressing the questions prompted by the installer
 
-    -P, --port             Server port number
-    -i, --import           Import configuration, logs and admin panel data from the previous installation
-        --no-import        Do not import configuration, logs and admin panel data from the previous installation
-    -u, --username         Username for the administrator account of server's admin panel
-    -p, --password         Password for the administrator account of server\'s admin panel
+    -P, --port
+        Server port number
+
+    -i, --import
+        Import configuration, logs and admin panel data from the previous installation
+
+    --no-import
+        Do not import configuration, logs and admin panel data from the previous installation
+
+    -u, --username
+        Username for the administrator account of server's admin panel
+
+    -p, --password
+        Password for the administrator account of server\'s admin panel
 
   Summary:
     Install the server
@@ -96,10 +97,11 @@ module Webroar
 
     HELP_START =%{
   Usage:
-    webroar start [APPNAME ...]
+    webroar start [<app(s)>]
 
   Arguments:
-    APPNAME        Name of the application
+    <app(s)>
+        Name of the application(s)
 
   Summary:
     Start the server or an application
@@ -111,42 +113,49 @@ module Webroar
 
     HELP_STOP =%{
   Usage:
-    webroar stop [APPNAME ...]
+    webroar stop [<app(s)>]
 
   Arguments:
-    APPNAME        Name of the application
+    <app(s)>
+        Name of the application(s)
 
   Summary:
     Stop the server or an application
 
   Description:
-    'stop' command without any arguments stops the server. One can stop multiple
-    applications together by passing multiple names.
+    'stop' command without any arguments stops the server. One can stop
+    multiple applications together by passing multiple names.
   }
 
     HELP_RESTART =%{
   Usage:
-    webroar restart [APPNAME ...]
+    webroar restart [<app(s)>]
 
   Arguments:
-    APPNAME        Name of the application
+    <app(s)>
+        Name of the application(s)
 
   Summary:
     Restart the server or an application
 
   Description:
-    'restart' command without any arguments restarts the server. One can restart
-    multiple applications together by passing multiple names.
+    'restart' command without any arguments restarts the server. One can
+    restart multiple applications together by passing multiple names.
   }
 
     HELP_TEST =%{
   Usage:
-    webroar test [options]
+    webroar test [ -r<report dir>] [ -d] [ -l]
 
   Options:
-    -r, --report-dir DIR    Report directory
-    -d, --debug-build       Compile the server as a debug build to output extremely verbose logs
-    -l, --load-test         Also run the load tests
+    -r, --report-dir
+        Report directory
+
+    -d, --debug-build
+        Compile the server as a debug build to output extremely verbose logs
+
+    -l, --load-test
+        Also run the load tests
 
   Summary:
     Run the test suite
@@ -154,47 +163,97 @@ module Webroar
 
     HELP_REMOVE = %{
   Usage:
-    webroar remove APPNAME
+    webroar remove [<app>]
 
   Arguments:
-    APPNAME        Name of the application
+    <app>
+        Name of the application
 
   Summary:
     Remove the specified application from the server.
+
+  Description:
+    If application name is not passed, it would look for 'config/environment.rb'
+    or 'config.ru' file in the current directory. If any one of the files found,
+    it passes name of the current directory as an application name.
+    
 }
 
     HELP_ADD = %{
   Usage:
-    webroar add APPNAME -R ... -D ... -U ... [options]
+    webroar add [<app>] [ -R] [ -D] [ -U] [ -T] [ -E] [ -A] [ -N] [ -X]
 
   Arguments:
-    APPNAME       Name of the application
+    <app>
+        Name of the application
 
   Options:
-    -R, --resolver
-          Resolver to identify the application. Set it to '/' if you would like to run the application on the root domain. e.g. http://yourserver:port/.
-          Else set the relevant base URI with which you would like to access the application, e.g. '/app1' if you want the application to be accessible via http://yourserver:port/app1.
-          If you would like to set a virtual host for your application e.g. www.company1.com, please specify it here. You can also host this application on a particular subdomain e.g. app1.company1.com. Wildcard '*' can also be used in defining the virtual host name, but it should only be used either at the start or the end. Prefix the virtual host name with tilde(~), if a wildcard is used in defining it. e.g. (i) ~*.server.com (ii) ~www.server.* (iii) ~*.server.*
-    -D, --path
-          Complete path for your application root directory: e.g. /home/someuser/webapps/app1
-    -U, --run-as-user
-          Name of the user with whose privileges you would like to run the application (root can be dangerous!). This user should have all the necessary permissions to get your web application working properly (e.g. write access on required files and directories etc)
+    The following parameters are mandatory, if the current directory would not
+    be the Rails or Rack root directory
 
-  The following parameters are optional
+    -R, --resolver
+        Resolver to identify the application. Set it to '/' if you would like
+        to run the application on the root domain. e.g. http://yourserver:port/.
+        (default: /<app>)
+
+        Else set the relevant base URI with which you would like to access the
+        application, e.g. '/app1' if you want the application to be accessible
+        via http://yourserver:port/app1.
+
+        If you would like to set a virtual host for your application e.g.
+        www.company1.com, please specify it here. You can also host this
+        application on a particular subdomain e.g. app1.company1.com. Wildcard
+        '*' can also be used in defining the virtual host name, but it should
+        only be used either at the start or the end. Prefix the virtual host
+        name with tilde(~), if a wildcard is used in defining it.
+        e.g. (i) ~*.server.com (ii) ~www.server.* (iii) ~*.server.*
+
+    -D, --path
+        Complete path for your application root directory: e.g. /home/someuser/webapps/app1
+        (default: current directory>
+
+    -U, --run-as-user
+        Name of the user with whose privileges you would like to run the
+        application (root can be dangerous!). This user should have all the
+        necessary permissions to get your web application working properly
+        (e.g. write access on required files and directories etc)
+        (default: Owner of 'config/environment.rb' or 'config.ru' file)
+
+    The following parameters are optional
 
     -T, --type
-          Type of the application either rack or rails (default: rails)
+        Type of the application either rack or rails (default: rails)
+
     -E, --environment
-          Environment in which you want to run the application (default: production)
+        Environment in which you want to run the application (default: production)
+
     -A, --analytics
-          Enable analytics to get detailed numbers about the run time performance of the application. This number gathering adds a very small overhead on your application
+        Enable analytics to get detailed numbers about the run time performance
+        of the application. This number gathering adds a very small overhead on
+        your application
+
     -N, --min-workers
-          Minimum number of worker processes that should run for this deployed application. Multiple worker instances help in processing a higher number of concurrent user requests simultaneously. The server would always ensure at least these many worker processes run for this application (default: 4)
+        Minimum number of worker processes that should run for this deployed
+        application. Multiple worker instances help in processing a higher number 
+        of concurrent user requests simultaneously. The server would always
+        ensure at least these many worker processes run for this application
+       (default: 4)
+
     -X, --max-workers
-          Maximum number of worker processes that should run for this deployed application. Multiple worker instances help in processing a higher number of concurrent user requests simultaneously. The server would ensure that maximum only these many worker processes run for this application (default: 8)
+        Maximum number of worker processes that should run for this deployed
+        application. Multiple worker instances help in processing a higher
+        number of concurrent user requests simultaneously. The server would
+        ensure that maximum only these many worker processes run for this
+        application (default: 8)
 
   Summary:
     Deploy (and start) a new application on the server.
+
+  Description:
+    If application name is not passed, it would look for 'config/environment.rb'
+    or 'config.ru' file in the current directory. If any one of the files found,
+    it passes name of the current directory as an application name.
+    
 }
     class CommandRunner
       def initialize
@@ -208,7 +267,11 @@ module Webroar
         return unless parse_args
 
         if ARGV.length == 0
-          puts HELP
+          if @options[:version]
+            Installer.new.version
+          else
+            puts HELP
+          end
           return
         end
 
@@ -236,7 +299,7 @@ module Webroar
         when "remove" ; WebroarCommand.new.remove(ARGV)
         when "test"; Installer.new.test(@options)
         else
-          puts "ERROR:  Invalid command: #{cmd}.  See 'webroar help commands'."
+          puts "ERROR:  Invalid command: #{cmd}.  See 'webroar help'."
         end
       end
 
@@ -246,7 +309,7 @@ module Webroar
 
         optparse = OptionParser.new do|opts|
 
-          opts.on( '-h', '--help', 'Version information') { @options[:help] = true }
+          opts.on( '-h', '--help', 'Webroar help') { @options[:help] = true }
           opts.on( '-s', '--ssl-support', 'Install with SSL support') { @options[:ssl] = true }
           opts.on( '-d', '--debug-build', 'Compile with debug mode') { @options[:debug_build] = true }
           opts.on( '-n', '--no-report', 'Do not generate test report') { @options[:no_report] = true }
@@ -256,8 +319,9 @@ module Webroar
           opts.on( '--no-import', 'Do not import configuration, logs and admin panel data from the previous installation') { @options[:import] = false }
 
           opts.on( '-v', '--version', 'Version information') do
-            Installer.new.version
-            return false
+            @options[:version] = true
+            #Installer.new.version
+            #return false
           end
 
           opts.on( '-u', '--username USERNAME', 'Username for the administrator account of server\'s admin panel') do |value|
@@ -318,7 +382,7 @@ module Webroar
         begin
           optparse.parse!
         rescue OptionParser::ParseError => err
-          puts "#{err}. See 'webroar --help'."
+          puts "#{err}. See 'webroar help'."
           return false
         end
 
@@ -332,7 +396,6 @@ module Webroar
       def run (cmd)
         case cmd
         when nil, "help"; puts HELP
-        when "commands"; puts HELP_COMMAND
         when "install"; puts HELP_INSTALL
         when "uninstall"; puts HELP_UNINSTALL
         when "clear"; puts HELP_CLEAR
@@ -342,7 +405,7 @@ module Webroar
         when "add"; puts HELP_ADD
         when "remove"; puts HELP_REMOVE
         when "test"; puts HELP_TEST
-        else puts "WARNING:  Unknown command #{cmd}. See 'webroar help commands'."
+        else puts "WARNING:  Unknown command #{cmd}. See 'webroar help'."
         end
       end
 
