@@ -101,7 +101,7 @@ task :tag do
   sh "git tag -m 'Tagging #{Webroar::SERVER}' -a v#{Webroar::VERSION::STRING}"
 end
 
-desc "Check for root user"
+#desc "Check for root user"
 task :check_root_user do
   if !File.writable?(TESTFILE)
       puts "#{MESSAGE_DEPLOYMENT}"

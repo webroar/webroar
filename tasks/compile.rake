@@ -129,7 +129,7 @@ head_files.each do |sfn|
   obj = sfn.sub(/\.[^.]*$/, '.o')
   obj_file = File.join(HEAD_OBJ_DIR , obj[obj.rindex(File::SEPARATOR)+1..obj.length])
   
-  desc "Setting Executable's dependency on objects files"
+  #desc "Setting Executable's dependency on objects files"
   file head_bin => obj_file
   
   #Insertion of object file to source file mapping in hash
@@ -171,7 +171,7 @@ helper_files.each do |sfn|
   obj = sfn.sub(/\.[^.]*$/, '.o')
   obj_file = File.join(HELPER_OBJ_DIR , obj[obj.rindex(File::SEPARATOR)+1..obj.length])
   
-  desc "Setting Executable's dependency on objects files"
+  #desc "Setting Executable's dependency on objects files"
   #file worker_bin => obj_file
   file head_bin => obj_file
   
@@ -221,7 +221,7 @@ task :debug_build do
   d.invoke();
 end
 
-desc "Creates required folders for compilation."
+#desc "Creates required folders for compilation."
 task :create_obj_dirs do
   if create_directories([WORKER_OBJ_DIR, HEAD_OBJ_DIR, HELPER_OBJ_DIR, TMP_FILES]) == true
     puts 'Required directories created successfully. Building executables...'

@@ -48,7 +48,7 @@ total = 0
 failed = 0
 file = nil
 
-desc "Log exceptions."
+#desc "Log exceptions."
 task :log_exception, :exception do |t, args|
   exception_log = File.join(REPORT_DIR,'exception.log')
 
@@ -58,7 +58,7 @@ task :log_exception, :exception do |t, args|
   end
 end
 
-desc "Creates required folders for running test cases."
+#desc "Creates required folders for running test cases."
 task :create_test_dirs do
   begin
     if(ENV["report_dir"])
@@ -94,7 +94,7 @@ def check_and_copy(src_file, dest_file)
   FileUtils.copy(src_file, dest_file) if File.exists?(src_file)
 end
 
-desc "Build .so file for all the test written in c"
+#desc "Build .so file for all the test written in c"
 task :build_unit_test do
   create_directories([TEST_OBJ_DIR])
   test_files = FileList[File.join(UNIT_TEST_DIR, '*.c'), File.join(HELPER_DIR, '*.c'),
@@ -314,7 +314,7 @@ task :load_test => [:create_test_dirs] do
   
 end
 
-desc "Build gem"
+#desc "Build gem"
 task :build_gem => [:create_test_dirs] do
   total += 1
   begin
@@ -330,7 +330,7 @@ task :build_gem => [:create_test_dirs] do
   end
 end
 
-desc "Gem install. It's meant for automated testing, passing predefined values for required inputs"
+#desc "Gem install. It's meant for automated testing, passing predefined values for required inputs"
 task :build_install => [:build_gem] do
   total += 1
   gem_file = File.join(WEBROAR_ROOT,'pkg',"webroar-#{Webroar::VERSION::STRING}.gem")
@@ -370,7 +370,7 @@ task :build_install => [:build_gem] do
   end
 end
 
-desc "Uninstall server and its gem"
+#desc "Uninstall server and its gem"
 task :build_uninstall => [:create_test_dirs] do
   total += 1
   file.print "Uninstall server and gem ... " if file
@@ -402,7 +402,7 @@ task :build_uninstall => [:create_test_dirs] do
   end
 end
 
-desc "Build test"
+#desc "Build test"
 task :build_test => [:create_test_dirs] do
   next unless test_flag == 1 or ENV["build_test"] == "yes"
   
@@ -558,10 +558,10 @@ def test_report
   
 end
 
-desc "Integrated testing executes unit tests, admin-panel tests and functional \
-      tests. To run load tests give load_test=yes, to run build tests give \
-      build_test=yes as an argument. To run test under debug build give \
-      debug_build=yes as an argument."
+desc "Integrated testing executes unit tests, admin-panel tests and functional\
+ tests. To run load tests give load_test=yes, to run build tests give build_test\
+=yes as an argument. To run test under debug build give debug_build=yes as an\
+ argument."
 task :all_test => [:create_test_dirs, :unit_test, :spec_test, :admin_panel_test, :load_test] do
 
   unless ENV["no_report"]
@@ -575,9 +575,9 @@ task :all_test => [:create_test_dirs, :unit_test, :spec_test, :admin_panel_test,
 end
 
 desc "Runs integrated test-suit comprises of gem creation, installation, unit \
-      tests, admin-panel tests, functional tests. To run load tests give \
-      load_test=yes as an argument. To run under debug build give debug_build=\
-      yes as an argument."
+tests, admin-panel tests, functional tests. To run load tests give load_test=\
+yes as an argument. To run under debug build give debug_build=yes as an \
+argument."
 task :test => [:build_test] do
   
   Dir.chdir(WEBROAR_ROOT)
