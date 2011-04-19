@@ -19,18 +19,18 @@
 require 'spec_helper'
 require 'uri'
 require 'time'
-require File.join(WEBROAR_ROOT,'src','ruby_lib','analyzer','db_connect.rb')
+require File.join(WEBROAR_ROOT,'lib','db_connect.rb')
 
 describe "Analytics" do
   
   before(:all) do
     create_config({},{'baseuri' => '/test_app','analytics' => 'enabled', 'run_as_user' => 'root'}).should be_true
+    Webroar::DBConnect.db_up('test')
+    create_test_app.should be_true
     create_messaging_config.should be_true
     move_config.should be_true
     move_messaging_config.should be_true
     start_server.should be_true
-    Webroar::Analyzer::DBConnect.establish_connection('test')
-    Webroar::Analyzer::DBConnect.load_models
     
     sleep(45) # PID processor thread poll PID queue at every 30 seconds
     @t1 = Time.now - 30 #in seconds
@@ -63,8 +63,8 @@ describe "Analytics" do
     result_set = ResourceUsage.find(:all, :select => "app_id, sum(cpu_usage) as tot_cpu, sum(memory_usage) as tot_memory", :conditions => ["wall_time >= ? and wall_time <= ?",@t1,@t2], :group => 'app_id')
     app_ids = result_set.collect { |a| a['app_id']}
     app_ids.should_not be_empty
-    # [1, 2, 3, 4, 5] for Webroar-head, Webroar-analyzer, Starling, Admin-panel, and test_app
-     ([1,2,3,4,5] - app_ids).should be_empty
+    # [1, 2, 3, 4, 5, 6] for Webroar-head, Webroar-analyzer, Starling, static-worker, Admin-panel, and test_app
+     ([1,2,3,4,5,6] - app_ids).should be_empty
   end
 
   it "there should be correct data for application profiling" do
@@ -91,16 +91,16 @@ describe "Analytics" do
     post_req.should_not be_empty
     post_req = post_req.first
     post_req['app_env'].should == 'test'
-    post_req['controller'].should == 'application'
-    post_req['method'].should == 'index'
+    post_req.app_exception['controller'].should == 'application'
+    post_req.app_exception['method'].should == 'index'
     post_req.app_exception['exception_message'].should == 'No route matches "/users/does/not/exists" with {:method=>:post}'
     post_req.app_exception['exception_class'].should == 'ActionController::RoutingError'
     get_req = result_set.select { |a| a['request_method'] == 'GET'}
     get_req.should_not be_empty
     get_req = get_req.first
     get_req['app_env'].should == 'test'
-    get_req['controller'].should == 'application'
-    get_req['method'].should == 'index'
+    get_req.app_exception['controller'].should == 'application'
+    get_req.app_exception['method'].should == 'index'
     get_req.app_exception['exception_message'].should == 'No route matches "/users/does/not/exists" with {:method=>:get}'
     get_req.app_exception['exception_class'].should == 'ActionController::RoutingError'
   end

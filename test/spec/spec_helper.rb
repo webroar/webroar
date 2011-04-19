@@ -29,6 +29,8 @@ require 'jcode' if RUBY_VERSION.gsub(/\D/,'').to_i < 187
 
 SPEC_DIR = File.expand_path(File.dirname(__FILE__)) unless defined? SPEC_DIR
 WEBROAR_ROOT = File.expand_path(File.join(SPEC_DIR,'..','..')) unless defined? WEBROAR_ROOT
+RAILS_ROOT = ADMIN_PANEL_DIR = File.join(WEBROAR_ROOT,'src','admin_panel') unless defined? ADMIN_PANEL_DIR
+ALLOWED_MAX_WORKERS = 20
 conf = YAML::load(File.read(File.join(WEBROAR_ROOT, 'conf', 'test_suite_config.yml')))['test_app_configuration']
 HOST = 'localhost'
 PORT = conf['port']
@@ -98,6 +100,11 @@ def test_setup(debug_build = false)
   end
   
   Dir.chdir(SPEC_DIR)
+end
+
+def create_test_app
+  App.create({:name => APP_NAME})
+  true
 end
 
 def create_config(server_conf = {}, app_conf = {})
