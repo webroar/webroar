@@ -16,16 +16,11 @@
 # You should have received a copy of the GNU General Public License
 # along with WebROaR.  If not, see <http://www.gnu.org/licenses/>.
 
-#require 'rubygems'
-#require 'action_mailer'
-$LOAD_PATH.unshift("#{File.join(ADMIN_PANEL_DIR,'vendor', 'rails', 'actionpack', 'lib')}")
-$LOAD_PATH.unshift("#{File.join(ADMIN_PANEL_DIR,'vendor', 'rails', 'actionmailer', 'lib')}")
-require File.join(ADMIN_PANEL_DIR,'vendor', 'rails', 'actionmailer', 'lib', 'action_mailer')
-
-#gem 'actionpack', '>= 2.3.5'
-#gem 'actionmailer', '>= 2.3.5'
-#require 'action_mailer'
+require 'rubygems'
+gem 'actionmailer', '2.3.9'
+require 'action_mailer'
 require 'yaml'
+require 'uri'
 
 module Email
   def mail_settings

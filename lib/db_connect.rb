@@ -16,9 +16,9 @@
 # You should have received a copy of the GNU General Public License
 # along with WebROaR.  If not, see <http://www.gnu.org/licenses/>.
 
-$LOAD_PATH.unshift("#{File.join(ADMIN_PANEL_DIR, 'vendor', 'rails', 'activerecord', 'lib')}")
-$LOAD_PATH.unshift("#{File.join(ADMIN_PANEL_DIR, 'vendor', 'rails', 'activesupport', 'lib')}")
-require File.join(ADMIN_PANEL_DIR, 'vendor', 'rails', 'activerecord', 'lib', 'active_record')
+require 'rubygems'
+gem 'activerecord','2.3.9'
+require 'active_record'
 
 module Webroar
   class DBConnect

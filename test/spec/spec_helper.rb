@@ -69,15 +69,6 @@ def test_setup(debug_build = false)
     puts "Done"
   end
   
-  Dir.chdir(SPEC_DIR)
-  unless File.exists?(File.join(TEST_APP_PATH,'vendor','rails'))
-    print "Creating link to admin_panel/vendor/rails ... "
-    target = File.expand_path(File.join(WEBROAR_ROOT,'src','admin_panel','vendor','rails'))
-    link_dir = File.expand_path(File.join(TEST_APP_PATH,'vendor'))
-    system("ln -s #{target} #{link_dir} >>#{TEST_SETUP_LOG} 2>>#{TEST_SETUP_LOG}")
-    puts "Done"
-  end
-  
   print "Setting up Admin-panel test database ... "
   Dir.chdir(File.join(WEBROAR_ROOT,'src','admin_panel'))
   system("rake db:drop RAILS_ENV=test >>#{TEST_SETUP_LOG} 2>>#{TEST_SETUP_LOG}")

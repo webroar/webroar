@@ -78,13 +78,13 @@
         <td>Minimum number of workers &nbsp;&nbsp;&nbsp;			
             <%= link_to_function "Help", :onclick => "addHelp('app_minworker',event)" %>
         </td>
-        <td ><%=text_field :application_specification, :min_worker, :size=>20, :tabindex => "8"%></td>
+        <td ><%=text_field :application_specification, :min_worker, :size=>20, :tabindex => "8", :value => @application_specification.min_worker.to_i %></td>
       </tr>
       <tr>
         <td>Maximum number of workers &nbsp;&nbsp;&nbsp;
             <%= link_to_function "Help", :onclick => "addHelp('app_maxworker',event)" %>
         </td>
-        <td ><%=text_field :application_specification, :max_worker, :size => 20, :tabindex => "9"%></td>
+        <td ><%=text_field :application_specification, :max_worker, :size => 20, :tabindex => "9" , :value => @application_specification.max_worker.to_i %></td>
       </tr>
       <tr>
         <%if type == "Edit"%>
