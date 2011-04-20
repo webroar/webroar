@@ -21,6 +21,8 @@ require 'spec_helper'
 describe "Access-logs" do
   before(:all) do
     create_config({'access_log' => 'enabled'},{'baseuri' => '/test_app'}).should be_true
+    Webroar::DBConnect.db_up('test')
+    create_test_app.should be_true
     move_config.should be_true
     create_messaging_config.should be_true
     move_messaging_config.should be_true
@@ -39,6 +41,7 @@ describe "Access-logs" do
   after(:all) do
     stop_server
     remove_config.should be_true
+    remove_test_app.should be_true
     remove_messaging_config.should be_true
   end
   

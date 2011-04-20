@@ -160,7 +160,8 @@ module Webroar
           end
         end
 
-        DBConnect.db_up
+        configuration = YAML.load(File.open(File.join(WEBROAR_ROOT,'conf','server_internal_config.yml')))
+        DBConnect.db_up(configuration["webroar_analyzer_script"]["environment"])
       end
 
       def check_server_status

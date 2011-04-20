@@ -19,8 +19,14 @@
 require 'spec_helper'
 
 describe 'Host names' do
+
+  before(:all) do
+    Webroar::DBConnect.db_up('test')
+  end
+
   it "should identify application" do
     create_config({},{'host_names' => 'test-app'}).should be_true
+    create_test_app.should be_true
     move_config.should be_true
     create_messaging_config.should be_true
     move_messaging_config.should be_true
@@ -35,12 +41,14 @@ describe 'Host names' do
     ensure
       stop_server
       remove_config.should be_true
+      remove_test_app.should be_true
       remove_messaging_config.should be_true
     end
   end
   
   it "should not accept _ in name" do
     create_config({},{'host_names' => 'test-app'}).should be_true
+    create_test_app.should be_true
     move_config.should be_true
     create_messaging_config.should be_true
     move_messaging_config.should be_true
@@ -54,12 +62,14 @@ describe 'Host names' do
     ensure
       stop_server
       remove_config.should be_true
+      remove_test_app.should be_true
       remove_messaging_config.should be_true
     end
   end
   
   it "should not accept .. in name" do
     create_config({},{'host_names' => 'test..app'}).should be_true
+    create_test_app.should be_true
     move_config.should be_true
     create_messaging_config.should be_true
     move_messaging_config.should be_true
@@ -73,12 +83,14 @@ describe 'Host names' do
     ensure
       stop_server
       remove_config.should be_true
+      remove_test_app.should be_true
       remove_messaging_config.should be_true
     end
   end
   
   it "should not accept wildcard(*) if ~ is not given in begining" do
     create_config({},{'host_names' => '*.test-app'}).should be_true
+    create_test_app.should be_true
     move_config.should be_true
     create_messaging_config.should be_true
     move_messaging_config.should be_true
@@ -92,12 +104,14 @@ describe 'Host names' do
     ensure
       stop_server
       remove_config.should be_true
+      remove_test_app.should be_true
       remove_messaging_config.should be_true
     end
   end
   
   it "should accept * in begining of name" do
     create_config({},{'host_names' => '~*.test-app'}).should be_true
+    create_test_app.should be_true
     move_config.should be_true
     create_messaging_config.should be_true
     move_messaging_config.should be_true
@@ -111,12 +125,14 @@ describe 'Host names' do
     ensure
       stop_server
       remove_config.should be_true
+      remove_test_app.should be_true
       remove_messaging_config.should be_true
     end
   end
   
   it "should accept * in end of name" do
     create_config({},{'host_names' => '~test-app.*'}).should be_true
+    create_test_app.should be_true
     move_config.should be_true
     create_messaging_config.should be_true
     move_messaging_config.should be_true
@@ -130,12 +146,14 @@ describe 'Host names' do
     ensure
       stop_server
       remove_config.should be_true
+      remove_test_app.should be_true
       remove_messaging_config.should be_true
     end
   end
   
   it "should not accept wildcard(*) inbetween the name" do
     create_config({},{'host_names' => '~test.*.app'}).should be_true
+    create_test_app.should be_true
     move_config.should be_true
     create_messaging_config.should be_true
     move_messaging_config.should be_true
@@ -149,12 +167,14 @@ describe 'Host names' do
     ensure
       stop_server
       remove_config.should be_true
+      remove_test_app.should be_true
       remove_messaging_config.should be_true
     end
   end
   
   it "should not accept duplicate entry for host name" do
   create_config({},{'host_names' => 'test-app test-app'}).should be_true
+  create_test_app.should be_true
   move_config.should be_true
   create_messaging_config.should be_true
   move_messaging_config.should be_true
@@ -168,6 +188,7 @@ describe 'Host names' do
   ensure
     stop_server
     remove_config.should be_true
+    remove_test_app.should be_true
     remove_messaging_config.should be_true
   end  
 end
@@ -175,6 +196,7 @@ end
   # According to http://www.w3.org/Protocols/rfc2616/rfc2616-sec5.html#sec5.2
   it "should identify host name from absolute-uri" do
     create_config({},{'host_names' => 'test-app'}).should be_true
+    create_test_app.should be_true
     move_config.should be_true
     create_messaging_config.should be_true
     move_messaging_config.should be_true
@@ -188,6 +210,7 @@ end
     ensure
       stop_server
       remove_config.should be_true
+      remove_test_app.should be_true
       remove_messaging_config.should be_true
     end
   end
@@ -195,6 +218,7 @@ end
   # According to http://www.w3.org/Protocols/rfc2616/rfc2616-sec5.html#sec5.2
   it "should consider host part of absolute-uri and ignore any host header when both are given" do
     create_config({},{'host_names' => 'test-app'}).should be_true
+    create_test_app.should be_true
     move_config.should be_true
     create_messaging_config.should be_true
     move_messaging_config.should be_true
@@ -208,12 +232,14 @@ end
     ensure
       stop_server
       remove_config.should be_true
+      remove_test_app.should be_true
       remove_messaging_config.should be_true
     end
   end
   
     it "should resolve multiple host names" do
     create_config({},{'host_names' => 'test1 test2 www.test.com www.mytest.com'}).should be_true
+    create_test_app.should be_true
     move_config.should be_true
     create_messaging_config.should be_true
     move_messaging_config.should be_true
@@ -239,6 +265,7 @@ end
     ensure
       stop_server
       remove_config.should be_true
+      remove_test_app.should be_true
       remove_messaging_config.should be_true
     end
   end

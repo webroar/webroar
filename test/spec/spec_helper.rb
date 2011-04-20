@@ -26,9 +26,11 @@ require 'fileutils'
 require 'digest/sha1'
 require 'jcode' if RUBY_VERSION.gsub(/\D/,'').to_i < 187
 
-
 SPEC_DIR = File.expand_path(File.dirname(__FILE__)) unless defined? SPEC_DIR
 WEBROAR_ROOT = File.expand_path(File.join(SPEC_DIR,'..','..')) unless defined? WEBROAR_ROOT
+
+require File.join(WEBROAR_ROOT,'lib','db_connect.rb')
+
 RAILS_ROOT = ADMIN_PANEL_DIR = File.join(WEBROAR_ROOT,'src','admin_panel') unless defined? ADMIN_PANEL_DIR
 ALLOWED_MAX_WORKERS = 20
 conf = YAML::load(File.read(File.join(WEBROAR_ROOT, 'conf', 'test_suite_config.yml')))['test_app_configuration']
@@ -95,6 +97,12 @@ end
 
 def create_test_app
   App.create({:name => APP_NAME})
+  true
+end
+
+def remove_test_app
+  app = App.find(:first, :conditions=>["name = ?", APP_NAME])
+  app.destroy if app
   true
 end
 
@@ -228,6 +236,8 @@ end
 shared_examples_for "Server Setup" do
   before(:all) do
     create_config({},{'baseuri' => '/test_app'}).should be_true
+    Webroar::DBConnect.db_up('test')
+    create_test_app.should be_true
     move_config.should be_true
     create_messaging_config.should be_true
     move_messaging_config.should be_true
@@ -237,6 +247,7 @@ shared_examples_for "Server Setup" do
   after(:all) do
     stop_server
     remove_config.should be_true
+    remove_test_app.should be_true
     remove_messaging_config.should be_true
   end
 end

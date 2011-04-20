@@ -19,7 +19,6 @@
 require 'spec_helper'
 require 'uri'
 require 'time'
-require File.join(WEBROAR_ROOT,'lib','db_connect.rb')
 
 describe "Analytics" do
   
@@ -63,8 +62,9 @@ describe "Analytics" do
     result_set = ResourceUsage.find(:all, :select => "app_id, sum(cpu_usage) as tot_cpu, sum(memory_usage) as tot_memory", :conditions => ["wall_time >= ? and wall_time <= ?",@t1,@t2], :group => 'app_id')
     app_ids = result_set.collect { |a| a['app_id']}
     app_ids.should_not be_empty
+    test_app_id = App.find(:first, :conditions=>["name = ?", APP_NAME]).id
     # [1, 2, 3, 4, 5, 6] for Webroar-head, Webroar-analyzer, Starling, static-worker, Admin-panel, and test_app
-     ([1,2,3,4,5,6] - app_ids).should be_empty
+    ([1,2,3,4,5,test_app_id] - app_ids).should be_empty
   end
 
   it "there should be correct data for application profiling" do
@@ -108,6 +108,7 @@ describe "Analytics" do
   after(:all) do
     stop_server
     remove_config.should be_true
+    remove_test_app.should be_true
     remove_messaging_config.should be_true
   end
 
