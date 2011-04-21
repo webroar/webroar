@@ -47,7 +47,6 @@ spec = Gem::Specification.new do |s|
 
   s.add_dependency 'rails', '2.3.9'
   s.add_dependency 'calendar_date_select', '>= 1.15'  
-  s.add_dependency 'rack', '~>1.1.0'
   s.add_dependency 'rake', '>= 0.8.1'  
   s.add_dependency 'rspec', '~>1.3.1'
   s.add_dependency 'sqlite3', '>=1.2.3'
