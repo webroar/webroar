@@ -19,7 +19,6 @@
 ###############################################################################
 #        Rake file to run integrated test-suit
 ###############################################################################
-require 'spec/rake/spectask'
 
 #TODO: forget underscore and cover tests under namespace
 WEBROAR_ROOT = File.expand_path(File.join(File.dirname(__FILE__), '..')).freeze
@@ -41,7 +40,6 @@ ALL_SPECS = FileList[File.join(SPEC_DIR,'*_spec.rb')].exclude("conditional_spec.
 #File.join(SPEC_DIR, 'http_spec.rb'),
 #File.join(SPEC_DIR, 'analytics_spec.rb')
 #)
-require File.join(SPEC_DIR,'spec_helper.rb')
 
 test_flag = 1
 total = 0
@@ -61,6 +59,9 @@ end
 #desc "Creates required folders for running test cases."
 task :create_test_dirs do
   begin
+    require 'spec/rake/spectask'
+    require File.join(SPEC_DIR,'spec_helper.rb')
+  
     if(ENV["report_dir"])
       REPORT_DIR = ENV["report_dir"]
     else
@@ -197,10 +198,14 @@ task :test_setup do
   end
 end
 
-task :spec => :test_setup
-Spec::Rake::SpecTask.new(:spec) do |t|
-  t.spec_files = ALL_SPECS
-  t.spec_opts << "--format specdoc"
+if defined? Spec
+  task :spec => :test_setup
+
+
+  Spec::Rake::SpecTask.new(:spec) do |t|
+    t.spec_files = ALL_SPECS
+    t.spec_opts << "--format specdoc"
+  end
 end
 
 desc "Run functional test cases."
