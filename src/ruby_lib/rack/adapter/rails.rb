@@ -23,7 +23,7 @@ module Webroar
         $0 = 'webroar' # Some application using it to retrive executable name.
         load_application
         
-        @rails_app = if defined?(ActionController::Dispatcher) and ActionController::Dispatcher.instance_methods.include?('call')
+        @rails_app = if self.class.rack_based?
           ActionController::Dispatcher.new
         elsif ::Rails::VERSION::MAJOR >= 3
           ::Rails.application
@@ -32,6 +32,14 @@ module Webroar
         end
         require 'rack'
         @file_server = ::Rack::File.new(::File.join(@root, "public"))
+      end
+      
+      def self.rack_based?
+        rails_version = ::Rails::VERSION
+        return false if rails_version::MAJOR < 2
+        return false if rails_version::MAJOR == 2 && rails_version::MINOR < 2
+        return false if rails_version::MAJOR == 2 && rails_version::MINOR == 2 && rails_version::TINY < 3
+        true # >= 2.2.3
       end
       
       def load_application
