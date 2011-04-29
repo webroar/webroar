@@ -186,6 +186,12 @@ task :unit_test => [:create_test_dirs] do
 end
 
 task :test_setup do
+  
+  Spec::Rake::SpecTask.new(:spec) do |t|
+    t.spec_files = ALL_SPECS
+    t.spec_opts << "--format specdoc"
+  end
+  
   if ENV["debug_build"] == "yes"
     rv = test_setup(true)
   else
@@ -198,15 +204,7 @@ task :test_setup do
   end
 end
 
-if defined? Spec
-  task :spec => :test_setup
-
-
-  Spec::Rake::SpecTask.new(:spec) do |t|
-    t.spec_files = ALL_SPECS
-    t.spec_opts << "--format specdoc"
-  end
-end
+task :spec => :test_setup
 
 desc "Run functional test cases."
 task :spec_test => [:create_test_dirs] do
