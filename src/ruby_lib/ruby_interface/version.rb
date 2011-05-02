@@ -22,10 +22,13 @@ module Webroar
     MAJOR    = "0"
     MINOR    = "5"
     TINY     = "1"
-    
+
     STRING   = [MAJOR, MINOR, TINY].join('.')
   end
-  
+  ruby_version = RUBY_VERSION.split(".")
+  RUBY_MAJOR    = ruby_version[0]
+  RUBY_MINOR    = ruby_version[1]
+  RUBY_TINY     = ruby_version[2]
   NAME    = 'WebROaR'.freeze
   SERVER  = "#{NAME}-#{VERSION::STRING}".freeze
   
