@@ -36,10 +36,10 @@ module Webroar
       
       def self.rack_based?
         rails_version = ::Rails::VERSION
-        return false if rails_version::MAJOR < 2
-        return false if rails_version::MAJOR == 2 && rails_version::MINOR < 2
-        return false if rails_version::MAJOR == 2 && rails_version::MINOR == 2 && rails_version::TINY < 3
-        true # >= 2.2.3
+        return false if rails_version::MAJOR != 2
+        return false if rails_version::MINOR < 2
+        return false if rails_version::MINOR == 2 && rails_version::TINY < 3
+        true # >= 2.2.3 and < 3.0.0
       end
       
       def load_application
