@@ -46,9 +46,8 @@ module Webroar
         ENV['RAILS_ENV'] = @env
         
         require "#{@root}/config/environment"
-#        TODO: figure out way to set relative URL, following is not working on Rails3-beta4 for stylesheet_link_tag, javascript_include_tag
         if ::Rails::VERSION::MAJOR >= 3
-          ::Rails.application.config.relative_url_root = @prefix
+          ActionController::Base.config.relative_url_root = @prefix
         else
           require 'dispatcher'
           if ActionController::Base.respond_to?('relative_url_root=') 
