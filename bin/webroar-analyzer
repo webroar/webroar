@@ -19,6 +19,7 @@
 # along with WebROaR.  If not, see <http://www.gnu.org/licenses/>.
 
 require 'rubygems'
+$: << "." if not $:.include? "."
 require File.join(File.dirname(__FILE__), '..', 'lib', 'constant.rb')
 
 $LOAD_PATH.unshift("#{WEBROAR_LIB_DIR}")

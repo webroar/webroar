@@ -18,10 +18,11 @@
 
 RUBY_1_9 = RUBY_VERSION =~ /^1\.9/
 SUDO     = "sudo"
+$: << "." if not $:.include? "."
 
 require 'rubygems'
 require 'rake'
 require 'rake/clean'
-require './src/ruby_lib/ruby_interface/version'
+require 'src/ruby_lib/ruby_interface/version'
 
 Dir['tasks/*.rake'].each { |rake| load rake }

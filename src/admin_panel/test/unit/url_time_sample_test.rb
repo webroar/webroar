@@ -18,7 +18,7 @@
 # along with WebROaR.  If not, see <http://www.gnu.org/licenses/>.
 #++
 
-require File.dirname(__FILE__) + '/../test_helper'
+require 'test_helper'
 
 class UrlTimeSampleTest < Test::Unit::TestCase
   # Replace this with your real tests.

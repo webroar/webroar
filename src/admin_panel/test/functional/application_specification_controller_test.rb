@@ -17,10 +17,8 @@
 # You should have received a copy of the GNU General Public License
 # along with WebROaR.  If not, see <http://www.gnu.org/licenses/>.
 #++
-require File.dirname(__FILE__) + '/../test_helper'
+require 'test_helper'
 require 'application_specification_controller'
-
-#require 'test_helper'
 
 class ApplicationSpecificationControllerTest < ActionController::TestCase
   # Replace this with your real tests.

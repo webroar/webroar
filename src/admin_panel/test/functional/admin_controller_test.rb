@@ -18,10 +18,8 @@
 # along with WebROaR.  If not, see <http://www.gnu.org/licenses/>.
 #++
 
-require File.dirname(__FILE__) + '/../test_helper'
+require 'test_helper'
 require 'admin_controller'
-
-#require 'test_helper'
 
 class AdminControllerTest < ActionController::TestCase
   # Replace this with your real tests.
