@@ -311,3 +311,8 @@ a:hover {
 #data_div select{
   width:50px;
 }
+.link_button {
+  padding:3px 15px 3px 15px;
+  color:white;
+  background: #585555;
+}

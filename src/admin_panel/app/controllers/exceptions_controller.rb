@@ -48,7 +48,19 @@ class ExceptionsController < ApplicationController
     @exception = AppException.first(:conditions => ["id = ?", params[:id]]) # found include bug with eager loading, its fetching all the associated records     
     render :partial => 'show', :locals => { :status_name => params[:status_name], :app_name => params[:app_name], :page => params[:page] }
   end
-  
+
+  # This method is to show the backtrace of the exception
+  def show_exception_backtrace
+    @exception = AppException.first(:conditions => ["id = ?", params[:id]])
+    render :partial => 'exception_backtrace_partial',:locals => {:index => params[:index].to_i,:status_name => params[:status_name], :app_name => params[:app_name], :page => params[:page] }
+  end
+
+  # This method is to show the environment details of the exception
+  def show_exception_environment
+    @exception = AppException.first(:conditions => ["id = ?", params[:id]])
+    render :partial => 'exception_environment_partial',:locals => {:index => params[:index].to_i,:status_name => params[:status_name], :app_name => params[:app_name], :page => params[:page]}
+  end
+
   # This method is to display the list of exceptions as selection made from select box.
   def list
     @application_name = params[:application_name]

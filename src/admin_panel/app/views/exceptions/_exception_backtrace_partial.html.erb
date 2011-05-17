@@ -1,0 +1,33 @@
+<%#
+# WebROaR - Ruby Application Server - http://webroar.in/
+# Copyright (C) 2009  Goonj LLC
+#
+# This file is part of WebROaR.
+#
+# WebROaR is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+#
+# WebROaR is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with WebROaR.  If not, see<http://www.gnu.org/licenses/>.
+#
+%>
+<div class='text_align_right'><%=link_to_remote 'Back',:update => 'data_div', :url => {:controller => 'exceptions', :action => 'show',:id => @exception.id, :app_name => app_name, :status_name => status_name, :page => page }%></div>
+<table width = 90% style = "word-wrap: break-word;" >
+  <tr>
+    <th colspan=2>Backtrace (<%= @exception.exception_details[index].wall_time.strftime("%d-%b-%Y - %H:%M:%S")%>)</th>
+  </tr>
+  <tr>
+    <td  colspan=2>
+    <%= @exception.exception_details[index].exception_backtrace.gsub(/\n/, '<br>')%>
+    </td>
+  </tr>
+  <tr><th colspan=1 >&nbsp;<th></tr>
+</table>
+<div class='text_align_right'><%=link_to_remote 'Back',:update => 'data_div', :url => {:controller => 'exceptions', :action => 'show',:id => @exception.id, :app_name => app_name, :status_name => status_name, :page => page }%></div>
