@@ -16,10 +16,7 @@
 # You should have received a copy of the GNU General Public License
 # along with WebROaR.  If not, see <http://www.gnu.org/licenses/>.
 
-require File.expand_path(File.join(WEBROAR_ROOT,'src','ruby_lib','mailer','smtpmail'))
 require File.expand_path(File.join(WEBROAR_ROOT,'src','admin_panel', 'config', 'initializers', 'application_constants'))
-
-include Email
 
 module Webroar
   module Analyzer
@@ -165,7 +162,6 @@ module Webroar
       end
 
       def process_exception_hash(exception_hash)
-        from,recipients, mail_configuration = Email.mail_settings
         while exception_hash
           if exception_hash[:app_name]
             app = App.get_application_data(exception_hash[:app_name])
@@ -184,18 +180,8 @@ module Webroar
               exception = save_exception(app.id,exception_hash,status)
             end
             save_exception_details(exception,exception_hash)
-            if mail_configuration and status == OPEN_EXCEPTION
-              subject = "#{exception_hash[:app_name]} : #{exception_hash.delete(:controller)}##{exception_hash.delete(:method)} (#{exception_hash[:exception_class]}) '#{exception_hash[:exception_message]}'"
-              body = "Application Name\n.................\n#{exception_hash.delete(:app_name)}\n\n"
-              body << "Error Message \n.................\n#{exception_hash.delete(:exception_message)}\n\n"
-              body << "Error Class\n.............\n#{exception_hash.delete(:exception_class)}\n\n"
-              body << "Time\n..................\n#{exception_hash.delete(:wall_time)}\n\n"
-              body << "Backtrace \n..................\n#{exception_hash.delete(:exception_backtrace)}\n\n"
-              body << "Environment\n.................\n"
-              exception_hash.each do |key, value|
-                body << "#{key.to_s.upcase} : #{value}\n"
-             end
-             EmailHandler.deliver_send_email(subject,body,from,recipients)
+            if status == OPEN_EXCEPTION
+              Mailer.send_exception(exception_hash)
             end
           end
           exception_hash = @message_reader.read_exception()
