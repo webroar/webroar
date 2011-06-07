@@ -26,7 +26,7 @@ RAILS_ROOT = ADMIN_PANEL_DIR
 GEM_BIN_DIR = File.expand_path(File.join(WEBROAR_ROOT,'..','..','bin'))
 USR_BIN_DIR = File.join('','usr','bin')
 ANALYZER_DIR = File.join(WEBROAR_ROOT, 'src', 'ruby_lib', 'analyzer')
-
+INTERNAL_CONF_FILE = File.join(WEBROAR_ROOT, 'conf', 'server_internal_config.yml')
 ENV["PATH"] += ":/usr/bin:/usr/sbin:/sbin:/usr/local/sbin:#{WEBROAR_BIN_DIR}"
 WEBROAR_LOG_FILE = File.join('','var','log','webroar','webroar.log')
 PIDFILE = "/var/run/webroar.pid"

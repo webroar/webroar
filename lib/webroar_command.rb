@@ -248,20 +248,29 @@ module Webroar
       def start_webroar
         puts "Initiating WebROaR startup sequence ..."
         if File.exist?(File.join(WEBROAR_BIN_DIR,"webroar-head")) && File.exist?(File.join(WEBROAR_BIN_DIR,"webroar-worker"))
+
           @starling_status = start_starling
 
           puts "Starting webroar-head process ..."
 
           check_server_status
           return unless start_server
-          start_analyzer
 
-          if @analyzer_status == :down
-            puts "Server started but 'Analytics' and 'Exception Notification' features would not work."
-          elsif @server_status == :running and @analyzer_status == :running
-            puts "Server already running."
+          if @starling_status != :disabled
+            start_analyzer
+            if @analyzer_status == :down
+              puts "Server started but 'Analytics' and 'Exception Notification' features would not work."
+            elsif @server_status == :running and @analyzer_status == :running
+              puts "Server already running."
+            else
+              puts "Server started successfully."
+            end
           else
-            puts "Server started successfully."
+            if @server_status == :running
+              puts "Server already running."
+            else
+              puts "Server started successfully."
+            end
           end
         else
           puts "WebROaR is not installed on this machine. Please run *sudo webroar install* to install it."
@@ -270,6 +279,16 @@ module Webroar
 
       # Start starling process
       def start_starling
+        analytics = true
+
+        
+        server_conf = YAML.load(File.open(INTERNAL_CONF_FILE))
+        if(server_conf and server_conf["webroar"] and !server_conf["webroar"]["analyzer"].nil?)
+          analytics = server_conf["webroar"]["analyzer"]
+        end
+
+        return :disabled unless analytics
+
         print "Starting message queue server ..."
 
         starling_conf_file = File.join(WEBROAR_ROOT, 'conf', 'starling_server_config.yml')
@@ -307,8 +326,8 @@ module Webroar
       # Stop the server
       def stop_webroar
         begin
-          filename = File.join(WEBROAR_ROOT, 'conf', 'server_internal_config.yml')
-          pid_file = YAML.load(File.open(filename))["webroar_analyzer_script"]["pid_file"]
+          yaml_obj = YAML.load(File.open(INTERNAL_CONF_FILE))
+          pid_file = yaml_obj["webroar_analyzer_script"]["pid_file"]
           if !(File.exists?(PIDFILE) or File.exists?(pid_file))
             puts "WebROaR is not running."
             return
@@ -318,12 +337,12 @@ module Webroar
           pid = File.read(PIDFILE).chomp.to_i rescue nil
           kill_process(pid)
 
-          filename = File.join(WEBROAR_ROOT, 'conf', 'server_internal_config.yml')
-          pid_file = YAML.load(File.open(filename))["webroar_analyzer_script"]["pid_file"]
-
-          print "Stopping webroar-analyzer process ..."
-          pid = File.read(pid_file).chomp.to_i rescue nil
-          kill_process(pid)
+          pid = File.read(yaml_obj["webroar_analyzer_script"]["pid_file"]).chomp.to_i rescue nil
+          if pid          
+            print "Stopping webroar-analyzer process ..."
+            kill_process(pid)
+          end
+          
           sleep(1)
 
           # Remove all temporary files

@@ -50,6 +50,8 @@ extern config_t *Config;
 #define WR_MSG_QUEUE_SERVER_PORT "starling/port"
 #define WR_PID_MSG_QUEUE_NAME "starling/pid_queue_name"
 
+#define WR_WEBROAR_ANALYZER "webroar/analyzer"
+
 /* from zutil.h */
 #ifndef DEF_MEM_LEVEL
 #if MAX_MEM_LEVEL >= 8
@@ -634,12 +636,15 @@ void send_static_worker_pid() {
     LOG_ERROR(SEVERE, "Could not parse server_internal_config.yml file. PID can not be sent to analyzer");
     return;  
   } else {
-    char *host = NULL, *port = NULL, *queue_name = NULL;
+    char *host = NULL, *port = NULL, *queue_name = NULL, *analytics = NULL;
     wr_msg_queue_server_t *msg_queue_server = NULL;
     wr_msg_queue_conn_t *msg_queue_conn = NULL;
     char msg_value[STR_SIZE32];
     int rv;
     
+    analytics = yaml_get_value(root, WR_WEBROAR_ANALYZER);
+    if(analytics && strcmp(analytics, "on")) return;
+
     host = yaml_get_value(root, WR_MSG_QUEUE_SERVER_HOST);
     port = yaml_get_value(root, WR_MSG_QUEUE_SERVER_PORT);
     queue_name = yaml_get_value(root, WR_PID_MSG_QUEUE_NAME);

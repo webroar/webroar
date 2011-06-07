@@ -18,9 +18,20 @@
 
 $: << "." if not $:.include? "."
 begin
-  require 'rubygems'
-  gem 'starling', '>=0.10.0'
-  require 'starling'
+  require 'yaml'
+  $g_options['analytics'] = true
+
+  server_conf = YAML.load(File.open(File.join($g_options["webroar_root"], "conf", "server_internal_config.yml")))
+  if(server_conf and server_conf["webroar"] and !server_conf["webroar"]["analyzer"].nil?)
+    $g_options['analytics'] = server_conf["webroar"]["analyzer"]
+  end
+
+  if $g_options['analytics']
+    require 'rubygems'
+    gem 'starling', '>=0.10.0'
+    require 'starling'
+  end
+  
   require File.join(File.expand_path(File.dirname(__FILE__)), 'ruby_interface', 'ruby_interface')
   
   #turn it on to see the Ruby exception
@@ -56,22 +67,24 @@ begin
       #    STDERR.reopen(STDOUT)
       #    STDERR.sync = true
       #    puts '...........file opened..............'
-      require File.join(File.dirname(__FILE__), 'profiler', 'message_dispatcher') #to send pid of worker
-#      TODO: Add Exception tracking for Rails 3
-      if $pid_sent and $g_options["app_name"].strip != 'Admin Panel' and $g_options["app_type"] == "rails" 
-        require File.join(File.dirname(__FILE__), 'exception_tracker', 'webroar_exception.rb')
-      elsif $g_options["app_name"].strip != 'Admin Panel'
-        Webroar.log_info("Exception notification would not work.")
-      end
-#      TODO: Add profiling support for Rails 3
-      if $g_options["app_profiling"] == "yes" and $g_options["app_type"] == "rails"  
-        if $pid_sent
-          require File.expand_path(File.join($g_options["webroar_root"], 'src', 'ruby_lib', 'profiler', 'webroar_profiling.rb'))     
-        else
-          Webroar.log_info("Profiling did not started.")
-        end
-      end
       
+      if $g_options['analytics']
+        require File.join(File.dirname(__FILE__), 'profiler', 'message_dispatcher') #to send pid of worker
+  #      TODO: Add Exception tracking for Rails 3
+        if $pid_sent and $g_options["app_name"].strip != 'Admin Panel' and $g_options["app_type"] == "rails" 
+          require File.join(File.dirname(__FILE__), 'exception_tracker', 'webroar_exception.rb')
+        elsif $g_options["app_name"].strip != 'Admin Panel'
+          Webroar.log_info("Exception notification would not work.")
+        end
+  #      TODO: Add profiling support for Rails 3
+        if $g_options["app_profiling"] == "yes" and $g_options["app_type"] == "rails"  
+          if $pid_sent
+            require File.expand_path(File.join($g_options["webroar_root"], 'src', 'ruby_lib', 'profiler', 'webroar_profiling.rb'))     
+          else
+            Webroar.log_info("Profiling did not started.")
+          end
+        end
+      end # analytics
       # Taken from Mongrel cgi_multipart_eof_fix
       # Ruby 1.8.5 has a security bug in cgi.rb, we need to patch it.
       version = RUBY_VERSION.split('.').map { |i| i.to_i }      
