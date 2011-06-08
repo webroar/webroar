@@ -41,6 +41,8 @@
 #define SERVER_SSL_SUPPORT  2
 #define SERVER_UDS_SUPPORT  4
 #define SERVER_KEEP_ALIVE   8
+#define SERVER_ADMIN_PANEL  16
+#define SERVER_ANALYZER   	32  // For future use
 
 typedef struct config_server_s{
   

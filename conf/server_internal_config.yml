@@ -9,8 +9,9 @@ starling:
   max_queue_items: 30000 # Maximum number of unprocessed messages in queue. One message is approximately 1 Kb
   
 webroar:
-  analyzer: on     # To set server analytics on/off
- 
+  analyzer: on     # Flag to set server analytics on/off
+  admin_panel: on  # Flag to start Admin Panel with server
+
 webroar_analyzer_script:
   pid_file: /var/run/webroar_analyzer.pid   # File to store pid of analyzer
   daemonize: true                           # true or false

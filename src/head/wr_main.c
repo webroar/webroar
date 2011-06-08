@@ -230,7 +230,9 @@ int main(int argc, char *argv[]) {
   set_log_severity(Config->Server.log_level);
 #endif
   // Add Admin Panel
-  wr_conf_admin_panel_add();
+  if(Config->Server.flag & SERVER_ADMIN_PANEL){
+	wr_conf_admin_panel_add();
+  }
   
   // Add staic file server
   wr_conf_static_server_add();

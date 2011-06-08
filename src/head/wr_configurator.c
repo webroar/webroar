@@ -891,6 +891,19 @@ void wr_worker_conf_read(node_t *root){
   wr_set_numeric_value(root, "Worker/ping_trials", &Config->Server.Worker.ping_trials, FALSE);
 }
 
+/** Read The Server Configuration **/
+void wr_server_conf_read(node_t *root){
+  char *str = NULL;
+  Config->Server.flag |= SERVER_ADMIN_PANEL;
+  str = yaml_validate_string(yaml_get_value(root, "webroar/admin_panel"));
+  if(str && !strcmp(str, "off")) Config->Server.flag -= SERVER_ADMIN_PANEL;
+
+  //May be used in future
+  Config->Server.flag |= SERVER_ANALYZER;
+  str = yaml_validate_string(yaml_get_value(root, "webroar/analyzer"));
+  if(str && !strcmp(str, "off")) Config->Server.flag -= SERVER_ANALYZER;
+}
+
 /** Read and fill Server Internal Configuration **/
 void wr_internal_conf_read(){
   LOG_FUNCTION
@@ -906,6 +919,7 @@ void wr_internal_conf_read(){
   }
   
   wr_application_conf_read(root);
+  wr_server_conf_read(root);
   wr_worker_conf_read(root);
   
   yaml_node_free(root);
@@ -1164,6 +1178,7 @@ void wr_conf_display() {
 /** Add Admin Panel configuration */
 int wr_conf_admin_panel_add() {
   LOG_FUNCTION
+
   config_application_list_t* app = wr_conf_admin_panel_read();
 
   if(app != NULL) {
