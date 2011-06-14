@@ -23,23 +23,13 @@ require 'test_helper'
 class MailerTest < ActionController::IntegrationTest
 
   def setup
-    @from,@recipients,@mail_configuration,@email_notification= Mailer.mail_settings
-  end
-
-  def test_mail_configuration_availability
-    print "\n Test to check mail configuration availability (will fail if email configuration not found)"
-    assert @mail_configuration , true
-  end
-
-  def test_mail_notification_enability
-    print "\n Test to check mail notification enability (will fail if email notification is disabled ) "
-    assert @email_notification , true
+    @from,@recipients = "test@test.com","test@test.com"
   end
 
   # Test to send email
   def test_send_email
-    print "\n Test to send email if mail configuration is availbale"
-    email = Mailer.deliver_send_email("Mailer Test","Test successfully completed",@from,@recipients) if @mail_configuration
+    print "\n Test send_email method"
+    email = Mailer.deliver_send_email("Mailer Test","Test successfully completed",@from,@recipients)
     assert !ActionMailer::Base.deliveries.empty?
     assert_equal @from, email['from'].to_s
     assert_equal @recipients, email['to'].to_s
