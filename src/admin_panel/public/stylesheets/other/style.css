@@ -19,224 +19,222 @@ You should have received a copy of the GNU General Public License
 along with WebROaR.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-body {    
-    margin : 0px;    
-    font-family:verdana;
-    background-color:#FFFFFF;
-    font-size:14px;
+body {
+  margin : 0px;
+  font-family:verdana;
+  background-color:#FFFFFF;
+  font-size:14px;
 }
 #header {
-    position:relative;
-    top:5px;
-    font-size:11px;
-    width:930px;
-    height:50px;
-    right:10px;
-    text-align:right;
+  position:relative;
+  top:5px;
+  font-size:11px;
+  width:930px;
+  height:50px;
+  right:10px;
+  text-align:right;
 }
 #header a {
-    font-weight:bold;
-    color:#878787;
+  font-weight:bold;
+  color:#878787;
 }
 #container_menu {
-    position: relative;
-    width:930px;
-    height:50;
-    text-align:right;
+  position: relative;
+  width:930px;
+  height:50px;
+  text-align:right;
 }
 #logo_div {
-    position:relative;
-    top:-22px;
-    left:20px;
-    float:left;
+  position:relative;
+  top:-22px;
+  left:20px;
+  float:left;
 }
 #menu_tab_div {
-    position:relative;
-    float:right;
-    right:10px;
+  position:relative;
+  float:right;
+  right:10px;
 }
 #menu_tab_div A:link {
-    color:#990b0a
+  color:#990b0a;
 }
 #menu_tab_div A:visited {
-    color:#990b0a
+  color:#990b0a;
 }
 #menu_tab_div A:active {
-    color:#990b0a
+  color:#990b0a;
 }
 #menu_tab_div A:hover {
-    color:#990b0a
+  color:#990b0a;
 }
 #container {
-    position:relative;
-    top:-2px;
-    width:940px;
-    font-size:14px;
-    height:680px;
-    padding-bottom:10px; 
+  position:relative;
+  top:-2px;
+  width:940px;
+  font-size:14px;
+  height:680px;
+  padding-bottom:10px;
 }
 #container table {
-    background-color:#E0E0E0;
-    border-spacing:1px 1px;
+  background-color:#E0E0E0;
+  border-spacing:1px 1px;
 }
 #container tr {
-    background-color:#FFF;
+  background-color:#FFF;
 }
 #container th {
-    font-size:14px;
-    padding:4px;
-    background-color:#DADADA;
-    font-weight:bold;
-    text-align:left;
-    color:#585555;
+  font-size:14px;
+  padding:4px;
+  background-color:#DADADA;
+  font-weight:bold;
+  text-align:left;
+  color:#585555;
 }
 #container td {
-    padding:4px;
-    font-size:13px;
+  padding:4px;
+  font-size:13px;
 }
 #container select{
-    width:140px;
+  width:140px;
 }
 #log_div select{
-    width:106px;
+  width:106px;
 }
 #error_div,#error_div_smtp_form ,#error_div_sendmail_form ,#error_div_expire_by_type {
-    font-size:11px;
-    color:red;
-    text-align:left;
+  font-size:11px;
+  color:red;
+  text-align:left;
 }
 #error_div h2 {
 	font-size:14px;
-    color:black;    
+  color:black;
 }
 #bottom_link_div {
-    position:relative;
-    width:940px;
-    height:30px;
-    font-weight:bold;
-    border-top:1px solid #E5C2C2;
-    color:#bc5d5b;
-    font-size:13px;
+  position:relative;
+  width:940px;
+  height:30px;
+  font-weight:bold;
+  border-top:1px solid #E5C2C2;
+  color:#bc5d5b;
+  font-size:13px;
 }
 .popup_container {
-    position:absolute;
-    width:460px;
-    z-index:1000;
-    border: 1px solid #006699;
-    background-color:#F9F6CD;
-    text-align:justify;
-    padding:5px;
+  position:absolute;
+  width:460px;
+  z-index:1000;
+  border: 1px solid #006699;
+  background-color:#F9F6CD;
+  text-align:justify;
+  padding:5px;
 }
 .sub_header {
-    background-color:#F0F0F0;
-    font-weight:bold;    
-    color:#585555;
+  background-color:#F0F0F0;
+  font-weight:bold;
+  color:#585555;
 }
 #page_name {
-    padding-left:25px;
-    padding-top:4px;
-    font-weight:bold;
-    text-align:left;
-    width:940px;
-    color:#757575;
+  padding-left:25px;
+  padding-top:4px;
+  font-weight:bold;
+  text-align:left;
+  width:940px;
+  color:#757575;
 }
 #needed {
-    font-size:10px;
-    color:red;
+  font-size:10px;
+  color:red;
 }
 a {
-    font-weight:normal;
-    text-decoration:none;
-    color:#1085CE;
+  font-weight:normal;
+  text-decoration:none;
+  color:#1085CE;
 }
 a:hover {
-    text-decoration:underline;
-    color:#1085CE;
+  text-decoration:underline;
+  color:#1085CE;
 }
 .text_align_right {
-    width:99%;
-    text-align:right;
+  width:99%;
+  text-align:right;
 }
 .text_align_center {
-    text-align:center;
+  text-align:center;
 }
 #time_div {
-    position:relative;
-    text-align:right;
-    height:10px;
-    width:730px;
-    float:right;
-    top:5px;
-    font-weight:bold;
-    color:#999999;
+  position:relative;
+  text-align:right;
+  height:10px;
+  width:730px;
+  float:right;
+  top:5px;
+  font-weight:bold;
+  color:#999999;
 }
 .font_size_12 {
-    font-size:12px;
-    color:black;
-    font-weight:normal;
+  font-size:12px;
+  color:black;
+  font-weight:normal;
 }.home
 {
-  width:54;
-  height:22;
-	background:url('../../images/home_ad.gif');
+  width:54px;
+  height:22px;
+  background:url('../../images/home_15_06_2011.gif');
 }
 .home_ov
 {
-  width:54;
-  height:22;
-	background:url('../../images/home_ad_ov.gif');
+  width:54px;
+  height:22px;
+  background:url('../../images/home_hover_15_06_2011.gif');
 }
 
 .configuration
 {
-  width:103;
-  height:22;
-	background:url('../../images/configuration_ad.gif');
+  width:116px;
+  height:22px;
+  background:url('../../images/configuration_15_06_2011.gif');
 }
 .configuration_ov
 {
-  width:103;
-  height:22;
-	background:url('../../images/configuration_ad_ov.gif');
+  width:116px;
+  height:22px;
+  background:url('../../images/configuration_hover_15_06_2011.gif');
 }
 .analytics
 {
-  width:76;
-  height:22;
-	background:url('../../images/analytics_ad.gif');
+  width:80px;
+  height:22px;
+  background:url('../../images/analytics_15_06_2011.gif');
 }
 .analytics_ov
 {
-  width:76;
-  height:22;
-	background:url('../../images/analytics_ad_ov.gif');
+  width:80px;
+  height:22px;
+  background:url('../../images/analytics_hover_15_06_2011.gif');
 }
 .exceptions
 {
-  width:84;
-  height:22;
-	background:url('../../images/exceptions_ad.gif');
+  width:90px;
+  height:22px;
+  background:url('../../images/exceptions_15_06_2011.gif');
 }
 .exceptions_ov
 {
-  width:84;
-  height:22;
-	background:url('../../images/exceptions_ad_ov.gif');
+  width:90px;
+  height:22px;
+  background:url('../../images/exceptions_hover_15_06_2011.gif');
 }
 .settings
 {
-  width:68;
-  height:22;
-	background:url('../../images/settings_ad.gif');
+  width:72px;
+  height:22px;
+  background:url('../../images/settings_15_06_2011.gif');
 }
 .settings_ov
 {
-  width:68;
-  height:22;
-	background:url('../../images/settings_ad_ov.gif');
+  width:72px;
+  height:22px;
+  background:url('../../images/settings_hover_15_06_2011.gif');
 }
-
-
 #overlay{
   position: absolute;
   z-index:100;		
@@ -300,13 +298,13 @@ a:hover {
   left: 0;
 }
 #slider_div {
-    font-size:11px;
+  font-size:11px;
 }
 .app_name {
-    font-weight:bold;
+  font-weight:bold;
 }
 .error {
-    color:red;
+  color:red;
 }
 #data_div select{
   width:50px;
