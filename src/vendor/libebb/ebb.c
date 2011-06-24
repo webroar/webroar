@@ -153,9 +153,9 @@ session_cache_store(void *data, gnutls_datum_t key, gnutls_datum_t value)
   cache->value.data = (void*)cache->value_storage;
 
   cache->node.key = &cache->key;
-  cache->node.value = &cache;
+  cache->node.value = cache;
 
-  rbtree_insert(tree, (rbtree_node)cache);
+  rbtree_insert(tree, &cache->node);
 
   //printf("session_cache_store\n");
 
@@ -201,6 +201,13 @@ session_cache_remove (void *data, gnutls_datum_t key)
   //printf("session_cache_remove\n");
 
   return 0;
+}
+
+static void session_cache_deinit(rbtree tree){
+  while(tree->root && tree->root->key){
+    struct session_cache *cache = tree->root->value;
+    session_cache_remove (tree, cache->key);
+  }
 }
 
 static void 
@@ -631,6 +638,13 @@ ebb_server_unlisten(ebb_server *server)
     server->port[0] = '\0';
     server->listening = FALSE;
   }
+#ifdef HAVE_GNUTLS
+  if(server->secure){
+    session_cache_deinit(&server->session_cache);
+    gnutls_certificate_free_credentials (server->credentials);
+    gnutls_global_deinit ();
+  }
+#endif
 }
 
 /**
@@ -654,7 +668,6 @@ ebb_server_init(ebb_server *server, struct ev_loop *loop)
   server->secure = FALSE;
 
 #ifdef HAVE_GNUTLS
-  rbtree_init(&server->session_cache, session_cache_compare);
   server->credentials = NULL;
 #endif
 
@@ -694,6 +707,7 @@ ebb_server_set_secure (ebb_server *server, const char *cert_file, const char *ke
     error("loading certificates");
     return -1;
   }
+  rbtree_init(&server->session_cache, session_cache_compare);
   return 1;
 }
 #endif /* HAVE_GNUTLS */
