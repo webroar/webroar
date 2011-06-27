@@ -72,7 +72,7 @@ RESTART_SERVER_MESSAGE="Please restart the server to made the latest changes eff
 NO_APPLICATION_FOR_ANALYTICS="No application has been configured for analytics."
 NO_APPLICATION_FOR_EXCEPTION_TRACKING="No applications are deployed on the server currently."
 NO_DEPLOYED_APPLICATION_MESSAGE="No applications are deployed on the server currently."
-
+MAIL_SETTINGS_NOT_CONFIGURED_MESSAGE = "Mail settings are not configured."
 
 SERVER_PORT_VALIDATION="Port should be a number between 1 and 65535."
 MINIMUM_WORKERS_VALIDATION="Minimum workers should be a number between 1 and #{ALLOWED_MAX_WORKERS}."

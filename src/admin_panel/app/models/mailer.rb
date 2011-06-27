@@ -25,7 +25,6 @@ unless defined?ActionMailer
 end
 
 class Mailer < ActionMailer::Base
-
   # This method is used to configure the ActionMailer::Base.smtp_settings or ActionMailer::Base.sendmail_settings
   # and returns from address ,recipients address and flags for mail_configuration status and email_notification
   # status for analytics part
@@ -53,7 +52,9 @@ class Mailer < ActionMailer::Base
         from = data['sendmail']['from']
         recipients = data['sendmail']['recipients']
         ActionMailer::Base.sendmail_settings = details
+        ActionMailer::Base.delivery_method = :sendmail
       end
+      ActionMailer::Base.raise_delivery_errors = true
     rescue
       mail_configuration = false
     end
@@ -67,10 +68,10 @@ class Mailer < ActionMailer::Base
 
   # This method is to deliver the email to recipients
   def send_email(subject,body,from,recipients)
-    subject subject
-    from from
-    recipients recipients
-    body body
+    @subject = subject
+    @from = from
+    @recipients = recipients
+    @body = body
   end
 
   # This method is used to send exception notification to the recipients
@@ -87,9 +88,45 @@ class Mailer < ActionMailer::Base
       exception_hash.each do |key, value|
         body << "#{key.to_s.upcase} : #{value}\n"
       end
-      deliver_send_email(subject,body,from,recipients)
+      begin
+        deliver_send_email(subject,body,from,recipients)
+      rescue Exception => e
+        e
+      end
+
     end
   end
 
-end
+  # This method is used to test smtp mail settings errors
+  def self.check_smtp_mail_settings
+    return nil if ActionMailer::Base.delivery_method == :sendmail
+    from,recipients,mail_configuration,email_notification = mail_settings
+    return MAIL_SETTINGS_NOT_CONFIGURED_MESSAGE,'' unless mail_configuration
+    smtp_settings = ActionMailer::Base.smtp_settings if ActionMailer::Base.smtp_settings
+    smtp = Net::SMTP.new(smtp_settings[:address], smtp_settings[:port])
+    if smtp_settings[:enable_starttls_auto]
+     smtp.enable_starttls_auto if smtp.respond_to?(:enable_starttls_auto)
+    end
+    begin
+      smtp.start(smtp_settings[:domain], smtp_settings[:user_name], smtp_settings[:password],smtp_settings[:authentication]) do |smtp| end;
+    rescue Exception => exception
+      return self.parse_exception(exception),''
+    end
+  end
 
+  # this method parse the SMTP faluire exceptions
+  def self.parse_exception(exception)
+    case exception
+    when Net::SMTPAuthenticationError
+      "Authentication unsuccessful, Please make sure that email credentials are correct."
+    when Net::SMTPFatalError
+      "Client does not have permissions to send as this sender, Please make sure that Sender`s email address is correct."
+    when Errno::ECONNREFUSED
+      "Connection Refused with port #{ActionMailer::Base.smtp_settings[:port]}, Please make sure that SMTP port address is correct."
+    when SocketError
+      "Invalid SMTP Server, Please make sure that SMTP server address is correct."
+    else
+      exception.message.capitalize
+    end
+  end
+end
