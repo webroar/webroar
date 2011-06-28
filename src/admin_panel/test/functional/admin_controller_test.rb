@@ -102,23 +102,24 @@ class AdminControllerTest < ActionController::TestCase
   
   def test_change_password
     print "\n Test is to check the functioning of change_password function"	
+
     post :login,:user=>{:name=>@user_name,:password=>@user_password}
     #		get :home
     #	assert_response :success
     #assert_equal 'admin',session[:user]
     post :change_password,:password=>{:old=>@user_password,:new=>@new_password,:confirm=>@new_password}
-    post :logout
-    get :index
-    assert_response :success
+    assert_response :redirect
     assert_nil session[:user]
+    assert_equal PASSWORD_CHANGED,flash[:notice]
+
     post :login,:user=>{:name=>@user_name,:password=>@new_password}
     assert_equal 'admin',session[:user]
     #		get :home
     #	assert_response :success
     post :change_password,:password=>{:old=>@new_password,:new=>@user_password,:confirm=>@user_password}
-    post :logout
-    get :index
-    assert_response :success
+    assert_response :redirect
+    assert_nil session[:user]
+    assert_equal PASSWORD_CHANGED,flash[:notice]
   end
   
 end

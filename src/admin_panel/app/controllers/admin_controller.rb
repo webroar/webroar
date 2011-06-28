@@ -105,17 +105,19 @@ class AdminController < ApplicationController
       end
     end
     if password_changed
-      flash[:notice] = PASSWORD_CHANGED
       YAMLWriter.write(users, USERS_FILE_PATH, YAMLConfig::USER)
+      reset_session
+      flash[:notice] = PASSWORD_CHANGED
+      redirect_to root_path
     else
       if params[:password][:new].length < 6
         flash[:notice] = WRONG_PASSWORD2
       else 
         flash[:notice] = WRONG_PASSWORD1
       end
+      render :action => 'change_password_form'
       #TODO : This message is to be made more specific for old password and confirm password.
     end
-    render :action => 'change_password_form'
   end
   
   #This method is used to render the Admin Panel Settings Page.	
