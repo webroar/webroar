@@ -235,6 +235,16 @@ a:hover {
   height:22px;
   background:url('../../images/settings_hover_15_06_2011.gif');
 }
+.contact_us {
+  width:90px;
+  height:22px;
+  background:url('../../images/contact_us_28_06_2011.gif');
+}
+.contact_us_ov {
+  width:90px;
+  height:22px;
+  background:url('../../images/contact_us_hover_28_06_2011.gif');
+}
 #overlay{
   position: absolute;
   z-index:100;		
@@ -313,4 +323,33 @@ a:hover {
   padding:3px 15px 3px 15px;
   color:white;
   background: #585555;
+}
+#contact_us {
+  margin-left:20%;
+}
+#contact_us td .input_text {
+  width:100%;
+}
+#contact_us td {
+  padding-left:20px;
+  padding-right:20px;
+}
+#contact_us_left_panel {
+  position:absolute;
+  left:0px;
+  margin-top:4px;
+}
+#contact_us_left_panel table{
+  border:2px solid #DFDFDF;
+  background-color:white;
+  border-spacing:1px 1px;
+}
+#contact_us_left_panel td {
+  padding:5px 25px 0px 25px;
+}
+#contact_us_left_panel td a {
+  text-decoration:none;
+  color:#736F6E;
+  font-size:16px;
+  line-height:2;
 }

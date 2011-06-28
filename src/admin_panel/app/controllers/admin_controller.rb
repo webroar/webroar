@@ -18,15 +18,15 @@
 # along with WebROaR.  If not, see <http://www.gnu.org/licenses/>.
 #++
 
-#This controller deals with all the actions related to the user handling and application configuration. 
+#This controller deals with all the actions related to the user handling and application configuration.
 class AdminController < ApplicationController
   before_filter :login_required, :except => ['index', 'login'] #This method checks whether user is authenticated or not.
   before_filter :check_session_timeout, :except => ['index', 'login', 'get_latest_updates', 'get_latest_time']
-  before_filter :clear_flash_notice, :only => [:change_password_form]
+  before_filter :clear_flash_notice, :only => [:change_password_form,:contact_us,:send_feedback,:send_report_bug]
   #before_filter :clear_flash_notice #This methos clear the flash notice messages before navigating to next action.
   protect_from_forgery :only => [:change_password ]
   ssl_required :index, :login, :change_password, :change_password_form if SSL_ON
-
+  before_filter :create_captcha, :only => [:contact_us]
   #This action is to render the login page with the layout index.html.erb.
   #If the user session is already created the it redirects the control to the home page of the admin panel.
   def index
@@ -155,6 +155,52 @@ class AdminController < ApplicationController
     end
   end
   
+  # This method is used to render the report_bug, feedback
+  # and contact_us form on the basis of params[:form_name]
+  def contact_us
+    flash[:notice] = Mailer.check_smtp_mail_settings
+    @rb = {:name => "" ,:email => "",:subject => "",:description => ""}
+    @fb = {:name => "" ,:email => "",:message => ""}
+    case params[:form_name]
+      when "report_bug"
+        render :partial => "report_bug_partial"
+      when "feedback"
+        render :partial => "feedback_partial"
+      else
+        render "contact_us"
+    end
+  end
+
+  # this method is used to send the feedback
+  def send_feedback
+    @fb = feedback = params[:feedback]
+    message = MailSpecification.validate_feedback_data(feedback)
+    if message == ""
+      if validate_captcha
+        @fb = {:name => "" ,:email => "",:message => ""}
+        flash[:notice] = Mailer.send_feedback(feedback)
+      end
+    else
+      flash[:notice] = message
+    end
+    render :partial => 'feedback_partial'
+  end
+
+  # this method is used to report the bug
+  def send_report_bug
+    @rb = report_bug = params[:report_bug]
+    message = MailSpecification.validate_report_bug_data(report_bug)
+    if message == ""
+      if validate_captcha
+        @rb = {:name => "" ,:email => "",:subject => "",:description => ""}
+        flash[:notice] = Mailer.send_report_bug(report_bug)
+      end
+    else
+      flash[:notice] = message
+    end
+    render :partial => 'report_bug_partial'
+  end
+
   private
  
   #This methos is to set the application name and the url type in the session.

@@ -1,0 +1,59 @@
+<% #
+# WebROaR - Ruby Application Server - http://webroar.in/
+# Copyright (C) 2009  Goonj LLC
+#
+# This file is part of WebROaR.
+#
+# WebROaR is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+#
+# WebROaR is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with WebROaR.  If not, see <http://www.gnu.org/licenses/>.
+#
+%>
+
+<%if(flash[:notice].class == Array )%>
+  <%= flash[:notice][0] %> Please use <%= link_to 'Configuration',configuration_path %> tab to configure mail settings.
+<% else %>
+  <%form_remote_for :report_bug,:update =>"contact_us",:before => 'show_busy_div()',:complete => "hide_busy_div()", :url => {:action => 'send_report_bug' } do%>  
+    <table width='75%'>
+      <tr>
+        <th colspan='2' >Report Bug / Raise Issue </th>
+      </tr>
+      <tr>
+        <td colspan = 2 >
+          <div id = 'error_div' style="padding:0px;">
+            <%if(flash[:notice].class == Array )%>
+                <%= flash[:notice][0] %> Please use <%= link_to 'Configuration',configuration_path %> tab to configure mail settings.
+            <% else %>
+              <%= flash[:notice] %>
+            <% end %>
+          </div>
+          Name<span id = 'needed'>*</span><br>
+          <%= text_field :report_bug, :name, :size => 20, :value => @rb[:name],:class =>'input_text'%><br><br>
+  
+          Email<span id = 'needed'>*</span><br>
+          <%= text_field :report_bug, :email, :size => 20, :value => @rb[:email],:class =>'input_text'%><br><br>
+  
+          Subject<span id = 'needed'>*</span><br>
+          <%= text_field :report_bug, :subject, :size => 20, :value => @rb[:subject],:class =>'input_text'%><br><br>
+  
+          Describe the problem<span id = 'needed'>*</span><br>
+          <%= text_area :report_bug, :description, :value => @rb[:description],:class =>'input_text',:rows => 15%><br><br>
+  
+          Word Verification:  Type the characters you see in the picture below. <br><br>
+          <%= image_captcha_tag %> 
+  
+          <p align='center'><%= submit_tag 'Submit'%></p>
+        </td>
+      </tr>
+    </table>
+  <%end%>
+<% end %>

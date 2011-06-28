@@ -27,6 +27,7 @@ module ApplicationHelper
     tab3 = ["analytics","analytics_ov"]
     tab4 = ["exceptions","exceptions_ov"]
     tab5 = ["settings","settings_ov"]
+    tab6 = ["contact_us","contact_us_ov"]
     if controller_name == 'admin'
       case action_name
       when "home"
@@ -35,6 +36,8 @@ module ApplicationHelper
         tab5 = ["settings_ov",""]
       when "change_password"
         tab5 = ["settings_ov",""]
+      when "contact_us","send_feedback","send_report_bug"
+        tab6 = ["contact_us_ov",""]
       else
         tab2 = ["configuration_ov",""]
       end
@@ -43,7 +46,7 @@ module ApplicationHelper
     elsif controller_name == 'exceptions'
       tab4 = ["exceptions_ov",""]
     end
-    return tab1,tab2,tab3,tab4,tab5
+    return tab1,tab2,tab3,tab4,tab5,tab6
   end
   
 end

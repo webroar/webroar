@@ -1,0 +1,50 @@
+<% #
+# WebROaR - Ruby Application Server - http://webroar.in/
+# Copyright (C) 2009  Goonj LLC
+#
+# This file is part of WebROaR.
+#
+# WebROaR is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+#
+# WebROaR is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with WebROaR.  If not, see <http://www.gnu.org/licenses/>.
+#
+%>
+<%if(flash[:notice].class == Array )%>
+  <%= flash[:notice][0] %> Please use <%= link_to 'Configuration',configuration_path %> tab to configure mail settings.
+<% else %>
+  <%form_remote_for :feedback,:update =>"contact_us",:before => 'show_busy_div()',:complete => "hide_busy_div()",:url => {:action => 'send_feedback' } do%>
+    <table width='75%'>
+      <tr>
+        <th colspan='2'>Feedback</th>
+      </tr>
+      <tr>
+        <td colspan = 2>
+          <div id = 'error_div' style="padding:0px;">
+            <%= flash[:notice] if flash[:notice] %>
+          </div>
+          Name<span id = 'needed'>*</span><br>
+          <%= text_field :feedback, :name, :value => @fb[:name],:class =>'input_text'%><br><br>
+  
+          Email<span id = 'needed'>*</span><br>
+          <%= text_field :feedback, :email,:value => @fb[:email],:class =>'input_text'%><br><br>
+  
+          Message<span id = 'needed'>*</span><br>
+          <%= text_area :feedback, :message, :value => @fb[:message],:class =>'input_text',:rows => 15%><br><br>
+  
+          Word Verification:  Type the characters you see in the picture below. <br><br>
+          <%= image_captcha_tag %> 
+          <p align="center"><%= submit_tag 'Submit'%></p>
+        </td>
+      </tr>
+    </table>
+  <%end%>
+<% end %>

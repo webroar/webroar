@@ -35,6 +35,7 @@ ActionController::Routing::Routes.draw do |map|
   map.home('/home', {:action=>'home',:controller=>'admin'})
   map.configuration('/configuration',{:action=>'configuration',:controller=>'admin'})
   map.analytics('/analytics',{:action=>'index',:controller=>'graph'})
+  map.contact_us('/contact_us',{:action=>'contact_us',:controller=>'admin'})
   map.settings('/settings',{:action=>'change_password_form',:controller=>'admin'})
   map.exceptions('/exceptions',{:action=>'index',:controller=>'exceptions'})
   map.logout('/logout',{:action=>'logout',:controller=>'admin'})

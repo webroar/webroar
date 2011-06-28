@@ -93,7 +93,6 @@ class Mailer < ActionMailer::Base
       rescue Exception => e
         e
       end
-
     end
   end
 
@@ -127,6 +126,36 @@ class Mailer < ActionMailer::Base
       "Invalid SMTP Server, Please make sure that SMTP server address is correct."
     else
       exception.message.capitalize
+    end
+  end
+
+  # this method sends the bug report to support@webroar.in
+  def self.send_report_bug(report_bug)
+    from,recipients, mail_configuration,email_notification = self.mail_settings
+    return MAIL_SETTINGS_NOT_CONFIGURED_MESSAGE,'' unless mail_configuration
+    subject = report_bug[:subject]
+    body = "#{report_bug[:description]}\n\n"
+    body << "Name : #{report_bug[:name]}\nEmail Address : #{report_bug[:email]}\n"
+    begin
+      deliver_send_email(subject,body,from,"support@webroar.in")
+      "<span style='color:green;'>Thank You for reporting the issue!</span>"
+    rescue Exception => exception
+      return self.parse_exception(exception),''
+    end
+  end
+
+  # this method sends the feedback to support@webroar.in
+  def self.send_feedback(feedback)
+    from,recipients, mail_configuration,email_notification = self.mail_settings
+    return MAIL_SETTINGS_NOT_CONFIGURED_MESSAGE,'' unless mail_configuration
+    subject = "WebROaR Feedback"
+    body = "#{feedback[:message]}\n\n"
+    body << "User Name : #{feedback[:name]}\nEmail Address : #{feedback[:email]}\n"
+    begin
+      deliver_send_email(subject,body,from,"support@webroar.in")
+      "<span style='color:green;'>Thank you for your valuable feedback!</span>"
+    rescue Exception => exception
+      return self.parse_exception(exception),''
     end
   end
 end

@@ -150,5 +150,41 @@ class MailSpecification
       end
     end
     
+    def validate_feedback_data(feedback)
+      message = ""
+      validate_field = [:name,:email,:message]
+      validate_message = ["Name","Email","Message"]
+      validate_field.each_index do |index|
+        if(feedback[validate_field[index]] == nil or feedback[validate_field[index]].strip == "")
+          message << "#{validate_message[index]} can't be blank.<br>"
+        else
+          if validate_field[index] == :email
+            if !/^([^@\s]+)@((?:[-a-z0-9]+\.)+[a-z]{2,})$/i.match(feedback[:email])
+              message << "Please enter valid email address."
+            end
+          end
+        end
+      end
+      message
+    end
+
+    def validate_report_bug_data(report_bug)
+      message = ""
+      validate_field = [:name,:email,:subject,:description]
+      validate_message = ["Name","Email","Subject","Problem description"]
+      validate_field.each_index do |index,value|
+        if(report_bug[validate_field[index]] == nil or report_bug[validate_field[index]].strip == "")
+          message << "#{validate_message[index]} can't be blank.<br>"
+        else
+          if validate_field[index] == :email
+            if !/^([^@\s]+)@((?:[-a-z0-9]+\.)+[a-z]{2,})$/i.match(report_bug[:email])
+              message << "Please enter valid email address."
+            end
+          end
+        end
+      end
+      message
+    end
+
   end
 end

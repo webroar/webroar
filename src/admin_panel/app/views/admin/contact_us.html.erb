@@ -1,0 +1,39 @@
+<% #
+# WebROaR - Ruby Application Server - http://webroar.in/
+# Copyright (C) 2009  Goonj LLC
+#
+# This file is part of WebROaR.
+#
+# WebROaR is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+#
+# WebROaR is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with WebROaR.  If not, see <http://www.gnu.org/licenses/>.
+#
+%>
+
+<br/>
+<div id = "page_name"><%= image_tag("title_contact_us_28_06_2011.gif", :border => '0')%></div>
+<br/><br/>
+<div id="contact_us_left_panel">
+  <table>
+    <tr><td><%= link_to_remote "Feedback",:update => 'contact_us' ,:url => {:controller => 'admin',:action => 'contact_us',:form_name => 'feedback'}%></td></tr>
+    <tr><td><%= link_to_remote "ReportBug",:update => 'contact_us',:url => {:controller => 'admin',:action => 'contact_us',:form_name => 'report_bug'}%></td></tr>
+    <tr><td><%= link_to_function "Support",:onclick => "window.open(this.href);return false;", :href => "http://webroar.in/support"%></td></tr>
+    <tr><td><%= link_to_function "About Us", :onclick => "window.open(this.href);return false;", :href => "http://webroar.in/aboutus"%></td></tr>
+    <tr><td><%= link_to_function "Contact Us", :onclick => "window.open(this.href);return false;", :href => "http://webroar.in/contactus"%><br><br></td></tr>
+  </table>
+</div>
+<div id='contact_us'>
+    <%= render :partial => 'feedback_partial' %>
+</div>
+
+
+
