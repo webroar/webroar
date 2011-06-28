@@ -55,14 +55,14 @@ class ServerSpecification
         end
         text = ssl_port
       when 'certificate_div'
-        if data.length > 0 and /^\/.*(\.crt)$/.match(data) and File.file?(data)
+        if data.length > 0 and File.file?(data)
           certificate = data    
         else
           error_message = SSL_CERTIFICATE_FILE_PATH_VALIDATION1
         end
         text = certificate
       when 'key_div'
-        if data.length > 0 and /^\/.*(\.key)$/.match(data) and File.file?(data)
+        if data.length > 0 and File.file?(data)
           key = data
         else
           error_message = SSL_KEY_FILE_PATH_VALIDATION1

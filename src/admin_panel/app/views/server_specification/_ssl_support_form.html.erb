@@ -22,7 +22,7 @@
   <%form_for :ssl, :url => {:controller => 'server_specification', :action => 'enable_ssl_support'} ,:html => { :onsubmit => "return validate_ssl(this)"} do%>
     <table width = 95%>
       <tr>
-        <td colspan = 2><div id = 'error_div_ssl_form' style="padding:0px;"><%=flash[:ssl_errors]%></div></td>
+        <td colspan = 2><div id = 'error_div_ssl_form' style="padding:0px;color:red;"><%=flash[:ssl_errors]%></div></td>
       </tr>
       <tr>
         <td>SSl Port<span id = 'needed'>*</span> &nbsp;&nbsp;&nbsp;

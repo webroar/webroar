@@ -118,32 +118,32 @@ module AdminHelper
     if info['Server Specification']['SSL Specification']
       block = "<table width = 95% >
 			      <tr>
-      				<th width = 80%>SSL Support</th>
+              <th colspan='2' width = 80%>SSL Support</th>
               <th>"
       if info['Server Specification']['SSL Specification']['ssl_support'] == 'enabled'
         block = block + "#{link_to('Disable', :controller => 'server_specification', :action => 'disable_ssl_support', :id => 0)}"
         block = block + "</th>
                   </tr>"
         block = block + "<tr>
-            				  <td width = 40%>SSL Port&nbsp;&nbsp;&nbsp;
-                      				#{link_to_function('Help', :onclick => 'addHelp("ssl_port",event);')}
+                      <td width = 30%>SSL Port&nbsp;&nbsp;&nbsp;
+                        #{link_to_function('Help', :onclick => 'addHelp("ssl_port",event);')}
                       </td>
-            				  <td width = 40%><div id = 'ssl_port_div'>#{ssl_port}</td>
-	            			  <td width = 40%>#{link_to_remote 'Edit', :update => 'ssl_port_div', :url => {:action => 'add_text_box', :div_id => 'ssl_port_div'}}</td>
+                      <td width = 50%><div id = 'ssl_port_div'>#{ssl_port}</td>
+                      <td width = 20%>#{link_to_remote 'Edit', :update => 'ssl_port_div', :url => { :controller => 'server_specification', :action => 'add_text_box', :div_id => 'ssl_port_div'}}</td>
 	          		  </tr>
 	          		  <tr>
 	            			  <td>SSL Certificate Path&nbsp;&nbsp;&nbsp;
                       				#{link_to_function('Help', :onclick => 'addHelp("ssl_certificate",event);')}
                       </td>
 	            			  <td><div id = 'certificate_div'>#{certificate}</div></td>
-            				  <td>#{link_to_remote 'Edit', :update => 'certificate_div', :url => {:action => 'add_text_box', :div_id => 'certificate_div'}}</td>
+                      <td>#{link_to_remote 'Edit', :update => 'certificate_div', :url => {:controller => 'server_specification', :action => 'add_text_box', :div_id => 'certificate_div'}}</td>
           			  </tr>
           			  <tr>
 				              <td>Machine key path&nbsp;&nbsp;&nbsp;
                       				#{link_to_function('Help', :onclick => 'addHelp("ssl_key",event);')}
                       </td>
             				  <td><div id = 'key_div'>#{key}</td>
-            				  <td>#{link_to_remote 'Edit', :update => 'key_div', :url => {:action => 'add_text_box', :div_id => 'key_div'}}</td>
+                      <td>#{link_to_remote 'Edit', :update => 'key_div', :url => { :controller => 'server_specification', :action => 'add_text_box', :div_id => 'key_div'}}</td>
           			  </tr>
             	  </table>"
       else

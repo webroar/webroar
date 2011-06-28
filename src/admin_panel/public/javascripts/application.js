@@ -629,20 +629,16 @@ function validates_number(fld,message)
 	return val;
 }
 
-function validate_headers_expire(frm)
+function validate_headers_expire(frm,div_id,old_data_value)
 {	
 	temp="";
 	var data_value = frm.data_value;
 	if(validates_presence(data_value,"Expires"))	
 		validates_expires(data_value,"Expires");
-	
-	var div =	document.getElementById("expires_div");
-	if(div)
-		var str = frm.action;	
-	
-	old_data_value = ((((str.split('?')[1]).split('&'))[1]).split('='))[1];
+	var div = document.getElementById(div_id);
+
 	if(temp.length > 0)
-	{				
+	{
 		div.innerHTML =  old_data_value+"<span style='color:red;display:inline;'> "+temp+"</span>" ;
 		return false;
 	}
@@ -759,13 +755,9 @@ function validates_value(fld,min_range,max_range,message)
 	return true;	
 }
 
-function validate_server_specification(frm)
+function validate_server_specification(frm,div_id,old_data_value)
 {			
 	temp = "";
-	var str = frm.action;
-
-	var div_id= ((((str.split('?')[1]).split('&'))[0]).split('='))[1];
-	var old_data_value = ((((str.split('?')[1]).split('&'))[1]).split('='))[1];	
 	var data_value = frm.data_value;
 	if(!(div_id=="log_div"))
 	{
@@ -782,13 +774,27 @@ function validate_server_specification(frm)
 					validates_value(data_value,1,20,"Maximum Workers");
 		}
 		else if(div_id == "port_div")
-		{			
+		{
 			if(validates_presence(data_value,"Port Number"))		
 				if(validates_number(data_value,"Port Number"))
 					validates_value(data_value,1,65535,"Port Number");
 		}
+		else if(div_id == "ssl_port_div")
+		{
+			if(validates_presence(data_value,"SSL Port Number"))
+				if(validates_number(data_value,"SSL Port Number"))
+					validates_value(data_value,1,65535,"SSL Port Number");
+		}
+		else if(div_id == "certificate_div")
+		{
+			validates_presence(data_value,"Certificate Path");
+		}
+		else if(div_id == "key_div")
+		{
+			validates_presence(data_value,"Key Path");
+		}
 	}
-	
+
 	var div =	document.getElementById(div_id);		
 	if(temp.length > 0)
 	{				
