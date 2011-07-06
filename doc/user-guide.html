@@ -630,7 +630,7 @@ SSL support.
 </div>
 <h2 id="_supported_operating_systems">2. Supported Operating Systems</h2>
 <div class="sectionbody">
-<div class="paragraph"><p>WebROaR has been tested on Ubuntu 8.10/9.04/9.10/10.04, Debian 5 (64 Bit),
+<div class="paragraph"><p>WebROaR has been tested on Ubuntu 8.10/9.04/9.10/10.04/10.10, Debian 5 (64 Bit),
 Mac OS X (v10.5 &amp; v10.6), Arch Linux 2009.08 and Cent OS 5.2. Basically, it
 should be able to run on any *IX OS.</p></div>
 <div class="paragraph"><p>Currently it does not support Microsoft&#174; Windows.</p></div>
@@ -898,7 +898,8 @@ rubygems version or any other reason), you can install the following dependent
 </p>
 <div class="literalblock">
 <div class="content">
-<pre><tt>calendar_date_select, rack, rake, rspec, sqlite3-ruby, starling, will_paginate</tt></pre>
+<pre><tt>rails-2.3.9, calendar_date_select, rake, rspec, sqlite3, starling,
+will_paginate, mini_magick</tt></pre>
 </div></div>
 </li>
 <li>
@@ -916,16 +917,7 @@ dump file would be created in /tmp if <em>gcore</em> is available on that machin
 </p>
 </li>
 </ul></div>
-<h3 id="_know_issue">3.4. Know Issue</h3><div style="clear:left"></div>
-<div class="ulist"><ul>
-<li>
-<p>
-WebROaR with SSL build crashes on Ubuntu 10.04 upon execution of
-<strong>gnutls_handshake</strong> by secure connection.
-</p>
-</li>
-</ul></div>
-<h3 id="_setting_up_database_for_server_admin_panel">3.5. Setting up database for server admin panel</h3><div style="clear:left"></div>
+<h3 id="_setting_up_database_for_server_admin_panel">3.4. Setting up database for server admin panel</h3><div style="clear:left"></div>
 <div class="paragraph"><p>The server&#8217;s admin panel itself is a Ruby on Rails&#8482; web application, and by
 default uses sqlite as it&#8217;s database. You can edit
 <strong>admin_panel/config/database.yml</strong> to setup a database of your liking and
@@ -1301,70 +1293,65 @@ Build Tests
 <h3 id="_webroar_help">10.1. webroar help</h3><div style="clear:left"></div>
 <div class="listingblock">
 <div class="content">
-<pre><tt>  WebROaR - Ruby Application Server
+<pre><tt>  Usage:
+    webroar [-v | --version] [-h | --version] COMMAND [ARGS]
 
-    Usage:
-      webroar -h/--help
-      webroar -v/--version
-      webroar command [argument] [options...]
-
-    Examples:
-      webroar install
-      webroar help
-
-    Further help:
-      webroar help commands      list all 'webroar' commands
-      webroar help &lt;COMMAND&gt;     show help on COMMAND</tt></pre>
-</div></div>
-<h3 id="_webroar_help_commands">10.2. webroar help commands</h3><div style="clear:left"></div>
-<div class="listingblock">
-<div class="content">
-<pre><tt>    install            Install the server
-    uninstall          Uninstall the server
-
-    start [APPNAME]    Start the server or an application
-    stop [APPNAME]     Stop the server or an application
-    restart [APPNAME]  Restart the server or an application
-
-    add APPNAME        Deploy an application on server
-    remove APPNAME     Remove an application from server
-
-    test               Run the test suite
+  The available webroar commands are:
+    install       Install the server
+    uninstall     Uninstall the server
+    start         Start the server or an application
+    stop          Stop the server or an application
+    restart       Restart the server or an application
+    add           Deploy an application on the server
+    remove        Remove an application from the server
+    test          Run the test suite
 
   For help on a particular command, use 'webroar help COMMAND'.</tt></pre>
 </div></div>
-<h3 id="_webroar_install">10.3. webroar install</h3><div style="clear:left"></div>
+<h3 id="_webroar_install">10.2. webroar install</h3><div style="clear:left"></div>
 <div class="listingblock">
 <div class="content">
 <pre><tt>  Usage:
-    webroar install [options]
+    webroar install [-s] [ -L&lt;library path&gt;] [ -I&lt;include path&gt;] [-d] [ -i |
+                    [ --no-import] [ -P&lt;port&gt;] [ -u&lt;user&gt;] [-p&lt;password&gt;] ]
 
   Options:
-    -L                     Additional library paths to be used for linking of
-                           the server
-    -I                     Additional include paths to be used for compiling of
-                           the server
-    -s, --ssl-support      Install the server with SSL support
-    -d, --debug-build      Compile the server as a debug build to output
-                           extremely verbose logs
+    -L
+        Additional library paths to be used for linking of the server
+
+    -I
+        Additional include paths to be used for linking of the server
+
+    -s, --ssl-support
+        Install the server with SSL support
+
+    -d, --debug-build
+        Compile the server as a debug build to output extremely verbose logs
 
   The following options would make the install non-interactive by suppressing
   the questions prompted by the installer
 
-    -P, --port             Server port number
-    -i, --import           Import configuration, logs and admin panel data from
-                           the previous installation
-        --no-import        Do not import configuration, logs and admin panel
-                           data from the previous installation
-    -u, --username         Username for the administrator account of server's
-                           admin panel
-    -p, --password         Password for the administrator account of server\'s
-                           admin panel
+    -P, --port
+        Server port number
+
+    -i, --import
+        Import configuration, logs and admin panel data from the previous
+        installation
+
+    --no-import
+        Do not import configuration, logs and admin panel data from the previous
+        installation
+
+    -u, --username
+        Username for the administrator account of server's admin panel
+
+    -p, --password
+        Password for the administrator account of server's admin panel
 
   Summary:
     Install the server</tt></pre>
 </div></div>
-<h3 id="_webroar_uninstall">10.4. webroar uninstall</h3><div style="clear:left"></div>
+<h3 id="_webroar_uninstall">10.3. webroar uninstall</h3><div style="clear:left"></div>
 <div class="listingblock">
 <div class="content">
 <pre><tt>  Usage:
@@ -1373,14 +1360,15 @@ Build Tests
   Summary:
     Uninstall the server</tt></pre>
 </div></div>
-<h3 id="_webroar_start">10.5. webroar start</h3><div style="clear:left"></div>
+<h3 id="_webroar_start">10.4. webroar start</h3><div style="clear:left"></div>
 <div class="listingblock">
 <div class="content">
 <pre><tt>  Usage:
-    webroar start [APPNAME ...]
+    webroar start [&lt;app(s)&gt;]
 
   Arguments:
-    APPNAME        Name of the application
+    &lt;app(s)&gt;
+        Name of the application(s)
 
   Summary:
     Start the server or an application
@@ -1389,120 +1377,150 @@ Build Tests
     'start' command without any arguments starts the server. One can start
     multiple applications together by passing multiple names.</tt></pre>
 </div></div>
-<h3 id="_webroar_stop">10.6. webroar stop</h3><div style="clear:left"></div>
+<h3 id="_webroar_stop">10.5. webroar stop</h3><div style="clear:left"></div>
 <div class="listingblock">
 <div class="content">
 <pre><tt>  Usage:
-    webroar stop [APPNAME ...]
+    webroar stop [&lt;app(s)&gt;]
 
   Arguments:
-    APPNAME        Name of the application
+    &lt;app(s)&gt;
+        Name of the application(s)
 
   Summary:
     Stop the server or an application
 
   Description:
-    'stop' command without any arguments stops the server. One can stop multiple
-    applications together by passing multiple names.</tt></pre>
+    'stop' command without any arguments stops the server. One can stop
+    multiple applications together by passing multiple names.</tt></pre>
 </div></div>
-<h3 id="_webroar_restart">10.7. webroar restart</h3><div style="clear:left"></div>
+<h3 id="_webroar_restart">10.6. webroar restart</h3><div style="clear:left"></div>
 <div class="listingblock">
 <div class="content">
 <pre><tt>  Usage:
-    webroar restart [APPNAME ...]
+    webroar restart [&lt;app(s)&gt;]
 
   Arguments:
-    APPNAME        Name of the application
+    &lt;app(s)&gt;
+        Name of the application(s)
 
   Summary:
     Restart the server or an application
 
   Description:
-    'restart' command without any arguments restarts the server. One can restart
-    multiple applications together by passing multiple names.</tt></pre>
+    'restart' command without any arguments restarts the server. One can
+    restart multiple applications together by passing multiple names.</tt></pre>
 </div></div>
-<h3 id="_webroar_add">10.8. webroar add</h3><div style="clear:left"></div>
+<h3 id="_webroar_add">10.7. webroar add</h3><div style="clear:left"></div>
 <div class="listingblock">
 <div class="content">
 <pre><tt>  Usage:
-    webroar add APPNAME -R ... -D ... -U ... [options]
+    webroar add [&lt;app&gt;] [ -R] [ -D] [ -U] [ -T] [ -E] [ -A] [ -N] [ -X]
 
   Arguments:
-    APPNAME       Name of the application
+    &lt;app&gt;
+        Name of the application
 
   Options:
-    -R, --resolver
-          Resolver to identify the application. Set it to '/' if you would like
-          to run the application on the root domain. e.g. http://yourserver:port/.
-          Else set the relevant base URI with which you would like to access the
-          application, e.g. '/app1' if you want the application to be accessible
-          via http://yourserver:port/app1.
-          If you would like to set a virtual host for your application e.g.
-          www.company1.com, please specify it here. You can also host this
-          application on a particular subdomain e.g. app1.company1.com.
-          Wildcard '*' can also be used in defining the virtual host name,
-          but it should only be used either at the start or the end. Prefix the
-          virtual host name with tilde(~), if a wildcard is used in defining it.
-          e.g. (i) ~*.server.com (ii) ~www.server.* (iii) ~*.server.*
-    -D, --path
-          Complete path for your application root directory: e.g.
-          /home/someuser/webapps/app1
-    -U, --run-as-user
-          Name of the user with whose privileges you would like to run the
-          application (root can be dangerous!). This user should have all the
-          necessary permissions to get your web application working properly
-          (e.g. write access on required files and directories etc)
+    The following parameters are mandatory, if the current directory would not
+    be the Rails or Rack root directory
 
-  The following parameters are optional
+    -R, --resolver
+        Resolver to identify the application. Set it to '/' if you would like
+        to run the application on the root domain. e.g. http://yourserver:port/.
+        (default: /&lt;app&gt;)
+
+        Else set the relevant base URI with which you would like to access the
+        application, e.g. '/app1' if you want the application to be accessible
+        via http://yourserver:port/app1.
+
+        If you would like to set a virtual host for your application e.g.
+        www.company1.com, please specify it here. You can also host this
+        application on a particular subdomain e.g. app1.company1.com. Wildcard
+        '*' can also be used in defining the virtual host name, but it should
+        only be used either at the start or the end. Prefix the virtual host
+        name with tilde(~), if a wildcard is used in defining it.
+        e.g. (i) ~*.server.com (ii) ~www.server.* (iii) ~*.server.*
+
+    -D, --path
+        Complete path for your application root directory: e.g. /home/someuser/webapps/app1
+        (default: current directory)
+
+    -U, --run-as-user
+        Name of the user with whose privileges you would like to run the
+        application (root can be dangerous!). This user should have all the
+        necessary permissions to get your web application working properly
+        (e.g. write access on required files and directories etc)
+        (default: Owner of 'config/environment.rb' or 'config.ru' file)
+
+    The following parameters are optional
 
     -T, --type
-          Type of the application either rack or rails (default: rails)
+        Type of the application either rack or rails (default: rails)
+
     -E, --environment
-          Environment in which you want to run the application
-          (default: production)
+        Environment in which you want to run the application (default: production)
+
     -A, --analytics
-          Enable analytics to get detailed numbers about the run time
-          performance of the application. This number gathering adds a very
-          small overhead on your application
+        Enable analytics to get detailed numbers about the run time performance
+        of the application. This number gathering adds a very small overhead on
+        your application
+
     -N, --min-workers
-          Minimum number of worker processes that should run for this deployed
-          application. Multiple worker instances help in processing a higher
-          number of concurrent user requests simultaneously. The server would
-          always ensure at least these many worker processes run for this
-          application (default: 4)
+        Minimum number of worker processes that should run for this deployed
+        application. Multiple worker instances help in processing a higher number
+        of concurrent user requests simultaneously. The server would always
+        ensure at least these many worker processes run for this application
+       (default: 4)
+
     -X, --max-workers
-          Maximum number of worker processes that should run for this deployed
-          application. Multiple worker instances help in processing a higher
-          number of concurrent user requests simultaneously. The server would
-          ensure that maximum only these many worker processes run for this
-          application (default: 8)
+        Maximum number of worker processes that should run for this deployed
+        application. Multiple worker instances help in processing a higher
+        number of concurrent user requests simultaneously. The server would
+        ensure that maximum only these many worker processes run for this
+        application (default: 8)
 
   Summary:
-    Deploy (and start) a new application on the server.</tt></pre>
+    Deploy (and start) a new application on the server.
+
+  Description:
+    If application name is not passed, it would look for 'config/environment.rb'
+    or 'config.ru' file in the current directory. If any one of the files found,
+    it passes name of the current directory as an application name.</tt></pre>
 </div></div>
-<h3 id="_webroar_remove">10.9. webroar remove</h3><div style="clear:left"></div>
+<h3 id="_webroar_remove">10.8. webroar remove</h3><div style="clear:left"></div>
 <div class="listingblock">
 <div class="content">
 <pre><tt>  Usage:
-    webroar remove APPNAME
+    webroar remove [&lt;app&gt;]
 
   Arguments:
-    APPNAME        Name of the application
+    &lt;app&gt;
+        Name of the application
 
   Summary:
-    Remove the specified application from the server.</tt></pre>
+    Remove the specified application from the server.
+
+  Description:
+    If application name is not passed, it would look for 'config/environment.rb'
+    or 'config.ru' file in the current directory. If any one of the files found,
+    it passes name of the current directory as an application name.</tt></pre>
 </div></div>
-<h3 id="_webroar_test">10.10. webroar test</h3><div style="clear:left"></div>
+<h3 id="_webroar_test">10.9. webroar test</h3><div style="clear:left"></div>
 <div class="listingblock">
 <div class="content">
 <pre><tt>  Usage:
-    webroar test [options]
+    webroar test [ -r&lt;report dir&gt;] [ -d] [ -l]
 
   Options:
-    -r, --report-dir DIR    Report directory
-    -d, --debug-build       Compile the server as a debug build to output
-    extremely verbose logs
-    -l, --load-test         Also run the load tests
+    -r, --report-dir
+        Report directory
+
+    -d, --debug-build
+        Compile the server as a debug build to output extremely verbose logs
+
+    -l, --load-test
+        Also run the load tests
 
   Summary:
     Run the test suite</tt></pre>
@@ -1512,7 +1530,7 @@ Build Tests
 <div id="footnotes"><hr /></div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2010-08-09 16:58:48 IST
+Last updated 2011-07-06 17:42:07 IST
 </div>
 </div>
 </body>

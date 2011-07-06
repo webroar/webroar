@@ -30,7 +30,7 @@ Ruby on Rails applications.
 
 == Supported Operating Systems ==
 
-WebROaR has been tested on Ubuntu 8.10/9.04/9.10/10.04, Debian 5 (64 Bit), 
+WebROaR has been tested on Ubuntu 8.10/9.04/9.10/10.04/10.10, Debian 5 (64 Bit), 
 Mac OS X (v10.5 & v10.6), Arch Linux 2009.08 and Cent OS 5.2. Basically, it 
 should be able to run on any *IX OS.
 
@@ -226,7 +226,8 @@ better.)
 rubygems version or any other reason), you can install the following dependent
  gems individually first:
 
- calendar_date_select, rack, rake, rspec, sqlite3-ruby, starling, will_paginate
+ rails-2.3.9, calendar_date_select, rake, rspec, sqlite3, starling, 
+ will_paginate, mini_magick
 
 - After successful installation of the webroar gem, any errors that occur
 during the setup are saved to the install.log created in the installed gem's 
@@ -236,10 +237,6 @@ directory. This can be used to troubleshoot the issues, if any.
 in */var/log/webroar*. In the unfortunate event of the server crashing, a core 
 dump file would be created in /tmp if 'gcore' is available on that machine.
 
-=== Know Issue ===
- 
-* WebROaR with SSL build crashes on Ubuntu 10.04 upon execution of 
-*gnutls_handshake* by secure connection.
 
 === Setting up database for server admin panel ===
 
@@ -538,37 +535,19 @@ tests:
 === webroar help ===
 
 ----
-  WebROaR - Ruby Application Server
+  Usage:
+    webroar [-v | --version] [-h | --version] COMMAND [ARGS]
 
-    Usage:
-      webroar -h/--help
-      webroar -v/--version
-      webroar command [argument] [options...]
+  The available webroar commands are:
+    install       Install the server
+    uninstall     Uninstall the server
+    start         Start the server or an application
+    stop          Stop the server or an application
+    restart       Restart the server or an application
+    add           Deploy an application on the server
+    remove        Remove an application from the server
+    test          Run the test suite
 
-    Examples:
-      webroar install
-      webroar help
-
-    Further help:
-      webroar help commands      list all 'webroar' commands
-      webroar help <COMMAND>     show help on COMMAND
-----
-
-=== webroar help commands ===
-
-----
-    install            Install the server
-    uninstall          Uninstall the server
-
-    start [APPNAME]    Start the server or an application
-    stop [APPNAME]     Stop the server or an application
-    restart [APPNAME]  Restart the server or an application
-
-    add APPNAME        Deploy an application on server
-    remove APPNAME     Remove an application from server
-
-    test               Run the test suite
-    
   For help on a particular command, use 'webroar help COMMAND'.
 ----
 
@@ -576,29 +555,41 @@ tests:
 
 ----
   Usage:
-    webroar install [options]
+    webroar install [-s] [ -L<library path>] [ -I<include path>] [-d] [ -i |
+                    [ --no-import] [ -P<port>] [ -u<user>] [-p<password>] ]
 
   Options:
-    -L                     Additional library paths to be used for linking of 
-                           the server
-    -I                     Additional include paths to be used for compiling of 
-                           the server
-    -s, --ssl-support      Install the server with SSL support
-    -d, --debug-build      Compile the server as a debug build to output 
-                           extremely verbose logs 
+    -L
+        Additional library paths to be used for linking of the server
+
+    -I
+        Additional include paths to be used for linking of the server
+
+    -s, --ssl-support
+        Install the server with SSL support
+
+    -d, --debug-build
+        Compile the server as a debug build to output extremely verbose logs
 
   The following options would make the install non-interactive by suppressing 
   the questions prompted by the installer
-    
-    -P, --port             Server port number
-    -i, --import           Import configuration, logs and admin panel data from 
-                           the previous installation
-        --no-import        Do not import configuration, logs and admin panel 
-                           data from the previous installation
-    -u, --username         Username for the administrator account of server's 
-                           admin panel
-    -p, --password         Password for the administrator account of server\'s 
-                           admin panel
+
+    -P, --port
+        Server port number
+
+    -i, --import
+        Import configuration, logs and admin panel data from the previous 
+        installation
+
+    --no-import
+        Do not import configuration, logs and admin panel data from the previous 
+        installation
+
+    -u, --username
+        Username for the administrator account of server's admin panel
+
+    -p, --password
+        Password for the administrator account of server's admin panel
 
   Summary:
     Install the server
@@ -618,13 +609,14 @@ tests:
 
 ----
   Usage:
-    webroar start [APPNAME ...] 
+    webroar start [<app(s)>]
 
   Arguments:
-    APPNAME        Name of the application
+    <app(s)>
+        Name of the application(s)
 
   Summary:
-    Start the server or an application 
+    Start the server or an application
 
   Description:
     'start' command without any arguments starts the server. One can start
@@ -635,120 +627,150 @@ tests:
 
 ----
   Usage:
-    webroar stop [APPNAME ...] 
+    webroar stop [<app(s)>]
 
   Arguments:
-    APPNAME        Name of the application
+    <app(s)>
+        Name of the application(s)
 
   Summary:
-    Stop the server or an application 
+    Stop the server or an application
 
   Description:
-    'stop' command without any arguments stops the server. One can stop multiple
-    applications together by passing multiple names.
+    'stop' command without any arguments stops the server. One can stop
+    multiple applications together by passing multiple names.
 ----
 
 === webroar restart ===
 
 ----
   Usage:
-    webroar restart [APPNAME ...] 
+    webroar restart [<app(s)>]
 
   Arguments:
-    APPNAME        Name of the application
+    <app(s)>
+        Name of the application(s)
 
   Summary:
-    Restart the server or an application 
+    Restart the server or an application
 
   Description:
-    'restart' command without any arguments restarts the server. One can restart
-    multiple applications together by passing multiple names.
+    'restart' command without any arguments restarts the server. One can
+    restart multiple applications together by passing multiple names.
 ----
 
 === webroar add ===
 
 ----
   Usage:
-    webroar add APPNAME -R ... -D ... -U ... [options]
+    webroar add [<app>] [ -R] [ -D] [ -U] [ -T] [ -E] [ -A] [ -N] [ -X]
 
   Arguments:
-    APPNAME       Name of the application
+    <app>
+        Name of the application
 
   Options:
-    -R, --resolver
-          Resolver to identify the application. Set it to '/' if you would like 
-          to run the application on the root domain. e.g. http://yourserver:port/.
-          Else set the relevant base URI with which you would like to access the 
-          application, e.g. '/app1' if you want the application to be accessible 
-          via http://yourserver:port/app1.
-          If you would like to set a virtual host for your application e.g. 
-          www.company1.com, please specify it here. You can also host this 
-          application on a particular subdomain e.g. app1.company1.com. 
-          Wildcard '*' can also be used in defining the virtual host name, 
-          but it should only be used either at the start or the end. Prefix the 
-          virtual host name with tilde(~), if a wildcard is used in defining it. 
-          e.g. (i) ~*.server.com (ii) ~www.server.* (iii) ~*.server.*
-    -D, --path
-          Complete path for your application root directory: e.g. 
-          /home/someuser/webapps/app1
-    -U, --run-as-user
-          Name of the user with whose privileges you would like to run the 
-          application (root can be dangerous!). This user should have all the 
-          necessary permissions to get your web application working properly 
-          (e.g. write access on required files and directories etc)
+    The following parameters are mandatory, if the current directory would not
+    be the Rails or Rack root directory
 
-  The following parameters are optional
+    -R, --resolver
+        Resolver to identify the application. Set it to '/' if you would like
+        to run the application on the root domain. e.g. http://yourserver:port/.
+        (default: /<app>)
+
+        Else set the relevant base URI with which you would like to access the
+        application, e.g. '/app1' if you want the application to be accessible
+        via http://yourserver:port/app1.
+
+        If you would like to set a virtual host for your application e.g.
+        www.company1.com, please specify it here. You can also host this
+        application on a particular subdomain e.g. app1.company1.com. Wildcard
+        '*' can also be used in defining the virtual host name, but it should
+        only be used either at the start or the end. Prefix the virtual host
+        name with tilde(~), if a wildcard is used in defining it.
+        e.g. (i) ~*.server.com (ii) ~www.server.* (iii) ~*.server.*
+
+    -D, --path
+        Complete path for your application root directory: e.g. /home/someuser/webapps/app1
+        (default: current directory)
+
+    -U, --run-as-user
+        Name of the user with whose privileges you would like to run the
+        application (root can be dangerous!). This user should have all the
+        necessary permissions to get your web application working properly
+        (e.g. write access on required files and directories etc)
+        (default: Owner of 'config/environment.rb' or 'config.ru' file)
+
+    The following parameters are optional
 
     -T, --type
-          Type of the application either rack or rails (default: rails)
+        Type of the application either rack or rails (default: rails)
+
     -E, --environment
-          Environment in which you want to run the application 
-          (default: production)
+        Environment in which you want to run the application (default: production)
+
     -A, --analytics
-          Enable analytics to get detailed numbers about the run time 
-          performance of the application. This number gathering adds a very 
-          small overhead on your application
+        Enable analytics to get detailed numbers about the run time performance
+        of the application. This number gathering adds a very small overhead on
+        your application
+
     -N, --min-workers
-          Minimum number of worker processes that should run for this deployed 
-          application. Multiple worker instances help in processing a higher 
-          number of concurrent user requests simultaneously. The server would 
-          always ensure at least these many worker processes run for this 
-          application (default: 4)
+        Minimum number of worker processes that should run for this deployed
+        application. Multiple worker instances help in processing a higher number 
+        of concurrent user requests simultaneously. The server would always
+        ensure at least these many worker processes run for this application
+       (default: 4)
+
     -X, --max-workers
-          Maximum number of worker processes that should run for this deployed 
-          application. Multiple worker instances help in processing a higher 
-          number of concurrent user requests simultaneously. The server would 
-          ensure that maximum only these many worker processes run for this 
-          application (default: 8)
+        Maximum number of worker processes that should run for this deployed
+        application. Multiple worker instances help in processing a higher
+        number of concurrent user requests simultaneously. The server would
+        ensure that maximum only these many worker processes run for this
+        application (default: 8)
 
   Summary:
     Deploy (and start) a new application on the server.
+
+  Description:
+    If application name is not passed, it would look for 'config/environment.rb'
+    or 'config.ru' file in the current directory. If any one of the files found,
+    it passes name of the current directory as an application name.
 ----
 
 === webroar remove ===
 
 ----
   Usage:
-    webroar remove APPNAME
+    webroar remove [<app>]
 
   Arguments:
-    APPNAME        Name of the application
+    <app>
+        Name of the application
 
   Summary:
     Remove the specified application from the server.
+
+  Description:
+    If application name is not passed, it would look for 'config/environment.rb'
+    or 'config.ru' file in the current directory. If any one of the files found,
+    it passes name of the current directory as an application name.
 ----
 
 === webroar test ===
 
 ----
   Usage:
-    webroar test [options] 
+    webroar test [ -r<report dir>] [ -d] [ -l]
 
   Options:
-    -r, --report-dir DIR    Report directory
-    -d, --debug-build       Compile the server as a debug build to output 
-    extremely verbose logs
-    -l, --load-test         Also run the load tests
+    -r, --report-dir
+        Report directory
+
+    -d, --debug-build
+        Compile the server as a debug build to output extremely verbose logs
+
+    -l, --load-test
+        Also run the load tests
 
   Summary:
     Run the test suite
