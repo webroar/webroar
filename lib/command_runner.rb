@@ -55,16 +55,19 @@ module Webroar
     -d, --debug-build
         Compile the server as a debug build to output extremely verbose logs
 
-  The following options would make the install non-interactive by suppressing the questions prompted by the installer
+  The following options would make the install non-interactive by suppressing 
+  the questions prompted by the installer
 
     -P, --port
         Server port number
 
     -i, --import
-        Import configuration, logs and admin panel data from the previous installation
+        Import configuration, logs and admin panel data from the previous 
+	installation
 
     --no-import
-        Do not import configuration, logs and admin panel data from the previous installation
+        Do not import configuration, logs and admin panel data from the previous 
+	installation
 
     -u, --username
         Username for the administrator account of server's admin panel
@@ -210,7 +213,7 @@ module Webroar
 
     -D, --path
         Complete path for your application root directory: e.g. /home/someuser/webapps/app1
-        (default: current directory>
+        (default: current directory)
 
     -U, --run-as-user
         Name of the user with whose privileges you would like to run the
