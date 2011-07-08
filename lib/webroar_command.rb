@@ -346,7 +346,7 @@ module Webroar
           sleep(1)
 
           # Remove all temporary files
-          FileUtils.rm Dir.glob('/tmp/webroar_*')
+          Webroar::FileHelper.remove('/tmp/webroar_*')
         rescue => err
           puts err
           puts err.backtrace

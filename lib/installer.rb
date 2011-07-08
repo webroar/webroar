@@ -17,7 +17,6 @@
 # along with WebROaR.  If not, see <http://www.gnu.org/licenses/>.
 #
 
-require "fileutils"
 require 'user_interaction'
 
 module Webroar
@@ -393,8 +392,7 @@ module Webroar
 
         # Close the archive file
         saved.close
-
-        FileUtils.mv("tmp.conf", "/etc/newsyslog.conf")
+        Webroar::FileHelper.move("tmp.conf", "/etc/newsyslog.conf")
       end
 
       # Add/Remove log rotate script
@@ -416,6 +414,11 @@ module Webroar
         s['SSL Specification'] = {'ssl_port' => 443, 'ssl_support' => "disabled", 'certificate_file' => nil, 'key_file' => nil} if @ssl
         info = {'Server Specification' => s}
         write_server_config_file(info)
+        
+        # move *.example.yml files to *.yml files in 'conf' folder
+        file = File.join(WEBROAR_ROOT, "conf", "server_internal_config.example.yml")
+        Webroar::FileHelper.move(file, file.gsub(/\.example\.yml$/, '.yml'))
+        Webroar::FileHelper.remove(File.join(WEBROAR_ROOT, "conf", "mail_config.yml"))
       end
 
       def write_server_config_file(info)
@@ -669,13 +672,27 @@ exit 0"
           puts "done."
           return YAML.load(File.open(WEBROAR_CONFIG_FILE))["Server Specification"]["port"]
         end
-
-        FileUtils.copy(File.join(import_dir,"src","admin_panel","config","user.yml"), ADMIN_USER_FILE)
-        FileUtils.copy(File.join(import_dir,"src","admin_panel","config","database.yml"), DB_CONFIG_FILE)
+        
+        # Copy all *.yml files from older version.
+        Webroar::FileHelper.copy(File.join(import_dir,"src","admin_panel","config","user.yml"), ADMIN_USER_FILE)
+        Webroar::FileHelper.copy(File.join(import_dir,"src","admin_panel","config","database.yml"), DB_CONFIG_FILE)
+        Webroar::FileHelper.copy(File.join(import_dir,"conf","mail_conf.yml"), File.join(WEBROAR_ROOT, "conf"))
+        
+        # Copy conf/server_internal_config.yml file.
+        example = YAML.load(File.open(File.join(WEBROAR_ROOT, "conf", "server_internal_config.example.yml")))
+        old = YAML.load(File.open(File.join(import_dir, "conf", "server_internal_config.yml")))
+        if example and old
+          new = example.merge(old).delete_if{ |key, value| !example.has_key?(key)}
+          dump = YAML::dump(new).gsub(/: true/, ': on').gsub(/: false/, ': off')
+          file = File.open(File.join(WEBROAR_ROOT, "conf", "server_internal_config.yml"), "w")
+          file.puts dump
+          file.close
+        end
+         
         configuration = YAML.load(File.open(DB_CONFIG_FILE))["production"]
         if configuration['adapter'] == 'sqlite3' and configuration['database'][0,1] != "/"
           db = File.join(import_dir, "src", "admin_panel", configuration['database'])
-          FileUtils.copy(db, File.join(ADMIN_PANEL_DIR, configuration['database'])) if File.exist?(db)
+          Webroar::FileHelper.copy(db, File.join(ADMIN_PANEL_DIR, configuration['database']))
         end
         puts "done."
         return YAML.load(File.open(WEBROAR_CONFIG_FILE))["Server Specification"]["port"]

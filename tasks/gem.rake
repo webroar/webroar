@@ -76,6 +76,7 @@ spec = Gem::Specification.new do |s|
                                                                     File.join('src', 'admin_panel', 'test.log'),
                                                                     File.join('src', 'admin_panel', 'test_summary'),
                                                                     File.join('conf', 'mail_config.yml'),
+                                                                    File.join('conf', 'server_internal_config.yml'),
                                                                     File.join('conf', 'config.yml'))
     
     s.test_files = FileList[File.join('test', '**', '*.{c,h,yml,rb,js,css,html,txt}'),

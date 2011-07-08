@@ -1,0 +1,42 @@
+# Server’s Internal Configuration
+
+starling:
+  host: 127.0.0.1  # Host that runs the starling message queue
+  port: 22122      # Port number of the starling message queue
+  profiler_queue_name: profiler_queue  # Queue to read/write profiling data
+  exception_queue_name: exception_queue # Queue to read/write exceptions
+  pid_queue_name: pid_queue # Queue to dispatch worker process id
+  max_queue_items: 30000 # Maximum number of unprocessed messages in queue. One message is approximately 1 Kb
+  
+webroar:
+  analyzer: on     # Flag to set server analytics on/off
+  admin_panel: on  # Flag to start Admin Panel with server
+
+webroar_analyzer_script:
+  pid_file: /var/run/webroar_analyzer.pid   # File to store pid of analyzer
+  daemonize: true                           # true or false
+  log_file: /var/log/webroar/analyzer.log   # Log file
+  sampling_rate: 1                          # Sampling time (in mins)
+  environment: production                   # to choose the database specific to environment
+
+## Application Configuration ##
+Application:
+  message_queue_size: 2048  # Queue size of pending requests for each application. Default value is 2048
+  maximum_request_ratio: 1  # Ratio of pending requests to active workes to create new worker. Default value is 1
+  minimum_request_ratio: 3  # Ratio of pending requests to active workes to destroy free worker. Default value is 3
+  high_load_time: 2         # Number of seconds to check high load before creating new worker. Default value is 2
+  low_load_time: 600        # Number of seconds to check low load before destroying free worker. Default value is 600
+  maximum_hosts: 16         # Maximum number of hosts allowed. Default value is 16
+
+## Worker Configuration ##
+Worker:
+  maximum_request_body_size: 65536  # If the request body is larger than this size, use file to read/write request body. Default value is 65536
+  maximum_workers: 20               # Maximum number of workers allowed. Default value is 20
+  pending_workers: 10               # Maximum number of pending workers. Default value is 10
+  add_trials: 3                     # Number of consecutive tries to add worker. Default value is 3
+  add_wait: 1800                    # Number of seconds to wait for creating new worker, if all consecutive trials are failed. Default value is 1800
+  add_timeout: 25                   # Number of seconds to wait for a response form newly created worker. Default value is 25. Set value to 0 to disable add timeout.
+  kill_timeout: 10                  # Number of seconds to wait before killing identified stuck worker. Default value is 10
+  idle_time: 60                     # If worker is unable to process request within this time, sends PING signal. Default value is 60. Set value to 0 to disable idle timer.
+  ping_timeout: 15                  # Number of seconds to wait for a response of PING signal. Default value is 15
+  ping_trials: 2                    # Number of PING signals to identify stuck worker. Default value is 2  
