@@ -138,7 +138,7 @@ class Mailer < ActionMailer::Base
     body << "Name : #{report_bug[:name]}\nEmail Address : #{report_bug[:email]}\n"
     begin
       deliver_send_email(subject,body,from,"support@webroar.in")
-      "<span style='color:green;'>Thank You for reporting the issue!</span>"
+      "<span style='color:green;'>Thank You for reporting the issue, We'll contact you shortly.</span>"
     rescue Exception => exception
       return self.parse_exception(exception),''
     end
