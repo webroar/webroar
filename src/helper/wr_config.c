@@ -25,7 +25,7 @@
 #include <sys/socket.h>
 
 #define SERVER_NAME       "WebROaR"
-#define SERVER_VERSION    "0.5.1"
+#define SERVER_VERSION    "0.6.0"
  
 #define FILE_PATH         "FILE_PATH"
 #define CONN_ID           "CONNECTION_ID"
