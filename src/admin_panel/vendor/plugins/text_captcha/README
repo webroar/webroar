@@ -1,0 +1,69 @@
+Captcha
+=======
+
+It is text captcha validation plugin for Rails applications. It creates 
+random question and validates the captcha answer after the submition of the
+form.
+
+Installation
+============
+
+Text Captcha installation process.
+
+    script/plugin install git://github.com/hokam/text_captcha.git
+
+Uninstallation
+==============
+
+    script/plugin remove text_captcha
+
+
+Usage
+=====
+
+After installation process you need to add 'before_filter' callback in your
+controller to create question captcha before the processing of specified actions.
+
+Suppose you have a CommentsController in which you want to create capthca question
+for "new" action so just add the following lines in your controller.
+
+class CommentsController << ActionController::Base
+  before_filter :create_question_captcha, :only => [:new]
+  # ....
+  # ....
+end
+
+And for validation of captcha text you need to call validate_captcha funtion in
+the required action. Lets say in "create" action of CommentsController you want 
+to apply captcha validation, so do the following addition in your 'create' action.
+
+
+class CommentsController << ActionController::Base
+  before_filter :create_question_captcha, :only => [:new]
+
+  def new
+    # action related data
+  end
+  # other action methods
+
+  def create
+    if validate_captcha_answer
+      # ........
+    else
+      # ........
+    end
+  end
+end
+
+And add the following line in your html view to create captcha image.
+
+<%= text_captcha_tag %>
+
+If captcha validation failes then text captcha plugin set the error message in 
+flash[:notice] variable, so you should use flash[:notice] variable in your form
+for the notification of captcha failure message.
+
+<%= flash[:notice] if flash[:notice] %> 
+
+To read more, use following.
+

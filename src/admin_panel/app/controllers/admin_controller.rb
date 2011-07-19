@@ -26,7 +26,7 @@ class AdminController < ApplicationController
   #before_filter :clear_flash_notice #This methos clear the flash notice messages before navigating to next action.
   protect_from_forgery :only => [:change_password ]
   ssl_required :index, :login, :change_password, :change_password_form if SSL_ON
-  before_filter :create_captcha, :only => [:contact_us]
+  before_filter :create_question_captcha, :only => [:contact_us]
   #This action is to render the login page with the layout index.html.erb.
   #If the user session is already created the it redirects the control to the home page of the admin panel.
   def index
@@ -178,7 +178,7 @@ class AdminController < ApplicationController
     @fb = feedback = params[:feedback]
     message = MailSpecification.validate_feedback_data(feedback)
     if message == ""
-      if validate_captcha
+      if validate_captcha_answer
         @fb = {:name => "" ,:email => "",:message => ""}
         flash[:notice] = Mailer.send_feedback(feedback)
       end
@@ -193,7 +193,7 @@ class AdminController < ApplicationController
     @rb = report_bug = params[:report_bug]
     message = MailSpecification.validate_report_bug_data(report_bug)
     if message == ""
-      if validate_captcha
+      if validate_captcha_answer
         @rb = {:name => "" ,:email => "",:subject => "",:description => ""}
         flash[:notice] = Mailer.send_report_bug(report_bug)
       end

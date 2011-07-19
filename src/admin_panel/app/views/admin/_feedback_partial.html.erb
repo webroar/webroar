@@ -39,9 +39,8 @@
   
           Message<span id = 'needed'>*</span><br>
           <%= text_area :feedback, :message, :value => @fb[:message],:class =>'input_text',:rows => 15%><br><br>
-  
-          Word Verification:  Type the characters you see in the picture below. <br><br>
-          <%= image_captcha_tag %> 
+
+          <%= text_captcha_tag %>
           <p align="center"><%= submit_tag 'Submit'%></p>
         </td>
       </tr>

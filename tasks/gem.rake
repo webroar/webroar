@@ -52,7 +52,6 @@ spec = Gem::Specification.new do |s|
   s.add_dependency 'sqlite3', '>=1.2.3'
   s.add_dependency 'starling', '>=0.10.0'
   s.add_dependency 'will_paginate', '~>2.3.12'
-  s.add_dependency 'mini_magick', '>= 3.3'
   
   s.files = FileList['Rakefile',
     'README',
