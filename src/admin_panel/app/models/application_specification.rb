@@ -30,16 +30,35 @@ class ApplicationSpecification < PseudoModel
   column :type1,        :string
   column :analytics,    :string
   column :environment,  :string
-  column :min_worker, :number
-  column :max_worker, :number
-  validates_presence_of :name, :resolver, :path, :run_as_user, :type1, :environment
-  validates_numericality_of :min_worker, :max_worker, :greater_than_or_equal_to => 1, :less_than_or_equal_to => ALLOWED_MAX_WORKERS
-  validates_format_of :name, :with => /^[A-Za-z0-9_\-]*$/i, :message => " must consist of A-Z, a-z, 0-9 , _ , -  and /."
+  column :min_worker,   :number
+  column :max_worker,   :number
+  
+  validate :name,         :presence => true,
+                          :format => { :with => /^[A-Za-z0-9_\-]*$/i, :message => " must consist of A-Z, a-z, 0-9 , _ , -  and /."},
+                          :length => { :maximum => 30 },
+                          :allow_nil => true
+  validate :resolver,     :presence => true
+  validate :path,         :presence => true
+  validate :run_as_user,  :presence => true,
+                          :length => { :maximum => 30 },
+                          :allow_nil => true
+  validate :type1,        :presence => true
+  validate :environment,  :presence => true,
+                          :length => { :maximum => 30 },
+                          :allow_nil => true
+  validate :min_worker,   :numericality => true, 
+                          :inclusion => { :in => 0..ALLOWED_MAX_WORKERS }
+  validate :max_worker,   :numericality => true, 
+                          :inclusion => { :in => 0..ALLOWED_MAX_WORKERS }
+  
+  #validates_presence_of :name, :resolver, :path, :run_as_user, :type1, :environment
+  #validates_numericality_of :min_worker, :max_worker, :greater_than_or_equal_to => 1, :less_than_or_equal_to => ALLOWED_MAX_WORKERS
+  #validates_format_of :name, :with => /^[A-Za-z0-9_\-]*$/i, :message => " must consist of A-Z, a-z, 0-9 , _ , -  and /."
   #  validates_format_of :path, :with => /^\/.*$/i, :message => "entered is not the complete path for your web application root directory."
-  validates_length_of :name, :maximum => 30, :allow_nil => true
+  #validates_length_of :name, :maximum => 30, :allow_nil => true
   #validates_length_of :path, :maximum => 256
-  validates_length_of :run_as_user, :maximum => 30, :allow_nil => true
-  validates_length_of :environment, :maximum => 30, :allow_nil => true
+  #validates_length_of :run_as_user, :maximum => 30, :allow_nil => true
+  #validates_length_of :environment, :maximum => 30, :allow_nil => true
   #  validates_format_of :baseuri, :with => /^\/[A-Za-z0-9_\-\/]*$/i, :message => "must start with '/' and contains characters A-Z, a-z, 0-9 , _ , -  and /."
   def write
 
