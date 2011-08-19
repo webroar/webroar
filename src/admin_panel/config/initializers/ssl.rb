@@ -16,7 +16,11 @@
 # You should have received a copy of the GNU General Public License
 # along with WebROaR.  If not, see <http://www.gnu.org/licenses/>.
 
-CONF_FILE = File.join(RAILS_ROOT, '..', '..', 'conf', 'config.yml').freeze
+
+
+ADMIN_PANEL_ROOT = File.expand_path('../../../', __FILE__) unless defined?ADMIN_PANEL_ROOT
+
+CONF_FILE  = File.join(ADMIN_PANEL_ROOT,'..','..','conf','config.yml')
 
 server_spec = YAML.load(File.open(CONF_FILE))["Server Specification"]
 

@@ -17,17 +17,19 @@
 # along with WebROaR.  If not, see <http://www.gnu.org/licenses/>.
 
 PREFIX='/admin-panel/'
-if defined? RAILS_ROOT
-  CONFIG_FILE_PATH="#{RAILS_ROOT}/../../conf/config.yml"
-  MAIL_FILE_PATH="#{RAILS_ROOT}/../../conf/mail_config.yml"
-  USERS_FILE_PATH="#{RAILS_ROOT}/config/user.yml"
-end
-SERVER_PORT=3000
-MIN_WORKERS=4
-MAX_WORKERS=8
-SERVER_NAME='WebROaR' 	
-LOG_LEVEL="SEVERE"	
-ACCESS_LOG = "enabled"
+
+ADMIN_PANEL_ROOT = File.expand_path('../../../', __FILE__) unless defined?ADMIN_PANEL_ROOT
+
+CONFIG_FILE_PATH  = File.join(ADMIN_PANEL_ROOT,'..','..','conf','config.yml')
+MAIL_FILE_PATH    = File.join(ADMIN_PANEL_ROOT,'..','..','conf','mail_config.yml')
+USERS_FILE_PATH   = File.join(ADMIN_PANEL_ROOT,'config','user.yml')
+
+SERVER_PORT = 3000
+MIN_WORKERS = 4
+MAX_WORKERS = 8
+SERVER_NAME = 'WebROaR' 	
+LOG_LEVEL   = 'SEVERE'	
+ACCESS_LOG  = 'enabled'
 ALLOWED_MAX_WORKERS = 20
 #session timeout in minutes
 SESSION_TIMEOUT = 10

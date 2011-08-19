@@ -22,7 +22,11 @@ class SignalHelper
   # send signal
   def self.send
     pid_file = nil
-    config = YAML.load(File.open(File.join(RAILS_ROOT, '..', '..', 'conf', 'server_internal_config.yml')))
+    
+    ADMIN_PANEL_ROOT = File.expand_path('../../../', __FILE__) unless defined?ADMIN_PANEL_ROOT
+    conf_file  = File.join(ADMIN_PANEL_ROOT,'..','..','conf','server_internal_config.yml')
+
+    config = YAML.load(conf_file)
     pid_file = config["webroar_analyzer_script"]["pid_file"] if config["webroar_analyzer_script"] and config["webroar_analyzer_script"]["pid_file"]
     unless pid_file
       Logger.erro("Either Webroar Analyzer is not started or 'webroar_analyzer.pid' not found")
