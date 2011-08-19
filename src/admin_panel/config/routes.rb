@@ -1,58 +1,16 @@
-ActionController::Routing::Routes.draw do |map|
-  # The priority is based upon order of creation: first created -> highest priority.
-
-  # Sample of regular route:
-  #   map.connect 'products/:id', :controller => 'catalog', :action => 'view'
-  # Keep in mind you can assign values other than :controller and :action
-
-  # Sample of named route:
-  #   map.purchase 'products/:id/purchase', :controller => 'catalog', :action => 'purchase'
-  # This route can be invoked with purchase_url(:id => product.id)
-
-  # Sample resource route (maps HTTP verbs to controller actions automatically):
-  #   map.resources :products
-
-  # Sample resource route with options:
-  #   map.resources :products, :member => { :short => :get, :toggle => :post }, :collection => { :sold => :get }
-
-  # Sample resource route with sub-resources:
-  #   map.resources :products, :has_many => [ :comments, :sales ], :has_one => :seller
-  
-  # Sample resource route with more complex sub-resources
-  #   map.resources :products do |products|
-  #     products.resources :comments
-  #     products.resources :sales, :collection => { :recent => :get }
-  #   end
-
-  # Sample resource route within a namespace:
-  #   map.namespace :admin do |admin|
-  #     # Directs /admin/products/* to Admin::ProductsController (app/controllers/admin/products_controller.rb)
-  #     admin.resources :products
-  #   end
-
-  # You can have the root of your site routed with map.root -- just remember to delete public/index.html.
-  map.root :controller => "admin",:action=>'index'
-  map.home('/home', {:action=>'home',:controller=>'admin'})
-  map.configuration('/configuration',{:action=>'configuration',:controller=>'admin'})
-  map.analytics('/analytics',{:action=>'index',:controller=>'graph'})
-  map.contact_us('/contact_us',{:action=>'contact_us',:controller=>'admin'})
-  map.settings('/settings',{:action=>'change_password_form',:controller=>'admin'})
-  map.exceptions('/exceptions',{:action=>'index',:controller=>'exceptions'})
-  map.logout('/logout',{:action=>'logout',:controller=>'admin'})
-  map.connect('/configuration/add',{:action=>'add_application_form',:controller=>'application_specification'})
-  map.connect('/configuration/create',{:action=>'add_application',:controller=>'application_specification'})
-  map.connect('/configuration/edit/:id',{:action=>'edit_application_form',:controller=>'application_specification'})
-  map.connect('/configuration/update/:id',{:action=>'edit_application',:controller=>'application_specification'})
-  map.connect('/settings/update',{:action=>'change_password',:controller=>'admin'})
-
-
-
-
-  # See how all your routes lay out with "rake routes"
-
-  # Install the default routes as the lowest priority.
-  # Note: These default routes make all actions in every controller accessible via GET requests. You should
-  # consider removing the them or commenting them out if you're using named routes and resources.
-  map.connect ':controller/:action/:id'
-  map.connect ':controller/:action/:id.:format'
+AdminPanel::Application.routes.draw do
+  match '/' => 'admin#index'
+  match '/home' => 'admin#home', :as => :home
+  match '/configuration' => 'admin#configuration', :as => :configuration
+  match '/analytics' => 'graph#index', :as => :analytics
+  match '/contact_us' => 'admin#contact_us', :as => :contact_us
+  match '/settings' => 'admin#change_password_form', :as => :settings
+  match '/exceptions' => 'exceptions#index', :as => :exceptions
+  match '/logout' => 'admin#logout', :as => :logout
+  match '/configuration/add' => 'application_specification#add_application_form'
+  match '/configuration/create' => 'application_specification#add_application'
+  match '/configuration/edit/:id' => 'application_specification#edit_application_form'
+  match '/configuration/update/:id' => 'application_specification#edit_application'
+  match '/settings/update' => 'admin#change_password'
+  match '/:controller(/:action(/:id))'
 end
