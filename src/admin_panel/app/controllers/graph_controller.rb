@@ -20,7 +20,8 @@
 
 #This controller deals with the graph plotting and retriving the data for the graphs using models.
 #This Controller additionally neads the module for each graph type saved in /lib/graph_controller_extensions.
-Dir["#{RAILS_ROOT}/lib/graph_controller_extensions/*.rb"].each { |extension| require extension}
+
+Dir["#{File.dirname(__FILE__)}/../../lib/graph_controller_extensions/*.rb"].each { |extension| require extension}
 class GraphController < ApplicationController
   before_filter :login_required
   before_filter :clear_flash_notice

@@ -17,8 +17,7 @@
 # You should have received a copy of the GNU General Public License
 # along with WebROaR.  If not, see <http://www.gnu.org/licenses/>.
 #++
-
-require File.join(RAILS_ROOT, "lib", "helper.rb")
+require File.join(File.expand_path('../../../' ,__FILE__), 'lib', 'helper')
 
 class ApplicationSpecification < PseudoModel
   column :app_id,       :string
