@@ -41,5 +41,4 @@ module AdminPanel
     config.filter_parameters += [:password]
   end
 end
-
-#require "asset_tag_helper_ext"
+require "asset_tag_helper_ext"
