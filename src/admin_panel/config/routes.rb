@@ -1,5 +1,5 @@
 AdminPanel::Application.routes.draw do
-  match '/' => 'admin#index'
+  match '/' => 'admin#index', :as => :root
   match '/home' => 'admin#home', :as => :home
   match '/configuration' => 'admin#configuration', :as => :configuration
   match '/analytics' => 'graph#index', :as => :analytics
