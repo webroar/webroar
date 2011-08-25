@@ -17,13 +17,13 @@
 # You should have received a copy of the GNU General Public License
 # along with WebROaR.  If not, see <http://www.gnu.org/licenses/>.
 #++
+ADMIN_PANEL_ROOT = File.expand_path('../../../', __FILE__) unless defined?ADMIN_PANEL_ROOT
 
 class SignalHelper
   # send signal
   def self.send
     pid_file = nil
-    
-    ADMIN_PANEL_ROOT = File.expand_path('../../../', __FILE__) unless defined?ADMIN_PANEL_ROOT
+
     conf_file  = File.join(ADMIN_PANEL_ROOT,'..','..','conf','server_internal_config.yml')
 
     config = YAML.load(conf_file)
