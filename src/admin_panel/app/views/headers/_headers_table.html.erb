@@ -21,16 +21,16 @@
 <table width = 95% >
     <tr>
         <th colspan = 3>
-            Headers&nbsp;&nbsp;&nbsp;<%=link_to_function "Help", :onclick => "addHelp('headers',event)" %>
+            Headers&nbsp;&nbsp;&nbsp;<%= link_to_function "Help", :onclick => "addHelp('headers',event)" %>
         </th>
     </tr>    
     <tr>
         <td width = 40% >
-            Expires&nbsp;&nbsp;&nbsp;<%=link_to_function "Help", :onclick => "addHelp('expires',event)" %>
+            Expires&nbsp;&nbsp;&nbsp;<%= link_to_function "Help", :onclick => "addHelp('expires',event)" %>
         </td>
         <td width = 40% >
             <div id = 'expires_div'>
-                <%= h(expires) %>
+                <%= expires %>
             </div>
         </td>
         <td width = 20% >
@@ -39,17 +39,17 @@
     </tr>
 		<tr>
 			<th colspan = 3>
-				Expires By Type&nbsp;&nbsp;&nbsp;<%=link_to_function "Help", :onclick => "addHelp('expires_by_type',event)" %>
+				Expires By Type&nbsp;&nbsp;&nbsp;<%= link_to_function "Help", :onclick => "addHelp('expires_by_type',event)" %>
 			</th>
 		</tr>
 		<% expires_by_type_array = Headers.get_expires_by_type_array() %>		
 		<% if expires_by_type_array.length > 0 %>
 		<tr>
 			<td class = 'sub_header text_align_center'>
-        Extension&nbsp;&nbsp;&nbsp;<%=link_to_function "Help", :onclick => "addHelp('expires_by_type_ext',event)" %>
+        Extension&nbsp;&nbsp;&nbsp;<%= link_to_function "Help", :onclick => "addHelp('expires_by_type_ext',event)" %>
 			</td>
 			<td class = 'sub_header text_align_center'>
-				Expires&nbsp;&nbsp;&nbsp;<%=link_to_function "Help", :onclick => "addHelp('expires_by_type_expires_value',event)" %>                
+				Expires&nbsp;&nbsp;&nbsp;<%= link_to_function "Help", :onclick => "addHelp('expires_by_type_expires_value',event)" %>                
       </td>
       <td class = 'sub_header text_align_center'></td>
 		</tr>
@@ -57,13 +57,13 @@
 		<% expires_by_type_array.each do |item| %>
 		  <tr>
 		  	<td >
-		  		<%=h item['ext'] %>
+		  		<%= item['ext'] %>
 		  	</td>
 				<td >
-          <%=h item['expires'] %>
+          <%= item['expires'] %>
         </td>
 				<td >
-          <%=link_to_remote "Delete", :update => 'headers_div', :url => {:controller => 'headers', :action => 'delete_expires_by_type', :id => index}, :confirm => "Are you sure to delete?", :oncontextmenu => 'return false;' %>
+          <%= link_to_remote "Delete", :update => 'headers_div', :url => {:controller => 'headers', :action => 'delete_expires_by_type', :id => index}, :confirm => "Are you sure to delete?", :oncontextmenu => 'return false;' %>
         </td>
 		  </tr>
 			<% index += 1%>
@@ -81,7 +81,7 @@
 		<% end %>			
 		<tr>
 			<td align = 'right' colspan='3'>
-				<%=link_to_remote "Add Expires By Type", :update => 'expires_by_type_form', :url => {:controller => 'headers', :action => 'add_expires_by_type_form'} %>			  
+				<%= link_to_remote "Add Expires By Type", :update => 'expires_by_type_form', :url => {:controller => 'headers', :action => 'add_expires_by_type_form'} %>			  
 			</td>
 		</tr>
 </table>

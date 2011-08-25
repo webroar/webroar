@@ -24,7 +24,7 @@
 		<%if @url_rank%>
 			<div class='text_align_right error'><%=@url_rank%><%=@suffix%> in the most time consuming urls list.</div>
 		<%end%>
-		<%= @url_breakup_graph%>
+		<%= raw(@url_breakup_graph)%>
 		<br/>
 		<%if @data_x %>
 		  <%if @data_x.size>0%>

@@ -25,28 +25,28 @@
     </tr>
     <tr>
       <td class="sub_header" width = 20%>Exception Message</td>
-      <td><%=h @exception.exception_message%></td>
+      <td><%= @exception.exception_message%></td>
     </tr>
     <tr>
       <td class="sub_header">Class </td>
-      <td><%=h @exception.exception_class%></td>
+      <td><%= @exception.exception_class%></td>
     </tr>
     <tr>
       <td class="sub_header">URL </td>
-      <td><%=h @exception.controller%>/<%=h @exception.method%></td>
+      <td><%= @exception.controller%>/<%=h @exception.method%></td>
     </tr>
     <tr>
       <td class="sub_header">Occurrences </td>
-      <td><%=h @exception.exceptions_count%></td>
+      <td><%= @exception.exceptions_count%></td>
     </tr>
     <% i = 0 %>
     <%@exception.occurrences.each do |occurrence|%>
     <tr>
       <td class="sub_header">&nbsp;</td>
       <td>
-        <%= h occurrence.wall_time.strftime("%d-%b-%Y %H:%M:%S") %>&nbsp;&nbsp;
-        <%= link_to_remote "<span class='link_button'>Backtrace</span>",:update => 'data_div', :url => { :controller =>"exceptions",:action =>'show_exception_backtrace',:id => @exception.id,:index => i,:app_name => app_name, :status_name => status_name, :page => page}%>&nbsp;&nbsp;
-        <%= link_to_remote "<span class='link_button'>Environment</span>",:update => 'data_div',:url => { :controller =>"exceptions",:action =>'show_exception_environment',:id => @exception.id,:index => i,:app_name => app_name, :status_name => status_name, :page => page}%>
+        <%=  occurrence.wall_time.strftime("%d-%b-%Y %H:%M:%S") %>&nbsp;&nbsp;
+        <%= link_to_remote raw("<span class='link_button'>Backtrace</span>"),:update => 'data_div', :url => { :controller =>"exceptions",:action =>'show_exception_backtrace',:id => @exception.id,:index => i,:app_name => app_name, :status_name => status_name, :page => page}%>&nbsp;&nbsp;
+        <%= link_to_remote raw("<span class='link_button'>Environment</span>"),:update => 'data_div',:url => { :controller =>"exceptions",:action =>'show_exception_environment',:id => @exception.id,:index => i,:app_name => app_name, :status_name => status_name, :page => page}%>
       </td>
       <% i+=1 %>
     </tr>

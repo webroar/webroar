@@ -30,33 +30,33 @@
       </tr>
       <tr>
         <td width = 40% > Port</td>	
-        <td width = 40% ><div id = 'port_div'><%=h(port)%></div></td>
+        <td width = 40% ><div id = 'port_div'><%= port %></div></td>
         <td width = 20% ><%=link_to_remote 'Edit', :update => 'port_div', :url => {:controller => 'server_specification', :action => 'add_text_box', :div_id => 'port_div'}%></td>
       </tr>
       <tr>
         <td >Minimum number of workers&nbsp;&nbsp;&nbsp;
             <%=link_to_function "Help", :onclick => "addHelp('minworker',event)"%>
         </td>
-        <td ><div id = 'min_pro_div'><%=h(min_worker)%></div></td>
+        <td ><div id = 'min_pro_div'><%= min_worker %></div></td>
         <td ><%=link_to_remote 'Edit', :update => 'min_pro_div', :url => {:controller => 'server_specification', :action => 'add_text_box', :div_id => 'min_pro_div'}%></td>
       </tr>
       <tr>
         <td >Maximum number of workers&nbsp;&nbsp;&nbsp;
             <%=link_to_function "Help", :onclick => "addHelp('maxworker',event)"%>
         </td>
-        <td ><div id = 'max_pro_div'><%=h(max_worker)%></div></td>
+        <td ><div id = 'max_pro_div'><%= max_worker %></div></td>
         <td ><%=link_to_remote 'Edit', :update => 'max_pro_div', :url => {:controller => 'server_specification', :action => 'add_text_box', :div_id => 'max_pro_div'}%></td>
       </tr>
       <tr>
         <td >Log Level&nbsp;&nbsp;&nbsp;
             <%=link_to_function "Help", :onclick => "addHelp('log_level',event)"%>
         </td>
-        <td ><div id = 'log_div'><%=h(log_level)%></div></td>
+        <td ><div id = 'log_div'><%= log_level %></div></td>
         <td ><%=link_to_remote 'Edit', :update => 'log_div', :url => {:controller => 'server_specification', :action => 'add_text_box', :div_id => 'log_div'}%></td>
       </tr>
     </table>
     <br/><br/>
-    <%=ssl_block(@info, ssl_port, certificate, key)%>
+    <%=raw(ssl_block(@info, ssl_port, certificate, key))%>
     <div id = 'mail_div'>
       <%if flash[:sendmail_errors]%>
         <%=render :partial => 'mail_specification/sendmail_form'%>

@@ -25,7 +25,7 @@
     <table>
       <%form_for(:user, :url => {:action => 'login'},:html => { :onsubmit => 'return validate_user(this)'}) do%>
         <tr>
-          <th colspan = 2 id = 'error_div' style="padding:0px;"><%if(flash[:notice])%><%=h(flash[:notice])%><%end%></th>
+          <th colspan = 2 id = 'error_div' style="padding:0px;"><%if(flash[:notice])%><%=flash[:notice]%><%end%></th>
         </tr>
         <tr>
           <td><b>User Name</b></td>
