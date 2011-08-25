@@ -40,7 +40,7 @@
           Message<span id = 'needed'>*</span><br>
           <%= text_area :feedback, :message, :value => @fb[:message],:class =>'input_text',:rows => 15%><br><br>
 
-          <%= text_captcha_tag %>
+          <%= raw(text_captcha_tag) %>
           <p align="center"><%= submit_tag 'Submit'%></p>
         </td>
       </tr>

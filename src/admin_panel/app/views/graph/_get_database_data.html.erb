@@ -26,7 +26,7 @@
 
 <%# this section is for Ploting % of time spent in Data Base Layer by an application%>
 <div id = 'percentage_db_usage_graph'>
-	<%=@percentage_db_usage_graph%>
+	<%=raw(@percentage_db_usage_graph)%>
 </div>
 <br/><br/>
 <%=render :partial=>'slider_partial',:locals=>{:count=>'first'}%>

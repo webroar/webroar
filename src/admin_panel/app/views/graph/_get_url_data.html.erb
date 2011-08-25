@@ -23,7 +23,7 @@
 <% else%>
 <%# this section is for Ploting Most Time Consuming url bar Graph for an application%>
 <div id = 'time_consuming_url_graph'>
-  <%=@time_consuming_url_graph%>
+  <%=raw(@time_consuming_url_graph)%>
 </div>
 <div class='text_align_right'><%=link_to_function "Help",:onclick=>"addHelp('most',event)"%></div>
 <br/>
@@ -33,7 +33,7 @@
 <br/>
 <%# this section is for Ploting Url Hits bar Graph for an application%>
 <div id = 'url_hits_graph'>
-  <%=@url_hits_graph%>
+  <%=raw(@url_hits_graph)%>
 </div>
 <div class='text_align_right'><%=link_to_function "Help",:onclick=>"addHelp('hits',event)"%></div>
 <br/>
@@ -43,7 +43,7 @@
 <br/>
 <%# this section is for Ploting Slowest Url bar Graph for an application%>
 <div id = 'slowest_url_graph'>
-  <%=@slowest_url_graph%>
+  <%=raw(@slowest_url_graph)%>
 </div>
 <div class='text_align_right'><%=link_to_function "Help",:onclick=>"addHelp('slowest',event)"%></div>
 <br/>
@@ -53,7 +53,7 @@
 <br/>
 <%# this section is for Ploting Top DataBase Using Urls Usage for an application%>
 <div id = 'db_consuming_url_graph'>
-  <%=@db_consuming_url_graph%>
+  <%=raw(@db_consuming_url_graph)%>
 </div>
 <div class='text_align_right'><%=link_to_function "Help",:onclick=>"addHelp('db',event)"%></div>
 <br/>
