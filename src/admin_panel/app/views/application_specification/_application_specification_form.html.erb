@@ -30,7 +30,16 @@
         <th colspan = 2><%= type %> Application</th>
       </tr>
       <tr>
-        <td colspan = 2 id = 'error_div' style="padding:0px;"><%= error_messages_for 'application_specification' %></td>
+        <td colspan = 2 id = 'error_div' style="padding:0px;">
+          <% if @application_specification.errors.any? %>
+            <h2><%= pluralize(@application_specification.errors.count, "error") %> prohibited this entry from being saved:</h2>
+            <ul>
+              <% @application_specification.errors.full_messages.each do |msg| %>
+                <li><%= msg %></li>
+              <% end %>
+            </ul>
+          <% end %>
+        </td>
       </tr>
       <tr>
         <td>Application Name<span id = 'needed'>*</span></td>
