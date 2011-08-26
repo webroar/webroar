@@ -18,7 +18,7 @@
   # along with WebROaR.  If not, see <http://www.gnu.org/licenses/>.
   #%>
 
-  <%form_for :smtp, :html => { :onsubmit => 'return validate_smtp(this)'},:url => {:controller => 'mail_specification', :action => 'save_smtp_settings'} do%>
+  <%= form_for :smtp, :html => { :onsubmit => 'return validate_smtp(this)'},:url => {:controller => 'mail_specification', :action => 'save_smtp_settings'} do%>
     <table width = 95%>
       <tr>
         <th width = 50% colspan = 2><b>Mail Settings</b>&nbsp;&nbsp;&nbsp;

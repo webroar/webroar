@@ -18,7 +18,7 @@
   # along with WebROaR.  If not, see <http://www.gnu.org/licenses/>.
   #%>
 
-<%remote_form_for :data, :html => { :onsubmit => 'if(!validate_expire_by_type(this)){return false;}'} , :url => {:controller => 'headers', :action => 'save_expires_by_type_value' } do %>
+<%= remote_form_for :data, :html => { :onsubmit => 'if(!validate_expire_by_type(this)){return false;}'} , :url => {:controller => 'headers', :action => 'save_expires_by_type_value' } do %>
   <table width = 100% >
     <tr>
       <td colspan = 3 id='error_div_expire_by_type' style="padding:0px;"><% if @error_message %><%= @error_message %><% end%></td>

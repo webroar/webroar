@@ -23,7 +23,7 @@
   <div id = 'login_logo'></div>	
   <div id = 'login_form'>
     <table>
-      <%form_for(:user, :url => {:action => 'login'},:html => { :onsubmit => 'return validate_user(this)'}) do%>
+      <%= form_for(:user, :url => {:action => 'login'},:html => { :onsubmit => 'return validate_user(this)'}) do%>
         <tr>
           <th colspan = 2 id = 'error_div' style="padding:0px;"><%if(flash[:notice])%><%=flash[:notice]%><%end%></th>
         </tr>

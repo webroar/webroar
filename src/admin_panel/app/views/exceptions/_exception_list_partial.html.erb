@@ -31,7 +31,7 @@
   <h3><center> Permanently Ignored Exceptions</center></h3>
 <% end %>
 <span class='error'><%= flash[:notice] if flash[:notice] %></span>
-<% form_tag '', :id => 'form_exception_list',:name => 'form_exception_list' do -%>
+<%= form_tag '', :id => 'form_exception_list',:name => 'form_exception_list' do -%>
 <table width = 90%>
     <tr>
     	<th  width = 1%> <%= check_box_tag 'check_all', 'check_all', false, :onclick =>"checkAll(this,document.form_exception_list.exception_ids_)" %> </td>
