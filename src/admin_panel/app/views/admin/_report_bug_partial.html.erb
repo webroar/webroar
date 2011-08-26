@@ -22,7 +22,7 @@
 <%if(flash[:notice].class == Array )%>
   <%= flash[:notice][0] %> Please use <%= link_to 'Configuration',configuration_path %> tab to configure mail settings.
 <% else %>
-  <%form_remote_for :report_bug,:update =>"contact_us",:before => 'show_busy_div()',:complete => "hide_busy_div()", :url => {:action => 'send_report_bug' },:html => { :onsubmit => 'if(!validate_report_bug(this)){return false;}'} do%>  
+  <%= form_remote_for :report_bug,:update =>"contact_us",:before => 'show_busy_div()',:complete => "hide_busy_div()", :url => {:action => 'send_report_bug' },:html => { :onsubmit => 'if(!validate_report_bug(this)){return false;}'} do%>  
     <table width='75%'>
       <tr>
         <th colspan='2' >Report Bug / Raise Issue </th>

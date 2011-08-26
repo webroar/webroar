@@ -23,7 +23,7 @@
 <% else %>
   <% url = {:controller => 'application_specification', :action => 'add_application'} %>
 <% end %>
-<%form_remote_for :application_specification, :url => url, :html => { :onsubmit => 'if(!validate_application(this)){return false;}'} ,:before => "show_busy_div()", :complete => "hide_busy_div(request)", :update => "application_specification_form" do %>	
+<%= form_remote_for :application_specification, :url => url, :html => { :onsubmit => 'if(!validate_application(this)){return false;}'} ,:before => "show_busy_div()", :complete => "hide_busy_div(request)", :update => "application_specification_form" do %>	
   <div class = "text_align_center">
     <table width = 60% >
       <tr>

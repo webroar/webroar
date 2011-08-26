@@ -19,7 +19,7 @@
   #%>
 <div id = 'err_msg_div'></div>
 <div class='text_align_right'>
-<%form_remote_tag :update => {:failure => 'err_msg_div', :success => update_div}, :url=>{:controller=>'graph', :action=> submit_action , :app_id=>@app_id} do%>
+<%= form_remote_tag :update => {:failure => 'err_msg_div', :success => update_div}, :url=>{:controller=>'graph', :action=> submit_action , :app_id=>@app_id} do%>
 	From : <%= calendar_date_select_tag "from_date",
                                  session[:from_date].strftime("%B %d, %Y"), 
 	                             :year_range => 3.years.ago..0.years.ago, 
