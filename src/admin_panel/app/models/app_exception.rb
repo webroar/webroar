@@ -27,24 +27,25 @@ class AppException < ActiveRecord::Base
   class << self
     #Gives the array of the five (open|closed|ignored) exceptions starting from the value of varriable 'start' for an application.
     def get_all(exception_status, app_id, page = 1, per_page = 5)
-      paginate(:conditions => ['app_id = ?  and exception_status = ?', app_id, exception_status],
-#               :include => [:latest_detail], # found bug with eager loading, its fetching all the associated records              
-               :page => page, :per_page => per_page)
+      where(:app_id => app_id, 
+            :exception_status => exception_status
+            ).paginate(:page => page, 
+            :per_page => per_page)
     end
     
     # Take App.id as argument and returns count of distinct open exceptions for an Application
     def count_open(app_id)
-      count(:exception_message, :conditions => {:app_id => app_id, :exception_status => OPEN_EXCEPTION})
+      where(:app_id => app_id, :exception_status => OPEN_EXCEPTION).count
     end
     
     # Take App.id as argument and returns count of distinct closed exceptions for an Application
     def count_closed(app_id)
-      count(:exception_message, :conditions => {:app_id => app_id, :exception_status => CLOSED_EXCEPTION})
+      where(:app_id => app_id, :exception_status => CLOSED_EXCEPTION).count
     end
     
     # Take App.id as argument and returns count of distinct ignored exceptions for an Application
     def count_ignored(app_id)
-      count(:exception_message, :conditions => {:app_id => app_id, :exception_status => IGNORED_EXCEPTION})
+      where(:app_id => app_id, :exception_status => IGNORED_EXCEPTION).count
     end
     
     # Update all exceptions status for given exceptions id array
@@ -99,7 +100,7 @@ class AppException < ActiveRecord::Base
 
     # TODO Change function to fetch all exception records if we require all exception fields instead of id only  
     def get_exceptions_by_class(app_id,exception_class)
-      find(:all,:select => :id,:conditions=>["app_id = ? and exception_class = ?",app_id, exception_class])
+      where(:app_id => app_id, :exception_class => exception_class).select(:id)
     end
 
     # This method is used to change status of exceptions by searching the exception with exception_class
@@ -112,10 +113,13 @@ class AppException < ActiveRecord::Base
 
     # This function is used to fetch the first exception record for the given exception_message pattern ,
     # exception_class, exception_details.controller , exception_details.method and app_id
-    def get_exception_for_analyzer(exception_hash,app_id)
-      AppException.find(:first,:conditions => ["exception_message like ? and exception_class = ? and controller = ? and method = ? and app_id = ?" ,
-        exception_hash[:exception_message].split(EXCEPTION_MESSAGE_SPLITER)[0] + "%",exception_hash[:exception_class],
-        exception_hash[:controller],exception_hash[:method],app_id])
+    def get_exception_for_analyzer(exception_hash, app_id)
+      where("exception_message like ? and exception_class = ? and controller = ? and method = ? and app_id = ?",
+                          exception_hash[:exception_message].split(EXCEPTION_MESSAGE_SPLITER)[0] + '%',
+                          exception_hash[:exception_class],
+                          exception_hash[:controller],
+                          exception_hash[:method],
+                          app_id).first
     end
   end
 end

@@ -32,7 +32,7 @@ class App < ActiveRecord::Base
     #This method is used to get the application data.
     #It needs name of the application as an input.
     def get_application_data(name)
-      app = find(:first, :conditions => ['name = ?', name])
+      app = where(:name => name).first 
       return app
     end
 
