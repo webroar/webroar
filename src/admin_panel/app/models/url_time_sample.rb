@@ -73,26 +73,50 @@ class UrlTimeSample < ActiveRecord::Base
     
     #This method is get data of the url hits for an application. This method is called by the get_url_calls_data method.
     def get_url_hits_data(app_id, start_time, end_time)
-      url_samples = find(:all, :select => 'url, sum(number_of_requests) as requests', :conditions => ['app_id = ? and wall_time >= ? and wall_time < ?', app_id, start_time, end_time], :group => 'url', :order => 'requests desc')
-      return	url_samples
+      return select('url, 
+                    sum(number_of_requests) as requests'
+                    ).where('app_id = ? and 
+                    wall_time >= ? and wall_time < ?',
+                    app_id, 
+                    start_time, end_time
+                    ).group(:url
+                    ).order('requests desc')
     end
     
     #This method is get data of the slowest urls of an application. This method is called by the get_url_calls_data method.
     def get_slowest_url_data(app_id, start_time, end_time)
-      url_samples = find(:all, :select=>'url, (sum(total_time) / sum(number_of_requests)) as result', :conditions => ['app_id = ? and wall_time >= ? and wall_time < ?', app_id, start_time, end_time], :group => 'url', :order => 'result desc')
-      return	url_samples
+      return select('url, 
+                    sum(total_time) / sum(number_of_requests) as result'
+                    ).where('app_id = ? and 
+                    wall_time >= ? and wall_time < ?',
+                    app_id, 
+                    start_time, end_time
+                    ).group(:url
+                    ).order('result desc')
     end
     
     #This method is get data of the time consuming urls of an application. This method is called by the get_url_calls_data method.
     def get_time_consuming_url_data(app_id, start_time, end_time)
-      url_samples = find(:all, :select => 'url, sum(total_time) as time', :conditions=>['app_id = ? and wall_time >= ? and wall_time < ?', app_id, start_time, end_time], :group => 'url', :order => 'time desc')
-      return	url_samples
+      return select('url, 
+                    sum(total_time) as time'
+                    ).where('app_id = ? and 
+                    wall_time >= ? and wall_time < ?',
+                    app_id, 
+                    start_time, end_time
+                    ).group(:url
+                    ).order('time desc')
     end
     
     #This method is get data of the top database consuming urls of an application. This method is called by the get_url_calls_data method.
     def get_top_db_consuming_url_data(app_id, start_time, end_time)
-      url_samples = find(:all, :select => 'url, sum(db_time) as time', :conditions=>['app_id = ? and wall_time >= ? and wall_time < ?', app_id, start_time, end_time], :group => 'url', :order => 'time desc')
-      return url_samples
+      return select('url, 
+                    sum(db_time) as time'
+                    ).where('app_id = ? and 
+                    wall_time >= ? and wall_time < ?',
+                    app_id, 
+                    start_time, end_time
+                    ).group(:url
+                    ).order('time desc')
     end
     
     #This method gives the maximum value for y axis and the value by which the y axis is to be partitioned.
@@ -114,7 +138,14 @@ class UrlTimeSample < ActiveRecord::Base
     #This method returns the array of the url for an application that were hit between start_time and end_time
     def get_urls(start_time, end_time, app_id)      
       urls = Array.new
-      url_samples = UrlTimeSample.find:all, :select=>'id, url, sum(total_time) as time', :conditions => ['app_id = ? and wall_time >= ? and wall_time < ?', app_id,  start_time, end_time], :group => 'url', :order => 'time desc'
+      url_samples = select('url, 
+                           sum(total_time) as time'
+                           ).where('app_id = ? and 
+                           wall_time >= ? and wall_time < ?', 
+                           app_id,  
+                           start_time, end_time
+                           ).group(:url
+                           ).order('time desc')
       url_samples.each do |url_sample|
         urls << url_sample.url
       end
@@ -124,15 +155,27 @@ class UrlTimeSample < ActiveRecord::Base
     # This method returns the total_time, db_time and rendering time for an url of an application 
     # for the given period between start_time and end_time
     def get_url_data(start_time, end_time, app_id, url_name)
-      url_samples=UrlTimeSample.find:all, :select=>'sum(total_time) as total_time, sum(db_time) as db_time, sum(rendering_time) as rendering_time, sum(number_of_requests) as requests', :conditions => ['app_id = ? and url = ? and wall_time >= ? and wall_time < ?', app_id, url_name, start_time, end_time]
-      return url_samples
+      return select('sum(total_time) as total_time, 
+                    sum(db_time) as db_time, 
+                    sum(rendering_time) as rendering_time, 
+                    sum(number_of_requests) as requests'
+                    ).where('app_id = ? and 
+                    url = ? and 
+                    wall_time >= ? and wall_time < ?', 
+                    app_id, 
+                    url_name, 
+                    start_time, end_time)
     end
     
     # This method returns the array of the url ids for a particular url of an application 
     # that was hit in a period between start_time and end_time
     def get_url_id(start_time, end_time, url_name,app_id)
-      url_samples = UrlTimeSample.find:all, :select => 'id, url', :conditions => ['url = ? and app_id = ? and wall_time >= ? and wall_time < ?', url_name, app_id, start_time, end_time]
-      return url_samples
+      return select('id, url'
+                    ).where('url = ? and 
+                    app_id = ? and 
+                    wall_time >= ? and wall_time < ?', 
+                    url_name, 
+                    app_id, start_time, end_time)
     end
     
     

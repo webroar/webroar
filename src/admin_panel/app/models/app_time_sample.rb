@@ -34,23 +34,43 @@ class AppTimeSample < ActiveRecord::Base
       interval = ((end_time-start_time) / 60).to_i
       final_data = Array.new(interval)
       wall_time = Array.new(interval)
-      application_samples = find(:all, :select => 'wall_time, sum(db_time) as db_time,sum(total_time_in_request) as total_time_in_request, sum(number_of_requests) as number_of_requests , avg(avg_response_time) as avg_avg_response_time, avg(peak_requests_served) as avg_peak_requests_served', :conditions => ['app_id = ? and wall_time >= ? and wall_time < ?', app_id, start_time, end_time], :group => 'wall_time')
-     application_samples.each do |application_sample| 
-          current_time = Time.local(application_sample.wall_time.year, application_sample.wall_time.month, application_sample.wall_time.day, application_sample.wall_time.hour, application_sample.wall_time.min, '0')
+      application_samples = select('wall_time, 
+                                    sum(db_time) as db_time,
+                                    sum(total_time_in_request) as total_time_in_request, 
+                                    sum(number_of_requests) as number_of_requests , 
+                                    avg(avg_response_time) as avg_avg_response_time, 
+                                    avg(peak_requests_served) as avg_peak_requests_served'
+                                    ).where('app_id = ? and 
+                                    wall_time >= ? and 
+                                    wall_time < ?', 
+                                    app_id,
+                                    start_time,
+                                    end_time
+                                    ).group(:wall_time)
+
+      application_samples.each do |application_sample| 
+         current_time = Time.local(application_sample.wall_time.year, 
+                                   application_sample.wall_time.month, 
+                                   application_sample.wall_time.day, 
+                                   application_sample.wall_time.hour, 
+                                   application_sample.wall_time.min, 
+                                   '0')
          db_time_data = 0
          total_time_in_request = 0
          total_requests = 0
          total_data = 0
          index = (current_time-start_time) / 60
          total_time_in_request = application_sample.total_time_in_request.to_f
-         if type == "db"
+         case type
+         when 'db'
             db_time_data = application_sample.db_time.to_f
             total_data = (db_time_data.to_f * 100 / total_time_in_request.to_f).to_f
-         elsif type == "averageresponsetime"
+         when 'averageresponsetime'
            total_data = application_sample.avg_avg_response_time.to_f
-         elsif type == "throughput"
+         when 'throughput'
             total_data = application_sample.avg_peak_requests_served.to_f
          end
+         
          if max < total_data
            max = total_data.to_i
          end
@@ -97,7 +117,15 @@ class AppTimeSample < ActiveRecord::Base
       end
       #      puts 'creating'
       with_exception_handling("Application sample creation for application #{app_id}, wall_time #{wall_time}") do
-        create({:app_id => app_id, :total_time_in_request => sample[0], :db_time => sample[1], :rendering_time => sample[2], :number_of_requests => sample[3], :wall_time => wall_time, :sampling_rate => sampling_rate, :avg_response_time => art, :peak_requests_served => prs})
+        create({:app_id => app_id, 
+                :total_time_in_request => sample[0], 
+                :db_time => sample[1], 
+                :rendering_time => sample[2], 
+                :number_of_requests => sample[3], 
+                :wall_time => wall_time, 
+                :sampling_rate => sampling_rate, 
+                :avg_response_time => art, 
+                :peak_requests_served => prs})
       end      
     end
     # application_samples contains at the most one sample and that is for current sampling period.
@@ -118,18 +146,20 @@ class AppTimeSample < ActiveRecord::Base
         sample[4][wall_time.sec] = (sample[4][wall_time.sec] || 0 ) + 1
         message_analyzer.application_samples[app_id][1] = sample
       elsif wall_time < message_analyzer.application_samples[app_id].first
-        db_sample = find(:first, :conditions => ["app_id = ? and wall_time >= ? and wall_time <= ?",app_id, wall_time, wall_time + message_analyzer.sampling_rate])
+        db_sample = where('app_id = ? and 
+                          wall_time >= ? and wall_time <= ?',
+                          app_id, 
+                          wall_time, wall_time + message_analyzer.sampling_rate
+                          ).first
         if db_sample
           db_sample.total_time_in_request += total_spent_time
           db_sample.db_time += db_time
           db_sample.rendering_time += rendering_time
           db_sample.number_of_requests += 1
-          #db_sample.avg_response_time += (total_spent_time / resource_analyzer.worker_count(app_id))
           db_sample.save! rescue nil
         else
           wall_time += message_analyzer.sampling_rate
           create_sample(app_id, [total_spent_time, db_time, rendering_time, 1, [1]], message_analyzer.sampling_rate, wall_time)
-          #create({:app_id => app_id, :total_time_in_request => total_spent_time, :db_time => db_time, :rendering_time => rendering_time, :number_of_requests => 1, :wall_time => wall_time, :sampling_rate => message_analyzer.sampling_rate, :avg_response_time => 1000, :peak_requests_served => 1 })
         end
       elsif wall_time > message_analyzer.application_samples[app_id].first +  message_analyzer.sampling_rate
         o_wall_time = message_analyzer.application_samples[app_id].first +  message_analyzer.sampling_rate

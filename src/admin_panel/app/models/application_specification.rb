@@ -87,7 +87,7 @@ class ApplicationSpecification < PseudoModel
       info.delete('Application Specification') if info['Application Specification'].length == 0
     end
 
-    app = App.find(:first, :conditions=>["name = ?", app_name])
+    app = App.where(:name => app_name).first
     app.destroy if app
     SignalHelper.send
 
