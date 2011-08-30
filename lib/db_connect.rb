@@ -17,7 +17,7 @@
 # along with WebROaR.  If not, see <http://www.gnu.org/licenses/>.
 
 require 'rubygems'
-gem 'activerecord','2.3.9'
+gem 'activerecord','3.0.9'
 require 'active_record'
 
 module Webroar
