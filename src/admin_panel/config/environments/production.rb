@@ -21,7 +21,7 @@ AdminPanel::Application.configure do
   # See everything in the log (default is :info)
   # config.log_level = :debug
   
-  config.log_path = File.join("","var","log","webroar","Admin_panel.production.log")
+  config.paths.log = File.join("","var","log","webroar","Admin_panel.production.log")
 
   # Use a different logger for distributed setups
   # config.logger = SyslogLogger.new
