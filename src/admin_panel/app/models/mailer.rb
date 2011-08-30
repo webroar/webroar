@@ -19,7 +19,7 @@
 #++
 
 unless defined?ActionMailer
-  gem 'actionmailer', '2.3.9'
+  gem 'actionmailer', '3.0.9'
   require 'action_mailer'
   require 'uri'
 end
