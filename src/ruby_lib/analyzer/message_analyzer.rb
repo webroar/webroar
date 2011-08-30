@@ -207,6 +207,7 @@ module Webroar
         exception_details_hash = Hash.new
         ExceptionDetail.columns.each { |column|  exception_details_hash[column.name] = nil }
         exception_details_hash.delete("id")
+        exception_details_hash.delete("app_exception_id")
         exception_details_hash.each_key do |key|
           exception_details_hash[key] = exception_hash[key.to_sym]
         end
