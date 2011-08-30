@@ -104,36 +104,35 @@ class ExceptionsController < ApplicationController
   
   #Method is used to update the status for selected exceptions.
   def change_status    
-    if request.method == :put
-      @application_name = params[:app_name]    
-      app_id = App.get_application_data(@application_name).id
-      if params[:exception_ids] and params[:status_name]        
-        params[:exception_ids].collect! do |e|
-          e.to_i
-        end
-        case params[:status_name].downcase
-          when 'delete'
-            
-          when 'ignore'
-            AppException.update_all_status_to(IGNORED_EXCEPTION, params[:exception_ids])
-          when 'close'
-            AppException.update_all_status_to(CLOSED_EXCEPTION, params[:exception_ids])
-          when 'open'
-            AppException.update_all_status_to(OPEN_EXCEPTION, params[:exception_ids])
-        end
+
+    @application_name = params[:app_name]
+    app_id = App.get_application_data(@application_name).id
+    if params[:exception_ids] and params[:status_name]
+      params[:exception_ids].collect! do |e|
+        e.to_i
       end
-      status = get_status_const(params[:current_status])
-      session[:per_page] = 5 if not session[:per_page]
-      @exceptions = AppException.get_all(status, app_id, params[:page],session[:per_page])
-      if @exceptions.out_of_bounds? and (page = params[:page].to_i - 1) > 0
-        @exceptions = AppException.get_all(status, app_id, page,session[:per_page])
-      end
-      render :update do |page|
-        page.replace_html 'data_div', :partial => 'exception_list_partial', :locals => { :current_status => status, :status_name => params[:current_status]}  
+      case params[:status_name].downcase
+        when 'delete'
+
+        when 'ignore'
+          AppException.update_all_status_to(IGNORED_EXCEPTION, params[:exception_ids])
+        when 'close'
+          AppException.update_all_status_to(CLOSED_EXCEPTION, params[:exception_ids])
+        when 'open'
+          AppException.update_all_status_to(OPEN_EXCEPTION, params[:exception_ids])
       end
     end
+    status = get_status_const(params[:current_status])
+    session[:per_page] = 5 if not session[:per_page]
+    @exceptions = AppException.get_all(status, app_id, params[:page],session[:per_page])
+    if @exceptions.out_of_bounds? and (page = params[:page].to_i - 1) > 0
+      @exceptions = AppException.get_all(status, app_id, page,session[:per_page])
+    end
+    render :update do |page|
+      page.replace_html 'data_div', :partial => 'exception_list_partial', :locals => { :current_status => status, :status_name => params[:current_status]}  
+    end
   end
-  
+
   # This method is used to render the add_application_class_form partial with all the exception classes
   # stored in configuration file, with respect to the selected application
   def save_exception_class_form

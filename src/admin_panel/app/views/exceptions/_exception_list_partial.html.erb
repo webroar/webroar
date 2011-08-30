@@ -56,18 +56,18 @@
     	<td colspan = 6>
     		<b>Take Action:</b>
 				<% unless current_status == OPEN_EXCEPTION %>
-				  <b><%=link_to_remote 'Reopen', :condition => "checkMarked('Reopen')", :url => {:controller => 'exceptions', :action => 'change_status', :status_name => "open", :current_status => status_name, :app_name => @application_name, :page => @exceptions.current_page }, :submit => 'form_exception_list', :method => :put  %></b>
+				  <b><%=link_to_remote 'Reopen', :condition => "checkMarked('Reopen')", :url => {:controller => 'exceptions', :action => 'change_status', :status_name => "open", :current_status => status_name, :app_name => @application_name, :page => @exceptions.current_page }, :submit => 'form_exception_list' %></b>
 				<% end %>
 				<% unless current_status == CLOSED_EXCEPTION %> 
-				  <b><%=link_to_remote 'Close', :condition => "checkMarked('Close')", :url => {:controller => 'exceptions', :action => 'change_status', :status_name => "close", :current_status => status_name, :app_name => @application_name, :page => @exceptions.current_page }, :submit => 'form_exception_list', :method => :put  %></b>
+				  <b><%=link_to_remote 'Close', :condition => "checkMarked('Close')", :url => {:controller => 'exceptions', :action => 'change_status', :status_name => "close", :current_status => status_name, :app_name => @application_name, :page => @exceptions.current_page }, :submit => 'form_exception_list'  %></b>
 			  <% end %>
 				<% unless current_status == IGNORED_EXCEPTION %>
-				<b><%=link_to_remote 'Ignore', :condition => "checkMarked('Ignore')", :url => {:controller => 'exceptions', :action => 'change_status', :status_name => "ignore", :current_status => status_name, :app_name => @application_name, :page => @exceptions.current_page }, :submit => 'form_exception_list', :method => :put  %></b>
+				<b><%=link_to_remote 'Ignore', :condition => "checkMarked('Ignore')", :url => {:controller => 'exceptions', :action => 'change_status', :status_name => "ignore", :current_status => status_name, :app_name => @application_name, :page => @exceptions.current_page }, :submit => 'form_exception_list' %></b>
 				<% end %>
 				<span style='margin-left:21%;'>
 				  ( <%= @exceptions.offset + 1 %> to <%= @exceptions.size + @exceptions.offset %> of <%= @exceptions.total_entries %> )
 				</span>
-				<%#=link_to_remote 'Delete', :condition => "checkMarked('delete')", :url => {:controller => 'exceptions', :action => 'change_status', :status_name => "delete", :current_status => status_name, :app_name => @application_name, :page => @exceptions.current_page }, :submit => 'form_exception_list', :method => :put  %>
+				<%#=link_to_remote 'Delete', :condition => "checkMarked('delete')", :url => {:controller => 'exceptions', :action => 'change_status', :status_name => "delete", :current_status => status_name, :app_name => @application_name, :page => @exceptions.current_page }, :submit => 'form_exception_list' %>
     	</td>
 	  </tr>
 	  <% if will_paginate @exceptions %>
