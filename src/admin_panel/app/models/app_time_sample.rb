@@ -44,8 +44,8 @@ class AppTimeSample < ActiveRecord::Base
                                     wall_time >= ? and 
                                     wall_time < ?', 
                                     app_id,
-                                    start_time,
-                                    end_time
+                                    start_time.strftime('%Y-%m-%d %H:%M:%S'),
+                                    end_time.strftime('%Y-%m-%d %H:%M:%S')
                                     ).group(:wall_time)
 
       application_samples.each do |application_sample| 
