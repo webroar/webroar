@@ -40,6 +40,7 @@ class UrlTimeSample < ActiveRecord::Base
       else
         url_samples = get_top_db_consuming_url_data(app_id, start_time, end_time)
       end
+      url_samples = url_samples.to_a
       if url_samples.size > 0
         url_samples.each do |url_sample|
           urls << url_sample.url
