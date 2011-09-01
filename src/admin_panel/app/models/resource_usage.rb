@@ -32,7 +32,7 @@ class ResourceUsage < ActiveRecord::Base
                        sum(memory_usage) as tot_memory'
                        ).where('wall_time <= ? and
                        wall_time >= ?',
-                       t1,t2).first
+                       t1.strftime("%Y-%m-%d %H:%M:%S"),t2.strftime("%Y-%m-%d %H:%M:%S")).first
       if !result
         res = [0.0, 0.0]
       else
@@ -62,7 +62,7 @@ class ResourceUsage < ActiveRecord::Base
                            sum(cpu_usage) as tot_cpu,
                            sum(memory_usage) as tot_memory'
                            ).where('wall_time <= ? and wall_time >= ?',
-                            t1,t2
+                            t1.strftime("%Y-%m-%d %H:%M:%S"),t2.strftime("%Y-%m-%d %H:%M:%S")
                             ).group(:app_id)
 
       if result_set.length != 0
@@ -98,7 +98,7 @@ class ResourceUsage < ActiveRecord::Base
                                 sum(cpu_usage) as cpu_usage,
                                 sum(memory_usage) as memory_usage'
                                 ).where('wall_time >= ? and wall_time < ?',
-                                start_time, end_time
+                                start_time.strftime("%Y-%m-%d %H:%M:%S"), end_time.strftime("%Y-%m-%d %H:%M:%S")
                                 ).group(:wall_time)
 
       resource_usages.each do |resource_usage|
@@ -142,7 +142,7 @@ class ResourceUsage < ActiveRecord::Base
                                 ).where('app_id = ? and
                                 wall_time >= ? and wall_time < ?',
                                 app_id,
-                                start_time, end_time
+                                start_time.strftime("%Y-%m-%d %H:%M:%S"), end_time.strftime("%Y-%m-%d %H:%M:%S")
                                 ).group(:wall_time)
       resource_usages.each do |resource_usage|
         current_time = Time.local(resource_usage.wall_time.year, resource_usage.wall_time.month, resource_usage.wall_time.day, resource_usage.wall_time.hour, resource_usage.wall_time.min, '0')
