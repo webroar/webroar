@@ -38,8 +38,7 @@ module Webroar
       private
 
       def load_models
-        models = Dir.glob(File.join(ADMIN_PANEL_DIR, 'app', 'models', "{pseudo_model,application_specification,server_specification,app,url_breakup_time_sample,app_time_sample,resource_usage,url_time_sample,app_exception,exception_detail,mailer}.rb"))
-
+        models = Dir.glob(File.join(ADMIN_PANEL_DIR, 'app', 'models', "{pseudo_model,application_specification,server_specification,app,url_breakup_time_sample,app_time_sample,resource_usage,url_time_sample,app_exception,exception_detail,../mailers/mailer}.rb"))
         models.each do |f|
           begin
             require f

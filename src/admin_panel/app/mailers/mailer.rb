@@ -68,10 +68,7 @@ class Mailer < ActionMailer::Base
 
   # This method is to deliver the email to recipients
   def send_email(subject,body,from,recipients)
-    @subject = subject
-    @from = from
-    @recipients = recipients
-    @body = body
+    mail(:to => recipients,:from => from,:subject => subject,:body => body)
   end
 
   # This method is used to send exception notification to the recipients
@@ -89,7 +86,7 @@ class Mailer < ActionMailer::Base
         body << "#{key.to_s.upcase} : #{value}\n"
       end
       begin
-        deliver_send_email(subject,body,from,recipients)
+        send_email(subject,body,from,recipients).deliver
       rescue Exception => e
         e
       end
@@ -137,7 +134,7 @@ class Mailer < ActionMailer::Base
     body = "#{report_bug[:description]}\n\n"
     body << "Name : #{report_bug[:name]}\nEmail Address : #{report_bug[:email]}\n"
     begin
-      deliver_send_email(subject,body,from,"support@webroar.in")
+      send_email(subject,body,from,"support@webroar.in").deliver
       "<span style='color:green;'>Thank You for reporting the issue, We'll contact you shortly.</span>"
     rescue Exception => exception
       return self.parse_exception(exception),''
@@ -152,7 +149,7 @@ class Mailer < ActionMailer::Base
     body = "#{feedback[:message]}\n\n"
     body << "User Name : #{feedback[:name]}\nEmail Address : #{feedback[:email]}\n"
     begin
-      deliver_send_email(subject,body,from,"support@webroar.in")
+      send_email(subject,body,from,"support@webroar.in").deliver
       "<span style='color:green;'>Thank you for your valuable feedback!</span>"
     rescue Exception => exception
       return self.parse_exception(exception),''
