@@ -31,9 +31,9 @@
         <td colspan = 2 >
           <div id = 'error_div' style="padding:0px;">
             <%if(flash[:notice].class == Array )%>
-                <%= flash[:notice][0] %> Please use <%= link_to 'Configuration',configuration_path %> tab to configure mail settings.
+                <%= raw(flash[:notice][0]) %> Please use <%= link_to 'Configuration',configuration_path %> tab to configure mail settings.
             <% else %>
-              <%= flash[:notice] %>
+              <%= raw(flash[:notice]) %>
             <% end %>
           </div>
           Name<span id = 'needed'>*</span><br>
