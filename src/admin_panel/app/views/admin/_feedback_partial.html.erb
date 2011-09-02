@@ -29,7 +29,7 @@
       <tr>
         <td colspan = 2>
           <div id = 'error_div' style="padding:0px;">
-            <%= flash[:notice] if flash[:notice] %>
+            <%= raw(flash[:notice]) if flash[:notice] %>
           </div>
           Name<span id = 'needed'>*</span><br>
           <%= text_field :feedback, :name, :value => @fb[:name],:class =>'input_text'%><br><br>
