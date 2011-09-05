@@ -21,7 +21,7 @@
 ###############################################################################
 require 'rubygems'
 #Gem::manage_gems
-require 'rake/gempackagetask'
+require 'rubygems/package_task'
 
 TESTFILE = "/etc/profile"
 MESSAGE_DEPLOYMENT = "This command needs to be run as root. Please try again using 'sudo'.".freeze
@@ -40,18 +40,17 @@ spec = Gem::Specification.new do |s|
   s.email                 = ["hokam.chauhan@webroar.in", "nikunj.limbaseeya@webroar.in"]
   s.homepage              = "http://webroar.in"
   s.rubyforge_project     = "webroar"
-  s.has_rdoc              = false
   s.executables           = ['webroar','webroar-analyzer']
   
   s.required_ruby_version = '>= 1.8.5'
 
-  s.add_dependency 'rails', '2.3.9'
+  s.add_dependency 'rails', '3.0.9'
   s.add_dependency 'calendar_date_select', '>= 1.15'  
   s.add_dependency 'rake', '>= 0.8.1'  
   s.add_dependency 'rspec', '~>1.3.1'
   s.add_dependency 'sqlite3', '>=1.2.3'
   s.add_dependency 'starling', '>=0.10.0'
-  s.add_dependency 'will_paginate', '~>2.3.12'
+  s.add_dependency 'will_paginate', '~>2.3.16'
   
   s.files = FileList['Rakefile',
     'README',
@@ -92,7 +91,7 @@ spec = Gem::Specification.new do |s|
   s.bindir                = "bin"
 end
 
-Rake::GemPackageTask.new(spec) do |p|
+Gem::PackageTask.new(spec) do |p|
   p.gem_spec = spec
   p.need_tar = true
 end
