@@ -31,7 +31,7 @@ module Webroar
         @app_name = $g_options["app_name"].freeze
         @app_env = $g_options["environment"].freeze
         filename = File.join($g_options["webroar_root"],'conf','server_internal_config.yml')
-        configuration = YAML.load(File.open(filename))["starling"]
+        configuration = YAML.load_file(filename)["starling"]
         host = configuration["host"]
         port = configuration["port"]        
         @server = %Q{#{host}:#{port}}.freeze

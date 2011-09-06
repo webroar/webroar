@@ -350,7 +350,7 @@ module Webroar
       def stop_server
         # Stop the server
         filename = File.join(WEBROAR_ROOT, 'conf', 'server_internal_config.yml')
-        pid_file = YAML.load(File.open(filename))["webroar_analyzer_script"]["pid_file"]
+        pid_file = YAML.load_file(filename)["webroar_analyzer_script"]["pid_file"]
 
         WebroarCommand.new.operation(nil, "stop") if (File.exists?(PIDFILE) or File.exists?(pid_file))
       end
@@ -650,7 +650,7 @@ exit 0"
           return
         end
 
-        info = YAML.load(File.open(File.join(import_dir,"conf","config.yml")))
+        info = YAML.load_file(File.join(import_dir,"conf","config.yml"))
         ssl = nil
         ssl = info['Server Specification']['SSL Specification'] if info and info['Server Specification'] and info['Server Specification']['SSL Specification']
 
@@ -676,7 +676,7 @@ exit 0"
 
         if Webroar::SERVER.downcase == gem_name.downcase
           puts "done."
-          return YAML.load(File.open(WEBROAR_CONFIG_FILE))["Server Specification"]["port"]
+          return YAML.load_file(WEBROAR_CONFIG_FILE)["Server Specification"]["port"]
         end
         
         # Copy all *.yml files from older version.
@@ -685,8 +685,8 @@ exit 0"
         Webroar::FileHelper.copy(File.join(import_dir,"conf","mail_conf.yml"), File.join(WEBROAR_ROOT, "conf"))
         
         # Copy conf/server_internal_config.yml file.
-        example = YAML.load(File.open(File.join(WEBROAR_ROOT, "conf", "server_internal_config.example.yml")))
-        old = YAML.load(File.open(File.join(import_dir, "conf", "server_internal_config.yml")))
+        example = YAML.load_file(File.join(WEBROAR_ROOT, "conf", "server_internal_config.example.yml"))
+        old = YAML.load_file(File.join(import_dir, "conf", "server_internal_config.yml"))
         if example and old
           new = example.merge(old).delete_if{ |key, value| !example.has_key?(key)}
           dump = YAML::dump(new).gsub(/: true/, ': on').gsub(/: false/, ': off')
@@ -695,13 +695,13 @@ exit 0"
           file.close
         end
          
-        configuration = YAML.load(File.open(DB_CONFIG_FILE))["production"]
+        configuration = YAML.load_file(DB_CONFIG_FILE)["production"]
         if configuration['adapter'] == 'sqlite3' and configuration['database'][0,1] != "/"
           db = File.join(import_dir, "src", "admin_panel", configuration['database'])
           Webroar::FileHelper.copy(db, File.join(ADMIN_PANEL_DIR, configuration['database']))
         end
         puts "done."
-        return YAML.load(File.open(WEBROAR_CONFIG_FILE))["Server Specification"]["port"]
+        return YAML.load_file(WEBROAR_CONFIG_FILE)["Server Specification"]["port"]
       end
 
       def set_install_options

@@ -29,7 +29,7 @@ module Webroar
       # Reading configuration file. Opening log file and PID file on given path.
       def initialize
         @@instance = self
-        @configuration = YAML.load(File.open(File.join(WEBROAR_ROOT,'conf','server_internal_config.yml')))
+        @configuration = YAML.load_file(File.join(WEBROAR_ROOT,'conf','server_internal_config.yml'))
         @process = ProcessHelper.new(@configuration["webroar_analyzer_script"]["log_file"], @configuration["webroar_analyzer_script"]["pid_file"])
         WLogger.set_log_file(@configuration["webroar_analyzer_script"]["log_file"])
 
@@ -45,7 +45,7 @@ module Webroar
 
       def get_starling_pid
         # read starling process id
-        pid_file = YAML.load(File.open(File.join(WEBROAR_ROOT, 'conf', 'starling_server_config.yml')))["starling"]["pid_file"]
+        pid_file = YAML.load_file(File.join(WEBROAR_ROOT, 'conf', 'starling_server_config.yml'))["starling"]["pid_file"]
         pid = File.read(pid_file).chomp.to_i rescue nil
       end
 
