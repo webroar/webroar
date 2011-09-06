@@ -148,20 +148,18 @@ module Webroar
 
       #Check server status and load models
       def load_models
-        files = [File.join(ADMIN_PANEL_DIR, 'config','initializers','application_constants.rb'),
-          File.join(ADMIN_PANEL_DIR, 'lib','yaml_writer.rb')]
-
-        files.each do |f|
-          begin
-            require f
-          rescue NameError => e
-            puts e
-            puts e.backtrace.join("\n")
-          end
+        configuration = YAML.load(File.open(File.join(WEBROAR_ROOT,'conf','server_internal_config.yml')))
+        ENV['RAILS_ENV'] = configuration["webroar_analyzer_script"]["environment"]
+        
+        begin
+          require File.join(ADMIN_PANEL_DIR, 'config','environment.rb')
+        rescue NameError => e
+          puts e
+          puts e.backtrace.join("\n")
         end
 
-        configuration = YAML.load(File.open(File.join(WEBROAR_ROOT,'conf','server_internal_config.yml')))
-        DBConnect.db_up(configuration["webroar_analyzer_script"]["environment"])
+        #configuration = YAML.load(File.open(File.join(WEBROAR_ROOT,'conf','server_internal_config.yml')))
+        #DBConnect.db_up(configuration["webroar_analyzer_script"]["environment"])
       end
 
       def check_server_status
