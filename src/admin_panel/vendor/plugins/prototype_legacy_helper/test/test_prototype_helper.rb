@@ -1,5 +1,5 @@
-if ENV['RAILS_ROOT']
-  environment = File.expand_path('vendor/gems/environment', ENV['RAILS_ROOT'])
+if Rails.root
+  environment = File.expand_path('vendor/gems/environment', Rails.root.to_s)
   require environment if File.exist?("#{environment}.rb")
 end
 
