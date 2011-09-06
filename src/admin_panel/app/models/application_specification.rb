@@ -33,23 +33,25 @@ class ApplicationSpecification < PseudoModel
   column :min_worker,   :number
   column :max_worker,   :number
   
-  validate :name,         :presence => true,
+  validates :name,         :presence => true,
                           :format => { :with => /^[A-Za-z0-9_\-]*$/i, :message => " must consist of A-Z, a-z, 0-9 , _ , -  and /."},
                           :length => { :maximum => 30 },
                           :allow_nil => true
-  validate :resolver,     :presence => true
-  validate :path,         :presence => true
-  validate :run_as_user,  :presence => true,
+  validates :resolver,     :presence => true
+  validates :path,         :presence => true
+  validates :run_as_user,  :presence => true,
                           :length => { :maximum => 30 },
                           :allow_nil => true
-  validate :type1,        :presence => true
-  validate :environment,  :presence => true,
+  validates :type1,        :presence => true
+  validates :environment,  :presence => true,
                           :length => { :maximum => 30 },
                           :allow_nil => true
-  validate :min_worker,   :numericality => true, 
+  validates :min_worker,   :numericality => true, 
                           :inclusion => { :in => 0..ALLOWED_MAX_WORKERS }
-  validate :max_worker,   :numericality => true, 
+  validates :max_worker,   :numericality => true, 
                           :inclusion => { :in => 0..ALLOWED_MAX_WORKERS }
+  
+  validate :ensure_validations
   
   #validates_presence_of :name, :resolver, :path, :run_as_user, :type1, :environment
   #validates_numericality_of :min_worker, :max_worker, :greater_than_or_equal_to => 1, :less_than_or_equal_to => ALLOWED_MAX_WORKERS
@@ -60,6 +62,7 @@ class ApplicationSpecification < PseudoModel
   #validates_length_of :run_as_user, :maximum => 30, :allow_nil => true
   #validates_length_of :environment, :maximum => 30, :allow_nil => true
   #  validates_format_of :baseuri, :with => /^\/[A-Za-z0-9_\-\/]*$/i, :message => "must start with '/' and contains characters A-Z, a-z, 0-9 , _ , -  and /."
+  
   def write
 
     info = YAML::load_file(CONFIG_FILE_PATH) rescue nil
@@ -100,9 +103,17 @@ class ApplicationSpecification < PseudoModel
 
   #Converting ApplicationSpecification obeject into a Hash.
   def obj_to_hash
-    app = Hash["name" => name, "path" => path, "run_as_user" => run_as_user.downcase, "type" => type1.downcase, "analytics" => analytics.to_s.downcase, "environment" => environment.downcase, "min_worker" => min_worker.to_i, "max_worker" => max_worker.to_i]
-    app["baseuri"] = baseuri.strip if baseuri
-    app["host_names"] = host_names if host_names
+    app = {}
+		app['name'] = name
+		app['path'] = path
+		app['run_as_user'] = run_as_user.downcase unless run_as_user.nil?
+		app['type'] = type1.downcase unless type1.nil?
+		app['analytics'] = analytics.downcase unless analytics.nil?
+		app['environment'] = environment.downcase unless environment.nil?
+		app['min_worker'] = min_worker.to_i
+		app['max_worker'] = max_worker.to_i
+		app['baseuri'] = baseuri.strip if baseuri
+		app['host_names'] = host_names if host_names
     return app
   end
 
@@ -117,7 +128,8 @@ class ApplicationSpecification < PseudoModel
   end
 
   #this method is used to validate the various fields of the apps model.
-  def validate
+  #def validate
+  def ensure_validations
     #    errors.add_to_base MIN_WORKERS_VALIDATION if min_worker.to_i > 20
     if max_worker.to_i < min_worker.to_i
       errors.add_to_base MAX_WORKERS_VALIDATION_1
@@ -125,9 +137,9 @@ class ApplicationSpecification < PseudoModel
       #      errors.add_to_base MAX_WORKERS_VALIDATION_2
     end
     #errors.add_to_base APPLICATION_PATH_EXISTANCE_VALIDATION if !File.directory?(path)
-    errors.add_to_base ANALYTICS_VALIDATION if type1=="Rails" and !(analytics.downcase == "enabled" or analytics.downcase == "disabled")
+    errors.add_to_base ANALYTICS_VALIDATION if type1 and type1=="Rails" and analytics and !(analytics.downcase == "enabled" or analytics.downcase == "disabled")
     #errors.add_to_base ENVIRONMENT_VALIDATION if !(environment.downcase == "production" or environment.downcase == "development" or environment.downcase == "test")
-    errors.add_to_base TYPE_VALIDATION if !(type1.downcase == RAILS or type1.downcase == RACK)
+    errors.add_to_base TYPE_VALIDATION if type1 and !(type1.downcase == RAILS or type1.downcase == RACK)
     if path and type1
       if type1.downcase == RAILS
         unless File.exists?(File.join(path, 'config', 'environment.rb'))
