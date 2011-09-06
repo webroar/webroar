@@ -26,7 +26,7 @@ class SignalHelper
 
     conf_file  = File.join(ADMIN_PANEL_ROOT,'..','..','conf','server_internal_config.yml')
 
-    config = YAML.load(conf_file)
+    config = YAML.load_file(conf_file)
     pid_file = config["webroar_analyzer_script"]["pid_file"] if config["webroar_analyzer_script"] and config["webroar_analyzer_script"]["pid_file"]
     unless pid_file
       Rails.logger.error("Either Webroar Analyzer is not started or 'webroar_analyzer.pid' not found")

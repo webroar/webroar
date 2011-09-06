@@ -21,7 +21,7 @@ begin
   require 'yaml'
   $g_options['analytics'] = true
 
-  server_conf = YAML.load(File.open(File.join($g_options["webroar_root"], "conf", "server_internal_config.yml")))
+  server_conf = YAML.load_file(File.join($g_options["webroar_root"], "conf", "server_internal_config.yml"))
   if(server_conf and server_conf["webroar"] and !server_conf["webroar"]["analyzer"].nil?)
     $g_options['analytics'] = server_conf["webroar"]["analyzer"]
   end

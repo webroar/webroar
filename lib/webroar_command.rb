@@ -148,7 +148,7 @@ module Webroar
 
       #Check server status and load models
       def load_models
-        configuration = YAML.load(File.open(File.join(WEBROAR_ROOT,'conf','server_internal_config.yml')))
+        configuration = YAML.load_file(File.join(WEBROAR_ROOT,'conf','server_internal_config.yml'))
         ENV['RAILS_ENV'] = configuration["webroar_analyzer_script"]["environment"]
         
         begin
@@ -158,7 +158,7 @@ module Webroar
           puts e.backtrace.join("\n")
         end
 
-        #configuration = YAML.load(File.open(File.join(WEBROAR_ROOT,'conf','server_internal_config.yml')))
+        #configuration = YAML.load_file(File.join(WEBROAR_ROOT,'conf','server_internal_config.yml'))
         #DBConnect.db_up(configuration["webroar_analyzer_script"]["environment"])
       end
 
@@ -182,7 +182,7 @@ module Webroar
         if $? == 0
           @server_status = :up
           filename = File.join(WEBROAR_ROOT, 'conf', 'config.yml')
-          apps_spec = YAML.load(File.open(filename))["Application Specification"]
+          apps_spec = YAML.load_file(filename)["Application Specification"]
           sleep_time = (apps_spec ? 1 + apps_spec.size : 1)
           sleep(sleep_time * 1.5)
           puts "Head process started successfully."
@@ -190,7 +190,7 @@ module Webroar
           puts "An error occurred while starting head process. Please refer '#{WEBROAR_LOG_FILE}' for details."
           if @starling_status == :up
             filename = File.join(WEBROAR_ROOT, 'conf', 'starling_server_config.yml')
-            pid_file = YAML.load(File.open(filename))["starling"]["pid_file"]
+            pid_file = YAML.load_file(filename)["starling"]["pid_file"]
             puts "Aborting startup sequence"
             print "Stopping starling message queue server ..."
             pid = File.read(pid_file).chomp.to_i rescue nil
@@ -205,11 +205,11 @@ module Webroar
         return if @starling_status == :down
 
         filename = File.join(WEBROAR_ROOT, 'conf', 'server_internal_config.yml')
-        log_file = YAML.load(File.open(filename))["webroar_analyzer_script"]["log_file"]
+        log_file = YAML.load_file(filename)["webroar_analyzer_script"]["log_file"]
 
         print "Starting webroar-analyzer process ..."
 
-        pid_file = YAML.load(File.open(filename))["webroar_analyzer_script"]["pid_file"]
+        pid_file = YAML.load_file(filename)["webroar_analyzer_script"]["pid_file"]
         pid = File.read(pid_file).chomp.to_i rescue nil
 
         if pid
@@ -280,7 +280,7 @@ module Webroar
         analytics = true
 
         
-        server_conf = YAML.load(File.open(INTERNAL_CONF_FILE))
+        server_conf = YAML.load_file(INTERNAL_CONF_FILE)
         if(server_conf and server_conf["webroar"] and !server_conf["webroar"]["analyzer"].nil?)
           analytics = server_conf["webroar"]["analyzer"]
         end
@@ -290,7 +290,7 @@ module Webroar
         print "Starting message queue server ..."
 
         starling_conf_file = File.join(WEBROAR_ROOT, 'conf', 'starling_server_config.yml')
-        pid_file = YAML.load(File.open(starling_conf_file))["starling"]["pid_file"]
+        pid_file = YAML.load_file(starling_conf_file)["starling"]["pid_file"]
         pid = File.read(pid_file).chomp.to_i rescue nil
 
         if pid
@@ -302,7 +302,7 @@ module Webroar
         end
 
         filename = File.join(WEBROAR_ROOT, 'conf', 'server_internal_config.yml')
-        log_file = YAML.load(File.open(filename))["webroar_analyzer_script"]["log_file"]
+        log_file = YAML.load_file(filename)["webroar_analyzer_script"]["log_file"]
 
         system("starling -f #{starling_conf_file} >> #{log_file} 2>>#{log_file}")
         if $? == 0
@@ -324,7 +324,7 @@ module Webroar
       # Stop the server
       def stop_webroar
         begin
-          yaml_obj = YAML.load(File.open(INTERNAL_CONF_FILE))
+          yaml_obj = YAML.load_file(INTERNAL_CONF_FILE)
           pid_file = yaml_obj["webroar_analyzer_script"]["pid_file"]
           if !(File.exists?(PIDFILE) or File.exists?(pid_file))
             puts "WebROaR is not running."
@@ -355,7 +355,7 @@ module Webroar
       def restart_webroar
         puts "Restarting WebROaR ..."
         filename = File.join(WEBROAR_ROOT, 'conf', 'server_internal_config.yml')
-        pid_file = YAML.load(File.open(filename))["webroar_analyzer_script"]["pid_file"]
+        pid_file = YAML.load_file(filename)["webroar_analyzer_script"]["pid_file"]
         if File.exists?(PIDFILE) or File.exists?(pid_file)
           stop_webroar
           system("sleep 1")

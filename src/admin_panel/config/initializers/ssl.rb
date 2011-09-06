@@ -22,7 +22,7 @@ ADMIN_PANEL_ROOT = File.expand_path('../../../', __FILE__) unless defined?ADMIN_
 
 CONF_FILE  = File.join(ADMIN_PANEL_ROOT,'..','..','conf','config.yml')
 
-server_spec = YAML.load(File.open(CONF_FILE))["Server Specification"]
+server_spec = YAML.load_file(CONF_FILE)["Server Specification"]
 
 if(server_spec and 
       server_spec["SSL Specification"] and 
