@@ -130,25 +130,25 @@ class ApplicationSpecification < PseudoModel
   #this method is used to validate the various fields of the apps model.
   #def validate
   def ensure_validations
-    #    errors.add_to_base MIN_WORKERS_VALIDATION if min_worker.to_i > 20
+    #    errors.add(:base, MIN_WORKERS_VALIDATION) if min_worker.to_i > 20
     if max_worker.to_i < min_worker.to_i
-      errors.add_to_base MAX_WORKERS_VALIDATION_1
+      errors.add(:base, MAX_WORKERS_VALIDATION_1)
       #    elsif max_worker.to_i > 20
       #      errors.add_to_base MAX_WORKERS_VALIDATION_2
     end
     #errors.add_to_base APPLICATION_PATH_EXISTANCE_VALIDATION if !File.directory?(path)
-    errors.add_to_base ANALYTICS_VALIDATION if type1 and type1=="Rails" and analytics and !(analytics.downcase == "enabled" or analytics.downcase == "disabled")
+    errors.add(:base, ANALYTICS_VALIDATION) if type1 and type1=="Rails" and analytics and !(analytics.downcase == "enabled" or analytics.downcase == "disabled")
     #errors.add_to_base ENVIRONMENT_VALIDATION if !(environment.downcase == "production" or environment.downcase == "development" or environment.downcase == "test")
-    errors.add_to_base TYPE_VALIDATION if type1 and !(type1.downcase == RAILS or type1.downcase == RACK)
+    errors.add(:base, TYPE_VALIDATION) if type1 and !(type1.downcase == RAILS or type1.downcase == RACK)
     if path and type1
       if type1.downcase == RAILS
         unless File.exists?(File.join(path, 'config', 'environment.rb'))
-          errors.add_to_base "The entered application path is not a valid Rails application path."
+          errors.add(:base, "The entered application path is not a valid Rails application path.")
         end
       end
       if type1.downcase == RACK
         unless File.exists?(File.join(path, 'config.ru'))
-          errors.add_to_base "The entered application path is not a valid Rack application path."
+          errors.add(:base, "The entered application path is not a valid Rack application path.")
         end
       end
     end
@@ -162,7 +162,7 @@ class ApplicationSpecification < PseudoModel
 
       if (tokens.size == 1 and tokens[0].start_with?('/'))
         write_attribute(:baseuri, resolver)
-        errors.add_to_base "BaseURI must start with '/' and contains characters A-Z, a-z, 0-9 , _ , -  and /." if !(baseuri.strip =~ /^\/[A-Za-z0-9_\-\/]*$/i)
+        errors.add(:base, "BaseURI must start with '/' and contains characters A-Z, a-z, 0-9 , _ , -  and /.") if !(baseuri.strip =~ /^\/[A-Za-z0-9_\-\/]*$/i)
       else
         write_attribute(:host_names, resolver)
         host_name_flag = 1
@@ -175,38 +175,38 @@ class ApplicationSpecification < PseudoModel
           len = token.size
           # Whole name can not exceed total length of 253
           if len > 253
-            errors.add_to_base HOSTNAME_LENGTH_EXCEEDS
+            errors.add(:base , HOSTNAME_LENGTH_EXCEEDS)
             next
           end
           # Subdivision can go down to maximum 127 level.
           labels = token.split(/\./)
           if labels.size > 127
-            errors.add_to_base SUBDIVISION_EXCEEDS_127
+            errors.add(:base, SUBDIVISION_EXCEEDS_127)
             next
           end
           # Start with '/' indicates BaseURI
           if token.start_with?('/')
-            errors.add_to_base BASEURI_AND_HOSTNAMES_EXIST
+            errors.add(:base, BASEURI_AND_HOSTNAMES_EXIST)
             break
           end
           # If wildcard '*' presents, Hostname should prefix with '~'
           if token.include?("*") and !(token =~ /^~/)
-            errors.add_to_base "#{token} - #{START_WTIH_TILD}"
+            errors.add(:base, "#{token} - #{START_WTIH_TILD}")
             next
           end
           # Wildcard '*' can come either at start or at end, not inbetween
           pos = token.index('*', 1)
           if pos and pos != 1 and pos != len-1
-            errors.add_to_base "#{token} - #{WILDCARD_AT_START_OR_END}"
+            errors.add(:base, "#{token} - #{WILDCARD_AT_START_OR_END}")
             next
           end
           pos = token.index('*', 2)
           if pos and pos != len - 1
-            errors.add_to_base "#{token} - #{WILDCARD_AT_START_OR_END}"
+            errors.add(:base, "#{token} - #{WILDCARD_AT_START_OR_END}")
             next
           end
           if token =~ /[.][.]/
-            errors.add_to_base "#{token} - #{CONSECUTIVE_DOTS}"
+            errors.add(:base, "#{token} - #{CONSECUTIVE_DOTS}")
             next
           end
           # Check for Letters, Digits and Hyphen
@@ -217,14 +217,14 @@ class ApplicationSpecification < PseudoModel
           labels = labels[1..labels.size - 2]
           labels.each do |label|
             if label.size > 63
-              errors.add_to_base LABEL_LENGTH_EXCEEDS
+              errors.add(:base, LABEL_LENGTH_EXCEEDS)
               next
             end
             label.each_char do |c|
               if (c >= 'a' and c <= 'z') or (c >= 'A' and c <= 'Z') or (c >= '0' and c <= '9') or c == '-'
                 next
               else
-                errors.add_to_base HOSTNAME_LDH
+                errors.add(:base, HOSTNAME_LDH)
                 err_flag = 1
                 break;
               end
@@ -240,7 +240,7 @@ class ApplicationSpecification < PseudoModel
             c = char_array[0]
             if (c >= 'a' and c <= 'z') or (c >= 'A' and c <= 'Z') or (c >= '0' and c <= '9') or c == '~'
             else
-              errors.add_to_base HOSTNAME_LDH
+              errors.add(:base, HOSTNAME_LDH)
               err_flag = 1
             end
           end
@@ -249,7 +249,7 @@ class ApplicationSpecification < PseudoModel
             c = char_array[1]
             if (c >= 'a' and c <= 'z') or (c >= 'A' and c <= 'Z') or (c >= '0' and c <= '9') or c == '*'
             else
-              errors.add_to_base HOSTNAME_LDH
+              errors.add(:base, HOSTNAME_LDH)
               err_flag = 1
             end
           end
@@ -260,7 +260,7 @@ class ApplicationSpecification < PseudoModel
               if (c >= 'a' and c <= 'z') or (c >= 'A' and c <= 'Z') or (c >= '0' and c <= '9') or c == '-'
                 next
               else
-                errors.add_to_base HOSTNAME_LDH
+                errors.add(:base, HOSTNAME_LDH)
                 err_flag = 1
                 break;
               end
@@ -275,7 +275,7 @@ class ApplicationSpecification < PseudoModel
             c = char_array[char_array.size - 1]
             if (c >= 'a' and c <= 'z') or (c >= 'A' and c <= 'Z') or (c >= '0' and c <= '9') or c == '*'
             else
-              errors.add_to_base HOSTNAME_LDH
+              errors.add(:base, HOSTNAME_LDH)
               err_flag = 1
             end
           end
@@ -285,7 +285,7 @@ class ApplicationSpecification < PseudoModel
             char_array.each do |c|
               if (c >= 'a' and c <= 'z') or (c >= 'A' and c <= 'Z') or (c >= '0' and c <= '9') or c == '*'
               else
-                errors.add_to_base HOSTNAME_LDH
+                errors.add(:base, HOSTNAME_LDH)
                 err_flag = 1
               end
             end
@@ -297,7 +297,7 @@ class ApplicationSpecification < PseudoModel
       end
 
       #BaseURI can not be /admin-panel
-      errors.add_to_base BASEURI_AS_ADMIN_PANEL_BASEURI_VALIDATION if baseuri and baseuri.strip == ADMIN_PANEL_BASE_URI
+      errors.add(:base, BASEURI_AS_ADMIN_PANEL_BASEURI_VALIDATION) if baseuri and baseuri.strip == ADMIN_PANEL_BASE_URI
       all_host_names = []
       curr_host_names_size = curr_host_names.size
 
@@ -308,8 +308,8 @@ class ApplicationSpecification < PseudoModel
       if info and info['Application Specification']
         i = 0
         info['Application Specification'].each do |app_info|
-          errors.add_to_base "#{name} - #{APPLICATION_NAME_REPEATED}" if app_info['name'] == name and tmp_id != i
-          errors.add_to_base BASEURI_EXISTANCE_VALIDATION if baseuri and baseuri.strip and app_info['baseuri'] == baseuri.strip and tmp_id != i
+          errors.add(:base, "#{name} - #{APPLICATION_NAME_REPEATED}") if app_info['name'] == name and tmp_id != i
+          errors.add(:base, BASEURI_EXISTANCE_VALIDATION) if baseuri and baseuri.strip and app_info['baseuri'] == baseuri.strip and tmp_id != i
           all_host_names << app_info['host_names'].split(/ /) if app_info['host_names'] and curr_host_names_size > 0 and tmp_id != i
           i += 1
         end
@@ -317,12 +317,12 @@ class ApplicationSpecification < PseudoModel
       all_host_names.flatten!
       # checking uniqueness of Hostnames
       if curr_host_names_size > 0
-        errors.add_to_base HOSTNAME_REPEATED  if curr_host_names_size != curr_host_names.uniq.size
+        errors.add(:base, HOSTNAME_REPEATED)  if curr_host_names_size != curr_host_names.uniq.size
         if all_host_names.size > 0
           curr_host_names.each do |c_host_name|
             all_host_names.each do |host_name|
               if c_host_name.eql?(host_name)
-                errors.add_to_base "#{c_host_name}-#{HOSTNAME_REPEATED }"
+                errors.add(:base, "#{c_host_name}-#{HOSTNAME_REPEATED }")
                 break
               end
             end
