@@ -124,14 +124,14 @@ module Webroar
 
         if application_specification.save
           application_specification.write
-          application_specification.errors.each_full{|msg| puts msg }
+          application_specification.errors.to_a.each{|msg| puts msg }
           reply, err_log = App.start(params[:name])
           #reply = nil indicate success
           puts reply ? reply : "Application '#{params[:name]}' added successfully."
           puts "\n\e[31m" + err_log + "\e[0m" if err_log
           application_specification.remove if (err_log or reply)
         else
-          application_specification.errors.each_full{|msg| puts msg }
+          application_specification.errors.to_a.each{|msg| puts msg }
         end
 
       end
