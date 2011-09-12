@@ -80,7 +80,6 @@ spec = Gem::Specification.new do |s|
     s.test_files = FileList[File.join('test', '**', '*.{c,h,yml,rb,js,css,html,txt}'),
     File.join('test', 'spec','test_app','app','**','*'),
     File.join('test', 'spec','test_app','script','**','*'),
-    File.join('test', 'spec', 'test_app', 'vendor', '.placeholder'),
     File.join('test', 'spec','test_app','public','**','*'),
     File.join('test', 'spec', 'test_app', 'README'),
     File.join('test', 'spec', 'test_app', 'Rakefile')].exclude(
