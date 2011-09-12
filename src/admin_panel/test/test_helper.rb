@@ -20,7 +20,7 @@
 
 ENV["RAILS_ENV"] = "test"
 require File.expand_path('../../config/environment',  __FILE__)
-require 'test_help'
+require 'rails/test_help'
 
 class Test::Unit::TestCase
   # Transactional fixtures accelerate your tests by wrapping each test method
