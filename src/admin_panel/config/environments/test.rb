@@ -10,7 +10,7 @@ AdminPanel::Application.configure do
   # Log error messages when you accidentally call methods on nil.
   config.whiny_nils = true
   
-  config.log_path = File.join("","var","log","webroar","admin_panel_rails.test.log")
+  config.paths.log = File.join("","var","log","webroar","admin_panel_rails.test.log")
 
   # Show full error reports and disable caching
   config.consider_all_requests_local       = true
