@@ -1,3 +1,4 @@
+#--
 # WebROaR - Ruby Application Server - http://webroar.in/
 # Copyright (C) 2009  Goonj LLC
 #
@@ -15,6 +16,7 @@
 #
 # You should have received a copy of the GNU General Public License
 # along with WebROaR.  If not, see <http://www.gnu.org/licenses/>.
+#++
 
 class UsersController < ApplicationController
   # GET /users
@@ -31,7 +33,7 @@ class UsersController < ApplicationController
   # GET /users/1
   # GET /users/1.xml
   def show
-    @user = User.find(:first)
+    @user = User.first
 
     respond_to do |format|
       format.html # show.html.erb
@@ -52,7 +54,7 @@ class UsersController < ApplicationController
 
   # GET /users/1/edit
   def edit
-    @user = User.find(:first)
+    @user = User.first
   end
 
   # POST /users
@@ -62,8 +64,7 @@ class UsersController < ApplicationController
 
     respond_to do |format|
       if @user.save
-        flash[:notice] = 'User was successfully created.'
-        format.html { redirect_to(@user) }
+        format.html { redirect_to(@user, :notice => 'User was successfully created.') }
         format.xml  { render :xml => @user, :status => :created, :location => @user }
       else
         format.html { render :action => "new" }
@@ -75,12 +76,11 @@ class UsersController < ApplicationController
   # PUT /users/1
   # PUT /users/1.xml
   def update
-    @user = User.find(:first)
+    @user = User.first
 
     respond_to do |format|
       if @user.update_attributes(params[:user])
-        flash[:notice] = 'User was successfully updated.'
-        format.html { redirect_to(@user) }
+        format.html { redirect_to(@user, :notice => 'User was successfully updated.') }
         format.xml  { head :ok }
       else
         format.html { render :action => "edit" }
@@ -92,7 +92,7 @@ class UsersController < ApplicationController
   # DELETE /users/1
   # DELETE /users/1.xml
   def destroy
-    @user = User.find(:first)
+    @user = User.first
     @user.destroy
 
     respond_to do |format|

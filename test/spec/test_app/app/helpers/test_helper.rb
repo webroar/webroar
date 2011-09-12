@@ -1,3 +1,4 @@
+#--
 # WebROaR - Ruby Application Server - http://webroar.in/
 # Copyright (C) 2009  Goonj LLC
 #
@@ -15,6 +16,7 @@
 #
 # You should have received a copy of the GNU General Public License
 # along with WebROaR.  If not, see <http://www.gnu.org/licenses/>.
+#++
 
 module TestHelper
 end

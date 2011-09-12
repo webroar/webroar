@@ -76,16 +76,16 @@ class TestController < ApplicationController
   
   def upload_file
     if request.post?
-	    if params[:file_uploading][:file1]!=""
+      if params[:file_uploading][:file1]!=""
         name=params[:file_uploading][:file1].original_filename
         path=File.join(RAILS_ROOT,'public',name)
         File.open(path,'wb') do |file|
           file.puts params[:file_uploading][:file1].read
         end
         flash[:notice] = 'File uploaded.'
-		  end
+      end
     end
     render :action => :upload_file
   end
-  
+
 end
