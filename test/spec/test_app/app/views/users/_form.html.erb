@@ -1,3 +1,4 @@
+<!--
 # WebROaR - Ruby Application Server - http://webroar.in/
 # Copyright (C) 2009  Goonj LLC
 #
@@ -15,17 +16,27 @@
 #
 # You should have received a copy of the GNU General Public License
 # along with WebROaR.  If not, see <http://www.gnu.org/licenses/>.
+#++
+-->
 
-class CreateUsers < ActiveRecord::Migration
-  def self.up
-    create_table :users do |t|
-      t.string :name
+<%= form_for(@user) do |f| %>
+  <% if @user.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(@user.errors.count, "error") %> prohibited this user from being saved:</h2>
 
-      t.timestamps
-    end
-  end
+      <ul>
+      <% @user.errors.full_messages.each do |msg| %>
+        <li><%= msg %></li>
+      <% end %>
+      </ul>
+    </div>
+  <% end %>
 
-  def self.down
-    drop_table :users
-  end
-end
+  <div class="field">
+    <%= f.label :name %><br />
+    <%= f.text_field :name %>
+  </div>
+  <div class="actions">
+    <%= f.submit %>
+  </div>
+<% end %>

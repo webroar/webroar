@@ -19,7 +19,7 @@ along with WebROaR.  If not, see <http://www.gnu.org/licenses/>.
 -->
 
 <% if flash[:notice]%><%=flash[:notice]%><%end%>
-<% form_for :file_uploading, :url => {:action=>'upload_file'},:html=>{:multipart=>true} do |f| %>
+<%= form_for :file_uploading, :url => {:action=>'upload_file'},:html=>{:multipart=>true} do |f| %>
 
 	<table>
 		<tr  align='left'>

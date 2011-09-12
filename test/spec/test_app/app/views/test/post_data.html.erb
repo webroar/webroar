@@ -18,7 +18,7 @@ You should have received a copy of the GNU General Public License
 along with WebROaR.  If not, see <http://www.gnu.org/licenses/>.
 -->
 
-<%form_for :post_data,:url=>{:action=>'post_data'}do%>
-<%=text_field :post_data,:name,:size=>20%>
+<%= form_for :post_data,:url => {:action=>'post_data'} do |f|%>
+<%=f.text_field :name,:size=>20%>
 <%=submit_tag 'Submit'%>
 <%end%>
