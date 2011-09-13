@@ -1,0 +1,589 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+  <meta content="text/html; charset=utf-8" http-equiv="Content-Type" />
+
+  <title>Class: Mailer</title>
+
+  <link rel="stylesheet" href="./rdoc.css" type="text/css" media="screen" />
+
+  <script src="./js/jquery.js" type="text/javascript" charset="utf-8"></script>
+  <script src="./js/thickbox-compressed.js" type="text/javascript" charset="utf-8"></script>
+  <script src="./js/quicksearch.js" type="text/javascript" charset="utf-8"></script>
+  <script src="./js/darkfish.js" type="text/javascript" charset="utf-8"></script>
+
+</head>
+<body id="top" class="class">
+
+  <div id="metadata">
+    <div id="home-metadata">
+      <div id="home-section" class="section">
+        <h3 class="section-header">
+          <a href="./index.html">Home</a>
+          <a href="./index.html#classes">Classes</a>
+          <a href="./index.html#methods">Methods</a>
+        </h3>
+      </div>
+    </div>
+
+    <div id="file-metadata">
+      <div id="file-list-section" class="section">
+        <h3 class="section-header">In Files</h3>
+        <div class="section-body">
+          <ul>
+          
+            <li><a href="./app/mailers/mailer_rb.html?TB_iframe=true&amp;height=550&amp;width=785"
+              class="thickbox" title="app/mailers/mailer.rb">app/mailers/mailer.rb</a></li>
+          
+          </ul>
+        </div>
+      </div>
+
+      
+    </div>
+
+    <div id="class-metadata">
+      
+      <!-- Parent Class -->
+      <div id="parent-class-section" class="section">
+        <h3 class="section-header">Parent</h3>
+        
+        <p class="link">ActionMailer::Base</p>
+        
+      </div>
+      
+
+      
+
+      
+
+      
+      <!-- Method Quickref -->
+      <div id="method-list-section" class="section">
+        <h3 class="section-header">Methods</h3>
+        <ul class="link-list">
+          
+          <li><a href="#method-c-check_smtp_mail_settings">::check_smtp_mail_settings</a></li>
+          
+          <li><a href="#method-c-mail_settings">::mail_settings</a></li>
+          
+          <li><a href="#method-c-parse_exception">::parse_exception</a></li>
+          
+          <li><a href="#method-c-send_exception">::send_exception</a></li>
+          
+          <li><a href="#method-c-send_feedback">::send_feedback</a></li>
+          
+          <li><a href="#method-c-send_report_bug">::send_report_bug</a></li>
+          
+          <li><a href="#method-i-send_email">#send_email</a></li>
+          
+        </ul>
+      </div>
+      
+
+      
+    </div>
+
+    <div id="project-metadata">
+      
+      
+      <div id="fileindex-section" class="section project-section">
+        <h3 class="section-header">Files</h3>
+        <ul>
+        
+          <li class="file"><a href="./doc/README_FOR_APP.html">README_FOR_APP</a></li>
+        
+        </ul>
+      </div>
+      
+
+      <div id="classindex-section" class="section project-section">
+        <h3 class="section-header">Class/Module Index
+          <span class="search-toggle"><img src="./images/find.png"
+            height="16" width="16" alt="[+]"
+            title="show/hide quicksearch" /></span></h3>
+        <form action="#" method="get" accept-charset="utf-8" class="initially-hidden">
+        <fieldset>
+          <legend>Quicksearch</legend>
+          <input type="text" name="quicksearch" value=""
+            class="quicksearch-field" />
+        </fieldset>
+        </form>
+
+        <ul class="link-list">
+        
+          <li><a href="./Analytics.html">Analytics</a></li>
+        
+          <li><a href="./Analytics/Database.html">Analytics::Database</a></li>
+        
+          <li><a href="./Analytics/ResourceUsage.html">Analytics::ResourceUsage</a></li>
+        
+          <li><a href="./Analytics/Throughput.html">Analytics::Throughput</a></li>
+        
+          <li><a href="./Analytics/Url.html">Analytics::Url</a></li>
+        
+          <li><a href="./Analytics/UrlBreakup.html">Analytics::UrlBreakup</a></li>
+        
+          <li><a href="./ActionView.html">ActionView</a></li>
+        
+          <li><a href="./ActionView/Helpers.html">ActionView::Helpers</a></li>
+        
+          <li><a href="./ActionView/Helpers/AssetTagHelper.html">ActionView::Helpers::AssetTagHelper</a></li>
+        
+          <li><a href="./AdminController.html">AdminController</a></li>
+        
+          <li><a href="./AdminHelper.html">AdminHelper</a></li>
+        
+          <li><a href="./App.html">App</a></li>
+        
+          <li><a href="./AppException.html">AppException</a></li>
+        
+          <li><a href="./AppTimeSample.html">AppTimeSample</a></li>
+        
+          <li><a href="./ApplicationController.html">ApplicationController</a></li>
+        
+          <li><a href="./ApplicationHelper.html">ApplicationHelper</a></li>
+        
+          <li><a href="./ApplicationSpecification.html">ApplicationSpecification</a></li>
+        
+          <li><a href="./ApplicationSpecificationController.html">ApplicationSpecificationController</a></li>
+        
+          <li><a href="./ApplicationSpecificationHelper.html">ApplicationSpecificationHelper</a></li>
+        
+          <li><a href="./Control.html">Control</a></li>
+        
+          <li><a href="./ExceptionDetail.html">ExceptionDetail</a></li>
+        
+          <li><a href="./ExceptionsController.html">ExceptionsController</a></li>
+        
+          <li><a href="./ExceptionsHelper.html">ExceptionsHelper</a></li>
+        
+          <li><a href="./GraphController.html">GraphController</a></li>
+        
+          <li><a href="./GraphHelper.html">GraphHelper</a></li>
+        
+          <li><a href="./Headers.html">Headers</a></li>
+        
+          <li><a href="./HeadersController.html">HeadersController</a></li>
+        
+          <li><a href="./HeadersHelper.html">HeadersHelper</a></li>
+        
+          <li><a href="./MailSpecification.html">MailSpecification</a></li>
+        
+          <li><a href="./MailSpecificationController.html">MailSpecificationController</a></li>
+        
+          <li><a href="./MailSpecificationHelper.html">MailSpecificationHelper</a></li>
+        
+          <li><a href="./Mailer.html">Mailer</a></li>
+        
+          <li><a href="./Object.html">Object</a></li>
+        
+          <li><a href="./PseudoModel.html">PseudoModel</a></li>
+        
+          <li><a href="./ResourceUsage.html">ResourceUsage</a></li>
+        
+          <li><a href="./SCGI.html">SCGI</a></li>
+        
+          <li><a href="./ServerSpecification.html">ServerSpecification</a></li>
+        
+          <li><a href="./ServerSpecificationController.html">ServerSpecificationController</a></li>
+        
+          <li><a href="./ServerSpecificationHelper.html">ServerSpecificationHelper</a></li>
+        
+          <li><a href="./SignalHelper.html">SignalHelper</a></li>
+        
+          <li><a href="./UrlBreakupTimeSample.html">UrlBreakupTimeSample</a></li>
+        
+          <li><a href="./UrlTimeSample.html">UrlTimeSample</a></li>
+        
+          <li><a href="./User.html">User</a></li>
+        
+          <li><a href="./YAMLConfig.html">YAMLConfig</a></li>
+        
+          <li><a href="./YAMLWriter.html">YAMLWriter</a></li>
+        
+        </ul>
+        <div id="no-class-search-results" style="display: none;">No matching classes.</div>
+      </div>
+
+      
+    </div>
+  </div>
+
+  <div id="documentation">
+    <h1 class="class">Mailer</h1>
+
+    <div id="description" class="description">
+      
+    </div><!-- description -->
+
+    
+    
+    
+    <div id="5Buntitled-5D" class="documentation-section">
+      
+
+      
+
+      
+
+      
+
+      <!-- Methods -->
+      
+      <div id="public-class-method-details" class="method-section section">
+        <h3 class="section-header">Public Class Methods</h3>
+
+      
+        <div id="check_smtp_mail_settings-method" class="method-detail ">
+          <a name="method-c-check_smtp_mail_settings"></a>
+
+          
+          <div class="method-heading">
+            <span class="method-name">check_smtp_mail_settings</span><span
+              class="method-args">()</span>
+            <span class="method-click-advice">click to toggle source</span>
+          </div>
+          
+
+          <div class="method-description">
+            
+            <p>This method is used to test smtp mail settings errors</p>
+            
+
+            
+            <div class="method-source-code" id="check_smtp_mail_settings-source">
+<pre>
+<span class="ruby-comment"># File app/mailers/mailer.rb, line 97</span>
+<span class="ruby-keyword">def</span> <span class="ruby-keyword">self</span>.<span class="ruby-identifier">check_smtp_mail_settings</span>
+  <span class="ruby-keyword">return</span> <span class="ruby-keyword">nil</span> <span class="ruby-keyword">if</span> <span class="ruby-constant">ActionMailer</span><span class="ruby-operator">::</span><span class="ruby-constant">Base</span>.<span class="ruby-identifier">delivery_method</span> <span class="ruby-operator">==</span> <span class="ruby-value">:sendmail</span>
+  <span class="ruby-identifier">from</span>,<span class="ruby-identifier">recipients</span>,<span class="ruby-identifier">mail_configuration</span>,<span class="ruby-identifier">email_notification</span> = <span class="ruby-identifier">mail_settings</span>
+  <span class="ruby-keyword">return</span> <span class="ruby-constant">MAIL_SETTINGS_NOT_CONFIGURED_MESSAGE</span>,<span class="ruby-string">''</span> <span class="ruby-keyword">unless</span> <span class="ruby-identifier">mail_configuration</span>
+  <span class="ruby-identifier">smtp_settings</span> = <span class="ruby-constant">ActionMailer</span><span class="ruby-operator">::</span><span class="ruby-constant">Base</span>.<span class="ruby-identifier">smtp_settings</span> <span class="ruby-keyword">if</span> <span class="ruby-constant">ActionMailer</span><span class="ruby-operator">::</span><span class="ruby-constant">Base</span>.<span class="ruby-identifier">smtp_settings</span>
+  <span class="ruby-identifier">smtp</span> = <span class="ruby-constant">Net</span><span class="ruby-operator">::</span><span class="ruby-constant">SMTP</span>.<span class="ruby-identifier">new</span>(<span class="ruby-identifier">smtp_settings</span>[<span class="ruby-value">:address</span>], <span class="ruby-identifier">smtp_settings</span>[<span class="ruby-value">:port</span>])
+  <span class="ruby-keyword">if</span> <span class="ruby-identifier">smtp_settings</span>[<span class="ruby-value">:enable_starttls_auto</span>]
+   <span class="ruby-identifier">smtp</span>.<span class="ruby-identifier">enable_starttls_auto</span> <span class="ruby-keyword">if</span> <span class="ruby-identifier">smtp</span>.<span class="ruby-identifier">respond_to?</span>(<span class="ruby-value">:enable_starttls_auto</span>)
+  <span class="ruby-keyword">end</span>
+  <span class="ruby-keyword">begin</span>
+    <span class="ruby-identifier">smtp</span>.<span class="ruby-identifier">start</span>(<span class="ruby-identifier">smtp_settings</span>[<span class="ruby-value">:domain</span>], <span class="ruby-identifier">smtp_settings</span>[<span class="ruby-value">:user_name</span>], <span class="ruby-identifier">smtp_settings</span>[<span class="ruby-value">:password</span>],<span class="ruby-identifier">smtp_settings</span>[<span class="ruby-value">:authentication</span>]) <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">smtp</span><span class="ruby-operator">|</span> <span class="ruby-keyword">end</span>;
+  <span class="ruby-keyword">rescue</span> <span class="ruby-constant">Exception</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">exception</span>
+    <span class="ruby-keyword">return</span> <span class="ruby-keyword">self</span>.<span class="ruby-identifier">parse_exception</span>(<span class="ruby-identifier">exception</span>),<span class="ruby-string">''</span>
+  <span class="ruby-keyword">end</span>
+<span class="ruby-keyword">end</span></pre>
+            </div><!-- check_smtp_mail_settings-source -->
+            
+          </div>
+
+          
+
+          
+        </div><!-- check_smtp_mail_settings-method -->
+
+      
+        <div id="mail_settings-method" class="method-detail ">
+          <a name="method-c-mail_settings"></a>
+
+          
+          <div class="method-heading">
+            <span class="method-name">mail_settings</span><span
+              class="method-args">()</span>
+            <span class="method-click-advice">click to toggle source</span>
+          </div>
+          
+
+          <div class="method-description">
+            
+            <p>This method is used to configure the ActionMailer::Base.smtp_settings or
+ActionMailer::Base.sendmail_settings and returns from address ,recipients
+address and flags for mail_configuration status and email_notification
+status for analytics part</p>
+            
+
+            
+            <div class="method-source-code" id="mail_settings-source">
+<pre>
+<span class="ruby-comment"># File app/mailers/mailer.rb, line 31</span>
+<span class="ruby-keyword">def</span> <span class="ruby-keyword">self</span>.<span class="ruby-identifier">mail_settings</span>
+  <span class="ruby-keyword">begin</span>
+    <span class="ruby-identifier">data</span> = <span class="ruby-constant">YAML</span><span class="ruby-operator">::</span><span class="ruby-identifier">load_file</span>(<span class="ruby-constant">MAIL_FILE_PATH</span>)
+    <span class="ruby-identifier">mail_configuration</span> = <span class="ruby-keyword">true</span>
+    <span class="ruby-keyword">if</span> <span class="ruby-identifier">data</span>[<span class="ruby-string">'smtp'</span>]
+      <span class="ruby-identifier">details</span> = {
+        <span class="ruby-value">:address</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">data</span>[<span class="ruby-string">'smtp'</span>][<span class="ruby-string">'address'</span>],
+        <span class="ruby-value">:port</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">data</span>[<span class="ruby-string">'smtp'</span>][<span class="ruby-string">'port'</span>],
+        <span class="ruby-value">:domain</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">data</span>[<span class="ruby-string">'smtp'</span>][<span class="ruby-string">'domain'</span>],
+        <span class="ruby-value">:authentication</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">data</span>[<span class="ruby-string">'smtp'</span>][<span class="ruby-string">'authentication'</span>].<span class="ruby-identifier">to_sym</span>,
+        <span class="ruby-value">:user_name</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">data</span>[<span class="ruby-string">'smtp'</span>][<span class="ruby-string">'user_name'</span>],
+        <span class="ruby-value">:password</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">data</span>[<span class="ruby-string">'smtp'</span>][<span class="ruby-string">'password'</span>]
+      }
+      <span class="ruby-identifier">from</span> = <span class="ruby-identifier">data</span>[<span class="ruby-string">'smtp'</span>][<span class="ruby-string">'from'</span>]
+      <span class="ruby-identifier">recipients</span> = <span class="ruby-identifier">data</span>[<span class="ruby-string">'smtp'</span>][<span class="ruby-string">'recipients'</span>]
+      <span class="ruby-constant">ActionMailer</span><span class="ruby-operator">::</span><span class="ruby-constant">Base</span>.<span class="ruby-identifier">smtp_settings</span> = <span class="ruby-identifier">details</span>
+    <span class="ruby-keyword">else</span>
+      <span class="ruby-identifier">details</span> = {
+        <span class="ruby-value">:location</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">data</span>[<span class="ruby-string">'sendmail'</span>][<span class="ruby-string">'location'</span>],
+        <span class="ruby-value">:arguments</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-string">&quot;-i -t -f&quot;</span>
+      }
+      <span class="ruby-identifier">from</span> = <span class="ruby-identifier">data</span>[<span class="ruby-string">'sendmail'</span>][<span class="ruby-string">'from'</span>]
+      <span class="ruby-identifier">recipients</span> = <span class="ruby-identifier">data</span>[<span class="ruby-string">'sendmail'</span>][<span class="ruby-string">'recipients'</span>]
+      <span class="ruby-constant">ActionMailer</span><span class="ruby-operator">::</span><span class="ruby-constant">Base</span>.<span class="ruby-identifier">sendmail_settings</span> = <span class="ruby-identifier">details</span>
+      <span class="ruby-constant">ActionMailer</span><span class="ruby-operator">::</span><span class="ruby-constant">Base</span>.<span class="ruby-identifier">delivery_method</span> = <span class="ruby-value">:sendmail</span>
+    <span class="ruby-keyword">end</span>
+    <span class="ruby-constant">ActionMailer</span><span class="ruby-operator">::</span><span class="ruby-constant">Base</span>.<span class="ruby-identifier">raise_delivery_errors</span> = <span class="ruby-keyword">true</span>
+  <span class="ruby-keyword">rescue</span>
+    <span class="ruby-identifier">mail_configuration</span> = <span class="ruby-keyword">false</span>
+  <span class="ruby-keyword">end</span>
+  <span class="ruby-keyword">if</span> <span class="ruby-identifier">data</span> <span class="ruby-keyword">and</span> <span class="ruby-identifier">data</span>[<span class="ruby-string">'email_notification'</span>] <span class="ruby-keyword">and</span> <span class="ruby-identifier">data</span>[<span class="ruby-string">'email_notification'</span>].<span class="ruby-identifier">downcase</span> <span class="ruby-operator">==</span> <span class="ruby-string">'enabled'</span>
+    <span class="ruby-identifier">email_notification</span> = <span class="ruby-keyword">true</span>
+  <span class="ruby-keyword">else</span>
+    <span class="ruby-identifier">email_notification</span> = <span class="ruby-keyword">false</span>
+  <span class="ruby-keyword">end</span>
+  <span class="ruby-keyword">return</span> <span class="ruby-identifier">from</span>,<span class="ruby-identifier">recipients</span>,<span class="ruby-identifier">mail_configuration</span>,<span class="ruby-identifier">email_notification</span>
+<span class="ruby-keyword">end</span></pre>
+            </div><!-- mail_settings-source -->
+            
+          </div>
+
+          
+
+          
+        </div><!-- mail_settings-method -->
+
+      
+        <div id="parse_exception-method" class="method-detail ">
+          <a name="method-c-parse_exception"></a>
+
+          
+          <div class="method-heading">
+            <span class="method-name">parse_exception</span><span
+              class="method-args">(exception)</span>
+            <span class="method-click-advice">click to toggle source</span>
+          </div>
+          
+
+          <div class="method-description">
+            
+            <p>this method parse the SMTP faluire exceptions</p>
+            
+
+            
+            <div class="method-source-code" id="parse_exception-source">
+<pre>
+<span class="ruby-comment"># File app/mailers/mailer.rb, line 114</span>
+<span class="ruby-keyword">def</span> <span class="ruby-keyword">self</span>.<span class="ruby-identifier">parse_exception</span>(<span class="ruby-identifier">exception</span>)
+  <span class="ruby-keyword">case</span> <span class="ruby-identifier">exception</span>
+  <span class="ruby-keyword">when</span> <span class="ruby-constant">Net</span><span class="ruby-operator">::</span><span class="ruby-constant">SMTPAuthenticationError</span>
+    <span class="ruby-string">&quot;Authentication unsuccessful, Please make sure that email credentials are correct.&quot;</span>
+  <span class="ruby-keyword">when</span> <span class="ruby-constant">Net</span><span class="ruby-operator">::</span><span class="ruby-constant">SMTPFatalError</span>
+    <span class="ruby-string">&quot;Client does not have permissions to send as this sender, Please make sure that Sender`s email address is correct.&quot;</span>
+  <span class="ruby-keyword">when</span> <span class="ruby-constant">Errno</span><span class="ruby-operator">::</span><span class="ruby-constant">ECONNREFUSED</span>
+    <span class="ruby-node">&quot;Connection Refused with port #{ActionMailer::Base.smtp_settings[:port]}, Please make sure that SMTP port address is correct.&quot;</span>
+  <span class="ruby-keyword">when</span> <span class="ruby-constant">SocketError</span>
+    <span class="ruby-string">&quot;Invalid SMTP Server, Please make sure that SMTP server address is correct.&quot;</span>
+  <span class="ruby-keyword">else</span>
+    <span class="ruby-identifier">exception</span>.<span class="ruby-identifier">message</span>.<span class="ruby-identifier">capitalize</span>
+  <span class="ruby-keyword">end</span>
+<span class="ruby-keyword">end</span></pre>
+            </div><!-- parse_exception-source -->
+            
+          </div>
+
+          
+
+          
+        </div><!-- parse_exception-method -->
+
+      
+        <div id="send_exception-method" class="method-detail ">
+          <a name="method-c-send_exception"></a>
+
+          
+          <div class="method-heading">
+            <span class="method-name">send_exception</span><span
+              class="method-args">(exception_hash)</span>
+            <span class="method-click-advice">click to toggle source</span>
+          </div>
+          
+
+          <div class="method-description">
+            
+            <p>This method is used to send exception notification to the recipients</p>
+            
+
+            
+            <div class="method-source-code" id="send_exception-source">
+<pre>
+<span class="ruby-comment"># File app/mailers/mailer.rb, line 75</span>
+<span class="ruby-keyword">def</span> <span class="ruby-keyword">self</span>.<span class="ruby-identifier">send_exception</span>(<span class="ruby-identifier">exception_hash</span>)
+  <span class="ruby-identifier">from</span>,<span class="ruby-identifier">recipients</span>, <span class="ruby-identifier">mail_configuration</span>,<span class="ruby-identifier">email_notification</span> = <span class="ruby-keyword">self</span>.<span class="ruby-identifier">mail_settings</span>
+  <span class="ruby-keyword">if</span> (<span class="ruby-identifier">mail_configuration</span> <span class="ruby-keyword">and</span> <span class="ruby-identifier">email_notification</span>)
+    <span class="ruby-identifier">subject</span> = <span class="ruby-node">&quot;#{exception_hash[:app_name]} : #{exception_hash.delete(:controller)}##{exception_hash.delete(:method)} (#{exception_hash[:exception_class]}) '#{exception_hash[:exception_message]}'&quot;</span>
+    <span class="ruby-identifier">body</span> = <span class="ruby-node">&quot;Application Name\n.................\n#{exception_hash.delete(:app_name)}\n\n&quot;</span>
+    <span class="ruby-identifier">body</span> <span class="ruby-operator">&lt;&lt;</span> <span class="ruby-node">&quot;Error Message \n.................\n#{exception_hash.delete(:exception_message)}\n\n&quot;</span>
+    <span class="ruby-identifier">body</span> <span class="ruby-operator">&lt;&lt;</span> <span class="ruby-node">&quot;Error Class\n.............\n#{exception_hash.delete(:exception_class)}\n\n&quot;</span>
+    <span class="ruby-identifier">body</span> <span class="ruby-operator">&lt;&lt;</span> <span class="ruby-node">&quot;Time\n..................\n#{exception_hash.delete(:wall_time)}\n\n&quot;</span>
+    <span class="ruby-identifier">body</span> <span class="ruby-operator">&lt;&lt;</span> <span class="ruby-node">&quot;Backtrace \n..................\n#{exception_hash.delete(:exception_backtrace)}\n\n&quot;</span>
+    <span class="ruby-identifier">body</span> <span class="ruby-operator">&lt;&lt;</span> <span class="ruby-string">&quot;Environment\n.................\n&quot;</span>
+    <span class="ruby-identifier">exception_hash</span>.<span class="ruby-identifier">each</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">key</span>, <span class="ruby-identifier">value</span><span class="ruby-operator">|</span>
+      <span class="ruby-identifier">body</span> <span class="ruby-operator">&lt;&lt;</span> <span class="ruby-node">&quot;#{key.to_s.upcase} : #{value}\n&quot;</span>
+    <span class="ruby-keyword">end</span>
+    <span class="ruby-keyword">begin</span>
+      <span class="ruby-identifier">send_email</span>(<span class="ruby-identifier">subject</span>,<span class="ruby-identifier">body</span>,<span class="ruby-identifier">from</span>,<span class="ruby-identifier">recipients</span>).<span class="ruby-identifier">deliver</span>
+    <span class="ruby-keyword">rescue</span> <span class="ruby-constant">Exception</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">e</span>
+      <span class="ruby-identifier">e</span>
+    <span class="ruby-keyword">end</span>
+  <span class="ruby-keyword">end</span>
+<span class="ruby-keyword">end</span></pre>
+            </div><!-- send_exception-source -->
+            
+          </div>
+
+          
+
+          
+        </div><!-- send_exception-method -->
+
+      
+        <div id="send_feedback-method" class="method-detail ">
+          <a name="method-c-send_feedback"></a>
+
+          
+          <div class="method-heading">
+            <span class="method-name">send_feedback</span><span
+              class="method-args">(feedback)</span>
+            <span class="method-click-advice">click to toggle source</span>
+          </div>
+          
+
+          <div class="method-description">
+            
+            <p>this method sends the feedback to support@webroar.in</p>
+            
+
+            
+            <div class="method-source-code" id="send_feedback-source">
+<pre>
+<span class="ruby-comment"># File app/mailers/mailer.rb, line 145</span>
+<span class="ruby-keyword">def</span> <span class="ruby-keyword">self</span>.<span class="ruby-identifier">send_feedback</span>(<span class="ruby-identifier">feedback</span>)
+  <span class="ruby-identifier">from</span>,<span class="ruby-identifier">recipients</span>, <span class="ruby-identifier">mail_configuration</span>,<span class="ruby-identifier">email_notification</span> = <span class="ruby-keyword">self</span>.<span class="ruby-identifier">mail_settings</span>
+  <span class="ruby-keyword">return</span> <span class="ruby-constant">MAIL_SETTINGS_NOT_CONFIGURED_MESSAGE</span>,<span class="ruby-string">''</span> <span class="ruby-keyword">unless</span> <span class="ruby-identifier">mail_configuration</span>
+  <span class="ruby-identifier">subject</span> = <span class="ruby-string">&quot;WebROaR Feedback&quot;</span>
+  <span class="ruby-identifier">body</span> = <span class="ruby-node">&quot;#{feedback[:message]}\n\n&quot;</span>
+  <span class="ruby-identifier">body</span> <span class="ruby-operator">&lt;&lt;</span> <span class="ruby-node">&quot;User Name : #{feedback[:name]}\nEmail Address : #{feedback[:email]}\n&quot;</span>
+  <span class="ruby-keyword">begin</span>
+    <span class="ruby-identifier">send_email</span>(<span class="ruby-identifier">subject</span>,<span class="ruby-identifier">body</span>,<span class="ruby-identifier">from</span>,<span class="ruby-string">&quot;support@webroar.in&quot;</span>).<span class="ruby-identifier">deliver</span>
+    <span class="ruby-string">&quot;&lt;span style='color:green;'&gt;Thank you for your valuable feedback!&lt;/span&gt;&quot;</span>
+  <span class="ruby-keyword">rescue</span> <span class="ruby-constant">Exception</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">exception</span>
+    <span class="ruby-keyword">return</span> <span class="ruby-keyword">self</span>.<span class="ruby-identifier">parse_exception</span>(<span class="ruby-identifier">exception</span>),<span class="ruby-string">''</span>
+  <span class="ruby-keyword">end</span>
+<span class="ruby-keyword">end</span></pre>
+            </div><!-- send_feedback-source -->
+            
+          </div>
+
+          
+
+          
+        </div><!-- send_feedback-method -->
+
+      
+        <div id="send_report_bug-method" class="method-detail ">
+          <a name="method-c-send_report_bug"></a>
+
+          
+          <div class="method-heading">
+            <span class="method-name">send_report_bug</span><span
+              class="method-args">(report_bug)</span>
+            <span class="method-click-advice">click to toggle source</span>
+          </div>
+          
+
+          <div class="method-description">
+            
+            <p>this method sends the bug report to support@webroar.in</p>
+            
+
+            
+            <div class="method-source-code" id="send_report_bug-source">
+<pre>
+<span class="ruby-comment"># File app/mailers/mailer.rb, line 130</span>
+<span class="ruby-keyword">def</span> <span class="ruby-keyword">self</span>.<span class="ruby-identifier">send_report_bug</span>(<span class="ruby-identifier">report_bug</span>)
+  <span class="ruby-identifier">from</span>,<span class="ruby-identifier">recipients</span>, <span class="ruby-identifier">mail_configuration</span>,<span class="ruby-identifier">email_notification</span> = <span class="ruby-keyword">self</span>.<span class="ruby-identifier">mail_settings</span>
+  <span class="ruby-keyword">return</span> <span class="ruby-constant">MAIL_SETTINGS_NOT_CONFIGURED_MESSAGE</span>,<span class="ruby-string">''</span> <span class="ruby-keyword">unless</span> <span class="ruby-identifier">mail_configuration</span>
+  <span class="ruby-identifier">subject</span> = <span class="ruby-identifier">report_bug</span>[<span class="ruby-value">:subject</span>]
+  <span class="ruby-identifier">body</span> = <span class="ruby-node">&quot;#{report_bug[:description]}\n\n&quot;</span>
+  <span class="ruby-identifier">body</span> <span class="ruby-operator">&lt;&lt;</span> <span class="ruby-node">&quot;Name : #{report_bug[:name]}\nEmail Address : #{report_bug[:email]}\n&quot;</span>
+  <span class="ruby-keyword">begin</span>
+    <span class="ruby-identifier">send_email</span>(<span class="ruby-identifier">subject</span>,<span class="ruby-identifier">body</span>,<span class="ruby-identifier">from</span>,<span class="ruby-string">&quot;support@webroar.in&quot;</span>).<span class="ruby-identifier">deliver</span>
+    <span class="ruby-string">&quot;&lt;span style='color:green;'&gt;Thank You for reporting the issue, We'll contact you shortly.&lt;/span&gt;&quot;</span>
+  <span class="ruby-keyword">rescue</span> <span class="ruby-constant">Exception</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">exception</span>
+    <span class="ruby-keyword">return</span> <span class="ruby-keyword">self</span>.<span class="ruby-identifier">parse_exception</span>(<span class="ruby-identifier">exception</span>),<span class="ruby-string">''</span>
+  <span class="ruby-keyword">end</span>
+<span class="ruby-keyword">end</span></pre>
+            </div><!-- send_report_bug-source -->
+            
+          </div>
+
+          
+
+          
+        </div><!-- send_report_bug-method -->
+
+      
+      </div><!-- public-class-method-details -->
+    
+      <div id="public-instance-method-details" class="method-section section">
+        <h3 class="section-header">Public Instance Methods</h3>
+
+      
+        <div id="send_email-method" class="method-detail ">
+          <a name="method-i-send_email"></a>
+
+          
+          <div class="method-heading">
+            <span class="method-name">send_email</span><span
+              class="method-args">(subject,body,from,recipients)</span>
+            <span class="method-click-advice">click to toggle source</span>
+          </div>
+          
+
+          <div class="method-description">
+            
+            <p>This method is to deliver the email to recipients</p>
+            
+
+            
+            <div class="method-source-code" id="send_email-source">
+<pre>
+<span class="ruby-comment"># File app/mailers/mailer.rb, line 70</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">send_email</span>(<span class="ruby-identifier">subject</span>,<span class="ruby-identifier">body</span>,<span class="ruby-identifier">from</span>,<span class="ruby-identifier">recipients</span>)
+  <span class="ruby-identifier">mail</span>(<span class="ruby-value">:to</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">recipients</span>,<span class="ruby-value">:from</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">from</span>,<span class="ruby-value">:subject</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">subject</span>,<span class="ruby-value">:body</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">body</span>)
+<span class="ruby-keyword">end</span></pre>
+            </div><!-- send_email-source -->
+            
+          </div>
+
+          
+
+          
+        </div><!-- send_email-method -->
+
+      
+      </div><!-- public-instance-method-details -->
+    
+    </div><!-- 5Buntitled-5D -->
+  
+
+  </div><!-- documentation -->
+
+  <div id="validator-badges">
+    <p><small><a href="http://validator.w3.org/check/referer">[Validate]</a></small></p>
+    <p><small>Generated with the <a href="http://deveiate.org/projects/Darkfish-Rdoc/">Darkfish
+      Rdoc Generator</a> 2</small>.</p>
+  </div>
+
+</body>
+</html>
+

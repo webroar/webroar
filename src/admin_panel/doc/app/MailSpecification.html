@@ -1,0 +1,685 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+  <meta content="text/html; charset=utf-8" http-equiv="Content-Type" />
+
+  <title>Class: MailSpecification</title>
+
+  <link rel="stylesheet" href="./rdoc.css" type="text/css" media="screen" />
+
+  <script src="./js/jquery.js" type="text/javascript" charset="utf-8"></script>
+  <script src="./js/thickbox-compressed.js" type="text/javascript" charset="utf-8"></script>
+  <script src="./js/quicksearch.js" type="text/javascript" charset="utf-8"></script>
+  <script src="./js/darkfish.js" type="text/javascript" charset="utf-8"></script>
+
+</head>
+<body id="top" class="class">
+
+  <div id="metadata">
+    <div id="home-metadata">
+      <div id="home-section" class="section">
+        <h3 class="section-header">
+          <a href="./index.html">Home</a>
+          <a href="./index.html#classes">Classes</a>
+          <a href="./index.html#methods">Methods</a>
+        </h3>
+      </div>
+    </div>
+
+    <div id="file-metadata">
+      <div id="file-list-section" class="section">
+        <h3 class="section-header">In Files</h3>
+        <div class="section-body">
+          <ul>
+          
+            <li><a href="./app/models/mail_specification_rb.html?TB_iframe=true&amp;height=550&amp;width=785"
+              class="thickbox" title="app/models/mail_specification.rb">app/models/mail_specification.rb</a></li>
+          
+          </ul>
+        </div>
+      </div>
+
+      
+    </div>
+
+    <div id="class-metadata">
+      
+      <!-- Parent Class -->
+      <div id="parent-class-section" class="section">
+        <h3 class="section-header">Parent</h3>
+        
+        <p class="link"><a href="Object.html">Object</a></p>
+        
+      </div>
+      
+
+      
+
+      
+
+      
+      <!-- Method Quickref -->
+      <div id="method-list-section" class="section">
+        <h3 class="section-header">Methods</h3>
+        <ul class="link-list">
+          
+          <li><a href="#method-c-save_sendmail_specification">::save_sendmail_specification</a></li>
+          
+          <li><a href="#method-c-save_smtp_specification">::save_smtp_specification</a></li>
+          
+          <li><a href="#method-c-sendmail_specification_hash">::sendmail_specification_hash</a></li>
+          
+          <li><a href="#method-c-smtp_specification_hash">::smtp_specification_hash</a></li>
+          
+          <li><a href="#method-c-update_notification_status">::update_notification_status</a></li>
+          
+          <li><a href="#method-c-validate_feedback_data">::validate_feedback_data</a></li>
+          
+          <li><a href="#method-c-validate_report_bug_data">::validate_report_bug_data</a></li>
+          
+          <li><a href="#method-c-validate_sendmail_specification">::validate_sendmail_specification</a></li>
+          
+          <li><a href="#method-c-validate_smtp_specification">::validate_smtp_specification</a></li>
+          
+        </ul>
+      </div>
+      
+
+      
+    </div>
+
+    <div id="project-metadata">
+      
+      
+      <div id="fileindex-section" class="section project-section">
+        <h3 class="section-header">Files</h3>
+        <ul>
+        
+          <li class="file"><a href="./doc/README_FOR_APP.html">README_FOR_APP</a></li>
+        
+        </ul>
+      </div>
+      
+
+      <div id="classindex-section" class="section project-section">
+        <h3 class="section-header">Class/Module Index
+          <span class="search-toggle"><img src="./images/find.png"
+            height="16" width="16" alt="[+]"
+            title="show/hide quicksearch" /></span></h3>
+        <form action="#" method="get" accept-charset="utf-8" class="initially-hidden">
+        <fieldset>
+          <legend>Quicksearch</legend>
+          <input type="text" name="quicksearch" value=""
+            class="quicksearch-field" />
+        </fieldset>
+        </form>
+
+        <ul class="link-list">
+        
+          <li><a href="./Analytics.html">Analytics</a></li>
+        
+          <li><a href="./Analytics/Database.html">Analytics::Database</a></li>
+        
+          <li><a href="./Analytics/ResourceUsage.html">Analytics::ResourceUsage</a></li>
+        
+          <li><a href="./Analytics/Throughput.html">Analytics::Throughput</a></li>
+        
+          <li><a href="./Analytics/Url.html">Analytics::Url</a></li>
+        
+          <li><a href="./Analytics/UrlBreakup.html">Analytics::UrlBreakup</a></li>
+        
+          <li><a href="./ActionView.html">ActionView</a></li>
+        
+          <li><a href="./ActionView/Helpers.html">ActionView::Helpers</a></li>
+        
+          <li><a href="./ActionView/Helpers/AssetTagHelper.html">ActionView::Helpers::AssetTagHelper</a></li>
+        
+          <li><a href="./AdminController.html">AdminController</a></li>
+        
+          <li><a href="./AdminHelper.html">AdminHelper</a></li>
+        
+          <li><a href="./App.html">App</a></li>
+        
+          <li><a href="./AppException.html">AppException</a></li>
+        
+          <li><a href="./AppTimeSample.html">AppTimeSample</a></li>
+        
+          <li><a href="./ApplicationController.html">ApplicationController</a></li>
+        
+          <li><a href="./ApplicationHelper.html">ApplicationHelper</a></li>
+        
+          <li><a href="./ApplicationSpecification.html">ApplicationSpecification</a></li>
+        
+          <li><a href="./ApplicationSpecificationController.html">ApplicationSpecificationController</a></li>
+        
+          <li><a href="./ApplicationSpecificationHelper.html">ApplicationSpecificationHelper</a></li>
+        
+          <li><a href="./Control.html">Control</a></li>
+        
+          <li><a href="./ExceptionDetail.html">ExceptionDetail</a></li>
+        
+          <li><a href="./ExceptionsController.html">ExceptionsController</a></li>
+        
+          <li><a href="./ExceptionsHelper.html">ExceptionsHelper</a></li>
+        
+          <li><a href="./GraphController.html">GraphController</a></li>
+        
+          <li><a href="./GraphHelper.html">GraphHelper</a></li>
+        
+          <li><a href="./Headers.html">Headers</a></li>
+        
+          <li><a href="./HeadersController.html">HeadersController</a></li>
+        
+          <li><a href="./HeadersHelper.html">HeadersHelper</a></li>
+        
+          <li><a href="./MailSpecification.html">MailSpecification</a></li>
+        
+          <li><a href="./MailSpecificationController.html">MailSpecificationController</a></li>
+        
+          <li><a href="./MailSpecificationHelper.html">MailSpecificationHelper</a></li>
+        
+          <li><a href="./Mailer.html">Mailer</a></li>
+        
+          <li><a href="./Object.html">Object</a></li>
+        
+          <li><a href="./PseudoModel.html">PseudoModel</a></li>
+        
+          <li><a href="./ResourceUsage.html">ResourceUsage</a></li>
+        
+          <li><a href="./SCGI.html">SCGI</a></li>
+        
+          <li><a href="./ServerSpecification.html">ServerSpecification</a></li>
+        
+          <li><a href="./ServerSpecificationController.html">ServerSpecificationController</a></li>
+        
+          <li><a href="./ServerSpecificationHelper.html">ServerSpecificationHelper</a></li>
+        
+          <li><a href="./SignalHelper.html">SignalHelper</a></li>
+        
+          <li><a href="./UrlBreakupTimeSample.html">UrlBreakupTimeSample</a></li>
+        
+          <li><a href="./UrlTimeSample.html">UrlTimeSample</a></li>
+        
+          <li><a href="./User.html">User</a></li>
+        
+          <li><a href="./YAMLConfig.html">YAMLConfig</a></li>
+        
+          <li><a href="./YAMLWriter.html">YAMLWriter</a></li>
+        
+        </ul>
+        <div id="no-class-search-results" style="display: none;">No matching classes.</div>
+      </div>
+
+      
+    </div>
+  </div>
+
+  <div id="documentation">
+    <h1 class="class">MailSpecification</h1>
+
+    <div id="description" class="description">
+      
+    </div><!-- description -->
+
+    
+    
+    
+    <div id="5Buntitled-5D" class="documentation-section">
+      
+
+      
+
+      
+
+      
+
+      <!-- Methods -->
+      
+      <div id="public-class-method-details" class="method-section section">
+        <h3 class="section-header">Public Class Methods</h3>
+
+      
+        <div id="save_sendmail_specification-method" class="method-detail ">
+          <a name="method-c-save_sendmail_specification"></a>
+
+          
+          <div class="method-heading">
+            <span class="method-name">save_sendmail_specification</span><span
+              class="method-args">(sendmail)</span>
+            <span class="method-click-advice">click to toggle source</span>
+          </div>
+          
+
+          <div class="method-description">
+            
+            
+            
+
+            
+            <div class="method-source-code" id="save_sendmail_specification-source">
+<pre>
+<span class="ruby-comment"># File app/models/mail_specification.rb, line 51</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">save_sendmail_specification</span>(<span class="ruby-identifier">sendmail</span>)
+  <span class="ruby-identifier">data</span> = <span class="ruby-identifier">sendmail_specification_hash</span>(<span class="ruby-identifier">sendmail</span>) 
+  <span class="ruby-identifier">data</span> = {<span class="ruby-string">'sendmail'</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">data</span>, <span class="ruby-string">'email_notification'</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-string">'enabled'</span>}
+  <span class="ruby-constant">YAMLWriter</span>.<span class="ruby-identifier">write</span>(<span class="ruby-identifier">data</span>, <span class="ruby-constant">MAIL_FILE_PATH</span>, <span class="ruby-constant">YAMLConfig</span><span class="ruby-operator">::</span><span class="ruby-constant">SENDMAIL</span>)
+<span class="ruby-keyword">end</span></pre>
+            </div><!-- save_sendmail_specification-source -->
+            
+          </div>
+
+          
+
+          
+        </div><!-- save_sendmail_specification-method -->
+
+      
+        <div id="save_smtp_specification-method" class="method-detail ">
+          <a name="method-c-save_smtp_specification"></a>
+
+          
+          <div class="method-heading">
+            <span class="method-name">save_smtp_specification</span><span
+              class="method-args">(smtp)</span>
+            <span class="method-click-advice">click to toggle source</span>
+          </div>
+          
+
+          <div class="method-description">
+            
+            
+            
+
+            
+            <div class="method-source-code" id="save_smtp_specification-source">
+<pre>
+<span class="ruby-comment"># File app/models/mail_specification.rb, line 107</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">save_smtp_specification</span>(<span class="ruby-identifier">smtp</span>)
+  <span class="ruby-identifier">data</span> = <span class="ruby-identifier">smtp_specification_hash</span>(<span class="ruby-identifier">smtp</span>) 
+  <span class="ruby-identifier">data</span> = {<span class="ruby-string">'smtp'</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">data</span>, <span class="ruby-string">'email_notification'</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-string">'enabled'</span>}
+  <span class="ruby-constant">YAMLWriter</span>.<span class="ruby-identifier">write</span>(<span class="ruby-identifier">data</span>, <span class="ruby-constant">MAIL_FILE_PATH</span>, <span class="ruby-constant">YAMLConfig</span><span class="ruby-operator">::</span><span class="ruby-constant">SMTP</span>)
+<span class="ruby-keyword">end</span></pre>
+            </div><!-- save_smtp_specification-source -->
+            
+          </div>
+
+          
+
+          
+        </div><!-- save_smtp_specification-method -->
+
+      
+        <div id="sendmail_specification_hash-method" class="method-detail ">
+          <a name="method-c-sendmail_specification_hash"></a>
+
+          
+          <div class="method-heading">
+            <span class="method-name">sendmail_specification_hash</span><span
+              class="method-args">(sendmail=nil)</span>
+            <span class="method-click-advice">click to toggle source</span>
+          </div>
+          
+
+          <div class="method-description">
+            
+            
+            
+
+            
+            <div class="method-source-code" id="sendmail_specification_hash-source">
+<pre>
+<span class="ruby-comment"># File app/models/mail_specification.rb, line 57</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">sendmail_specification_hash</span>(<span class="ruby-identifier">sendmail</span>=<span class="ruby-keyword">nil</span>)
+  <span class="ruby-keyword">if</span> <span class="ruby-identifier">sendmail</span> <span class="ruby-comment"># create Hash from passed argument</span>
+    <span class="ruby-constant">Hash</span>[
+        <span class="ruby-string">'location'</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">sendmail</span>[<span class="ruby-value">:location</span>],
+        <span class="ruby-string">'arguments'</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-string">&quot;-f&quot;</span>,
+        <span class="ruby-string">'from'</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">sendmail</span>[<span class="ruby-value">:from</span>],
+        <span class="ruby-string">'recipients'</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">sendmail</span>[<span class="ruby-value">:recipients</span>]
+        ]
+  <span class="ruby-keyword">else</span> <span class="ruby-comment"># render default values</span>
+    <span class="ruby-constant">Hash</span>[
+        <span class="ruby-string">'location'</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-string">''</span>,
+        <span class="ruby-string">'from'</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-string">''</span>,
+        <span class="ruby-string">'recipients'</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-string">''</span>
+        ]
+  <span class="ruby-keyword">end</span>
+<span class="ruby-keyword">end</span></pre>
+            </div><!-- sendmail_specification_hash-source -->
+            
+          </div>
+
+          
+
+          
+        </div><!-- sendmail_specification_hash-method -->
+
+      
+        <div id="smtp_specification_hash-method" class="method-detail ">
+          <a name="method-c-smtp_specification_hash"></a>
+
+          
+          <div class="method-heading">
+            <span class="method-name">smtp_specification_hash</span><span
+              class="method-args">(smtp=nil)</span>
+            <span class="method-click-advice">click to toggle source</span>
+          </div>
+          
+
+          <div class="method-description">
+            
+            
+            
+
+            
+            <div class="method-source-code" id="smtp_specification_hash-source">
+<pre>
+<span class="ruby-comment"># File app/models/mail_specification.rb, line 113</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">smtp_specification_hash</span>(<span class="ruby-identifier">smtp</span>=<span class="ruby-keyword">nil</span>)
+  <span class="ruby-keyword">if</span> <span class="ruby-identifier">smtp</span>   <span class="ruby-comment"># create Hash from passed argument  </span>
+    <span class="ruby-constant">Hash</span>[
+        <span class="ruby-string">'address'</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">smtp</span>[<span class="ruby-value">:address</span>],
+        <span class="ruby-string">'port'</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">smtp</span>[<span class="ruby-value">:port</span>],
+        <span class="ruby-string">'domain'</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">smtp</span>[<span class="ruby-value">:domain</span>],
+        <span class="ruby-string">'authentication'</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">smtp</span>[<span class="ruby-value">:authentication</span>],
+        <span class="ruby-string">'user_name'</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">smtp</span>[<span class="ruby-value">:user_name</span>],
+        <span class="ruby-string">'password'</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">smtp</span>[<span class="ruby-value">:password</span>],
+        <span class="ruby-string">'from'</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">smtp</span>[<span class="ruby-value">:from</span>],
+        <span class="ruby-string">'recipients'</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">smtp</span>[<span class="ruby-value">:recipients</span>]
+        ]
+  <span class="ruby-keyword">else</span>
+    <span class="ruby-constant">Hash</span>[
+        <span class="ruby-string">'address'</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-string">&quot;&quot;</span>,
+        <span class="ruby-string">'port'</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-string">'25'</span>,
+        <span class="ruby-string">'domain'</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-string">&quot;&quot;</span>,
+        <span class="ruby-string">'authentication'</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-string">&quot;login&quot;</span>,
+        <span class="ruby-string">'user_name'</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-string">&quot;&quot;</span>,
+        <span class="ruby-string">'password'</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-string">&quot;&quot;</span>,
+        <span class="ruby-string">'from'</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-string">&quot;&quot;</span>,
+        <span class="ruby-string">'recipients'</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-string">&quot;&quot;</span>
+        ]
+  <span class="ruby-keyword">end</span>
+<span class="ruby-keyword">end</span></pre>
+            </div><!-- smtp_specification_hash-source -->
+            
+          </div>
+
+          
+
+          
+        </div><!-- smtp_specification_hash-method -->
+
+      
+        <div id="update_notification_status-method" class="method-detail ">
+          <a name="method-c-update_notification_status"></a>
+
+          
+          <div class="method-heading">
+            <span class="method-name">update_notification_status</span><span
+              class="method-args">(status)</span>
+            <span class="method-click-advice">click to toggle source</span>
+          </div>
+          
+
+          <div class="method-description">
+            
+            
+            
+
+            
+            <div class="method-source-code" id="update_notification_status-source">
+<pre>
+<span class="ruby-comment"># File app/models/mail_specification.rb, line 139</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">update_notification_status</span>(<span class="ruby-identifier">status</span>)
+  <span class="ruby-ivar">@notification_conf</span> = <span class="ruby-constant">YAML</span><span class="ruby-operator">::</span><span class="ruby-identifier">load_file</span>(<span class="ruby-constant">MAIL_FILE_PATH</span>)      
+  <span class="ruby-keyword">case</span> <span class="ruby-identifier">status</span>
+    <span class="ruby-keyword">when</span> <span class="ruby-value">:enable</span>
+      <span class="ruby-ivar">@notification_conf</span>[<span class="ruby-string">'email_notification'</span>] = <span class="ruby-string">'enabled'</span>
+    <span class="ruby-keyword">when</span> <span class="ruby-value">:disable</span>
+      <span class="ruby-ivar">@notification_conf</span>[<span class="ruby-string">'email_notification'</span>] = <span class="ruby-string">'disabled'</span>          
+  <span class="ruby-keyword">end</span>      
+  <span class="ruby-identifier">yaml_obj</span> = <span class="ruby-constant">YAML</span><span class="ruby-operator">::</span><span class="ruby-identifier">dump</span>(<span class="ruby-ivar">@notification_conf</span>)
+  <span class="ruby-constant">File</span>.<span class="ruby-identifier">open</span>(<span class="ruby-constant">MAIL_FILE_PATH</span>, <span class="ruby-string">'w'</span>) <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">f</span><span class="ruby-operator">|</span>
+    <span class="ruby-identifier">f</span>.<span class="ruby-identifier">puts</span> <span class="ruby-identifier">yaml_obj</span>
+  <span class="ruby-keyword">end</span>
+<span class="ruby-keyword">end</span></pre>
+            </div><!-- update_notification_status-source -->
+            
+          </div>
+
+          
+
+          
+        </div><!-- update_notification_status-method -->
+
+      
+        <div id="validate_feedback_data-method" class="method-detail ">
+          <a name="method-c-validate_feedback_data"></a>
+
+          
+          <div class="method-heading">
+            <span class="method-name">validate_feedback_data</span><span
+              class="method-args">(feedback)</span>
+            <span class="method-click-advice">click to toggle source</span>
+          </div>
+          
+
+          <div class="method-description">
+            
+            
+            
+
+            
+            <div class="method-source-code" id="validate_feedback_data-source">
+<pre>
+<span class="ruby-comment"># File app/models/mail_specification.rb, line 153</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">validate_feedback_data</span>(<span class="ruby-identifier">feedback</span>)
+  <span class="ruby-identifier">message</span> = <span class="ruby-string">&quot;&quot;</span>
+  <span class="ruby-identifier">validate_field</span> = [<span class="ruby-value">:name</span>,<span class="ruby-value">:email</span>,<span class="ruby-value">:message</span>]
+  <span class="ruby-identifier">validate_message</span> = [<span class="ruby-string">&quot;Name&quot;</span>,<span class="ruby-string">&quot;Email&quot;</span>,<span class="ruby-string">&quot;Message&quot;</span>]
+  <span class="ruby-identifier">validate_field</span>.<span class="ruby-identifier">each_index</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">index</span><span class="ruby-operator">|</span>
+    <span class="ruby-keyword">if</span>(<span class="ruby-identifier">feedback</span>[<span class="ruby-identifier">validate_field</span>[<span class="ruby-identifier">index</span>]] <span class="ruby-operator">==</span> <span class="ruby-keyword">nil</span> <span class="ruby-keyword">or</span> <span class="ruby-identifier">feedback</span>[<span class="ruby-identifier">validate_field</span>[<span class="ruby-identifier">index</span>]].<span class="ruby-identifier">strip</span> <span class="ruby-operator">==</span> <span class="ruby-string">&quot;&quot;</span>)
+      <span class="ruby-identifier">message</span> <span class="ruby-operator">&lt;&lt;</span> <span class="ruby-node">&quot;#{validate_message[index]} can't be blank.&lt;br&gt;&quot;</span>
+    <span class="ruby-keyword">else</span>
+      <span class="ruby-keyword">if</span> <span class="ruby-identifier">validate_field</span>[<span class="ruby-identifier">index</span>] <span class="ruby-operator">==</span> <span class="ruby-value">:email</span>
+        <span class="ruby-keyword">if</span> <span class="ruby-operator">!</span><span class="ruby-regexp">/^([^@\s]+)@((?:[-a-z0-9]+\.)+[a-z]{2,})$/</span>.<span class="ruby-identifier">match</span>(<span class="ruby-identifier">feedback</span>[<span class="ruby-value">:email</span>])
+          <span class="ruby-identifier">message</span> <span class="ruby-operator">&lt;&lt;</span> <span class="ruby-string">&quot;Please enter valid email address.&quot;</span>
+        <span class="ruby-keyword">end</span>
+      <span class="ruby-keyword">end</span>
+    <span class="ruby-keyword">end</span>
+  <span class="ruby-keyword">end</span>
+  <span class="ruby-identifier">message</span>
+<span class="ruby-keyword">end</span></pre>
+            </div><!-- validate_feedback_data-source -->
+            
+          </div>
+
+          
+
+          
+        </div><!-- validate_feedback_data-method -->
+
+      
+        <div id="validate_report_bug_data-method" class="method-detail ">
+          <a name="method-c-validate_report_bug_data"></a>
+
+          
+          <div class="method-heading">
+            <span class="method-name">validate_report_bug_data</span><span
+              class="method-args">(report_bug)</span>
+            <span class="method-click-advice">click to toggle source</span>
+          </div>
+          
+
+          <div class="method-description">
+            
+            
+            
+
+            
+            <div class="method-source-code" id="validate_report_bug_data-source">
+<pre>
+<span class="ruby-comment"># File app/models/mail_specification.rb, line 171</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">validate_report_bug_data</span>(<span class="ruby-identifier">report_bug</span>)
+  <span class="ruby-identifier">message</span> = <span class="ruby-string">&quot;&quot;</span>
+  <span class="ruby-identifier">validate_field</span> = [<span class="ruby-value">:name</span>,<span class="ruby-value">:email</span>,<span class="ruby-value">:subject</span>,<span class="ruby-value">:description</span>]
+  <span class="ruby-identifier">validate_message</span> = [<span class="ruby-string">&quot;Name&quot;</span>,<span class="ruby-string">&quot;Email&quot;</span>,<span class="ruby-string">&quot;Subject&quot;</span>,<span class="ruby-string">&quot;Problem description&quot;</span>]
+  <span class="ruby-identifier">validate_field</span>.<span class="ruby-identifier">each_index</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">index</span>,<span class="ruby-identifier">value</span><span class="ruby-operator">|</span>
+    <span class="ruby-keyword">if</span>(<span class="ruby-identifier">report_bug</span>[<span class="ruby-identifier">validate_field</span>[<span class="ruby-identifier">index</span>]] <span class="ruby-operator">==</span> <span class="ruby-keyword">nil</span> <span class="ruby-keyword">or</span> <span class="ruby-identifier">report_bug</span>[<span class="ruby-identifier">validate_field</span>[<span class="ruby-identifier">index</span>]].<span class="ruby-identifier">strip</span> <span class="ruby-operator">==</span> <span class="ruby-string">&quot;&quot;</span>)
+      <span class="ruby-identifier">message</span> <span class="ruby-operator">&lt;&lt;</span> <span class="ruby-node">&quot;#{validate_message[index]} can't be blank.&lt;br&gt;&quot;</span>
+    <span class="ruby-keyword">else</span>
+      <span class="ruby-keyword">if</span> <span class="ruby-identifier">validate_field</span>[<span class="ruby-identifier">index</span>] <span class="ruby-operator">==</span> <span class="ruby-value">:email</span>
+        <span class="ruby-keyword">if</span> <span class="ruby-operator">!</span><span class="ruby-regexp">/^([^@\s]+)@((?:[-a-z0-9]+\.)+[a-z]{2,})$/</span>.<span class="ruby-identifier">match</span>(<span class="ruby-identifier">report_bug</span>[<span class="ruby-value">:email</span>])
+          <span class="ruby-identifier">message</span> <span class="ruby-operator">&lt;&lt;</span> <span class="ruby-string">&quot;Please enter valid email address.&quot;</span>
+        <span class="ruby-keyword">end</span>
+      <span class="ruby-keyword">end</span>
+    <span class="ruby-keyword">end</span>
+  <span class="ruby-keyword">end</span>
+  <span class="ruby-identifier">message</span>
+<span class="ruby-keyword">end</span></pre>
+            </div><!-- validate_report_bug_data-source -->
+            
+          </div>
+
+          
+
+          
+        </div><!-- validate_report_bug_data-method -->
+
+      
+        <div id="validate_sendmail_specification-method" class="method-detail ">
+          <a name="method-c-validate_sendmail_specification"></a>
+
+          
+          <div class="method-heading">
+            <span class="method-name">validate_sendmail_specification</span><span
+              class="method-args">(sendmail)</span>
+            <span class="method-click-advice">click to toggle source</span>
+          </div>
+          
+
+          <div class="method-description">
+            
+            
+            
+
+            
+            <div class="method-source-code" id="validate_sendmail_specification-source">
+<pre>
+<span class="ruby-comment"># File app/models/mail_specification.rb, line 24</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">validate_sendmail_specification</span>(<span class="ruby-identifier">sendmail</span>)
+  <span class="ruby-identifier">str</span> = <span class="ruby-string">&quot;&quot;</span>
+  <span class="ruby-identifier">str</span> = <span class="ruby-constant">SENDMAIL_LOCATION_VALIDATION</span> <span class="ruby-keyword">if</span> <span class="ruby-identifier">sendmail</span>[<span class="ruby-value">:location</span>].<span class="ruby-identifier">strip</span>.<span class="ruby-identifier">length</span> <span class="ruby-operator">&lt;</span> <span class="ruby-value">1</span>
+  <span class="ruby-keyword">if</span> <span class="ruby-identifier">sendmail</span>[<span class="ruby-value">:from</span>].<span class="ruby-identifier">strip</span>.<span class="ruby-identifier">length</span> <span class="ruby-operator">==</span> <span class="ruby-value">0</span>
+    <span class="ruby-identifier">str</span> <span class="ruby-operator">+=</span> <span class="ruby-constant">SENDMAIL_SENDER_EMAIL_VALIDATION1</span>
+  <span class="ruby-keyword">elsif</span> <span class="ruby-operator">!</span><span class="ruby-regexp">/^([^@\s]+)@((?:[-a-z0-9]+\.)+[a-z]{2,})$/</span>.<span class="ruby-identifier">match</span>(<span class="ruby-identifier">sendmail</span>[<span class="ruby-value">:from</span>].<span class="ruby-identifier">strip</span>)
+    <span class="ruby-identifier">str</span> <span class="ruby-operator">+=</span> <span class="ruby-constant">SENDMAIL_SENDER_EMAIL_VALIDATION</span>      
+  <span class="ruby-keyword">end</span>
+  
+  <span class="ruby-keyword">if</span> <span class="ruby-identifier">sendmail</span>[<span class="ruby-value">:recipients</span>].<span class="ruby-identifier">length</span> <span class="ruby-operator">==</span> <span class="ruby-value">0</span>
+    <span class="ruby-identifier">str</span> <span class="ruby-operator">+=</span> <span class="ruby-constant">SENDMAIL_RECIPIENT_EMAIL_VALIDATION1</span>
+  <span class="ruby-keyword">else</span>
+    <span class="ruby-identifier">flag</span> = <span class="ruby-value">0</span>  
+    <span class="ruby-identifier">str1</span> = <span class="ruby-string">&quot;&lt;ul&gt;&quot;</span>
+    <span class="ruby-identifier">recipients</span> = <span class="ruby-identifier">sendmail</span>[<span class="ruby-value">:recipients</span>].<span class="ruby-identifier">split</span>(<span class="ruby-string">&quot;,&quot;</span>)
+    <span class="ruby-identifier">recipients</span>.<span class="ruby-identifier">each</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">recipient</span><span class="ruby-operator">|</span>
+      <span class="ruby-keyword">if</span> <span class="ruby-operator">!</span><span class="ruby-regexp">/^([^@\s]+)@((?:[-a-z0-9]+\.)+[a-z]{2,})$/</span>.<span class="ruby-identifier">match</span>(<span class="ruby-identifier">recipient</span>.<span class="ruby-identifier">strip</span>)
+        <span class="ruby-identifier">flag</span> = <span class="ruby-value">1</span>
+        <span class="ruby-identifier">str1</span> <span class="ruby-operator">+=</span> <span class="ruby-node">&quot;&lt;li&gt;#{recipient.strip}&lt;/li&gt;&quot;</span>
+      <span class="ruby-keyword">end</span>
+    <span class="ruby-keyword">end</span>
+    <span class="ruby-identifier">str1</span> <span class="ruby-operator">+=</span> <span class="ruby-string">&quot;&lt;/ul&gt;&quot;</span>
+    <span class="ruby-identifier">str</span> <span class="ruby-operator">+=</span> <span class="ruby-node">&quot;&lt;li&gt;#{SENDMAIL_RECIPIENT_EMAIL_VALIDATION}-#{str1}&lt;/li&gt;&quot;</span> <span class="ruby-keyword">if</span> <span class="ruby-identifier">flag</span> <span class="ruby-operator">==</span> <span class="ruby-value">1</span>
+  <span class="ruby-keyword">end</span>
+  <span class="ruby-keyword">return</span> <span class="ruby-identifier">str</span>
+<span class="ruby-keyword">end</span></pre>
+            </div><!-- validate_sendmail_specification-source -->
+            
+          </div>
+
+          
+
+          
+        </div><!-- validate_sendmail_specification-method -->
+
+      
+        <div id="validate_smtp_specification-method" class="method-detail ">
+          <a name="method-c-validate_smtp_specification"></a>
+
+          
+          <div class="method-heading">
+            <span class="method-name">validate_smtp_specification</span><span
+              class="method-args">(smtp)</span>
+            <span class="method-click-advice">click to toggle source</span>
+          </div>
+          
+
+          <div class="method-description">
+            
+            
+            
+
+            
+            <div class="method-source-code" id="validate_smtp_specification-source">
+<pre>
+<span class="ruby-comment"># File app/models/mail_specification.rb, line 74</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">validate_smtp_specification</span>(<span class="ruby-identifier">smtp</span>)
+  <span class="ruby-identifier">str</span> = <span class="ruby-string">&quot;&quot;</span>
+  <span class="ruby-identifier">str</span> <span class="ruby-operator">+=</span> <span class="ruby-constant">SMTP_ADDRESS_VALIDATION</span> <span class="ruby-keyword">if</span> <span class="ruby-identifier">smtp</span>[<span class="ruby-value">:address</span>].<span class="ruby-identifier">strip</span>.<span class="ruby-identifier">length</span> <span class="ruby-operator">&lt;</span> <span class="ruby-value">1</span>
+  <span class="ruby-identifier">str</span> <span class="ruby-operator">+=</span> <span class="ruby-constant">SMTP_PORT_VALIDATION</span> <span class="ruby-keyword">if</span> <span class="ruby-identifier">smtp</span>[<span class="ruby-value">:port</span>].<span class="ruby-identifier">strip</span>.<span class="ruby-identifier">to_i</span> <span class="ruby-operator">&lt;</span> <span class="ruby-value">1</span>
+  <span class="ruby-identifier">str</span> <span class="ruby-operator">+=</span> <span class="ruby-constant">SMTP_DOMAIN_VALIDATION</span> <span class="ruby-keyword">if</span> <span class="ruby-identifier">smtp</span>[<span class="ruby-value">:domain</span>].<span class="ruby-identifier">strip</span>.<span class="ruby-identifier">length</span> <span class="ruby-operator">&lt;</span> <span class="ruby-value">1</span>
+  <span class="ruby-identifier">str</span> <span class="ruby-operator">+=</span> <span class="ruby-constant">SMTP_AUTHENTICATION_VALIDATION</span> <span class="ruby-keyword">if</span> <span class="ruby-identifier">smtp</span>[<span class="ruby-value">:authentication</span>].<span class="ruby-identifier">strip</span>.<span class="ruby-identifier">length</span> <span class="ruby-operator">&lt;</span> <span class="ruby-value">1</span>
+  <span class="ruby-identifier">str</span> <span class="ruby-operator">+=</span> <span class="ruby-constant">SMTP_USER_NAME_VALIDATION</span> <span class="ruby-keyword">if</span> <span class="ruby-identifier">smtp</span>[<span class="ruby-value">:user_name</span>].<span class="ruby-identifier">strip</span>.<span class="ruby-identifier">length</span> <span class="ruby-operator">&lt;</span> <span class="ruby-value">1</span>
+  <span class="ruby-identifier">str</span> <span class="ruby-operator">+=</span> <span class="ruby-constant">SMTP_PASSWORD_VALIDATION</span> <span class="ruby-keyword">if</span> <span class="ruby-identifier">smtp</span>[<span class="ruby-value">:password</span>].<span class="ruby-identifier">length</span> <span class="ruby-operator">&lt;</span> <span class="ruby-value">1</span>
+  
+  <span class="ruby-keyword">if</span> <span class="ruby-identifier">smtp</span>[<span class="ruby-value">:from</span>].<span class="ruby-identifier">strip</span>.<span class="ruby-identifier">length</span> <span class="ruby-operator">==</span> <span class="ruby-value">0</span>
+    <span class="ruby-identifier">str</span> <span class="ruby-operator">+=</span> <span class="ruby-constant">SENDMAIL_SENDER_EMAIL_VALIDATION1</span>
+  <span class="ruby-keyword">elsif</span> <span class="ruby-operator">!</span><span class="ruby-regexp">/^([^@\s]+)@((?:[-a-z0-9]+\.)+[a-z]{2,})$/</span>.<span class="ruby-identifier">match</span>(<span class="ruby-identifier">smtp</span>[<span class="ruby-value">:from</span>].<span class="ruby-identifier">strip</span>)
+    <span class="ruby-identifier">str</span> <span class="ruby-operator">+=</span> <span class="ruby-constant">SENDMAIL_SENDER_EMAIL_VALIDATION</span>
+  <span class="ruby-keyword">end</span>
+
+  <span class="ruby-keyword">if</span> <span class="ruby-identifier">smtp</span>[<span class="ruby-value">:recipients</span>].<span class="ruby-identifier">strip</span>.<span class="ruby-identifier">length</span> <span class="ruby-operator">==</span> <span class="ruby-value">0</span>
+    <span class="ruby-identifier">str</span> <span class="ruby-operator">+=</span> <span class="ruby-constant">SENDMAIL_RECIPIENT_EMAIL_VALIDATION1</span>
+  <span class="ruby-keyword">else</span>
+    <span class="ruby-identifier">flag</span> = <span class="ruby-value">0</span>  
+    <span class="ruby-identifier">str1</span> = <span class="ruby-string">&quot;&lt;ul&gt;&quot;</span>
+    <span class="ruby-identifier">recipients</span> = <span class="ruby-identifier">smtp</span>[<span class="ruby-value">:recipients</span>].<span class="ruby-identifier">split</span>(<span class="ruby-string">&quot;,&quot;</span>)
+    <span class="ruby-identifier">recipients</span>.<span class="ruby-identifier">each</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">recipient</span><span class="ruby-operator">|</span>
+      <span class="ruby-keyword">if</span> <span class="ruby-operator">!</span><span class="ruby-regexp">/^([^@\s]+)@((?:[-a-z0-9]+\.)+[a-z]{2,})$/</span>.<span class="ruby-identifier">match</span>(<span class="ruby-identifier">recipient</span>.<span class="ruby-identifier">strip</span>)
+        <span class="ruby-identifier">flag</span> = <span class="ruby-value">1</span>
+        <span class="ruby-identifier">str1</span> <span class="ruby-operator">+=</span> <span class="ruby-node">&quot;&lt;li&gt;#{recipient.strip}&lt;/li&gt;&quot;</span>
+      <span class="ruby-keyword">end</span>
+    <span class="ruby-keyword">end</span>
+    <span class="ruby-identifier">str1</span> <span class="ruby-operator">+=</span> <span class="ruby-string">&quot;&lt;/ul&gt;&quot;</span>
+    <span class="ruby-identifier">str</span> <span class="ruby-operator">+=</span> <span class="ruby-node">&quot;&lt;li&gt;#{SENDMAIL_RECIPIENT_EMAIL_VALIDATION}-#{str1}&lt;/li&gt;&quot;</span> <span class="ruby-keyword">if</span> <span class="ruby-identifier">flag</span> <span class="ruby-operator">==</span> <span class="ruby-value">1</span>    
+  <span class="ruby-keyword">end</span>
+  <span class="ruby-keyword">return</span> <span class="ruby-identifier">str</span>
+<span class="ruby-keyword">end</span></pre>
+            </div><!-- validate_smtp_specification-source -->
+            
+          </div>
+
+          
+
+          
+        </div><!-- validate_smtp_specification-method -->
+
+      
+      </div><!-- public-class-method-details -->
+    
+    </div><!-- 5Buntitled-5D -->
+  
+
+  </div><!-- documentation -->
+
+  <div id="validator-badges">
+    <p><small><a href="http://validator.w3.org/check/referer">[Validate]</a></small></p>
+    <p><small>Generated with the <a href="http://deveiate.org/projects/Darkfish-Rdoc/">Darkfish
+      Rdoc Generator</a> 2</small>.</p>
+  </div>
+
+</body>
+</html>
+

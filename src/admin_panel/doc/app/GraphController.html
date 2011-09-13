@@ -1,0 +1,1101 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+  <meta content="text/html; charset=utf-8" http-equiv="Content-Type" />
+
+  <title>Class: GraphController</title>
+
+  <link rel="stylesheet" href="./rdoc.css" type="text/css" media="screen" />
+
+  <script src="./js/jquery.js" type="text/javascript" charset="utf-8"></script>
+  <script src="./js/thickbox-compressed.js" type="text/javascript" charset="utf-8"></script>
+  <script src="./js/quicksearch.js" type="text/javascript" charset="utf-8"></script>
+  <script src="./js/darkfish.js" type="text/javascript" charset="utf-8"></script>
+
+</head>
+<body id="top" class="class">
+
+  <div id="metadata">
+    <div id="home-metadata">
+      <div id="home-section" class="section">
+        <h3 class="section-header">
+          <a href="./index.html">Home</a>
+          <a href="./index.html#classes">Classes</a>
+          <a href="./index.html#methods">Methods</a>
+        </h3>
+      </div>
+    </div>
+
+    <div id="file-metadata">
+      <div id="file-list-section" class="section">
+        <h3 class="section-header">In Files</h3>
+        <div class="section-body">
+          <ul>
+          
+            <li><a href="./app/controllers/graph_controller_rb.html?TB_iframe=true&amp;height=550&amp;width=785"
+              class="thickbox" title="app/controllers/graph_controller.rb">app/controllers/graph_controller.rb</a></li>
+          
+          </ul>
+        </div>
+      </div>
+
+      
+    </div>
+
+    <div id="class-metadata">
+      
+      <!-- Parent Class -->
+      <div id="parent-class-section" class="section">
+        <h3 class="section-header">Parent</h3>
+        
+        <p class="link"><a href="ApplicationController.html">ApplicationController</a></p>
+        
+      </div>
+      
+
+      
+
+      
+
+      
+      <!-- Method Quickref -->
+      <div id="method-list-section" class="section">
+        <h3 class="section-header">Methods</h3>
+        <ul class="link-list">
+          
+          <li><a href="#method-i-bar_graph">#bar_graph</a></li>
+          
+          <li><a href="#method-i-database_usage_graph">#database_usage_graph</a></li>
+          
+          <li><a href="#method-i-draw_chart">#draw_chart</a></li>
+          
+          <li><a href="#method-i-get_labels_for_graph">#get_labels_for_graph</a></li>
+          
+          <li><a href="#method-i-get_legends_for_graphs">#get_legends_for_graphs</a></li>
+          
+          <li><a href="#method-i-get_next_app">#get_next_app</a></li>
+          
+          <li><a href="#method-i-get_next_graph">#get_next_graph</a></li>
+          
+          <li><a href="#method-i-horizontal_graph">#horizontal_graph</a></li>
+          
+          <li><a href="#method-i-index">#index</a></li>
+          
+          <li><a href="#method-i-line_graph">#line_graph</a></li>
+          
+          <li><a href="#method-i-pie">#pie</a></li>
+          
+          <li><a href="#method-i-resource_usage_graph_app">#resource_usage_graph_app</a></li>
+          
+          <li><a href="#method-i-resource_usage_graph_server">#resource_usage_graph_server</a></li>
+          
+          <li><a href="#method-i-throughput_graph">#throughput_graph</a></li>
+          
+          <li><a href="#method-i-url_breakup_graph">#url_breakup_graph</a></li>
+          
+          <li><a href="#method-i-url_calls_graph">#url_calls_graph</a></li>
+          
+        </ul>
+      </div>
+      
+
+      
+      <!-- Included Modules -->
+      <div id="includes-section" class="section">
+        <h3 class="section-header">Included Modules</h3>
+        <ul class="link-list">
+        
+        
+          <li><a class="include" href="Analytics/ResourceUsage.html">Analytics::ResourceUsage</a></li>
+        
+        
+        
+          <li><a class="include" href="Analytics/UrlBreakup.html">Analytics::UrlBreakup</a></li>
+        
+        
+        
+          <li><a class="include" href="Analytics/Database.html">Analytics::Database</a></li>
+        
+        
+        
+          <li><a class="include" href="Analytics/Throughput.html">Analytics::Throughput</a></li>
+        
+        
+        
+          <li><a class="include" href="Analytics/Url.html">Analytics::Url</a></li>
+        
+        
+        </ul>
+      </div>
+      
+    </div>
+
+    <div id="project-metadata">
+      
+      
+      <div id="fileindex-section" class="section project-section">
+        <h3 class="section-header">Files</h3>
+        <ul>
+        
+          <li class="file"><a href="./doc/README_FOR_APP.html">README_FOR_APP</a></li>
+        
+        </ul>
+      </div>
+      
+
+      <div id="classindex-section" class="section project-section">
+        <h3 class="section-header">Class/Module Index
+          <span class="search-toggle"><img src="./images/find.png"
+            height="16" width="16" alt="[+]"
+            title="show/hide quicksearch" /></span></h3>
+        <form action="#" method="get" accept-charset="utf-8" class="initially-hidden">
+        <fieldset>
+          <legend>Quicksearch</legend>
+          <input type="text" name="quicksearch" value=""
+            class="quicksearch-field" />
+        </fieldset>
+        </form>
+
+        <ul class="link-list">
+        
+          <li><a href="./Analytics.html">Analytics</a></li>
+        
+          <li><a href="./Analytics/Database.html">Analytics::Database</a></li>
+        
+          <li><a href="./Analytics/ResourceUsage.html">Analytics::ResourceUsage</a></li>
+        
+          <li><a href="./Analytics/Throughput.html">Analytics::Throughput</a></li>
+        
+          <li><a href="./Analytics/Url.html">Analytics::Url</a></li>
+        
+          <li><a href="./Analytics/UrlBreakup.html">Analytics::UrlBreakup</a></li>
+        
+          <li><a href="./ActionView.html">ActionView</a></li>
+        
+          <li><a href="./ActionView/Helpers.html">ActionView::Helpers</a></li>
+        
+          <li><a href="./ActionView/Helpers/AssetTagHelper.html">ActionView::Helpers::AssetTagHelper</a></li>
+        
+          <li><a href="./AdminController.html">AdminController</a></li>
+        
+          <li><a href="./AdminHelper.html">AdminHelper</a></li>
+        
+          <li><a href="./App.html">App</a></li>
+        
+          <li><a href="./AppException.html">AppException</a></li>
+        
+          <li><a href="./AppTimeSample.html">AppTimeSample</a></li>
+        
+          <li><a href="./ApplicationController.html">ApplicationController</a></li>
+        
+          <li><a href="./ApplicationHelper.html">ApplicationHelper</a></li>
+        
+          <li><a href="./ApplicationSpecification.html">ApplicationSpecification</a></li>
+        
+          <li><a href="./ApplicationSpecificationController.html">ApplicationSpecificationController</a></li>
+        
+          <li><a href="./ApplicationSpecificationHelper.html">ApplicationSpecificationHelper</a></li>
+        
+          <li><a href="./Control.html">Control</a></li>
+        
+          <li><a href="./ExceptionDetail.html">ExceptionDetail</a></li>
+        
+          <li><a href="./ExceptionsController.html">ExceptionsController</a></li>
+        
+          <li><a href="./ExceptionsHelper.html">ExceptionsHelper</a></li>
+        
+          <li><a href="./GraphController.html">GraphController</a></li>
+        
+          <li><a href="./GraphHelper.html">GraphHelper</a></li>
+        
+          <li><a href="./Headers.html">Headers</a></li>
+        
+          <li><a href="./HeadersController.html">HeadersController</a></li>
+        
+          <li><a href="./HeadersHelper.html">HeadersHelper</a></li>
+        
+          <li><a href="./MailSpecification.html">MailSpecification</a></li>
+        
+          <li><a href="./MailSpecificationController.html">MailSpecificationController</a></li>
+        
+          <li><a href="./MailSpecificationHelper.html">MailSpecificationHelper</a></li>
+        
+          <li><a href="./Mailer.html">Mailer</a></li>
+        
+          <li><a href="./Object.html">Object</a></li>
+        
+          <li><a href="./PseudoModel.html">PseudoModel</a></li>
+        
+          <li><a href="./ResourceUsage.html">ResourceUsage</a></li>
+        
+          <li><a href="./SCGI.html">SCGI</a></li>
+        
+          <li><a href="./ServerSpecification.html">ServerSpecification</a></li>
+        
+          <li><a href="./ServerSpecificationController.html">ServerSpecificationController</a></li>
+        
+          <li><a href="./ServerSpecificationHelper.html">ServerSpecificationHelper</a></li>
+        
+          <li><a href="./SignalHelper.html">SignalHelper</a></li>
+        
+          <li><a href="./UrlBreakupTimeSample.html">UrlBreakupTimeSample</a></li>
+        
+          <li><a href="./UrlTimeSample.html">UrlTimeSample</a></li>
+        
+          <li><a href="./User.html">User</a></li>
+        
+          <li><a href="./YAMLConfig.html">YAMLConfig</a></li>
+        
+          <li><a href="./YAMLWriter.html">YAMLWriter</a></li>
+        
+        </ul>
+        <div id="no-class-search-results" style="display: none;">No matching classes.</div>
+      </div>
+
+      
+    </div>
+  </div>
+
+  <div id="documentation">
+    <h1 class="class">GraphController</h1>
+
+    <div id="description" class="description">
+      
+    </div><!-- description -->
+
+    
+    
+    
+    <div id="5Buntitled-5D" class="documentation-section">
+      
+
+      
+
+      
+
+      
+
+      <!-- Methods -->
+      
+      <div id="public-instance-method-details" class="method-section section">
+        <h3 class="section-header">Public Instance Methods</h3>
+
+      
+        <div id="bar_graph-method" class="method-detail ">
+          <a name="method-i-bar_graph"></a>
+
+          
+          <div class="method-heading">
+            <span class="method-name">bar_graph</span><span
+              class="method-args">(x_data, y_data, title, max=300, slab=30, x_legend="", y_legend="")</span>
+            <span class="method-click-advice">click to toggle source</span>
+          </div>
+          
+
+          <div class="method-description">
+            
+            <p>This method is to plot the bar graph for the data supplied to the method.</p>
+            
+
+            
+            <div class="method-source-code" id="bar_graph-source">
+<pre>
+<span class="ruby-comment"># File app/controllers/graph_controller.rb, line 227</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">bar_graph</span>(<span class="ruby-identifier">x_data</span>, <span class="ruby-identifier">y_data</span>, <span class="ruby-identifier">title</span>, <span class="ruby-identifier">max</span>=<span class="ruby-value">300</span>, <span class="ruby-identifier">slab</span>=<span class="ruby-value">30</span>, <span class="ruby-identifier">x_legend</span>=<span class="ruby-string">&quot;&quot;</span>, <span class="ruby-identifier">y_legend</span>=<span class="ruby-string">&quot;&quot;</span>)
+  <span class="ruby-identifier">title</span> = <span class="ruby-constant">OFC2</span><span class="ruby-operator">::</span><span class="ruby-constant">Title</span>.<span class="ruby-identifier">new</span>(<span class="ruby-value">:text</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">title</span>)
+  <span class="ruby-identifier">bar</span> = <span class="ruby-constant">OFC2</span><span class="ruby-operator">::</span><span class="ruby-constant">BarGlass</span>.<span class="ruby-identifier">new</span>
+  <span class="ruby-identifier">bar_values</span> = []
+  <span class="ruby-identifier">count</span> = <span class="ruby-value">0</span>
+  <span class="ruby-identifier">y_data</span>.<span class="ruby-identifier">each</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">y</span><span class="ruby-operator">|</span>
+     <span class="ruby-keyword">if</span> <span class="ruby-identifier">y</span> <span class="ruby-operator">==</span> <span class="ruby-value">0</span>
+       <span class="ruby-identifier">bar_values</span> <span class="ruby-operator">&lt;&lt;</span> <span class="ruby-identifier">y</span>
+     <span class="ruby-keyword">else</span>      
+       <span class="ruby-identifier">bar_values</span> <span class="ruby-operator">&lt;&lt;</span> <span class="ruby-constant">OFC2</span><span class="ruby-operator">::</span><span class="ruby-constant">BarValue</span>.<span class="ruby-identifier">new</span>(<span class="ruby-value">:top</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">y</span>, <span class="ruby-value">:tip</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-node">&quot;#{round(y)}(#{x_data[count]})&quot;</span>)
+       <span class="ruby-comment">#bar_values &lt;&lt; OFC2::BarValue.new(:top =&gt; y, :colour =&gt; '#000000', :tip =&gt; &quot;#{round(y)}(#{x_data[count]})&quot;)</span>
+     <span class="ruby-keyword">end</span>  
+     <span class="ruby-identifier">count</span> <span class="ruby-operator">+=</span> <span class="ruby-value">1</span>
+  <span class="ruby-keyword">end</span>
+  <span class="ruby-identifier">bar</span>.<span class="ruby-identifier">values</span> = <span class="ruby-identifier">bar_values</span>
+  <span class="ruby-identifier">bar</span>.<span class="ruby-identifier">text</span> = <span class="ruby-string">''</span>
+  <span class="ruby-identifier">x_legend</span>, <span class="ruby-identifier">y_legend</span> = <span class="ruby-identifier">get_legends_for_graphs</span>(<span class="ruby-identifier">x_legend</span>, <span class="ruby-identifier">y_legend</span>)
+  <span class="ruby-identifier">x</span>, <span class="ruby-identifier">y</span> = <span class="ruby-identifier">get_labels_for_graph</span>(<span class="ruby-identifier">x_data</span>, <span class="ruby-identifier">max</span>, <span class="ruby-identifier">slab</span>, <span class="ruby-value">1</span>)
+  <span class="ruby-identifier">draw_chart</span>(<span class="ruby-identifier">x</span>,<span class="ruby-identifier">y</span>,<span class="ruby-identifier">x_legend</span>,<span class="ruby-identifier">y_legend</span>,<span class="ruby-identifier">title</span>,<span class="ruby-identifier">bar</span>)
+<span class="ruby-keyword">end</span></pre>
+            </div><!-- bar_graph-source -->
+            
+          </div>
+
+          
+
+          
+        </div><!-- bar_graph-method -->
+
+      
+        <div id="database_usage_graph-method" class="method-detail ">
+          <a name="method-i-database_usage_graph"></a>
+
+          
+          <div class="method-heading">
+            <span class="method-name">database_usage_graph</span><span
+              class="method-args">()</span>
+            <span class="method-click-advice">click to toggle source</span>
+          </div>
+          
+
+          <div class="method-description">
+            
+            
+            
+
+            
+            <div class="method-source-code" id="database_usage_graph-source">
+<pre>
+<span class="ruby-comment"># File app/controllers/graph_controller.rb, line 131</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">database_usage_graph</span>
+  <span class="ruby-ivar">@app_id</span> = <span class="ruby-identifier">params</span>[<span class="ruby-value">:app_id</span>]    
+  <span class="ruby-comment"># if date is changed from calendar popup, we would get only date</span>
+  <span class="ruby-comment"># if slider is changed, we would get date and hour</span>
+  <span class="ruby-identifier">date_str</span> = <span class="ruby-identifier">params</span>[<span class="ruby-value">:date</span>].<span class="ruby-identifier">strip</span>
+  <span class="ruby-identifier">rv</span> = <span class="ruby-identifier">check_for_valid_query_date</span>(<span class="ruby-identifier">date_str</span>)
+  <span class="ruby-keyword">if</span> <span class="ruby-identifier">rv</span>.<span class="ruby-identifier">class</span> <span class="ruby-operator">==</span> <span class="ruby-constant">Array</span>
+    <span class="ruby-identifier">check_and_set_query_date</span>(<span class="ruby-identifier">rv</span>[<span class="ruby-value">0</span>])
+    <span class="ruby-identifier">start_date</span> = <span class="ruby-identifier">session</span>[<span class="ruby-value">:start_time</span>].<span class="ruby-identifier">strftime</span>(<span class="ruby-string">&quot;%Y-%m-%d&quot;</span>)<span class="ruby-operator">+</span><span class="ruby-string">&quot; 00:00:00&quot;</span>
+    <span class="ruby-identifier">end_date</span> = <span class="ruby-identifier">session</span>[<span class="ruby-value">:start_time</span>].<span class="ruby-identifier">strftime</span>(<span class="ruby-string">&quot;%Y-%m-%d&quot;</span>)<span class="ruby-operator">+</span><span class="ruby-string">&quot; 23:59:59&quot;</span>
+    <span class="ruby-identifier">urls</span> = <span class="ruby-constant">UrlTimeSample</span>.<span class="ruby-identifier">get_urls</span>(<span class="ruby-identifier">start_date</span>, <span class="ruby-identifier">end_date</span>, <span class="ruby-ivar">@app_id</span>)      
+    <span class="ruby-keyword">if</span> <span class="ruby-identifier">urls</span>.<span class="ruby-identifier">size</span> <span class="ruby-operator">&gt;</span> <span class="ruby-value">0</span>              
+      <span class="ruby-ivar">@percentage_db_usage_graph</span> = <span class="ruby-identifier">get_database_usage_graph</span>(<span class="ruby-ivar">@app_id</span>)  
+    <span class="ruby-keyword">else</span>
+      <span class="ruby-identifier">flash</span>[<span class="ruby-value">:notice</span>] = <span class="ruby-constant">NO_DATA_FOUND</span>
+    <span class="ruby-keyword">end</span>            
+    <span class="ruby-identifier">render</span> <span class="ruby-value">:partial</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-string">'get_database_data'</span>           
+  <span class="ruby-keyword">else</span>
+    <span class="ruby-identifier">render</span> <span class="ruby-value">:text</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">rv</span>, <span class="ruby-value">:status</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-value">404</span>
+  <span class="ruby-keyword">end</span>    
+<span class="ruby-keyword">end</span></pre>
+            </div><!-- database_usage_graph-source -->
+            
+          </div>
+
+          
+
+          
+        </div><!-- database_usage_graph-method -->
+
+      
+        <div id="draw_chart-method" class="method-detail ">
+          <a name="method-i-draw_chart"></a>
+
+          
+          <div class="method-heading">
+            <span class="method-name">draw_chart</span><span
+              class="method-args">(x, y, x_legend, y_legend, title, line)</span>
+            <span class="method-click-advice">click to toggle source</span>
+          </div>
+          
+
+          <div class="method-description">
+            
+            <p>This method is used to draw the line or bar graph.</p>
+            
+
+            
+            <div class="method-source-code" id="draw_chart-source">
+<pre>
+<span class="ruby-comment"># File app/controllers/graph_controller.rb, line 339</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">draw_chart</span>(<span class="ruby-identifier">x</span>, <span class="ruby-identifier">y</span>, <span class="ruby-identifier">x_legend</span>, <span class="ruby-identifier">y_legend</span>, <span class="ruby-identifier">title</span>, <span class="ruby-identifier">line</span>)
+  <span class="ruby-identifier">chart</span> = <span class="ruby-constant">OFC2</span><span class="ruby-operator">::</span><span class="ruby-constant">Graph</span>.<span class="ruby-identifier">new</span>
+  <span class="ruby-identifier">title</span>.<span class="ruby-identifier">set_style</span>(<span class="ruby-node">&quot;{font-size: 15px; color: #990B0A; text-align: center;font-weight: bold;}&quot;</span>)
+  <span class="ruby-identifier">chart</span>.<span class="ruby-identifier">title</span> = <span class="ruby-identifier">title</span>
+  <span class="ruby-identifier">chart</span> <span class="ruby-operator">&lt;&lt;</span> <span class="ruby-identifier">line</span>
+  <span class="ruby-identifier">chart</span>.<span class="ruby-identifier">x_axis</span> = <span class="ruby-identifier">x</span>
+  <span class="ruby-identifier">chart</span>.<span class="ruby-identifier">y_axis</span> = <span class="ruby-identifier">y</span>
+  <span class="ruby-identifier">chart</span>.<span class="ruby-identifier">bg_colour</span> = <span class="ruby-string">'#FFFFFF'</span>
+  <span class="ruby-identifier">x</span>.<span class="ruby-identifier">grid_colour</span> = <span class="ruby-node">&quot;#E9EAEC&quot;</span>
+  <span class="ruby-identifier">y</span>.<span class="ruby-identifier">grid_colour</span> = <span class="ruby-node">&quot;#E9EAEC&quot;</span>
+  <span class="ruby-identifier">x</span>.<span class="ruby-identifier">colour</span> = <span class="ruby-node">&quot;#000000&quot;</span>
+  <span class="ruby-identifier">y</span>.<span class="ruby-identifier">colour</span> = <span class="ruby-node">&quot;#000000&quot;</span>
+  <span class="ruby-identifier">x</span>.<span class="ruby-identifier">labels</span>.<span class="ruby-identifier">style</span> = <span class="ruby-node">&quot;{font-size: 30px; color:#0000ff; font-family: Verdana;}&quot;</span>
+  <span class="ruby-identifier">line</span>.<span class="ruby-identifier">colour</span> = <span class="ruby-node">&quot;#990B0A&quot;</span>
+  <span class="ruby-identifier">chart</span>.<span class="ruby-identifier">set_x_legend</span>(<span class="ruby-identifier">x_legend</span>)
+  <span class="ruby-identifier">chart</span>.<span class="ruby-identifier">set_y_legend</span>(<span class="ruby-identifier">y_legend</span>)   
+  <span class="ruby-identifier">render</span> <span class="ruby-value">:text</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">chart</span>.<span class="ruby-identifier">render</span>
+<span class="ruby-keyword">end</span></pre>
+            </div><!-- draw_chart-source -->
+            
+          </div>
+
+          
+
+          
+        </div><!-- draw_chart-method -->
+
+      
+        <div id="get_labels_for_graph-method" class="method-detail ">
+          <a name="method-i-get_labels_for_graph"></a>
+
+          
+          <div class="method-heading">
+            <span class="method-name">get_labels_for_graph</span><span
+              class="method-args">(x_data, max, slab, steps)</span>
+            <span class="method-click-advice">click to toggle source</span>
+          </div>
+          
+
+          <div class="method-description">
+            
+            <p>This methos is to label the X and Y axis for either of the line or bar
+graph.</p>
+            
+
+            
+            <div class="method-source-code" id="get_labels_for_graph-source">
+<pre>
+<span class="ruby-comment"># File app/controllers/graph_controller.rb, line 325</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">get_labels_for_graph</span>(<span class="ruby-identifier">x_data</span>, <span class="ruby-identifier">max</span>, <span class="ruby-identifier">slab</span>, <span class="ruby-identifier">steps</span>)
+  <span class="ruby-identifier">x</span> = <span class="ruby-constant">OFC2</span><span class="ruby-operator">::</span><span class="ruby-constant">XAxis</span>.<span class="ruby-identifier">new</span>
+  <span class="ruby-identifier">y</span> = <span class="ruby-constant">OFC2</span><span class="ruby-operator">::</span><span class="ruby-constant">YAxis</span>.<span class="ruby-identifier">new</span>(<span class="ruby-value">:min</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-value">0</span>, <span class="ruby-value">:max</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">max</span>, <span class="ruby-value">:steps</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">slab</span>)
+  <span class="ruby-identifier">x_labels</span> = <span class="ruby-constant">OFC2</span><span class="ruby-operator">::</span><span class="ruby-constant">XAxisLabels</span>.<span class="ruby-identifier">new</span>
+  <span class="ruby-identifier">x_labels</span>.<span class="ruby-identifier">rotate</span> = <span class="ruby-string">'diagonal'</span>
+  <span class="ruby-identifier">x_labels</span>.<span class="ruby-identifier">set_size</span>(<span class="ruby-value">12</span>)
+  <span class="ruby-identifier">x_labels</span>.<span class="ruby-identifier">set_labels</span> <span class="ruby-identifier">x_data</span>
+  <span class="ruby-identifier">x_labels</span>.<span class="ruby-identifier">set_steps</span>(<span class="ruby-identifier">steps</span>)
+  <span class="ruby-identifier">x</span>.<span class="ruby-identifier">set_labels</span> <span class="ruby-identifier">x_labels</span>
+  <span class="ruby-identifier">x</span>.<span class="ruby-identifier">set_steps</span>(<span class="ruby-identifier">steps</span>) <span class="ruby-keyword">if</span> <span class="ruby-identifier">steps</span> <span class="ruby-operator">&gt;</span> <span class="ruby-value">0</span>     
+  <span class="ruby-keyword">return</span> <span class="ruby-identifier">x</span>, <span class="ruby-identifier">y</span>
+<span class="ruby-keyword">end</span></pre>
+            </div><!-- get_labels_for_graph-source -->
+            
+          </div>
+
+          
+
+          
+        </div><!-- get_labels_for_graph-method -->
+
+      
+        <div id="get_legends_for_graphs-method" class="method-detail ">
+          <a name="method-i-get_legends_for_graphs"></a>
+
+          
+          <div class="method-heading">
+            <span class="method-name">get_legends_for_graphs</span><span
+              class="method-args">(x_legend, y_legend)</span>
+            <span class="method-click-advice">click to toggle source</span>
+          </div>
+          
+
+          <div class="method-description">
+            
+            <p>This method is to set the legends for either of the line or bar graph.</p>
+            
+
+            
+            <div class="method-source-code" id="get_legends_for_graphs-source">
+<pre>
+<span class="ruby-comment"># File app/controllers/graph_controller.rb, line 316</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">get_legends_for_graphs</span>(<span class="ruby-identifier">x_legend</span>, <span class="ruby-identifier">y_legend</span>)
+  <span class="ruby-identifier">x_legend</span> = <span class="ruby-constant">OFC2</span><span class="ruby-operator">::</span><span class="ruby-constant">XLegend</span>.<span class="ruby-identifier">new</span>(<span class="ruby-value">:text</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">x_legend</span>)
+  <span class="ruby-identifier">y_legend</span> = <span class="ruby-constant">OFC2</span><span class="ruby-operator">::</span><span class="ruby-constant">YLegend</span>.<span class="ruby-identifier">new</span>(<span class="ruby-value">:text</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">y_legend</span>)
+  <span class="ruby-identifier">x_legend</span>.<span class="ruby-identifier">set_style</span>(<span class="ruby-string">'{font-size: 12px; color: #990B0A;}'</span>)
+  <span class="ruby-identifier">y_legend</span>.<span class="ruby-identifier">set_style</span>(<span class="ruby-string">'{font-size: 12px; color: #990B0A;}'</span>)
+  <span class="ruby-keyword">return</span> <span class="ruby-identifier">x_legend</span>, <span class="ruby-identifier">y_legend</span>
+<span class="ruby-keyword">end</span></pre>
+            </div><!-- get_legends_for_graphs-source -->
+            
+          </div>
+
+          
+
+          
+        </div><!-- get_legends_for_graphs-method -->
+
+      
+        <div id="get_next_app-method" class="method-detail ">
+          <a name="method-i-get_next_app"></a>
+
+          
+          <div class="method-heading">
+            <span class="method-name">get_next_app</span><span
+              class="method-args">()</span>
+            <span class="method-click-advice">click to toggle source</span>
+          </div>
+          
+
+          <div class="method-description">
+            
+            <p>This method will give the details and initial graphs for the selected
+application. This method is called when the application is selected from
+the select box for selecting application on index page of the graph
+controller.</p>
+            
+
+            
+            <div class="method-source-code" id="get_next_app-source">
+<pre>
+<span class="ruby-comment"># File app/controllers/graph_controller.rb, line 51</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">get_next_app</span>
+  <span class="ruby-keyword">if</span> <span class="ruby-identifier">params</span>[<span class="ruby-value">:application_name</span>]
+    <span class="ruby-ivar">@application_name</span> = <span class="ruby-identifier">params</span>[<span class="ruby-value">:application_name</span>]
+  <span class="ruby-keyword">else</span>
+    <span class="ruby-ivar">@application_name</span> = <span class="ruby-identifier">session</span>[<span class="ruby-value">:application_name</span>]
+  <span class="ruby-keyword">end</span>
+  <span class="ruby-identifier">session</span>[<span class="ruby-value">:application_name</span>] = <span class="ruby-ivar">@application_name</span>    
+  <span class="ruby-identifier">session</span>[<span class="ruby-value">:graph_type</span>] = <span class="ruby-string">&quot;URL-Breakup&quot;</span>
+  <span class="ruby-identifier">get_graphs</span>()
+  <span class="ruby-identifier">render</span> <span class="ruby-value">:partial</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-string">'graph_page'</span>
+<span class="ruby-keyword">end</span></pre>
+            </div><!-- get_next_app-source -->
+            
+          </div>
+
+          
+
+          
+        </div><!-- get_next_app-method -->
+
+      
+        <div id="get_next_graph-method" class="method-detail ">
+          <a name="method-i-get_next_graph"></a>
+
+          
+          <div class="method-heading">
+            <span class="method-name">get_next_graph</span><span
+              class="method-args">()</span>
+            <span class="method-click-advice">click to toggle source</span>
+          </div>
+          
+
+          <div class="method-description">
+            
+            <p>This method is to display the different type of graphs as per the user
+selection from the populated select box. This method gets its input from
+the select box named as “Select Graph”. This method call the method as
+per the grpah name supplied from the select box.</p>
+            
+
+            
+            <div class="method-source-code" id="get_next_graph-source">
+<pre>
+<span class="ruby-comment"># File app/controllers/graph_controller.rb, line 66</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">get_next_graph</span>
+  <span class="ruby-identifier">app_id</span> = <span class="ruby-identifier">params</span>[<span class="ruby-value">:id</span>]
+  <span class="ruby-identifier">session</span>[<span class="ruby-value">:graph_type</span>] = <span class="ruby-identifier">params</span>[<span class="ruby-value">:graph_name</span>]
+  <span class="ruby-keyword">case</span> <span class="ruby-identifier">params</span>[<span class="ruby-value">:graph_name</span>]
+  <span class="ruby-keyword">when</span> <span class="ruby-string">&quot;URL-Calls&quot;</span>
+    <span class="ruby-identifier">get_url_data</span>(<span class="ruby-identifier">app_id</span>)
+  <span class="ruby-keyword">when</span> <span class="ruby-string">&quot;Database-Usage&quot;</span>
+    <span class="ruby-identifier">get_database_data</span>(<span class="ruby-identifier">app_id</span>)
+  <span class="ruby-keyword">when</span> <span class="ruby-string">&quot;URL-Breakup&quot;</span>
+    <span class="ruby-identifier">get_url_breakup_data</span>(<span class="ruby-identifier">app_id</span>)
+  <span class="ruby-keyword">when</span> <span class="ruby-string">&quot;Throughput&quot;</span>
+    <span class="ruby-identifier">get_throughput_data</span>(<span class="ruby-identifier">app_id</span>)
+  <span class="ruby-keyword">when</span> <span class="ruby-string">&quot;Resource-Usage&quot;</span>
+    <span class="ruby-identifier">get_resource_usage_data_app</span>(<span class="ruby-identifier">app_id</span>)
+  <span class="ruby-keyword">end</span>
+<span class="ruby-keyword">end</span></pre>
+            </div><!-- get_next_graph-source -->
+            
+          </div>
+
+          
+
+          
+        </div><!-- get_next_graph-method -->
+
+      
+        <div id="horizontal_graph-method" class="method-detail ">
+          <a name="method-i-horizontal_graph"></a>
+
+          
+          <div class="method-heading">
+            <span class="method-name">horizontal_graph</span><span
+              class="method-args">(x_data, y_data, title, max=300, slab=30, x_legend="", y_legend="")</span>
+            <span class="method-click-advice">click to toggle source</span>
+          </div>
+          
+
+          <div class="method-description">
+            
+            
+            
+
+            
+            <div class="method-source-code" id="horizontal_graph-source">
+<pre>
+<span class="ruby-comment"># File app/controllers/graph_controller.rb, line 248</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">horizontal_graph</span>(<span class="ruby-identifier">x_data</span>, <span class="ruby-identifier">y_data</span>, <span class="ruby-identifier">title</span>, <span class="ruby-identifier">max</span>=<span class="ruby-value">300</span>, <span class="ruby-identifier">slab</span>=<span class="ruby-value">30</span>, <span class="ruby-identifier">x_legend</span>=<span class="ruby-string">&quot;&quot;</span>, <span class="ruby-identifier">y_legend</span>=<span class="ruby-string">&quot;&quot;</span>)
+  <span class="ruby-identifier">title</span> = <span class="ruby-constant">OFC2</span><span class="ruby-operator">::</span><span class="ruby-constant">Title</span>.<span class="ruby-identifier">new</span>(<span class="ruby-value">:text</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">title</span>)
+  <span class="ruby-identifier">data</span> = []
+  <span class="ruby-identifier">y_data</span>.<span class="ruby-identifier">each</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">i</span><span class="ruby-operator">|</span>
+    <span class="ruby-keyword">if</span> <span class="ruby-identifier">i</span> <span class="ruby-operator">!=</span> <span class="ruby-value">0</span>
+      <span class="ruby-identifier">data</span> <span class="ruby-operator">&lt;&lt;</span> <span class="ruby-constant">OFC2</span><span class="ruby-operator">::</span><span class="ruby-constant">HBarValue</span>.<span class="ruby-identifier">new</span>(<span class="ruby-value">:left</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-value">0</span>, <span class="ruby-value">:right</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">i</span>)
+    <span class="ruby-keyword">else</span>
+      <span class="ruby-identifier">data</span> <span class="ruby-operator">&lt;&lt;</span> <span class="ruby-identifier">i</span>
+    <span class="ruby-keyword">end</span>
+  <span class="ruby-keyword">end</span>
+  <span class="ruby-identifier">bar</span> = <span class="ruby-constant">OFC2</span><span class="ruby-operator">::</span><span class="ruby-constant">HBar</span>.<span class="ruby-identifier">new</span>
+  <span class="ruby-identifier">bar</span>.<span class="ruby-identifier">values</span> = <span class="ruby-identifier">data</span>
+  <span class="ruby-identifier">bar</span>.<span class="ruby-identifier">set_tooltip</span>(<span class="ruby-string">&quot;&quot;</span>)
+  <span class="ruby-identifier">bar</span>.<span class="ruby-identifier">text</span> = <span class="ruby-string">''</span>
+  <span class="ruby-identifier">x_labels</span> = <span class="ruby-constant">OFC2</span><span class="ruby-operator">::</span><span class="ruby-constant">XAxisLabels</span>.<span class="ruby-identifier">new</span>
+  <span class="ruby-identifier">labels</span>= []
+  <span class="ruby-keyword">if</span> <span class="ruby-identifier">max</span> <span class="ruby-operator">&lt;</span> <span class="ruby-value">10</span> 
+    <span class="ruby-identifier">labels</span> = [<span class="ruby-string">'0'</span>,<span class="ruby-string">'1'</span>,<span class="ruby-string">'2'</span>,<span class="ruby-string">'3'</span>,<span class="ruby-string">'4'</span>,<span class="ruby-string">'5'</span>,<span class="ruby-string">'6'</span>,<span class="ruby-string">'7'</span>,<span class="ruby-string">'8'</span>,<span class="ruby-string">'9'</span>]
+  <span class="ruby-keyword">else</span>
+    <span class="ruby-comment"># TODO find some way to prevent empty label creation, max could be 1,000,000 and gives unnecessary overhead to server and client</span>
+    <span class="ruby-comment"># http://teethgrinder.co.uk/open-flash-chart-2/x-axis-labels-step.php </span>
+    <span class="ruby-value">0</span>.<span class="ruby-identifier">upto</span>(<span class="ruby-identifier">max</span>) <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">i</span><span class="ruby-operator">|</span>
+      <span class="ruby-keyword">if</span> <span class="ruby-identifier">i</span> <span class="ruby-operator">%</span> <span class="ruby-identifier">slab</span> <span class="ruby-operator">==</span> <span class="ruby-value">0</span>
+        <span class="ruby-identifier">labels</span> <span class="ruby-operator">&lt;&lt;</span> <span class="ruby-identifier">i</span>.<span class="ruby-identifier">to_s</span>
+      <span class="ruby-keyword">else</span>    
+        <span class="ruby-identifier">labels</span> <span class="ruby-operator">&lt;&lt;</span> <span class="ruby-string">''</span>
+      <span class="ruby-keyword">end</span>
+    <span class="ruby-keyword">end</span>
+    <span class="ruby-identifier">x_labels</span>.<span class="ruby-identifier">steps</span> = <span class="ruby-identifier">slab</span>
+  <span class="ruby-keyword">end</span>
+  <span class="ruby-identifier">x_labels</span>.<span class="ruby-identifier">labels</span> = <span class="ruby-identifier">labels</span>
+  <span class="ruby-identifier">x</span> = <span class="ruby-constant">OFC2</span><span class="ruby-operator">::</span><span class="ruby-constant">XAxis</span>.<span class="ruby-identifier">new</span>
+  <span class="ruby-identifier">x</span>.<span class="ruby-identifier">labels</span> = <span class="ruby-identifier">x_labels</span>
+  <span class="ruby-identifier">x</span>.<span class="ruby-identifier">steps</span> = <span class="ruby-identifier">slab</span>
+  <span class="ruby-identifier">x</span>.<span class="ruby-identifier">offset</span> = <span class="ruby-keyword">false</span>
+  <span class="ruby-identifier">y</span> = <span class="ruby-constant">OFC2</span><span class="ruby-operator">::</span><span class="ruby-constant">YAxis</span>.<span class="ruby-identifier">new</span>
+  <span class="ruby-identifier">y</span>.<span class="ruby-identifier">offset</span> = <span class="ruby-keyword">true</span>
+  <span class="ruby-identifier">y</span>.<span class="ruby-identifier">labels</span> = <span class="ruby-identifier">x_data</span>.<span class="ruby-identifier">reverse</span>
+  <span class="ruby-identifier">x_legend</span>, <span class="ruby-identifier">y_legend</span> = <span class="ruby-identifier">get_legends_for_graphs</span>(<span class="ruby-identifier">y_legend</span>, <span class="ruby-identifier">x_legend</span>.<span class="ruby-identifier">reverse</span>)
+  <span class="ruby-comment">#draw_chart(x, y, x_legend, y_legend, title, bar)</span>
+
+  <span class="ruby-identifier">tooltip</span> = <span class="ruby-constant">OFC2</span><span class="ruby-operator">::</span><span class="ruby-constant">Tooltip</span>.<span class="ruby-identifier">new</span>
+  <span class="ruby-identifier">tooltip</span>.<span class="ruby-identifier">set_hover</span>()
+  <span class="ruby-identifier">tooltip</span>.<span class="ruby-identifier">mouse</span> = <span class="ruby-value">2</span>
+  <span class="ruby-identifier">tooltip</span>.<span class="ruby-identifier">set_stroke</span>(<span class="ruby-value">1</span>)
+  <span class="ruby-identifier">tooltip</span>.<span class="ruby-identifier">set_backgroung_colour</span>(<span class="ruby-node">&quot;#ffffff&quot;</span>)
+  <span class="ruby-identifier">tooltip</span>.<span class="ruby-identifier">set_colour</span>(<span class="ruby-node">&quot;#000000&quot;</span>)
+
+  <span class="ruby-identifier">chart</span> = <span class="ruby-constant">OFC2</span><span class="ruby-operator">::</span><span class="ruby-constant">Graph</span>.<span class="ruby-identifier">new</span>
+  <span class="ruby-identifier">title</span>.<span class="ruby-identifier">set_style</span>(<span class="ruby-node">&quot;{font-size: 15px; color: #990B0A; text-align: center;font-weight: bold;}&quot;</span>)
+  <span class="ruby-identifier">chart</span>.<span class="ruby-identifier">title</span> = <span class="ruby-identifier">title</span>
+  <span class="ruby-identifier">chart</span> <span class="ruby-operator">&lt;&lt;</span> <span class="ruby-identifier">bar</span>
+  <span class="ruby-identifier">chart</span>.<span class="ruby-identifier">x_axis</span> = <span class="ruby-identifier">x</span>
+  <span class="ruby-identifier">chart</span>.<span class="ruby-identifier">y_axis</span> = <span class="ruby-identifier">y</span>
+  <span class="ruby-identifier">chart</span>.<span class="ruby-identifier">bg_colour</span> = <span class="ruby-string">'#FFFFFF'</span>
+  <span class="ruby-identifier">x</span>.<span class="ruby-identifier">grid_colour</span> = <span class="ruby-node">&quot;#E9EAEC&quot;</span>
+  <span class="ruby-identifier">y</span>.<span class="ruby-identifier">grid_colour</span> = <span class="ruby-node">&quot;#E9EAEC&quot;</span>
+  <span class="ruby-identifier">x</span>.<span class="ruby-identifier">colour</span> = <span class="ruby-node">&quot;#000000&quot;</span>
+  <span class="ruby-identifier">y</span>.<span class="ruby-identifier">colour</span> = <span class="ruby-node">&quot;#000000&quot;</span>
+  <span class="ruby-identifier">x</span>.<span class="ruby-identifier">labels</span>.<span class="ruby-identifier">style</span> = <span class="ruby-node">&quot;{font-size: 30px; color:#0000ff; font-family: Verdana;}&quot;</span>
+  <span class="ruby-identifier">bar</span>.<span class="ruby-identifier">colour</span> = <span class="ruby-node">&quot;#990B0A&quot;</span>
+  <span class="ruby-identifier">chart</span>.<span class="ruby-identifier">set_x_legend</span>(<span class="ruby-identifier">x_legend</span>)
+  <span class="ruby-identifier">chart</span>.<span class="ruby-identifier">set_y_legend</span>(<span class="ruby-identifier">y_legend</span>)
+  <span class="ruby-identifier">chart</span>.<span class="ruby-identifier">set_tooltip</span>(<span class="ruby-identifier">tooltip</span>)
+  <span class="ruby-identifier">render</span> <span class="ruby-value">:text</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">chart</span>.<span class="ruby-identifier">render</span>
+<span class="ruby-keyword">end</span></pre>
+            </div><!-- horizontal_graph-source -->
+            
+          </div>
+
+          
+
+          
+        </div><!-- horizontal_graph-method -->
+
+      
+        <div id="index-method" class="method-detail ">
+          <a name="method-i-index"></a>
+
+          
+          <div class="method-heading">
+            <span class="method-name">index</span><span
+              class="method-args">()</span>
+            <span class="method-click-advice">click to toggle source</span>
+          </div>
+          
+
+          <div class="method-description">
+            
+            <p>This action renders the <a href="Analytics.html">Analytics</a> page. This
+tab displayed the url breakdown information as a default if there is some
+application hosted in the server else it  shows the server stats.</p>
+            
+
+            
+            <div class="method-source-code" id="index-source">
+<pre>
+<span class="ruby-comment"># File app/controllers/graph_controller.rb, line 38</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">index</span>
+  <span class="ruby-ivar">@apps</span> = <span class="ruby-identifier">get_application_list</span>    
+  <span class="ruby-identifier">session</span>[<span class="ruby-value">:graph_type</span>] = <span class="ruby-string">&quot;URL-Breakup&quot;</span> <span class="ruby-keyword">unless</span> <span class="ruby-identifier">session</span>[<span class="ruby-value">:graph_type</span>]    
+  <span class="ruby-identifier">get_graphs</span>()
+  <span class="ruby-keyword">if</span> <span class="ruby-ivar">@apps</span>[<span class="ruby-value">0</span>] <span class="ruby-operator">==</span> <span class="ruby-constant">SERVER_NAME</span>
+    <span class="ruby-identifier">session</span>[<span class="ruby-value">:exceptions_application_name</span>] = <span class="ruby-keyword">nil</span>
+  <span class="ruby-keyword">else</span>
+    <span class="ruby-identifier">session</span>[<span class="ruby-value">:exceptions_application_name</span>] = <span class="ruby-identifier">get_application_list_for_exceptions</span>[<span class="ruby-value">0</span>]
+  <span class="ruby-keyword">end</span>
+<span class="ruby-keyword">end</span></pre>
+            </div><!-- index-source -->
+            
+          </div>
+
+          
+
+          
+        </div><!-- index-method -->
+
+      
+        <div id="line_graph-method" class="method-detail ">
+          <a name="method-i-line_graph"></a>
+
+          
+          <div class="method-heading">
+            <span class="method-name">line_graph</span><span
+              class="method-args">(x_data, y_data, title, max=300, slab=30, step=3, x_legend="", y_legend="")</span>
+            <span class="method-click-advice">click to toggle source</span>
+          </div>
+          
+
+          <div class="method-description">
+            
+            <p>This method is to plot the line graph for the data supplied to the method.</p>
+            
+
+            
+            <div class="method-source-code" id="line_graph-source">
+<pre>
+<span class="ruby-comment"># File app/controllers/graph_controller.rb, line 206</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">line_graph</span>(<span class="ruby-identifier">x_data</span>, <span class="ruby-identifier">y_data</span>, <span class="ruby-identifier">title</span>, <span class="ruby-identifier">max</span>=<span class="ruby-value">300</span>, <span class="ruby-identifier">slab</span>=<span class="ruby-value">30</span>, <span class="ruby-identifier">step</span>=<span class="ruby-value">3</span>, <span class="ruby-identifier">x_legend</span>=<span class="ruby-string">&quot;&quot;</span>, <span class="ruby-identifier">y_legend</span>=<span class="ruby-string">&quot;&quot;</span>)
+  <span class="ruby-identifier">title</span> = <span class="ruby-constant">OFC2</span><span class="ruby-operator">::</span><span class="ruby-constant">Title</span>.<span class="ruby-identifier">new</span>(<span class="ruby-value">:text</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">title</span>)
+  <span class="ruby-identifier">x_legend</span>, <span class="ruby-identifier">y_legend</span> = <span class="ruby-identifier">get_legends_for_graphs</span>(<span class="ruby-identifier">x_legend</span>, <span class="ruby-identifier">y_legend</span>)
+  <span class="ruby-identifier">line</span> = <span class="ruby-constant">OFC2</span><span class="ruby-operator">::</span><span class="ruby-constant">Line</span>.<span class="ruby-identifier">new</span> 
+  <span class="ruby-identifier">line_values</span>=[]
+  <span class="ruby-identifier">count</span> = <span class="ruby-value">0</span>
+  <span class="ruby-identifier">y_data</span>.<span class="ruby-identifier">each</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">y</span><span class="ruby-operator">|</span>
+     <span class="ruby-keyword">if</span> <span class="ruby-identifier">y</span>.<span class="ruby-identifier">nil?</span>
+       <span class="ruby-identifier">line_values</span> <span class="ruby-operator">&lt;&lt;</span> <span class="ruby-identifier">y</span>
+     <span class="ruby-keyword">else</span>      
+       <span class="ruby-identifier">line_values</span> <span class="ruby-operator">&lt;&lt;</span> <span class="ruby-constant">OFC2</span><span class="ruby-operator">::</span><span class="ruby-constant">Dot</span>.<span class="ruby-identifier">new</span>(<span class="ruby-value">:value</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">y</span>, <span class="ruby-value">:tip</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-node">&quot;At #{x_data[count]} value is #{round(y)}&quot;</span>)
+     <span class="ruby-keyword">end</span>
+     <span class="ruby-identifier">count</span> <span class="ruby-operator">+=</span> <span class="ruby-value">1</span>
+  <span class="ruby-keyword">end</span>    
+  <span class="ruby-identifier">line</span>.<span class="ruby-identifier">values</span> = <span class="ruby-identifier">line_values</span>
+  <span class="ruby-identifier">line</span>.<span class="ruby-identifier">text</span> = <span class="ruby-string">''</span>
+  <span class="ruby-identifier">x</span>, <span class="ruby-identifier">y</span> = <span class="ruby-identifier">get_labels_for_graph</span>(<span class="ruby-identifier">x_data</span>, <span class="ruby-identifier">max</span>, <span class="ruby-identifier">slab</span>, <span class="ruby-identifier">step</span>)
+  <span class="ruby-identifier">draw_chart</span>(<span class="ruby-identifier">x</span>, <span class="ruby-identifier">y</span>, <span class="ruby-identifier">x_legend</span>, <span class="ruby-identifier">y_legend</span>, <span class="ruby-identifier">title</span>, <span class="ruby-identifier">line</span>)
+<span class="ruby-keyword">end</span></pre>
+            </div><!-- line_graph-source -->
+            
+          </div>
+
+          
+
+          
+        </div><!-- line_graph-method -->
+
+      
+        <div id="pie-method" class="method-detail ">
+          <a name="method-i-pie"></a>
+
+          
+          <div class="method-heading">
+            <span class="method-name">pie</span><span
+              class="method-args">()</span>
+            <span class="method-click-advice">click to toggle source</span>
+          </div>
+          
+
+          <div class="method-description">
+            
+            <p>This method is to plot pie chart.</p>
+            
+
+            
+            <div class="method-source-code" id="pie-source">
+<pre>
+<span class="ruby-comment"># File app/controllers/graph_controller.rb, line 359</span>
+  <span class="ruby-keyword">def</span> <span class="ruby-identifier">pie</span>
+    <span class="ruby-identifier">data_1</span>, <span class="ruby-identifier">title</span>, <span class="ruby-identifier">data_x</span>, <span class="ruby-identifier">data_y</span>, <span class="ruby-identifier">data_actual_time</span> = <span class="ruby-identifier">pie_data</span>(<span class="ruby-identifier">params</span>[<span class="ruby-value">:id</span>], <span class="ruby-identifier">params</span>[<span class="ruby-value">:url</span>])
+    <span class="ruby-identifier">color</span>=[<span class="ruby-node">&quot;#d01f3c&quot;</span>,<span class="ruby-node">&quot;#356aa0&quot;</span>,<span class="ruby-node">&quot;#C79810&quot;</span>,<span class="ruby-node">&quot;#cccccc&quot;</span>,<span class="ruby-node">&quot;#ffcc00&quot;</span>,<span class="ruby-node">&quot;#ff3300&quot;</span>,<span class="ruby-node">&quot;#99cc00&quot;</span>,<span class="ruby-node">&quot;#cc9900&quot;</span>,<span class="ruby-node">&quot;#333300&quot;</span>,<span class="ruby-node">&quot;#ffff00&quot;</span>,<span class="ruby-node">&quot;#990000&quot;</span>,<span class="ruby-node">&quot;#ffff00&quot;</span>,<span class="ruby-node">&quot;#ff0033&quot;</span>,
+<span class="ruby-node">&quot;#00ffff&quot;</span>,<span class="ruby-node">&quot;#00cc33&quot;</span>,<span class="ruby-node">&quot;#ff66ff&quot;</span>,<span class="ruby-node">&quot;#3300cc&quot;</span>,<span class="ruby-node">&quot;#0033ff&quot;</span>,<span class="ruby-node">&quot;#ffccff&quot;</span>,<span class="ruby-node">&quot;#ccccff&quot;</span>,<span class="ruby-node">&quot;#cc33cc&quot;</span>,<span class="ruby-node">&quot;#ff9933&quot;</span>,<span class="ruby-node">&quot;#ffffff&quot;</span>,<span class="ruby-node">&quot;#000000&quot;</span>]
+    <span class="ruby-identifier">pie</span> = <span class="ruby-constant">OFC2</span><span class="ruby-operator">::</span><span class="ruby-constant">Pie</span>.<span class="ruby-identifier">new</span>
+    <span class="ruby-identifier">pie</span>.<span class="ruby-identifier">colours</span> = <span class="ruby-identifier">color</span>
+    <span class="ruby-identifier">pie</span>.<span class="ruby-identifier">start_angle</span> = <span class="ruby-value">35</span>  
+    <span class="ruby-identifier">pie</span>.<span class="ruby-identifier">animate</span> = <span class="ruby-keyword">true</span>
+    <span class="ruby-identifier">pie</span>.<span class="ruby-identifier">radius</span> = <span class="ruby-value">130</span>
+    <span class="ruby-identifier">pie</span>.<span class="ruby-identifier">values</span> = <span class="ruby-identifier">data_1</span>
+    <span class="ruby-identifier">pie</span>.<span class="ruby-identifier">label_colour</span> = <span class="ruby-node">&quot;#000000&quot;</span>
+    <span class="ruby-identifier">chart</span> = <span class="ruby-constant">OFC2</span><span class="ruby-operator">::</span><span class="ruby-constant">Graph</span>.<span class="ruby-identifier">new</span>  
+    <span class="ruby-identifier">chart</span>.<span class="ruby-identifier">title</span> = <span class="ruby-constant">OFC2</span><span class="ruby-operator">::</span><span class="ruby-constant">Title</span>.<span class="ruby-identifier">new</span>(<span class="ruby-value">:text</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">title</span>, <span class="ruby-value">:style</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-node">&quot;{font-size: 15px; color: #990B0A; text-align: center;font-weight: bold;}&quot;</span>)
+    <span class="ruby-identifier">chart</span>.<span class="ruby-identifier">bg_colour</span> = <span class="ruby-string">'#FFFFFF'</span>  
+    <span class="ruby-identifier">chart</span> <span class="ruby-operator">&lt;&lt;</span> <span class="ruby-identifier">pie</span>  
+    <span class="ruby-identifier">render</span> <span class="ruby-value">:text</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">chart</span>.<span class="ruby-identifier">render</span>
+  <span class="ruby-keyword">end</span></pre>
+            </div><!-- pie-source -->
+            
+          </div>
+
+          
+
+          
+        </div><!-- pie-method -->
+
+      
+        <div id="resource_usage_graph_app-method" class="method-detail ">
+          <a name="method-i-resource_usage_graph_app"></a>
+
+          
+          <div class="method-heading">
+            <span class="method-name">resource_usage_graph_app</span><span
+              class="method-args">()</span>
+            <span class="method-click-advice">click to toggle source</span>
+          </div>
+          
+
+          <div class="method-description">
+            
+            
+            
+
+            
+            <div class="method-source-code" id="resource_usage_graph_app-source">
+<pre>
+<span class="ruby-comment"># File app/controllers/graph_controller.rb, line 153</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">resource_usage_graph_app</span>
+  <span class="ruby-ivar">@app_id</span> = <span class="ruby-identifier">params</span>[<span class="ruby-value">:app_id</span>]    
+  <span class="ruby-comment"># if date is changed from calendar popup, we would get only date</span>
+  <span class="ruby-comment"># if slider is changed, we would get date and hour</span>
+  <span class="ruby-identifier">date_str</span> = <span class="ruby-identifier">params</span>[<span class="ruby-value">:date</span>].<span class="ruby-identifier">strip</span>
+  <span class="ruby-identifier">rv</span> = <span class="ruby-identifier">check_for_valid_query_date</span>(<span class="ruby-identifier">date_str</span>)
+  <span class="ruby-keyword">if</span> <span class="ruby-identifier">rv</span>.<span class="ruby-identifier">class</span> <span class="ruby-operator">==</span> <span class="ruby-constant">Array</span>
+    <span class="ruby-identifier">check_and_set_query_date</span>(<span class="ruby-identifier">rv</span>[<span class="ruby-value">0</span>])      
+    <span class="ruby-ivar">@app_cpu_usage_graph</span>,<span class="ruby-ivar">@app_memory_usage_graph</span> = <span class="ruby-identifier">get_resource_usage_graph_app</span>(<span class="ruby-ivar">@app_id</span>)
+    <span class="ruby-identifier">render</span> <span class="ruby-value">:partial=</span><span class="ruby-operator">&gt;</span> <span class="ruby-string">'get_resource_usage_data_app'</span>      
+  <span class="ruby-keyword">else</span>
+    <span class="ruby-identifier">render</span> <span class="ruby-value">:text</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">rv</span>, <span class="ruby-value">:status</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-value">404</span>
+  <span class="ruby-keyword">end</span>    
+  
+<span class="ruby-keyword">end</span></pre>
+            </div><!-- resource_usage_graph_app-source -->
+            
+          </div>
+
+          
+
+          
+        </div><!-- resource_usage_graph_app-method -->
+
+      
+        <div id="resource_usage_graph_server-method" class="method-detail ">
+          <a name="method-i-resource_usage_graph_server"></a>
+
+          
+          <div class="method-heading">
+            <span class="method-name">resource_usage_graph_server</span><span
+              class="method-args">()</span>
+            <span class="method-click-advice">click to toggle source</span>
+          </div>
+          
+
+          <div class="method-description">
+            
+            
+            
+
+            
+            <div class="method-source-code" id="resource_usage_graph_server-source">
+<pre>
+<span class="ruby-comment"># File app/controllers/graph_controller.rb, line 191</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">resource_usage_graph_server</span>        
+  <span class="ruby-comment"># if date is changed from calendar popup, we would get only date</span>
+  <span class="ruby-comment"># if slider is changed, we would get date and hour</span>
+  <span class="ruby-identifier">date_str</span> = <span class="ruby-identifier">params</span>[<span class="ruby-value">:date</span>].<span class="ruby-identifier">strip</span>
+  <span class="ruby-identifier">rv</span> = <span class="ruby-identifier">check_for_valid_query_date</span>(<span class="ruby-identifier">date_str</span>)
+  <span class="ruby-keyword">if</span> <span class="ruby-identifier">rv</span>.<span class="ruby-identifier">class</span> <span class="ruby-operator">==</span> <span class="ruby-constant">Array</span>
+    <span class="ruby-identifier">check_and_set_query_date</span>(<span class="ruby-identifier">rv</span>[<span class="ruby-value">0</span>])      
+    <span class="ruby-ivar">@server_cpu_usage_graph</span>, <span class="ruby-ivar">@server_memory_usage_graph</span> = <span class="ruby-identifier">get_resource_usage_graph_server</span>()
+    <span class="ruby-identifier">render</span> <span class="ruby-value">:partial</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-string">'get_resource_usage_data_server'</span>
+  <span class="ruby-keyword">else</span>
+    <span class="ruby-identifier">render</span> <span class="ruby-value">:text</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">rv</span>, <span class="ruby-value">:status</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-value">404</span>
+  <span class="ruby-keyword">end</span>    
+<span class="ruby-keyword">end</span></pre>
+            </div><!-- resource_usage_graph_server-source -->
+            
+          </div>
+
+          
+
+          
+        </div><!-- resource_usage_graph_server-method -->
+
+      
+        <div id="throughput_graph-method" class="method-detail ">
+          <a name="method-i-throughput_graph"></a>
+
+          
+          <div class="method-heading">
+            <span class="method-name">throughput_graph</span><span
+              class="method-args">()</span>
+            <span class="method-click-advice">click to toggle source</span>
+          </div>
+          
+
+          <div class="method-description">
+            
+            
+            
+
+            
+            <div class="method-source-code" id="throughput_graph-source">
+<pre>
+<span class="ruby-comment"># File app/controllers/graph_controller.rb, line 169</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">throughput_graph</span>
+  <span class="ruby-ivar">@app_id</span> = <span class="ruby-identifier">params</span>[<span class="ruby-value">:app_id</span>]    
+  <span class="ruby-comment"># if date is changed from calendar popup, we would get only date</span>
+  <span class="ruby-comment"># if slider is changed, we would get date and hour</span>
+  <span class="ruby-identifier">date_str</span> = <span class="ruby-identifier">params</span>[<span class="ruby-value">:date</span>].<span class="ruby-identifier">strip</span>
+  <span class="ruby-identifier">rv</span> = <span class="ruby-identifier">check_for_valid_query_date</span>(<span class="ruby-identifier">date_str</span>)
+  <span class="ruby-keyword">if</span> <span class="ruby-identifier">rv</span>.<span class="ruby-identifier">class</span> <span class="ruby-operator">==</span> <span class="ruby-constant">Array</span>
+    <span class="ruby-identifier">check_and_set_query_date</span>(<span class="ruby-identifier">rv</span>[<span class="ruby-value">0</span>])
+    <span class="ruby-identifier">start_date</span> = <span class="ruby-identifier">session</span>[<span class="ruby-value">:start_time</span>].<span class="ruby-identifier">strftime</span>(<span class="ruby-string">&quot;%Y-%m-%d&quot;</span>)<span class="ruby-operator">+</span><span class="ruby-string">&quot; 00:00:00&quot;</span>
+    <span class="ruby-identifier">end_date</span> = <span class="ruby-identifier">session</span>[<span class="ruby-value">:start_time</span>].<span class="ruby-identifier">strftime</span>(<span class="ruby-string">&quot;%Y-%m-%d&quot;</span>)<span class="ruby-operator">+</span><span class="ruby-string">&quot; 23:59:59&quot;</span>
+    <span class="ruby-identifier">urls</span> = <span class="ruby-constant">UrlTimeSample</span>.<span class="ruby-identifier">get_urls</span>(<span class="ruby-identifier">start_date</span>, <span class="ruby-identifier">end_date</span>, <span class="ruby-ivar">@app_id</span>)
+    <span class="ruby-keyword">if</span> <span class="ruby-identifier">urls</span>.<span class="ruby-identifier">size</span> <span class="ruby-operator">&gt;</span> <span class="ruby-value">0</span>             
+      <span class="ruby-ivar">@avg_res_time_graph</span>,<span class="ruby-ivar">@app_throughput_graph</span> = <span class="ruby-identifier">get_throughput_graph</span>(<span class="ruby-ivar">@app_id</span>)   
+    <span class="ruby-keyword">else</span>
+      <span class="ruby-identifier">flash</span>[<span class="ruby-value">:notice</span>] = <span class="ruby-constant">NO_DATA_FOUND</span>
+    <span class="ruby-keyword">end</span>      
+    <span class="ruby-identifier">render</span> <span class="ruby-value">:partial</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-string">'get_throughput_data'</span>   
+  <span class="ruby-keyword">else</span>
+    <span class="ruby-identifier">render</span> <span class="ruby-value">:text</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">rv</span>, <span class="ruby-value">:status</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-value">404</span>
+  <span class="ruby-keyword">end</span>
+<span class="ruby-keyword">end</span></pre>
+            </div><!-- throughput_graph-source -->
+            
+          </div>
+
+          
+
+          
+        </div><!-- throughput_graph-method -->
+
+      
+        <div id="url_breakup_graph-method" class="method-detail ">
+          <a name="method-i-url_breakup_graph"></a>
+
+          
+          <div class="method-heading">
+            <span class="method-name">url_breakup_graph</span><span
+              class="method-args">()</span>
+            <span class="method-click-advice">click to toggle source</span>
+          </div>
+          
+
+          <div class="method-description">
+            
+            <p>This method is called when the graphs are needed for a particular period.</p>
+            
+
+            
+            <div class="method-source-code" id="url_breakup_graph-source">
+<pre>
+<span class="ruby-comment"># File app/controllers/graph_controller.rb, line 84</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">url_breakup_graph</span>    
+  <span class="ruby-ivar">@urls</span> = <span class="ruby-constant">Array</span>.<span class="ruby-identifier">new</span>
+  <span class="ruby-ivar">@app_id</span> = <span class="ruby-identifier">params</span>[<span class="ruby-value">:app_id</span>]
+  <span class="ruby-identifier">from_date_str</span> = <span class="ruby-identifier">params</span>[<span class="ruby-value">:from_date</span>].<span class="ruby-identifier">strip</span>
+  <span class="ruby-identifier">to_date_str</span> = <span class="ruby-identifier">params</span>[<span class="ruby-value">:to_date</span>].<span class="ruby-identifier">strip</span>
+  <span class="ruby-identifier">rv</span> = <span class="ruby-identifier">check_for_valid_period</span>(<span class="ruby-identifier">from_date_str</span>, <span class="ruby-identifier">to_date_str</span>)
+  <span class="ruby-keyword">if</span> <span class="ruby-identifier">rv</span>.<span class="ruby-identifier">class</span> <span class="ruby-operator">==</span> <span class="ruby-constant">Array</span>  
+    <span class="ruby-comment"># check_for_valid_period method would set Time object having hour minute and second value to zero</span>
+    <span class="ruby-comment"># for entime we would change it 23:59:59  by adding 86399 seconds </span>
+    <span class="ruby-identifier">check_and_set_query_period</span>(<span class="ruby-identifier">rv</span>[<span class="ruby-value">0</span>], <span class="ruby-identifier">rv</span>[<span class="ruby-value">1</span>] <span class="ruby-operator">+</span> <span class="ruby-value">86399</span>)         
+    <span class="ruby-ivar">@urls</span> = <span class="ruby-constant">UrlTimeSample</span>.<span class="ruby-identifier">get_urls</span>(<span class="ruby-identifier">session</span>[<span class="ruby-value">:from_date</span>], <span class="ruby-identifier">session</span>[<span class="ruby-value">:to_date</span>], <span class="ruby-ivar">@app_id</span>)
+    <span class="ruby-ivar">@start_time</span> = <span class="ruby-identifier">session</span>[<span class="ruby-value">:from_date</span>].<span class="ruby-identifier">strftime</span>(<span class="ruby-string">&quot;%Y/%m/%d&quot;</span>)
+    <span class="ruby-ivar">@end_time</span> = <span class="ruby-identifier">session</span>[<span class="ruby-value">:to_date</span>].<span class="ruby-identifier">strftime</span>(<span class="ruby-string">&quot;%Y/%m/%d&quot;</span>)
+    <span class="ruby-keyword">if</span> <span class="ruby-ivar">@urls</span>.<span class="ruby-identifier">size</span> <span class="ruby-operator">&gt;</span> <span class="ruby-value">0</span>
+      <span class="ruby-ivar">@url_rank</span> = <span class="ruby-value">1</span>
+      <span class="ruby-ivar">@suffix</span> = <span class="ruby-identifier">get_suffix</span>(<span class="ruby-ivar">@url_rank</span>)
+      <span class="ruby-ivar">@data_x</span>,<span class="ruby-ivar">@data_y</span>,<span class="ruby-ivar">@url_breakup_graph</span>,<span class="ruby-ivar">@data_actual_time</span> = <span class="ruby-identifier">get_url_breakup_graph_data</span>(<span class="ruby-ivar">@start_time</span>, <span class="ruby-ivar">@end_time</span>, <span class="ruby-ivar">@app_id</span>, <span class="ruby-ivar">@urls</span>)       
+    <span class="ruby-keyword">else</span>
+      <span class="ruby-identifier">flash</span>[<span class="ruby-value">:notice</span>] = <span class="ruby-constant">NO_DATA_FOUND</span>
+    <span class="ruby-keyword">end</span>              
+    <span class="ruby-identifier">render</span> <span class="ruby-value">:partial</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-string">'get_url_breakup_data'</span>
+  <span class="ruby-keyword">else</span>
+    <span class="ruby-identifier">render</span> <span class="ruby-value">:text</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">rv</span>, <span class="ruby-value">:status</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-value">404</span>
+  <span class="ruby-keyword">end</span>
+<span class="ruby-keyword">end</span></pre>
+            </div><!-- url_breakup_graph-source -->
+            
+          </div>
+
+          
+
+          
+        </div><!-- url_breakup_graph-method -->
+
+      
+        <div id="url_calls_graph-method" class="method-detail ">
+          <a name="method-i-url_calls_graph"></a>
+
+          
+          <div class="method-heading">
+            <span class="method-name">url_calls_graph</span><span
+              class="method-args">()</span>
+            <span class="method-click-advice">click to toggle source</span>
+          </div>
+          
+
+          <div class="method-description">
+            
+            
+            
+
+            
+            <div class="method-source-code" id="url_calls_graph-source">
+<pre>
+<span class="ruby-comment"># File app/controllers/graph_controller.rb, line 110</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">url_calls_graph</span>
+  <span class="ruby-ivar">@app_id</span> = <span class="ruby-identifier">params</span>[<span class="ruby-value">:app_id</span>]
+  <span class="ruby-identifier">from_date_str</span> = <span class="ruby-identifier">params</span>[<span class="ruby-value">:from_date</span>].<span class="ruby-identifier">strip</span>
+  <span class="ruby-identifier">to_date_str</span> = <span class="ruby-identifier">params</span>[<span class="ruby-value">:to_date</span>].<span class="ruby-identifier">strip</span>
+  <span class="ruby-identifier">rv</span> = <span class="ruby-identifier">check_for_valid_period</span>(<span class="ruby-identifier">from_date_str</span>, <span class="ruby-identifier">to_date_str</span>)
+  <span class="ruby-keyword">if</span> <span class="ruby-identifier">rv</span>.<span class="ruby-identifier">class</span> <span class="ruby-operator">==</span> <span class="ruby-constant">Array</span>  
+    <span class="ruby-comment"># check_for_valid_period method would set Time object having hour minute and second value to zero</span>
+    <span class="ruby-comment"># for entime we would change it 23:59:59  by adding 86399 seconds</span>
+    <span class="ruby-identifier">check_and_set_query_period</span>(<span class="ruby-identifier">rv</span>[<span class="ruby-value">0</span>], <span class="ruby-identifier">rv</span>[<span class="ruby-value">1</span>] <span class="ruby-operator">+</span> <span class="ruby-value">86399</span>)
+    <span class="ruby-identifier">urls</span> = <span class="ruby-constant">UrlTimeSample</span>.<span class="ruby-identifier">get_urls</span>(<span class="ruby-identifier">session</span>[<span class="ruby-value">:from_date</span>], <span class="ruby-identifier">session</span>[<span class="ruby-value">:to_date</span>], <span class="ruby-ivar">@app_id</span>)      
+    <span class="ruby-keyword">if</span> <span class="ruby-identifier">urls</span>.<span class="ruby-identifier">size</span> <span class="ruby-operator">&gt;</span> <span class="ruby-value">0</span>               
+      <span class="ruby-ivar">@url_hits_graph</span>, <span class="ruby-ivar">@slowest_url_graph</span>, <span class="ruby-ivar">@time_consuming_url_graph</span>, <span class="ruby-ivar">@db_consuming_url_graph</span> = <span class="ruby-identifier">get_url_calls_graph</span>(<span class="ruby-ivar">@app_id</span>)
+    <span class="ruby-keyword">else</span>
+      <span class="ruby-identifier">flash</span>[<span class="ruby-value">:notice</span>] = <span class="ruby-constant">NO_DATA_FOUND</span>
+    <span class="ruby-keyword">end</span>
+    <span class="ruby-identifier">render</span> <span class="ruby-value">:partial</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-string">'get_url_data'</span>      
+  <span class="ruby-keyword">else</span>
+    <span class="ruby-identifier">render</span> <span class="ruby-value">:text</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">rv</span>, <span class="ruby-value">:status</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-value">404</span>
+  <span class="ruby-keyword">end</span>       
+<span class="ruby-keyword">end</span></pre>
+            </div><!-- url_calls_graph-source -->
+            
+          </div>
+
+          
+
+          
+        </div><!-- url_calls_graph-method -->
+
+      
+      </div><!-- public-instance-method-details -->
+    
+    </div><!-- 5Buntitled-5D -->
+  
+
+  </div><!-- documentation -->
+
+  <div id="validator-badges">
+    <p><small><a href="http://validator.w3.org/check/referer">[Validate]</a></small></p>
+    <p><small>Generated with the <a href="http://deveiate.org/projects/Darkfish-Rdoc/">Darkfish
+      Rdoc Generator</a> 2</small>.</p>
+  </div>
+
+</body>
+</html>
+

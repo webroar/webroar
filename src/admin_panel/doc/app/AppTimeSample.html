@@ -1,0 +1,620 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+  <meta content="text/html; charset=utf-8" http-equiv="Content-Type" />
+
+  <title>Class: AppTimeSample</title>
+
+  <link rel="stylesheet" href="./rdoc.css" type="text/css" media="screen" />
+
+  <script src="./js/jquery.js" type="text/javascript" charset="utf-8"></script>
+  <script src="./js/thickbox-compressed.js" type="text/javascript" charset="utf-8"></script>
+  <script src="./js/quicksearch.js" type="text/javascript" charset="utf-8"></script>
+  <script src="./js/darkfish.js" type="text/javascript" charset="utf-8"></script>
+
+</head>
+<body id="top" class="class">
+
+  <div id="metadata">
+    <div id="home-metadata">
+      <div id="home-section" class="section">
+        <h3 class="section-header">
+          <a href="./index.html">Home</a>
+          <a href="./index.html#classes">Classes</a>
+          <a href="./index.html#methods">Methods</a>
+        </h3>
+      </div>
+    </div>
+
+    <div id="file-metadata">
+      <div id="file-list-section" class="section">
+        <h3 class="section-header">In Files</h3>
+        <div class="section-body">
+          <ul>
+          
+            <li><a href="./app/models/app_time_sample_rb.html?TB_iframe=true&amp;height=550&amp;width=785"
+              class="thickbox" title="app/models/app_time_sample.rb">app/models/app_time_sample.rb</a></li>
+          
+          </ul>
+        </div>
+      </div>
+
+      
+    </div>
+
+    <div id="class-metadata">
+      
+      <!-- Parent Class -->
+      <div id="parent-class-section" class="section">
+        <h3 class="section-header">Parent</h3>
+        
+        <p class="link">ActiveRecord::Base</p>
+        
+      </div>
+      
+
+      
+
+      
+
+      
+      <!-- Method Quickref -->
+      <div id="method-list-section" class="section">
+        <h3 class="section-header">Methods</h3>
+        <ul class="link-list">
+          
+          <li><a href="#method-c-add_to_sample">::add_to_sample</a></li>
+          
+          <li><a href="#method-c-create_sample">::create_sample</a></li>
+          
+          <li><a href="#method-c-get_application_data">::get_application_data</a></li>
+          
+          <li><a href="#method-c-get_max_and_slab">::get_max_and_slab</a></li>
+          
+          <li><a href="#method-c-write_all_samples">::write_all_samples</a></li>
+          
+          <li><a href="#method-c-write_stale_samples">::write_stale_samples</a></li>
+          
+        </ul>
+      </div>
+      
+
+      
+    </div>
+
+    <div id="project-metadata">
+      
+      
+      <div id="fileindex-section" class="section project-section">
+        <h3 class="section-header">Files</h3>
+        <ul>
+        
+          <li class="file"><a href="./doc/README_FOR_APP.html">README_FOR_APP</a></li>
+        
+        </ul>
+      </div>
+      
+
+      <div id="classindex-section" class="section project-section">
+        <h3 class="section-header">Class/Module Index
+          <span class="search-toggle"><img src="./images/find.png"
+            height="16" width="16" alt="[+]"
+            title="show/hide quicksearch" /></span></h3>
+        <form action="#" method="get" accept-charset="utf-8" class="initially-hidden">
+        <fieldset>
+          <legend>Quicksearch</legend>
+          <input type="text" name="quicksearch" value=""
+            class="quicksearch-field" />
+        </fieldset>
+        </form>
+
+        <ul class="link-list">
+        
+          <li><a href="./Analytics.html">Analytics</a></li>
+        
+          <li><a href="./Analytics/Database.html">Analytics::Database</a></li>
+        
+          <li><a href="./Analytics/ResourceUsage.html">Analytics::ResourceUsage</a></li>
+        
+          <li><a href="./Analytics/Throughput.html">Analytics::Throughput</a></li>
+        
+          <li><a href="./Analytics/Url.html">Analytics::Url</a></li>
+        
+          <li><a href="./Analytics/UrlBreakup.html">Analytics::UrlBreakup</a></li>
+        
+          <li><a href="./ActionView.html">ActionView</a></li>
+        
+          <li><a href="./ActionView/Helpers.html">ActionView::Helpers</a></li>
+        
+          <li><a href="./ActionView/Helpers/AssetTagHelper.html">ActionView::Helpers::AssetTagHelper</a></li>
+        
+          <li><a href="./AdminController.html">AdminController</a></li>
+        
+          <li><a href="./AdminHelper.html">AdminHelper</a></li>
+        
+          <li><a href="./App.html">App</a></li>
+        
+          <li><a href="./AppException.html">AppException</a></li>
+        
+          <li><a href="./AppTimeSample.html">AppTimeSample</a></li>
+        
+          <li><a href="./ApplicationController.html">ApplicationController</a></li>
+        
+          <li><a href="./ApplicationHelper.html">ApplicationHelper</a></li>
+        
+          <li><a href="./ApplicationSpecification.html">ApplicationSpecification</a></li>
+        
+          <li><a href="./ApplicationSpecificationController.html">ApplicationSpecificationController</a></li>
+        
+          <li><a href="./ApplicationSpecificationHelper.html">ApplicationSpecificationHelper</a></li>
+        
+          <li><a href="./Control.html">Control</a></li>
+        
+          <li><a href="./ExceptionDetail.html">ExceptionDetail</a></li>
+        
+          <li><a href="./ExceptionsController.html">ExceptionsController</a></li>
+        
+          <li><a href="./ExceptionsHelper.html">ExceptionsHelper</a></li>
+        
+          <li><a href="./GraphController.html">GraphController</a></li>
+        
+          <li><a href="./GraphHelper.html">GraphHelper</a></li>
+        
+          <li><a href="./Headers.html">Headers</a></li>
+        
+          <li><a href="./HeadersController.html">HeadersController</a></li>
+        
+          <li><a href="./HeadersHelper.html">HeadersHelper</a></li>
+        
+          <li><a href="./MailSpecification.html">MailSpecification</a></li>
+        
+          <li><a href="./MailSpecificationController.html">MailSpecificationController</a></li>
+        
+          <li><a href="./MailSpecificationHelper.html">MailSpecificationHelper</a></li>
+        
+          <li><a href="./Mailer.html">Mailer</a></li>
+        
+          <li><a href="./Object.html">Object</a></li>
+        
+          <li><a href="./PseudoModel.html">PseudoModel</a></li>
+        
+          <li><a href="./ResourceUsage.html">ResourceUsage</a></li>
+        
+          <li><a href="./SCGI.html">SCGI</a></li>
+        
+          <li><a href="./ServerSpecification.html">ServerSpecification</a></li>
+        
+          <li><a href="./ServerSpecificationController.html">ServerSpecificationController</a></li>
+        
+          <li><a href="./ServerSpecificationHelper.html">ServerSpecificationHelper</a></li>
+        
+          <li><a href="./SignalHelper.html">SignalHelper</a></li>
+        
+          <li><a href="./UrlBreakupTimeSample.html">UrlBreakupTimeSample</a></li>
+        
+          <li><a href="./UrlTimeSample.html">UrlTimeSample</a></li>
+        
+          <li><a href="./User.html">User</a></li>
+        
+          <li><a href="./YAMLConfig.html">YAMLConfig</a></li>
+        
+          <li><a href="./YAMLWriter.html">YAMLWriter</a></li>
+        
+        </ul>
+        <div id="no-class-search-results" style="display: none;">No matching classes.</div>
+      </div>
+
+      
+    </div>
+  </div>
+
+  <div id="documentation">
+    <h1 class="class">AppTimeSample</h1>
+
+    <div id="description" class="description">
+      
+<p>This is the model class <a href="AppTimeSample.html">AppTimeSample</a>
+related to the application_samples table in the database.</p>
+
+    </div><!-- description -->
+
+    
+    
+    
+    <div id="5Buntitled-5D" class="documentation-section">
+      
+
+      
+
+      
+
+      
+
+      <!-- Methods -->
+      
+      <div id="public-class-method-details" class="method-section section">
+        <h3 class="section-header">Public Class Methods</h3>
+
+      
+        <div id="add_to_sample-method" class="method-detail ">
+          <a name="method-c-add_to_sample"></a>
+
+          
+          <div class="method-heading">
+            <span class="method-name">add_to_sample</span><span
+              class="method-args">(message_analyzer, app_id, total_spent_time, db_time, rendering_time, wall_time)</span>
+            <span class="method-click-advice">click to toggle source</span>
+          </div>
+          
+
+          <div class="method-description">
+            
+            <p>application_samples contains at the most one sample and that is for current
+sampling period. if sample doesn’t exists ,create it. if sample exists
+and wall_time falling in that sampling period, add into sample if sample
+exists and wall_time not falling in that sampling period and less than
+sampling period, check into database for that sample and update it if
+sample exists and wall_time not falling in that sampling period and greater
+than sampling period, create new sample and add current into database.</p>
+            
+
+            
+            <div class="method-source-code" id="add_to_sample-source">
+<pre>
+<span class="ruby-comment"># File app/models/app_time_sample.rb, line 136</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">add_to_sample</span>(<span class="ruby-identifier">message_analyzer</span>, <span class="ruby-identifier">app_id</span>, <span class="ruby-identifier">total_spent_time</span>, <span class="ruby-identifier">db_time</span>, <span class="ruby-identifier">rendering_time</span>, <span class="ruby-identifier">wall_time</span>)
+  <span class="ruby-comment"># create({:app_id =&gt; app_id, :total_time_in_request =&gt; total_spent_time, :db_time =&gt; db_time, :rendering_time =&gt; rendering_time, :number_of_requests =&gt; 1, :wall_time =&gt; wall_time, :sampling_rate =&gt; message_analyzer.sampling_rate })       </span>
+  <span class="ruby-keyword">if</span> <span class="ruby-identifier">message_analyzer</span>.<span class="ruby-identifier">application_samples</span>[<span class="ruby-identifier">app_id</span>].<span class="ruby-identifier">length</span> <span class="ruby-operator">==</span> <span class="ruby-value">0</span>        
+    <span class="ruby-identifier">message_analyzer</span>.<span class="ruby-identifier">application_samples</span>[<span class="ruby-identifier">app_id</span>] = [<span class="ruby-identifier">wall_time</span>, [<span class="ruby-identifier">total_spent_time</span>, <span class="ruby-identifier">db_time</span>, <span class="ruby-identifier">rendering_time</span>, <span class="ruby-value">1</span>, <span class="ruby-constant">Array</span>.<span class="ruby-identifier">new</span>(<span class="ruby-value">60</span>,<span class="ruby-value">0</span>)]]
+  <span class="ruby-keyword">elsif</span> <span class="ruby-identifier">wall_time</span> <span class="ruby-operator">&gt;=</span> <span class="ruby-identifier">message_analyzer</span>.<span class="ruby-identifier">application_samples</span>[<span class="ruby-identifier">app_id</span>].<span class="ruby-identifier">first</span> <span class="ruby-keyword">and</span> <span class="ruby-identifier">wall_time</span> <span class="ruby-operator">&lt;=</span>  <span class="ruby-identifier">message_analyzer</span>.<span class="ruby-identifier">application_samples</span>[<span class="ruby-identifier">app_id</span>].<span class="ruby-identifier">first</span> <span class="ruby-operator">+</span> <span class="ruby-identifier">message_analyzer</span>.<span class="ruby-identifier">sampling_rate</span>
+    <span class="ruby-identifier">sample</span> = <span class="ruby-identifier">message_analyzer</span>.<span class="ruby-identifier">application_samples</span>[<span class="ruby-identifier">app_id</span>][<span class="ruby-value">1</span>]
+    <span class="ruby-identifier">sample</span>[<span class="ruby-value">0</span>] <span class="ruby-operator">+=</span> <span class="ruby-identifier">total_spent_time</span>
+    <span class="ruby-identifier">sample</span>[<span class="ruby-value">1</span>] <span class="ruby-operator">+=</span> <span class="ruby-identifier">db_time</span>
+    <span class="ruby-identifier">sample</span>[<span class="ruby-value">2</span>] <span class="ruby-operator">+=</span> <span class="ruby-identifier">rendering_time</span>
+    <span class="ruby-identifier">sample</span>[<span class="ruby-value">3</span>] <span class="ruby-operator">+=</span> <span class="ruby-value">1</span>        
+    <span class="ruby-identifier">sample</span>[<span class="ruby-value">4</span>][<span class="ruby-identifier">wall_time</span>.<span class="ruby-identifier">sec</span>] = (<span class="ruby-identifier">sample</span>[<span class="ruby-value">4</span>][<span class="ruby-identifier">wall_time</span>.<span class="ruby-identifier">sec</span>] <span class="ruby-operator">||</span> <span class="ruby-value">0</span> ) <span class="ruby-operator">+</span> <span class="ruby-value">1</span>
+    <span class="ruby-identifier">message_analyzer</span>.<span class="ruby-identifier">application_samples</span>[<span class="ruby-identifier">app_id</span>][<span class="ruby-value">1</span>] = <span class="ruby-identifier">sample</span>
+  <span class="ruby-keyword">elsif</span> <span class="ruby-identifier">wall_time</span> <span class="ruby-operator">&lt;</span> <span class="ruby-identifier">message_analyzer</span>.<span class="ruby-identifier">application_samples</span>[<span class="ruby-identifier">app_id</span>].<span class="ruby-identifier">first</span>
+    <span class="ruby-identifier">db_sample</span> = <span class="ruby-identifier">where</span>(<span class="ruby-string">'app_id = ? and 
+                      wall_time &gt;= ? and wall_time &lt;= ?'</span>,
+                      <span class="ruby-identifier">app_id</span>, 
+                      <span class="ruby-identifier">wall_time</span>, <span class="ruby-identifier">wall_time</span> <span class="ruby-operator">+</span> <span class="ruby-identifier">message_analyzer</span>.<span class="ruby-identifier">sampling_rate</span>
+                      ).<span class="ruby-identifier">first</span>
+    <span class="ruby-keyword">if</span> <span class="ruby-identifier">db_sample</span>
+      <span class="ruby-identifier">db_sample</span>.<span class="ruby-identifier">total_time_in_request</span> <span class="ruby-operator">+=</span> <span class="ruby-identifier">total_spent_time</span>
+      <span class="ruby-identifier">db_sample</span>.<span class="ruby-identifier">db_time</span> <span class="ruby-operator">+=</span> <span class="ruby-identifier">db_time</span>
+      <span class="ruby-identifier">db_sample</span>.<span class="ruby-identifier">rendering_time</span> <span class="ruby-operator">+=</span> <span class="ruby-identifier">rendering_time</span>
+      <span class="ruby-identifier">db_sample</span>.<span class="ruby-identifier">number_of_requests</span> <span class="ruby-operator">+=</span> <span class="ruby-value">1</span>
+      <span class="ruby-identifier">db_sample</span>.<span class="ruby-identifier">save!</span> <span class="ruby-keyword">rescue</span> <span class="ruby-keyword">nil</span>
+    <span class="ruby-keyword">else</span>
+      <span class="ruby-identifier">wall_time</span> <span class="ruby-operator">+=</span> <span class="ruby-identifier">message_analyzer</span>.<span class="ruby-identifier">sampling_rate</span>
+      <span class="ruby-identifier">create_sample</span>(<span class="ruby-identifier">app_id</span>, [<span class="ruby-identifier">total_spent_time</span>, <span class="ruby-identifier">db_time</span>, <span class="ruby-identifier">rendering_time</span>, <span class="ruby-value">1</span>, [<span class="ruby-value">1</span>]], <span class="ruby-identifier">message_analyzer</span>.<span class="ruby-identifier">sampling_rate</span>, <span class="ruby-identifier">wall_time</span>)
+    <span class="ruby-keyword">end</span>
+  <span class="ruby-keyword">elsif</span> <span class="ruby-identifier">wall_time</span> <span class="ruby-operator">&gt;</span> <span class="ruby-identifier">message_analyzer</span>.<span class="ruby-identifier">application_samples</span>[<span class="ruby-identifier">app_id</span>].<span class="ruby-identifier">first</span> <span class="ruby-operator">+</span>  <span class="ruby-identifier">message_analyzer</span>.<span class="ruby-identifier">sampling_rate</span>
+    <span class="ruby-identifier">o_wall_time</span> = <span class="ruby-identifier">message_analyzer</span>.<span class="ruby-identifier">application_samples</span>[<span class="ruby-identifier">app_id</span>].<span class="ruby-identifier">first</span> <span class="ruby-operator">+</span>  <span class="ruby-identifier">message_analyzer</span>.<span class="ruby-identifier">sampling_rate</span>
+    <span class="ruby-identifier">sample</span> = <span class="ruby-identifier">message_analyzer</span>.<span class="ruby-identifier">application_samples</span>[<span class="ruby-identifier">app_id</span>][<span class="ruby-value">1</span>]
+    
+    <span class="ruby-identifier">create_sample</span>(<span class="ruby-identifier">app_id</span>, <span class="ruby-identifier">sample</span>, <span class="ruby-identifier">message_analyzer</span>.<span class="ruby-identifier">sampling_rate</span>, <span class="ruby-identifier">o_wall_time</span>)
+    
+    <span class="ruby-identifier">message_analyzer</span>.<span class="ruby-identifier">application_samples</span>[<span class="ruby-identifier">app_id</span>] =  [<span class="ruby-identifier">wall_time</span>, [<span class="ruby-identifier">total_spent_time</span>, <span class="ruby-identifier">db_time</span>, <span class="ruby-identifier">rendering_time</span>, <span class="ruby-value">1</span>, <span class="ruby-constant">Array</span>.<span class="ruby-identifier">new</span>(<span class="ruby-value">60</span>,<span class="ruby-value">0</span>)]]
+  <span class="ruby-keyword">else</span>
+    <span class="ruby-identifier">raise</span> <span class="ruby-constant">UndefinedSituation</span>, <span class="ruby-string">&quot;Think of this possibility!&quot;</span>
+  <span class="ruby-keyword">end</span> <span class="ruby-comment"># if</span>
+<span class="ruby-keyword">end</span></pre>
+            </div><!-- add_to_sample-source -->
+            
+          </div>
+
+          
+
+          
+        </div><!-- add_to_sample-method -->
+
+      
+        <div id="create_sample-method" class="method-detail ">
+          <a name="method-c-create_sample"></a>
+
+          
+          <div class="method-heading">
+            <span class="method-name">create_sample</span><span
+              class="method-args">(app_id, sample, sampling_rate, wall_time)</span>
+            <span class="method-click-advice">click to toggle source</span>
+          </div>
+          
+
+          <div class="method-description">
+            
+            <p>This section of the model is used by the WebROaR Analyzer.</p>
+            
+
+            
+            <div class="method-source-code" id="create_sample-source">
+<pre>
+<span class="ruby-comment"># File app/models/app_time_sample.rb, line 108</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">create_sample</span>(<span class="ruby-identifier">app_id</span>, <span class="ruby-identifier">sample</span>, <span class="ruby-identifier">sampling_rate</span>, <span class="ruby-identifier">wall_time</span>)      
+  <span class="ruby-comment"># peak requests serverd is maximum of number of requests served in a second      </span>
+  <span class="ruby-identifier">prs</span> = <span class="ruby-identifier">sample</span>[<span class="ruby-value">4</span>].<span class="ruby-identifier">max</span> <span class="ruby-operator">||</span> <span class="ruby-value">0</span>
+  <span class="ruby-identifier">sample</span>[<span class="ruby-value">4</span>].<span class="ruby-identifier">reject!</span>{<span class="ruby-operator">|</span><span class="ruby-identifier">e</span><span class="ruby-operator">|</span> <span class="ruby-identifier">e</span> <span class="ruby-operator">==</span> <span class="ruby-value">0</span>}
+  <span class="ruby-comment"># time in milisecods /  number of requests</span>
+  <span class="ruby-keyword">if</span> <span class="ruby-identifier">sample</span>[<span class="ruby-value">4</span>].<span class="ruby-identifier">length</span> <span class="ruby-operator">&gt;</span> <span class="ruby-value">0</span>
+    <span class="ruby-identifier">art</span> = (<span class="ruby-identifier">sample</span>[<span class="ruby-value">4</span>].<span class="ruby-identifier">length</span>*<span class="ruby-value">1000</span>) <span class="ruby-operator">/</span> <span class="ruby-identifier">sample</span>[<span class="ruby-value">4</span>].<span class="ruby-identifier">inject</span>(<span class="ruby-value">0</span>){<span class="ruby-operator">|</span><span class="ruby-identifier">sum</span>,<span class="ruby-identifier">e</span><span class="ruby-operator">|</span> <span class="ruby-identifier">sum</span> <span class="ruby-operator">+</span> <span class="ruby-identifier">e</span>}.<span class="ruby-identifier">to_f</span> 
+  <span class="ruby-keyword">else</span>
+    <span class="ruby-identifier">art</span> = <span class="ruby-value">0</span>
+  <span class="ruby-keyword">end</span>
+  <span class="ruby-comment">#      puts 'creating'</span>
+  <span class="ruby-identifier">with_exception_handling</span>(<span class="ruby-node">&quot;Application sample creation for application #{app_id}, wall_time #{wall_time}&quot;</span>) <span class="ruby-keyword">do</span>
+    <span class="ruby-identifier">create</span>({<span class="ruby-value">:app_id</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">app_id</span>, 
+            <span class="ruby-value">:total_time_in_request</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">sample</span>[<span class="ruby-value">0</span>], 
+            <span class="ruby-value">:db_time</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">sample</span>[<span class="ruby-value">1</span>], 
+            <span class="ruby-value">:rendering_time</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">sample</span>[<span class="ruby-value">2</span>], 
+            <span class="ruby-value">:number_of_requests</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">sample</span>[<span class="ruby-value">3</span>], 
+            <span class="ruby-value">:wall_time</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">wall_time</span>, 
+            <span class="ruby-value">:sampling_rate</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">sampling_rate</span>, 
+            <span class="ruby-value">:avg_response_time</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">art</span>, 
+            <span class="ruby-value">:peak_requests_served</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">prs</span>})
+  <span class="ruby-keyword">end</span>      
+<span class="ruby-keyword">end</span></pre>
+            </div><!-- create_sample-source -->
+            
+          </div>
+
+          
+
+          
+        </div><!-- create_sample-method -->
+
+      
+        <div id="get_application_data-method" class="method-detail ">
+          <a name="method-c-get_application_data"></a>
+
+          
+          <div class="method-heading">
+            <span class="method-name">get_application_data</span><span
+              class="method-args">(app_id, start_time, end_time, type)</span>
+            <span class="method-click-advice">click to toggle source</span>
+          </div>
+          
+
+          <div class="method-description">
+            
+            <p>This method supplies the url and there statistics to the admin panel
+application. This data is used for the graph ploting. This method supplies
+the data for database consumption by an application, throughtput and
+Average Response Time of an application.</p>
+            
+
+            
+            <div class="method-source-code" id="get_application_data-source">
+<pre>
+<span class="ruby-comment"># File app/models/app_time_sample.rb, line 31</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">get_application_data</span>(<span class="ruby-identifier">app_id</span>, <span class="ruby-identifier">start_time</span>, <span class="ruby-identifier">end_time</span>, <span class="ruby-identifier">type</span>)
+     <span class="ruby-identifier">max</span> = <span class="ruby-value">0</span>
+     <span class="ruby-identifier">interval</span> = <span class="ruby-value">0</span>
+     <span class="ruby-identifier">interval</span> = ((<span class="ruby-identifier">end_time</span><span class="ruby-operator">-</span><span class="ruby-identifier">start_time</span>) <span class="ruby-operator">/</span> <span class="ruby-value">60</span>).<span class="ruby-identifier">to_i</span>
+     <span class="ruby-identifier">final_data</span> = <span class="ruby-constant">Array</span>.<span class="ruby-identifier">new</span>(<span class="ruby-identifier">interval</span>)
+     <span class="ruby-identifier">wall_time</span> = <span class="ruby-constant">Array</span>.<span class="ruby-identifier">new</span>(<span class="ruby-identifier">interval</span>)
+     <span class="ruby-identifier">application_samples</span> = <span class="ruby-identifier">select</span>(<span class="ruby-string">'wall_time, 
+                                   sum(db_time) as db_time,
+                                   sum(total_time_in_request) as total_time_in_request, 
+                                   sum(number_of_requests) as number_of_requests , 
+                                   avg(avg_response_time) as avg_avg_response_time, 
+                                   avg(peak_requests_served) as avg_peak_requests_served'</span>
+                                   ).<span class="ruby-identifier">where</span>(<span class="ruby-string">'app_id = ? and 
+                                   wall_time &gt;= ? and 
+                                   wall_time &lt; ?'</span>, 
+                                   <span class="ruby-identifier">app_id</span>,
+                                   <span class="ruby-identifier">start_time</span>.<span class="ruby-identifier">strftime</span>(<span class="ruby-string">'%Y-%m-%d %H:%M:%S'</span>),
+                                   <span class="ruby-identifier">end_time</span>.<span class="ruby-identifier">strftime</span>(<span class="ruby-string">'%Y-%m-%d %H:%M:%S'</span>)
+                                   ).<span class="ruby-identifier">group</span>(<span class="ruby-value">:wall_time</span>)
+
+     <span class="ruby-identifier">application_samples</span>.<span class="ruby-identifier">each</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">application_sample</span><span class="ruby-operator">|</span> 
+        <span class="ruby-identifier">current_time</span> = <span class="ruby-constant">Time</span>.<span class="ruby-identifier">local</span>(<span class="ruby-identifier">application_sample</span>.<span class="ruby-identifier">wall_time</span>.<span class="ruby-identifier">year</span>, 
+                                  <span class="ruby-identifier">application_sample</span>.<span class="ruby-identifier">wall_time</span>.<span class="ruby-identifier">month</span>, 
+                                  <span class="ruby-identifier">application_sample</span>.<span class="ruby-identifier">wall_time</span>.<span class="ruby-identifier">day</span>, 
+                                  <span class="ruby-identifier">application_sample</span>.<span class="ruby-identifier">wall_time</span>.<span class="ruby-identifier">hour</span>, 
+                                  <span class="ruby-identifier">application_sample</span>.<span class="ruby-identifier">wall_time</span>.<span class="ruby-identifier">min</span>, 
+                                  <span class="ruby-string">'0'</span>)
+        <span class="ruby-identifier">db_time_data</span> = <span class="ruby-value">0</span>
+        <span class="ruby-identifier">total_time_in_request</span> = <span class="ruby-value">0</span>
+        <span class="ruby-identifier">total_requests</span> = <span class="ruby-value">0</span>
+        <span class="ruby-identifier">total_data</span> = <span class="ruby-value">0</span>
+        <span class="ruby-identifier">index</span> = (<span class="ruby-identifier">current_time</span><span class="ruby-operator">-</span><span class="ruby-identifier">start_time</span>) <span class="ruby-operator">/</span> <span class="ruby-value">60</span>
+        <span class="ruby-identifier">total_time_in_request</span> = <span class="ruby-identifier">application_sample</span>.<span class="ruby-identifier">total_time_in_request</span>.<span class="ruby-identifier">to_f</span>
+        <span class="ruby-keyword">case</span> <span class="ruby-identifier">type</span>
+        <span class="ruby-keyword">when</span> <span class="ruby-string">'db'</span>
+           <span class="ruby-identifier">db_time_data</span> = <span class="ruby-identifier">application_sample</span>.<span class="ruby-identifier">db_time</span>.<span class="ruby-identifier">to_f</span>
+           <span class="ruby-identifier">total_data</span> = (<span class="ruby-identifier">db_time_data</span>.<span class="ruby-identifier">to_f</span> * <span class="ruby-value">100</span> <span class="ruby-operator">/</span> <span class="ruby-identifier">total_time_in_request</span>.<span class="ruby-identifier">to_f</span>).<span class="ruby-identifier">to_f</span>
+        <span class="ruby-keyword">when</span> <span class="ruby-string">'averageresponsetime'</span>
+          <span class="ruby-identifier">total_data</span> = <span class="ruby-identifier">application_sample</span>.<span class="ruby-identifier">avg_avg_response_time</span>.<span class="ruby-identifier">to_f</span>
+        <span class="ruby-keyword">when</span> <span class="ruby-string">'throughput'</span>
+           <span class="ruby-identifier">total_data</span> = <span class="ruby-identifier">application_sample</span>.<span class="ruby-identifier">avg_peak_requests_served</span>.<span class="ruby-identifier">to_f</span>
+        <span class="ruby-keyword">end</span>
+        
+        <span class="ruby-keyword">if</span> <span class="ruby-identifier">max</span> <span class="ruby-operator">&lt;</span> <span class="ruby-identifier">total_data</span>
+          <span class="ruby-identifier">max</span> = <span class="ruby-identifier">total_data</span>.<span class="ruby-identifier">to_i</span>
+        <span class="ruby-keyword">end</span>
+         <span class="ruby-identifier">final_data</span>[<span class="ruby-identifier">index</span>] = <span class="ruby-identifier">total_data</span>
+         <span class="ruby-identifier">wall_time</span>[<span class="ruby-identifier">index</span>] = <span class="ruby-identifier">current_time</span>.<span class="ruby-identifier">strftime</span>(<span class="ruby-string">&quot;%H:%M&quot;</span>)
+   <span class="ruby-keyword">end</span>  
+     <span class="ruby-keyword">for</span> <span class="ruby-identifier">i</span> <span class="ruby-keyword">in</span> <span class="ruby-value">0</span><span class="ruby-operator">..</span><span class="ruby-identifier">interval</span>
+         <span class="ruby-keyword">if</span> <span class="ruby-identifier">final_data</span>[<span class="ruby-identifier">i</span>].<span class="ruby-identifier">nil?</span>
+           <span class="ruby-identifier">wall_time</span>[<span class="ruby-identifier">i</span>] = (<span class="ruby-identifier">start_time</span><span class="ruby-operator">+</span><span class="ruby-identifier">i</span>*<span class="ruby-value">60</span>).<span class="ruby-identifier">strftime</span>(<span class="ruby-string">&quot;%H:%M&quot;</span>)
+         <span class="ruby-keyword">end</span>
+     <span class="ruby-keyword">end</span>
+     <span class="ruby-identifier">max</span>,<span class="ruby-identifier">slab</span> = <span class="ruby-identifier">get_max_and_slab</span>(<span class="ruby-identifier">max</span>)
+     <span class="ruby-identifier">step</span> = (<span class="ruby-identifier">interval</span> <span class="ruby-operator">+</span> <span class="ruby-value">1</span>) <span class="ruby-operator">/</span> <span class="ruby-value">20</span>
+     <span class="ruby-keyword">return</span> <span class="ruby-identifier">wall_time</span>, <span class="ruby-identifier">final_data</span>, <span class="ruby-identifier">max</span>, <span class="ruby-identifier">slab</span>, <span class="ruby-identifier">step</span>
+   <span class="ruby-keyword">end</span></pre>
+            </div><!-- get_application_data-source -->
+            
+          </div>
+
+          
+
+          
+        </div><!-- get_application_data-method -->
+
+      
+        <div id="get_max_and_slab-method" class="method-detail ">
+          <a name="method-c-get_max_and_slab"></a>
+
+          
+          <div class="method-heading">
+            <span class="method-name">get_max_and_slab</span><span
+              class="method-args">(max)</span>
+            <span class="method-click-advice">click to toggle source</span>
+          </div>
+          
+
+          <div class="method-description">
+            
+            <p>This method gives the maximum value for y axis and the value by which the y
+axis is to be partitioned.</p>
+            
+
+            
+            <div class="method-source-code" id="get_max_and_slab-source">
+<pre>
+<span class="ruby-comment"># File app/models/app_time_sample.rb, line 91</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">get_max_and_slab</span>(<span class="ruby-identifier">max</span>)
+  <span class="ruby-keyword">if</span> <span class="ruby-identifier">max</span> <span class="ruby-operator">==</span> <span class="ruby-value">0</span>
+    <span class="ruby-identifier">max</span> = <span class="ruby-value">1</span>
+    <span class="ruby-identifier">slab</span> = <span class="ruby-value">1</span>
+  <span class="ruby-keyword">else</span>
+    <span class="ruby-keyword">if</span> <span class="ruby-identifier">max</span> <span class="ruby-operator">&gt;</span> <span class="ruby-value">8</span>
+      <span class="ruby-identifier">slab</span> = <span class="ruby-identifier">max</span> <span class="ruby-operator">/</span> <span class="ruby-value">8</span>.<span class="ruby-identifier">to_i</span>
+    <span class="ruby-keyword">else</span> 
+      <span class="ruby-identifier">slab</span> = <span class="ruby-value">1</span>
+    <span class="ruby-keyword">end</span>
+  <span class="ruby-keyword">end</span>
+  <span class="ruby-identifier">max</span> = <span class="ruby-identifier">max</span>.<span class="ruby-identifier">to_i</span> <span class="ruby-operator">+</span> <span class="ruby-identifier">slab</span>
+  <span class="ruby-keyword">return</span> <span class="ruby-identifier">max</span>, <span class="ruby-identifier">slab</span>
+<span class="ruby-keyword">end</span></pre>
+            </div><!-- get_max_and_slab-source -->
+            
+          </div>
+
+          
+
+          
+        </div><!-- get_max_and_slab-method -->
+
+      
+        <div id="write_all_samples-method" class="method-detail ">
+          <a name="method-c-write_all_samples"></a>
+
+          
+          <div class="method-heading">
+            <span class="method-name">write_all_samples</span><span
+              class="method-args">(message_analyzer)</span>
+            <span class="method-click-advice">click to toggle source</span>
+          </div>
+          
+
+          <div class="method-description">
+            
+            <p>At time of stopping a script, we would write the samples which are in
+memory.</p>
+            
+
+            
+            <div class="method-source-code" id="write_all_samples-source">
+<pre>
+<span class="ruby-comment"># File app/models/app_time_sample.rb, line 198</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">write_all_samples</span>(<span class="ruby-identifier">message_analyzer</span>)
+  <span class="ruby-keyword">if</span> <span class="ruby-identifier">message_analyzer</span>.<span class="ruby-identifier">application_samples</span>.<span class="ruby-identifier">length</span> <span class="ruby-operator">==</span> <span class="ruby-value">0</span>
+    <span class="ruby-keyword">return</span>
+  <span class="ruby-keyword">end</span>
+  <span class="ruby-identifier">samples</span> = <span class="ruby-identifier">message_analyzer</span>.<span class="ruby-identifier">application_samples</span>
+  <span class="ruby-identifier">samples</span>.<span class="ruby-identifier">each_pair</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">app_id</span>, <span class="ruby-identifier">sample</span><span class="ruby-operator">|</span>
+    <span class="ruby-keyword">if</span> <span class="ruby-identifier">sample</span> <span class="ruby-keyword">and</span> <span class="ruby-identifier">sample</span>.<span class="ruby-identifier">length</span> <span class="ruby-operator">&gt;</span> <span class="ruby-value">0</span>
+      <span class="ruby-identifier">o_wall_time</span> = <span class="ruby-identifier">sample</span>.<span class="ruby-identifier">first</span> <span class="ruby-operator">+</span> <span class="ruby-identifier">message_analyzer</span>.<span class="ruby-identifier">sampling_rate</span>
+      <span class="ruby-identifier">sample</span> = <span class="ruby-identifier">sample</span>[<span class="ruby-value">1</span>]
+      <span class="ruby-identifier">create_sample</span>(<span class="ruby-identifier">app_id</span>, <span class="ruby-identifier">sample</span>, <span class="ruby-identifier">message_analyzer</span>.<span class="ruby-identifier">sampling_rate</span>, <span class="ruby-identifier">o_wall_time</span>)
+      <span class="ruby-comment"># peak requests serverd is maximum of number of requests served in a second</span>
+      <span class="ruby-comment">#          prs = sample[4].max</span>
+      <span class="ruby-comment">#          sample[4].reject!{|e| e == 0}</span>
+      <span class="ruby-comment">#          art = sample[4].inject(0){|sum,e| sum + e}.to_f / sample[4].length</span>
+      <span class="ruby-comment">#          create({:app_id =&gt; app_id, :total_time_in_request =&gt; sample[0], :db_time =&gt; sample[1], :rendering_time =&gt; sample[2], :number_of_requests =&gt; sample[3], :wall_time =&gt; o_wall_time, :sampling_rate =&gt; message_analyzer.sampling_rate, :avg_response_time =&gt; ars, :peak_requests_served =&gt; prs})</span>
+    <span class="ruby-keyword">end</span> <span class="ruby-comment">#   if sample and sample.length &gt; 0</span>
+  <span class="ruby-keyword">end</span> <span class="ruby-comment"># do |app_id, sample|</span>
+<span class="ruby-keyword">end</span></pre>
+            </div><!-- write_all_samples-source -->
+            
+          </div>
+
+          
+
+          
+        </div><!-- write_all_samples-method -->
+
+      
+        <div id="write_stale_samples-method" class="method-detail ">
+          <a name="method-c-write_stale_samples"></a>
+
+          
+          <div class="method-heading">
+            <span class="method-name">write_stale_samples</span><span
+              class="method-args">(message_analyzer)</span>
+            <span class="method-click-advice">click to toggle source</span>
+          </div>
+          
+
+          <div class="method-description">
+            
+            <p>We have kept sampling period of one minute and would keep any sample in
+memory for maximum one minute. By this method we                  # would
+write all such samples which are in memory for more than a minute.</p>
+            
+
+            
+            <div class="method-source-code" id="write_stale_samples-source">
+<pre>
+<span class="ruby-comment"># File app/models/app_time_sample.rb, line 177</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">write_stale_samples</span>(<span class="ruby-identifier">message_analyzer</span>)
+  <span class="ruby-keyword">if</span> <span class="ruby-identifier">message_analyzer</span>.<span class="ruby-identifier">application_samples</span>.<span class="ruby-identifier">length</span> <span class="ruby-operator">==</span> <span class="ruby-value">0</span>
+    <span class="ruby-keyword">return</span>
+  <span class="ruby-keyword">end</span>
+  <span class="ruby-identifier">samples</span> = <span class="ruby-identifier">message_analyzer</span>.<span class="ruby-identifier">application_samples</span>
+  <span class="ruby-identifier">samples</span>.<span class="ruby-identifier">each_pair</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">app_id</span>, <span class="ruby-identifier">sample</span><span class="ruby-operator">|</span>
+    <span class="ruby-keyword">if</span> <span class="ruby-identifier">sample</span> <span class="ruby-keyword">and</span> <span class="ruby-identifier">sample</span>.<span class="ruby-identifier">length</span> <span class="ruby-operator">&gt;</span> <span class="ruby-value">0</span> <span class="ruby-keyword">and</span> (<span class="ruby-identifier">o_wall_time</span> = <span class="ruby-identifier">sample</span>.<span class="ruby-identifier">first</span> <span class="ruby-operator">+</span> <span class="ruby-identifier">message_analyzer</span>.<span class="ruby-identifier">sampling_rate</span>) <span class="ruby-operator">&lt;</span> <span class="ruby-constant">Time</span>.<span class="ruby-identifier">now</span>
+      <span class="ruby-identifier">sample</span> = <span class="ruby-identifier">sample</span>[<span class="ruby-value">1</span>]
+      <span class="ruby-identifier">create_sample</span>(<span class="ruby-identifier">app_id</span>, <span class="ruby-identifier">sample</span>, <span class="ruby-identifier">message_analyzer</span>.<span class="ruby-identifier">sampling_rate</span>, <span class="ruby-identifier">o_wall_time</span>)
+      <span class="ruby-comment"># peak requests serverd is maximum of number of requests served in a second</span>
+      <span class="ruby-comment">#          prs = sample[4].max</span>
+      <span class="ruby-comment">#          sample[4].reject!{|e| e == 0}</span>
+      <span class="ruby-comment">#          art = sample[4].inject(0){|sum,e| sum + e}.to_f / sample[4].length</span>
+      <span class="ruby-comment">#          create({:app_id =&gt; app_id, :total_time_in_request =&gt; sample[0], :db_time =&gt; sample[1], :rendering_time =&gt; sample[2], :number_of_requests =&gt; sample[3], :wall_time =&gt; o_wall_time, :sampling_rate =&gt; message_analyzer.sampling_rate, :avg_response_time  =&gt; ars, :peak_requests_served =&gt; prs})</span>
+      <span class="ruby-identifier">message_analyzer</span>.<span class="ruby-identifier">application_samples</span>[<span class="ruby-identifier">app_id</span>] = <span class="ruby-constant">Array</span>.<span class="ruby-identifier">new</span>
+    <span class="ruby-keyword">end</span>
+    
+  <span class="ruby-keyword">end</span>
+<span class="ruby-keyword">end</span></pre>
+            </div><!-- write_stale_samples-source -->
+            
+          </div>
+
+          
+
+          
+        </div><!-- write_stale_samples-method -->
+
+      
+      </div><!-- public-class-method-details -->
+    
+    </div><!-- 5Buntitled-5D -->
+  
+
+  </div><!-- documentation -->
+
+  <div id="validator-badges">
+    <p><small><a href="http://validator.w3.org/check/referer">[Validate]</a></small></p>
+    <p><small>Generated with the <a href="http://deveiate.org/projects/Darkfish-Rdoc/">Darkfish
+      Rdoc Generator</a> 2</small>.</p>
+  </div>
+
+</body>
+</html>
+
