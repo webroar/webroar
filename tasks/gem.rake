@@ -36,8 +36,8 @@ spec = Gem::Specification.new do |s|
   s.platform              = Gem::Platform::RUBY
   s.summary               = "A ruby application server."
   s.description           = "WebROaR is an application server that makes deployments of ruby web applications extremely simple. It provides an integrated solution to view the run time performance numbers and email notifications in case any exceptions occur in any of the deployed applications. It is 5 to 55% faster than all other comparable deployment stacks for Ruby on Rails applications. Check out http://webroar.in for more details."
-  s.authors               = ["Dharmarth Shah", "Nikunj Limbaseeya"]
-  s.email                 = ["dharmarth.shah@webroar.in", "nikunj.limbaseeya@webroar.in"]
+  s.authors               = ["Hokam Singh Chauhan", "Nikunj Limbaseeya"]
+  s.email                 = ["hokam.chauhan@webroar.in", "nikunj.limbaseeya@webroar.in"]
   s.homepage              = "http://webroar.in"
   s.rubyforge_project     = "webroar"
   s.executables           = ['webroar','webroar-analyzer']
@@ -45,7 +45,6 @@ spec = Gem::Specification.new do |s|
   s.required_ruby_version = '>= 1.8.5'
 
   s.add_dependency 'rails', '3.0.9'
-  s.add_dependency 'calendar_date_select', '>= 1.15'  
   s.add_dependency 'rake', '>= 0.8.1'  
   s.add_dependency 'rspec', '~>1.3.1'
   s.add_dependency 'sqlite3', '>=1.2.3'
