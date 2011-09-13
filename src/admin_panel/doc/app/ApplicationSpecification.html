@@ -1,0 +1,876 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+  <meta content="text/html; charset=utf-8" http-equiv="Content-Type" />
+
+  <title>Class: ApplicationSpecification</title>
+
+  <link rel="stylesheet" href="./rdoc.css" type="text/css" media="screen" />
+
+  <script src="./js/jquery.js" type="text/javascript" charset="utf-8"></script>
+  <script src="./js/thickbox-compressed.js" type="text/javascript" charset="utf-8"></script>
+  <script src="./js/quicksearch.js" type="text/javascript" charset="utf-8"></script>
+  <script src="./js/darkfish.js" type="text/javascript" charset="utf-8"></script>
+
+</head>
+<body id="top" class="class">
+
+  <div id="metadata">
+    <div id="home-metadata">
+      <div id="home-section" class="section">
+        <h3 class="section-header">
+          <a href="./index.html">Home</a>
+          <a href="./index.html#classes">Classes</a>
+          <a href="./index.html#methods">Methods</a>
+        </h3>
+      </div>
+    </div>
+
+    <div id="file-metadata">
+      <div id="file-list-section" class="section">
+        <h3 class="section-header">In Files</h3>
+        <div class="section-body">
+          <ul>
+          
+            <li><a href="./app/models/application_specification_rb.html?TB_iframe=true&amp;height=550&amp;width=785"
+              class="thickbox" title="app/models/application_specification.rb">app/models/application_specification.rb</a></li>
+          
+          </ul>
+        </div>
+      </div>
+
+      
+    </div>
+
+    <div id="class-metadata">
+      
+      <!-- Parent Class -->
+      <div id="parent-class-section" class="section">
+        <h3 class="section-header">Parent</h3>
+        
+        <p class="link"><a href="PseudoModel.html">PseudoModel</a></p>
+        
+      </div>
+      
+
+      
+
+      
+
+      
+      <!-- Method Quickref -->
+      <div id="method-list-section" class="section">
+        <h3 class="section-header">Methods</h3>
+        <ul class="link-list">
+          
+          <li><a href="#method-c-analytics_enabled-3F">::analytics_enabled?</a></li>
+          
+          <li><a href="#method-c-get_application_id_from_name">::get_application_id_from_name</a></li>
+          
+          <li><a href="#method-c-get_hash">::get_hash</a></li>
+          
+          <li><a href="#method-c-remove">::remove</a></li>
+          
+          <li><a href="#method-i-ensure_validations">#ensure_validations</a></li>
+          
+          <li><a href="#method-i-obj_to_hash">#obj_to_hash</a></li>
+          
+          <li><a href="#method-i-remove">#remove</a></li>
+          
+          <li><a href="#method-i-update">#update</a></li>
+          
+          <li><a href="#method-i-write">#write</a></li>
+          
+        </ul>
+      </div>
+      
+
+      
+    </div>
+
+    <div id="project-metadata">
+      
+      
+      <div id="fileindex-section" class="section project-section">
+        <h3 class="section-header">Files</h3>
+        <ul>
+        
+          <li class="file"><a href="./doc/README_FOR_APP.html">README_FOR_APP</a></li>
+        
+        </ul>
+      </div>
+      
+
+      <div id="classindex-section" class="section project-section">
+        <h3 class="section-header">Class/Module Index
+          <span class="search-toggle"><img src="./images/find.png"
+            height="16" width="16" alt="[+]"
+            title="show/hide quicksearch" /></span></h3>
+        <form action="#" method="get" accept-charset="utf-8" class="initially-hidden">
+        <fieldset>
+          <legend>Quicksearch</legend>
+          <input type="text" name="quicksearch" value=""
+            class="quicksearch-field" />
+        </fieldset>
+        </form>
+
+        <ul class="link-list">
+        
+          <li><a href="./Analytics.html">Analytics</a></li>
+        
+          <li><a href="./Analytics/Database.html">Analytics::Database</a></li>
+        
+          <li><a href="./Analytics/ResourceUsage.html">Analytics::ResourceUsage</a></li>
+        
+          <li><a href="./Analytics/Throughput.html">Analytics::Throughput</a></li>
+        
+          <li><a href="./Analytics/Url.html">Analytics::Url</a></li>
+        
+          <li><a href="./Analytics/UrlBreakup.html">Analytics::UrlBreakup</a></li>
+        
+          <li><a href="./ActionView.html">ActionView</a></li>
+        
+          <li><a href="./ActionView/Helpers.html">ActionView::Helpers</a></li>
+        
+          <li><a href="./ActionView/Helpers/AssetTagHelper.html">ActionView::Helpers::AssetTagHelper</a></li>
+        
+          <li><a href="./AdminController.html">AdminController</a></li>
+        
+          <li><a href="./AdminHelper.html">AdminHelper</a></li>
+        
+          <li><a href="./App.html">App</a></li>
+        
+          <li><a href="./AppException.html">AppException</a></li>
+        
+          <li><a href="./AppTimeSample.html">AppTimeSample</a></li>
+        
+          <li><a href="./ApplicationController.html">ApplicationController</a></li>
+        
+          <li><a href="./ApplicationHelper.html">ApplicationHelper</a></li>
+        
+          <li><a href="./ApplicationSpecification.html">ApplicationSpecification</a></li>
+        
+          <li><a href="./ApplicationSpecificationController.html">ApplicationSpecificationController</a></li>
+        
+          <li><a href="./ApplicationSpecificationHelper.html">ApplicationSpecificationHelper</a></li>
+        
+          <li><a href="./Control.html">Control</a></li>
+        
+          <li><a href="./ExceptionDetail.html">ExceptionDetail</a></li>
+        
+          <li><a href="./ExceptionsController.html">ExceptionsController</a></li>
+        
+          <li><a href="./ExceptionsHelper.html">ExceptionsHelper</a></li>
+        
+          <li><a href="./GraphController.html">GraphController</a></li>
+        
+          <li><a href="./GraphHelper.html">GraphHelper</a></li>
+        
+          <li><a href="./Headers.html">Headers</a></li>
+        
+          <li><a href="./HeadersController.html">HeadersController</a></li>
+        
+          <li><a href="./HeadersHelper.html">HeadersHelper</a></li>
+        
+          <li><a href="./MailSpecification.html">MailSpecification</a></li>
+        
+          <li><a href="./MailSpecificationController.html">MailSpecificationController</a></li>
+        
+          <li><a href="./MailSpecificationHelper.html">MailSpecificationHelper</a></li>
+        
+          <li><a href="./Mailer.html">Mailer</a></li>
+        
+          <li><a href="./Object.html">Object</a></li>
+        
+          <li><a href="./PseudoModel.html">PseudoModel</a></li>
+        
+          <li><a href="./ResourceUsage.html">ResourceUsage</a></li>
+        
+          <li><a href="./SCGI.html">SCGI</a></li>
+        
+          <li><a href="./ServerSpecification.html">ServerSpecification</a></li>
+        
+          <li><a href="./ServerSpecificationController.html">ServerSpecificationController</a></li>
+        
+          <li><a href="./ServerSpecificationHelper.html">ServerSpecificationHelper</a></li>
+        
+          <li><a href="./SignalHelper.html">SignalHelper</a></li>
+        
+          <li><a href="./UrlBreakupTimeSample.html">UrlBreakupTimeSample</a></li>
+        
+          <li><a href="./UrlTimeSample.html">UrlTimeSample</a></li>
+        
+          <li><a href="./User.html">User</a></li>
+        
+          <li><a href="./YAMLConfig.html">YAMLConfig</a></li>
+        
+          <li><a href="./YAMLWriter.html">YAMLWriter</a></li>
+        
+        </ul>
+        <div id="no-class-search-results" style="display: none;">No matching classes.</div>
+      </div>
+
+      
+    </div>
+  </div>
+
+  <div id="documentation">
+    <h1 class="class">ApplicationSpecification</h1>
+
+    <div id="description" class="description">
+      
+    </div><!-- description -->
+
+    
+    
+    
+    <div id="5Buntitled-5D" class="documentation-section">
+      
+
+      
+
+      
+
+      
+
+      <!-- Methods -->
+      
+      <div id="public-class-method-details" class="method-section section">
+        <h3 class="section-header">Public Class Methods</h3>
+
+      
+        <div id="analytics_enabled-3F-method" class="method-detail ">
+          <a name="method-c-analytics_enabled-3F"></a>
+
+          
+          <div class="method-heading">
+            <span class="method-name">analytics_enabled?</span><span
+              class="method-args">(application_name)</span>
+            <span class="method-click-advice">click to toggle source</span>
+          </div>
+          
+
+          <div class="method-description">
+            
+            
+            
+
+            
+            <div class="method-source-code" id="analytics_enabled-3F-source">
+<pre>
+<span class="ruby-comment"># File app/models/application_specification.rb, line 387</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">analytics_enabled?</span>(<span class="ruby-identifier">application_name</span>)
+  <span class="ruby-identifier">info</span> = <span class="ruby-constant">YAML</span><span class="ruby-operator">::</span><span class="ruby-identifier">load_file</span>(<span class="ruby-constant">CONFIG_FILE_PATH</span>) <span class="ruby-keyword">rescue</span> <span class="ruby-keyword">nil</span>
+  <span class="ruby-identifier">i</span> = <span class="ruby-value">0</span>
+  <span class="ruby-keyword">while</span> <span class="ruby-identifier">info</span>[<span class="ruby-string">'Application Specification'</span>]
+    <span class="ruby-keyword">if</span> <span class="ruby-identifier">info</span>[<span class="ruby-string">'Application Specification'</span>][<span class="ruby-identifier">i</span>][<span class="ruby-string">'name'</span>] <span class="ruby-operator">==</span> <span class="ruby-identifier">application_name</span>
+      <span class="ruby-keyword">if</span> <span class="ruby-identifier">info</span>[<span class="ruby-string">'Application Specification'</span>][<span class="ruby-identifier">i</span>][<span class="ruby-string">'analytics'</span>].<span class="ruby-identifier">downcase</span> <span class="ruby-operator">==</span> <span class="ruby-string">&quot;enabled&quot;</span>.<span class="ruby-identifier">downcase</span>
+        <span class="ruby-keyword">return</span> <span class="ruby-keyword">true</span>
+      <span class="ruby-keyword">else</span>
+        <span class="ruby-keyword">return</span> <span class="ruby-keyword">false</span>
+      <span class="ruby-keyword">end</span>
+    <span class="ruby-keyword">end</span>
+    <span class="ruby-identifier">i</span> <span class="ruby-operator">+=</span><span class="ruby-value">1</span>
+  <span class="ruby-keyword">end</span>
+  <span class="ruby-keyword">false</span>
+<span class="ruby-keyword">end</span></pre>
+            </div><!-- analytics_enabled-3F-source -->
+            
+          </div>
+
+          
+
+          
+        </div><!-- analytics_enabled-3F-method -->
+
+      
+        <div id="get_application_id_from_name-method" class="method-detail ">
+          <a name="method-c-get_application_id_from_name"></a>
+
+          
+          <div class="method-heading">
+            <span class="method-name">get_application_id_from_name</span><span
+              class="method-args">(application_name)</span>
+            <span class="method-click-advice">click to toggle source</span>
+          </div>
+          
+
+          <div class="method-description">
+            
+            
+            
+
+            
+            <div class="method-source-code" id="get_application_id_from_name-source">
+<pre>
+<span class="ruby-comment"># File app/models/application_specification.rb, line 375</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">get_application_id_from_name</span>(<span class="ruby-identifier">application_name</span>)
+  <span class="ruby-identifier">info</span> = <span class="ruby-constant">YAML</span><span class="ruby-operator">::</span><span class="ruby-identifier">load_file</span>(<span class="ruby-constant">CONFIG_FILE_PATH</span>) <span class="ruby-keyword">rescue</span> <span class="ruby-keyword">nil</span>
+  <span class="ruby-identifier">i</span> = <span class="ruby-value">0</span>
+  <span class="ruby-keyword">while</span> <span class="ruby-identifier">info</span>[<span class="ruby-string">'Application Specification'</span>]
+    <span class="ruby-keyword">if</span> <span class="ruby-identifier">info</span>[<span class="ruby-string">'Application Specification'</span>][<span class="ruby-identifier">i</span>][<span class="ruby-string">'name'</span>] <span class="ruby-operator">==</span> <span class="ruby-identifier">application_name</span>
+      <span class="ruby-keyword">break</span>
+    <span class="ruby-keyword">end</span>
+    <span class="ruby-identifier">i</span> <span class="ruby-operator">+=</span><span class="ruby-value">1</span>
+  <span class="ruby-keyword">end</span>
+  <span class="ruby-keyword">return</span> <span class="ruby-identifier">i</span>
+<span class="ruby-keyword">end</span></pre>
+            </div><!-- get_application_id_from_name-source -->
+            
+          </div>
+
+          
+
+          
+        </div><!-- get_application_id_from_name-method -->
+
+      
+        <div id="get_hash-method" class="method-detail ">
+          <a name="method-c-get_hash"></a>
+
+          
+          <div class="method-heading">
+            <span class="method-name">get_hash</span><span
+              class="method-args">(application_id = 1000)</span>
+            <span class="method-click-advice">click to toggle source</span>
+          </div>
+          
+
+          <div class="method-description">
+            
+            <p>This method is to get application specifications for a specific application
+from WebROaR config file.</p>
+            
+
+            
+            <div class="method-source-code" id="get_hash-source">
+<pre>
+<span class="ruby-comment"># File app/models/application_specification.rb, line 337</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">get_hash</span>(<span class="ruby-identifier">application_id</span> = <span class="ruby-value">1000</span>)
+  <span class="ruby-identifier">info</span> = <span class="ruby-constant">YAML</span><span class="ruby-operator">::</span><span class="ruby-identifier">load_file</span>(<span class="ruby-constant">CONFIG_FILE_PATH</span>) <span class="ruby-keyword">rescue</span> <span class="ruby-keyword">nil</span>
+  <span class="ruby-identifier">name</span> = <span class="ruby-string">&quot;&quot;</span>
+  <span class="ruby-identifier">path</span> = <span class="ruby-string">&quot;&quot;</span>
+  <span class="ruby-identifier">run_as_user</span> = <span class="ruby-string">&quot;&quot;</span>
+  <span class="ruby-identifier">type</span> = <span class="ruby-string">&quot;Rails&quot;</span>
+  <span class="ruby-identifier">analytics</span> = <span class="ruby-string">&quot;Disabled&quot;</span>
+  <span class="ruby-identifier">environment</span> = <span class="ruby-string">&quot;Production&quot;</span>
+  <span class="ruby-identifier">port</span>, <span class="ruby-identifier">min_worker</span>, <span class="ruby-identifier">max_worker</span>, <span class="ruby-identifier">log_level</span> = <span class="ruby-constant">ServerSpecification</span>.<span class="ruby-identifier">get_fields</span>
+  <span class="ruby-keyword">if</span> <span class="ruby-operator">!</span><span class="ruby-identifier">application_id</span>.<span class="ruby-identifier">nil?</span>
+    <span class="ruby-keyword">if</span> <span class="ruby-identifier">info</span> <span class="ruby-keyword">and</span> <span class="ruby-identifier">info</span>[<span class="ruby-string">'Application Specification'</span>] <span class="ruby-keyword">and</span> <span class="ruby-identifier">info</span>[<span class="ruby-string">'Application Specification'</span>][<span class="ruby-identifier">application_id</span>]
+      <span class="ruby-identifier">name</span> = <span class="ruby-identifier">info</span>[<span class="ruby-string">'Application Specification'</span>][<span class="ruby-identifier">application_id</span>][<span class="ruby-string">'name'</span>] <span class="ruby-keyword">if</span> <span class="ruby-identifier">info</span>[<span class="ruby-string">'Application Specification'</span>][<span class="ruby-identifier">application_id</span>][<span class="ruby-string">'name'</span>]
+      <span class="ruby-identifier">baseuri</span> = <span class="ruby-identifier">info</span>[<span class="ruby-string">'Application Specification'</span>][<span class="ruby-identifier">application_id</span>][<span class="ruby-string">'baseuri'</span>] <span class="ruby-keyword">if</span> <span class="ruby-identifier">info</span>[<span class="ruby-string">'Application Specification'</span>][<span class="ruby-identifier">application_id</span>][<span class="ruby-string">'baseuri'</span>]
+      <span class="ruby-identifier">host_names</span> = <span class="ruby-identifier">info</span>[<span class="ruby-string">'Application Specification'</span>][<span class="ruby-identifier">application_id</span>][<span class="ruby-string">'host_names'</span>] <span class="ruby-keyword">if</span> <span class="ruby-identifier">info</span>[<span class="ruby-string">'Application Specification'</span>][<span class="ruby-identifier">application_id</span>][<span class="ruby-string">'host_names'</span>]
+      <span class="ruby-identifier">path</span> = <span class="ruby-identifier">info</span>[<span class="ruby-string">'Application Specification'</span>][<span class="ruby-identifier">application_id</span>][<span class="ruby-string">'path'</span>] <span class="ruby-keyword">if</span> <span class="ruby-identifier">info</span>[<span class="ruby-string">'Application Specification'</span>][<span class="ruby-identifier">application_id</span>][<span class="ruby-string">'path'</span>]
+      <span class="ruby-identifier">run_as_user</span> = <span class="ruby-identifier">info</span>[<span class="ruby-string">'Application Specification'</span>][<span class="ruby-identifier">application_id</span>][<span class="ruby-string">'run_as_user'</span>] <span class="ruby-keyword">if</span> <span class="ruby-identifier">info</span>[<span class="ruby-string">'Application Specification'</span>][<span class="ruby-identifier">application_id</span>][<span class="ruby-string">'run_as_user'</span>]
+      <span class="ruby-identifier">type</span> = <span class="ruby-identifier">info</span>[<span class="ruby-string">'Application Specification'</span>][<span class="ruby-identifier">application_id</span>][<span class="ruby-string">'type'</span>].<span class="ruby-identifier">capitalize</span> <span class="ruby-keyword">if</span> <span class="ruby-identifier">info</span>[<span class="ruby-string">'Application Specification'</span>][<span class="ruby-identifier">application_id</span>][<span class="ruby-string">'type'</span>]
+      <span class="ruby-identifier">analytics</span> = <span class="ruby-identifier">info</span>[<span class="ruby-string">'Application Specification'</span>][<span class="ruby-identifier">application_id</span>][<span class="ruby-string">'analytics'</span>].<span class="ruby-identifier">capitalize</span> <span class="ruby-keyword">if</span> <span class="ruby-identifier">info</span>[<span class="ruby-string">'Application Specification'</span>][<span class="ruby-identifier">application_id</span>][<span class="ruby-string">'analytics'</span>]
+      <span class="ruby-identifier">environment</span> = <span class="ruby-identifier">info</span>[<span class="ruby-string">'Application Specification'</span>][<span class="ruby-identifier">application_id</span>][<span class="ruby-string">'environment'</span>].<span class="ruby-identifier">capitalize</span> <span class="ruby-keyword">if</span> <span class="ruby-identifier">info</span>[<span class="ruby-string">'Application Specification'</span>][<span class="ruby-identifier">application_id</span>][<span class="ruby-string">'environment'</span>]
+      <span class="ruby-identifier">min_worker</span> = <span class="ruby-identifier">info</span>[<span class="ruby-string">'Application Specification'</span>][<span class="ruby-identifier">application_id</span>][<span class="ruby-string">'min_worker'</span>] <span class="ruby-keyword">if</span> <span class="ruby-identifier">info</span>[<span class="ruby-string">'Application Specification'</span>][<span class="ruby-identifier">application_id</span>][<span class="ruby-string">'min_worker'</span>]
+      <span class="ruby-identifier">max_worker</span> = <span class="ruby-identifier">info</span>[<span class="ruby-string">'Application Specification'</span>][<span class="ruby-identifier">application_id</span>][<span class="ruby-string">'max_worker'</span>] <span class="ruby-keyword">if</span> <span class="ruby-identifier">info</span>[<span class="ruby-string">'Application Specification'</span>][<span class="ruby-identifier">application_id</span>][<span class="ruby-string">'max_worker'</span>]
+    <span class="ruby-keyword">end</span>
+  <span class="ruby-keyword">end</span>
+  <span class="ruby-identifier">app_hash</span> = <span class="ruby-constant">Hash</span>[<span class="ruby-value">:app_id</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">application_id</span>.<span class="ruby-identifier">to_i</span>,
+  <span class="ruby-value">:name</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">name</span>,
+  <span class="ruby-value">:path</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">path</span>,
+  <span class="ruby-value">:run_as_user</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">run_as_user</span>,
+  <span class="ruby-value">:type1</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">type</span>,
+  <span class="ruby-value">:analytics</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">analytics</span>,
+  <span class="ruby-value">:environment</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">environment</span>,
+  <span class="ruby-value">:min_worker</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">min_worker</span>,
+  <span class="ruby-value">:max_worker</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">max_worker</span>]
+  <span class="ruby-identifier">app_hash</span>[<span class="ruby-value">:resolver</span>] = <span class="ruby-identifier">baseuri</span> <span class="ruby-keyword">if</span> <span class="ruby-identifier">baseuri</span>
+  <span class="ruby-identifier">app_hash</span>[<span class="ruby-value">:resolver</span>] = <span class="ruby-identifier">host_names</span> <span class="ruby-keyword">if</span> <span class="ruby-identifier">host_names</span>
+
+  <span class="ruby-keyword">return</span> <span class="ruby-identifier">app_hash</span>
+<span class="ruby-keyword">end</span></pre>
+            </div><!-- get_hash-source -->
+            
+          </div>
+
+          
+
+          
+        </div><!-- get_hash-method -->
+
+      
+        <div id="remove-method" class="method-detail ">
+          <a name="method-c-remove"></a>
+
+          
+          <div class="method-heading">
+            <span class="method-name">remove</span><span
+              class="method-args">(app_name)</span>
+            <span class="method-click-advice">click to toggle source</span>
+          </div>
+          
+
+          <div class="method-description">
+            
+            
+            
+
+            
+            <div class="method-source-code" id="remove-source">
+<pre>
+<span class="ruby-comment"># File app/models/application_specification.rb, line 81</span>
+<span class="ruby-keyword">def</span> <span class="ruby-keyword">self</span>.<span class="ruby-identifier">remove</span>(<span class="ruby-identifier">app_name</span>)
+  <span class="ruby-identifier">info</span> = <span class="ruby-constant">YAML</span><span class="ruby-operator">::</span><span class="ruby-identifier">load_file</span>(<span class="ruby-constant">CONFIG_FILE_PATH</span>) <span class="ruby-keyword">rescue</span> <span class="ruby-keyword">nil</span>
+
+  <span class="ruby-keyword">if</span> <span class="ruby-identifier">info</span> <span class="ruby-keyword">and</span> <span class="ruby-identifier">info</span>[<span class="ruby-string">'Application Specification'</span>]
+    <span class="ruby-identifier">info</span>[<span class="ruby-string">'Application Specification'</span>].<span class="ruby-identifier">each</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">x</span><span class="ruby-operator">|</span>
+      <span class="ruby-keyword">if</span> <span class="ruby-identifier">x</span>[<span class="ruby-string">'name'</span>].<span class="ruby-identifier">to_s</span>.<span class="ruby-identifier">eql?</span>(<span class="ruby-identifier">app_name</span>.<span class="ruby-identifier">to_s</span>)
+        <span class="ruby-identifier">info</span>[<span class="ruby-string">'Application Specification'</span>].<span class="ruby-identifier">delete</span>(<span class="ruby-identifier">x</span>)
+      <span class="ruby-keyword">end</span>
+    <span class="ruby-keyword">end</span>
+    <span class="ruby-identifier">info</span>.<span class="ruby-identifier">delete</span>(<span class="ruby-string">'Application Specification'</span>) <span class="ruby-keyword">if</span> <span class="ruby-identifier">info</span>[<span class="ruby-string">'Application Specification'</span>].<span class="ruby-identifier">length</span> <span class="ruby-operator">==</span> <span class="ruby-value">0</span>
+  <span class="ruby-keyword">end</span>
+
+  <span class="ruby-identifier">app</span> = <span class="ruby-constant">App</span>.<span class="ruby-identifier">where</span>(<span class="ruby-value">:name</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">app_name</span>).<span class="ruby-identifier">first</span>
+  <span class="ruby-identifier">app</span>.<span class="ruby-identifier">destroy</span> <span class="ruby-keyword">if</span> <span class="ruby-identifier">app</span>
+  <span class="ruby-constant">SignalHelper</span>.<span class="ruby-identifier">send</span>
+
+  <span class="ruby-constant">YAMLWriter</span>.<span class="ruby-identifier">write</span>(<span class="ruby-identifier">info</span>, <span class="ruby-constant">CONFIG_FILE_PATH</span>, <span class="ruby-constant">YAMLConfig</span><span class="ruby-operator">::</span><span class="ruby-constant">CONFIG</span>)
+<span class="ruby-keyword">end</span></pre>
+            </div><!-- remove-source -->
+            
+          </div>
+
+          
+
+          
+        </div><!-- remove-method -->
+
+      
+      </div><!-- public-class-method-details -->
+    
+      <div id="public-instance-method-details" class="method-section section">
+        <h3 class="section-header">Public Instance Methods</h3>
+
+      
+        <div id="ensure_validations-method" class="method-detail ">
+          <a name="method-i-ensure_validations"></a>
+
+          
+          <div class="method-heading">
+            <span class="method-name">ensure_validations</span><span
+              class="method-args">()</span>
+            <span class="method-click-advice">click to toggle source</span>
+          </div>
+          
+
+          <div class="method-description">
+            
+            <p>this method is used to validate the various fields of the apps model. def
+validate</p>
+            
+
+            
+            <div class="method-source-code" id="ensure_validations-source">
+<pre>
+<span class="ruby-comment"># File app/models/application_specification.rb, line 132</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">ensure_validations</span>
+  <span class="ruby-comment">#    errors.add(:base, MIN_WORKERS_VALIDATION) if min_worker.to_i &gt; 20</span>
+  <span class="ruby-keyword">if</span> <span class="ruby-identifier">max_worker</span>.<span class="ruby-identifier">to_i</span> <span class="ruby-operator">&lt;</span> <span class="ruby-identifier">min_worker</span>.<span class="ruby-identifier">to_i</span>
+    <span class="ruby-identifier">errors</span>.<span class="ruby-identifier">add</span>(<span class="ruby-value">:base</span>, <span class="ruby-constant">MAX_WORKERS_VALIDATION_1</span>)
+    <span class="ruby-comment">#    elsif max_worker.to_i &gt; 20</span>
+    <span class="ruby-comment">#      errors.add_to_base MAX_WORKERS_VALIDATION_2</span>
+  <span class="ruby-keyword">end</span>
+  <span class="ruby-comment">#errors.add_to_base APPLICATION_PATH_EXISTANCE_VALIDATION if !File.directory?(path)</span>
+  <span class="ruby-identifier">errors</span>.<span class="ruby-identifier">add</span>(<span class="ruby-value">:base</span>, <span class="ruby-constant">ANALYTICS_VALIDATION</span>) <span class="ruby-keyword">if</span> <span class="ruby-identifier">type1</span> <span class="ruby-keyword">and</span> <span class="ruby-identifier">type1</span><span class="ruby-operator">==</span><span class="ruby-string">&quot;Rails&quot;</span> <span class="ruby-keyword">and</span> <span class="ruby-identifier">analytics</span> <span class="ruby-keyword">and</span> <span class="ruby-operator">!</span>(<span class="ruby-identifier">analytics</span>.<span class="ruby-identifier">downcase</span> <span class="ruby-operator">==</span> <span class="ruby-string">&quot;enabled&quot;</span> <span class="ruby-keyword">or</span> <span class="ruby-identifier">analytics</span>.<span class="ruby-identifier">downcase</span> <span class="ruby-operator">==</span> <span class="ruby-string">&quot;disabled&quot;</span>)
+  <span class="ruby-comment">#errors.add_to_base ENVIRONMENT_VALIDATION if !(environment.downcase == &quot;production&quot; or environment.downcase == &quot;development&quot; or environment.downcase == &quot;test&quot;)</span>
+  <span class="ruby-identifier">errors</span>.<span class="ruby-identifier">add</span>(<span class="ruby-value">:base</span>, <span class="ruby-constant">TYPE_VALIDATION</span>) <span class="ruby-keyword">if</span> <span class="ruby-identifier">type1</span> <span class="ruby-keyword">and</span> <span class="ruby-operator">!</span>(<span class="ruby-identifier">type1</span>.<span class="ruby-identifier">downcase</span> <span class="ruby-operator">==</span> <span class="ruby-constant">RAILS</span> <span class="ruby-keyword">or</span> <span class="ruby-identifier">type1</span>.<span class="ruby-identifier">downcase</span> <span class="ruby-operator">==</span> <span class="ruby-constant">RACK</span>)
+  <span class="ruby-keyword">if</span> <span class="ruby-identifier">path</span> <span class="ruby-keyword">and</span> <span class="ruby-identifier">type1</span>
+    <span class="ruby-keyword">if</span> <span class="ruby-identifier">type1</span>.<span class="ruby-identifier">downcase</span> <span class="ruby-operator">==</span> <span class="ruby-constant">RAILS</span>
+      <span class="ruby-keyword">unless</span> <span class="ruby-constant">File</span>.<span class="ruby-identifier">exists?</span>(<span class="ruby-constant">File</span>.<span class="ruby-identifier">join</span>(<span class="ruby-identifier">path</span>, <span class="ruby-string">'config'</span>, <span class="ruby-string">'environment.rb'</span>))
+        <span class="ruby-identifier">errors</span>.<span class="ruby-identifier">add</span>(<span class="ruby-value">:base</span>, <span class="ruby-string">&quot;The entered application path is not a valid Rails application path.&quot;</span>)
+      <span class="ruby-keyword">end</span>
+    <span class="ruby-keyword">end</span>
+    <span class="ruby-keyword">if</span> <span class="ruby-identifier">type1</span>.<span class="ruby-identifier">downcase</span> <span class="ruby-operator">==</span> <span class="ruby-constant">RACK</span>
+      <span class="ruby-keyword">unless</span> <span class="ruby-constant">File</span>.<span class="ruby-identifier">exists?</span>(<span class="ruby-constant">File</span>.<span class="ruby-identifier">join</span>(<span class="ruby-identifier">path</span>, <span class="ruby-string">'config.ru'</span>))
+        <span class="ruby-identifier">errors</span>.<span class="ruby-identifier">add</span>(<span class="ruby-value">:base</span>, <span class="ruby-string">&quot;The entered application path is not a valid Rack application path.&quot;</span>)
+      <span class="ruby-keyword">end</span>
+    <span class="ruby-keyword">end</span>
+  <span class="ruby-keyword">end</span>
+  <span class="ruby-comment"># Resolver take either baseuri or host_names, not both.</span>
+  <span class="ruby-comment"># baseuri starts with '/'</span>
+  <span class="ruby-keyword">if</span> <span class="ruby-identifier">resolver</span>
+    <span class="ruby-identifier">tokens</span> = <span class="ruby-identifier">resolver</span>.<span class="ruby-identifier">split</span>(<span class="ruby-regexp">/ /</span>)
+
+    <span class="ruby-identifier">curr_host_names</span> = []
+    <span class="ruby-identifier">host_name_flag</span> = <span class="ruby-value">0</span>
+
+    <span class="ruby-keyword">if</span> (<span class="ruby-identifier">tokens</span>.<span class="ruby-identifier">size</span> <span class="ruby-operator">==</span> <span class="ruby-value">1</span> <span class="ruby-keyword">and</span> <span class="ruby-identifier">tokens</span>[<span class="ruby-value">0</span>].<span class="ruby-identifier">start_with?</span>(<span class="ruby-string">'/'</span>))
+      <span class="ruby-identifier">write_attribute</span>(<span class="ruby-value">:baseuri</span>, <span class="ruby-identifier">resolver</span>)
+      <span class="ruby-identifier">errors</span>.<span class="ruby-identifier">add</span>(<span class="ruby-value">:base</span>, <span class="ruby-string">&quot;BaseURI must start with '/' and contains characters A-Z, a-z, 0-9 , _ , -  and /.&quot;</span>) <span class="ruby-keyword">if</span> <span class="ruby-operator">!</span>(<span class="ruby-identifier">baseuri</span>.<span class="ruby-identifier">strip</span> <span class="ruby-operator">=~</span> <span class="ruby-regexp">/^\/[A-Za-z0-9_\-\/]*$/</span>)
+    <span class="ruby-keyword">else</span>
+      <span class="ruby-identifier">write_attribute</span>(<span class="ruby-value">:host_names</span>, <span class="ruby-identifier">resolver</span>)
+      <span class="ruby-identifier">host_name_flag</span> = <span class="ruby-value">1</span>
+    <span class="ruby-keyword">end</span>
+
+    <span class="ruby-comment"># More than one token would come only in case of host_names</span>
+    <span class="ruby-keyword">if</span> <span class="ruby-identifier">host_name_flag</span> <span class="ruby-operator">==</span> <span class="ruby-value">1</span> <span class="ruby-keyword">and</span> <span class="ruby-identifier">tokens</span>.<span class="ruby-identifier">size</span> <span class="ruby-operator">&gt;</span> <span class="ruby-value">0</span>
+      <span class="ruby-identifier">tokens</span>.<span class="ruby-identifier">each</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">token</span><span class="ruby-operator">|</span>
+        <span class="ruby-keyword">next</span> <span class="ruby-keyword">if</span> <span class="ruby-identifier">token</span> <span class="ruby-operator">==</span> <span class="ruby-string">&quot;&quot;</span>
+        <span class="ruby-identifier">len</span> = <span class="ruby-identifier">token</span>.<span class="ruby-identifier">size</span>
+        <span class="ruby-comment"># Whole name can not exceed total length of 253</span>
+        <span class="ruby-keyword">if</span> <span class="ruby-identifier">len</span> <span class="ruby-operator">&gt;</span> <span class="ruby-value">253</span>
+          <span class="ruby-identifier">errors</span>.<span class="ruby-identifier">add</span>(<span class="ruby-value">:base</span> , <span class="ruby-constant">HOSTNAME_LENGTH_EXCEEDS</span>)
+          <span class="ruby-keyword">next</span>
+        <span class="ruby-keyword">end</span>
+        <span class="ruby-comment"># Subdivision can go down to maximum 127 level.</span>
+        <span class="ruby-identifier">labels</span> = <span class="ruby-identifier">token</span>.<span class="ruby-identifier">split</span>(<span class="ruby-regexp">/\./</span>)
+        <span class="ruby-keyword">if</span> <span class="ruby-identifier">labels</span>.<span class="ruby-identifier">size</span> <span class="ruby-operator">&gt;</span> <span class="ruby-value">127</span>
+          <span class="ruby-identifier">errors</span>.<span class="ruby-identifier">add</span>(<span class="ruby-value">:base</span>, <span class="ruby-constant">SUBDIVISION_EXCEEDS_127</span>)
+          <span class="ruby-keyword">next</span>
+        <span class="ruby-keyword">end</span>
+        <span class="ruby-comment"># Start with '/' indicates BaseURI</span>
+        <span class="ruby-keyword">if</span> <span class="ruby-identifier">token</span>.<span class="ruby-identifier">start_with?</span>(<span class="ruby-string">'/'</span>)
+          <span class="ruby-identifier">errors</span>.<span class="ruby-identifier">add</span>(<span class="ruby-value">:base</span>, <span class="ruby-constant">BASEURI_AND_HOSTNAMES_EXIST</span>)
+          <span class="ruby-keyword">break</span>
+        <span class="ruby-keyword">end</span>
+        <span class="ruby-comment"># If wildcard '*' presents, Hostname should prefix with '~'</span>
+        <span class="ruby-keyword">if</span> <span class="ruby-identifier">token</span>.<span class="ruby-identifier">include?</span>(<span class="ruby-string">&quot;*&quot;</span>) <span class="ruby-keyword">and</span> <span class="ruby-operator">!</span>(<span class="ruby-identifier">token</span> <span class="ruby-operator">=~</span> <span class="ruby-regexp">/^~/</span>)
+          <span class="ruby-identifier">errors</span>.<span class="ruby-identifier">add</span>(<span class="ruby-value">:base</span>, <span class="ruby-node">&quot;#{token} - #{START_WTIH_TILD}&quot;</span>)
+          <span class="ruby-keyword">next</span>
+        <span class="ruby-keyword">end</span>
+        <span class="ruby-comment"># Wildcard '*' can come either at start or at end, not inbetween</span>
+        <span class="ruby-identifier">pos</span> = <span class="ruby-identifier">token</span>.<span class="ruby-identifier">index</span>(<span class="ruby-string">'*'</span>, <span class="ruby-value">1</span>)
+        <span class="ruby-keyword">if</span> <span class="ruby-identifier">pos</span> <span class="ruby-keyword">and</span> <span class="ruby-identifier">pos</span> <span class="ruby-operator">!=</span> <span class="ruby-value">1</span> <span class="ruby-keyword">and</span> <span class="ruby-identifier">pos</span> <span class="ruby-operator">!=</span> <span class="ruby-identifier">len</span><span class="ruby-operator">-</span><span class="ruby-value">1</span>
+          <span class="ruby-identifier">errors</span>.<span class="ruby-identifier">add</span>(<span class="ruby-value">:base</span>, <span class="ruby-node">&quot;#{token} - #{WILDCARD_AT_START_OR_END}&quot;</span>)
+          <span class="ruby-keyword">next</span>
+        <span class="ruby-keyword">end</span>
+        <span class="ruby-identifier">pos</span> = <span class="ruby-identifier">token</span>.<span class="ruby-identifier">index</span>(<span class="ruby-string">'*'</span>, <span class="ruby-value">2</span>)
+        <span class="ruby-keyword">if</span> <span class="ruby-identifier">pos</span> <span class="ruby-keyword">and</span> <span class="ruby-identifier">pos</span> <span class="ruby-operator">!=</span> <span class="ruby-identifier">len</span> <span class="ruby-operator">-</span> <span class="ruby-value">1</span>
+          <span class="ruby-identifier">errors</span>.<span class="ruby-identifier">add</span>(<span class="ruby-value">:base</span>, <span class="ruby-node">&quot;#{token} - #{WILDCARD_AT_START_OR_END}&quot;</span>)
+          <span class="ruby-keyword">next</span>
+        <span class="ruby-keyword">end</span>
+        <span class="ruby-keyword">if</span> <span class="ruby-identifier">token</span> <span class="ruby-operator">=~</span> <span class="ruby-regexp">/[.][.]/</span>
+          <span class="ruby-identifier">errors</span>.<span class="ruby-identifier">add</span>(<span class="ruby-value">:base</span>, <span class="ruby-node">&quot;#{token} - #{CONSECUTIVE_DOTS}&quot;</span>)
+          <span class="ruby-keyword">next</span>
+        <span class="ruby-keyword">end</span>
+        <span class="ruby-comment"># Check for Letters, Digits and Hyphen</span>
+        <span class="ruby-identifier">err_flag</span> = <span class="ruby-value">0</span>
+        <span class="ruby-comment">#first label can have '~' as first char and '*' as second char, last label can have '*' as last character</span>
+        <span class="ruby-identifier">first_label</span> = <span class="ruby-identifier">labels</span>[<span class="ruby-value">0</span>]
+        <span class="ruby-identifier">last_label</span> = <span class="ruby-identifier">labels</span>[<span class="ruby-identifier">labels</span>.<span class="ruby-identifier">size</span> <span class="ruby-operator">-</span> <span class="ruby-value">1</span>]
+        <span class="ruby-identifier">labels</span> = <span class="ruby-identifier">labels</span>[<span class="ruby-value">1</span><span class="ruby-operator">..</span><span class="ruby-identifier">labels</span>.<span class="ruby-identifier">size</span> <span class="ruby-operator">-</span> <span class="ruby-value">2</span>]
+        <span class="ruby-identifier">labels</span>.<span class="ruby-identifier">each</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">label</span><span class="ruby-operator">|</span>
+          <span class="ruby-keyword">if</span> <span class="ruby-identifier">label</span>.<span class="ruby-identifier">size</span> <span class="ruby-operator">&gt;</span> <span class="ruby-value">63</span>
+            <span class="ruby-identifier">errors</span>.<span class="ruby-identifier">add</span>(<span class="ruby-value">:base</span>, <span class="ruby-constant">LABEL_LENGTH_EXCEEDS</span>)
+            <span class="ruby-keyword">next</span>
+          <span class="ruby-keyword">end</span>
+          <span class="ruby-identifier">label</span>.<span class="ruby-identifier">each_char</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">c</span><span class="ruby-operator">|</span>
+            <span class="ruby-keyword">if</span> (<span class="ruby-identifier">c</span> <span class="ruby-operator">&gt;=</span> <span class="ruby-string">'a'</span> <span class="ruby-keyword">and</span> <span class="ruby-identifier">c</span> <span class="ruby-operator">&lt;=</span> <span class="ruby-string">'z'</span>) <span class="ruby-keyword">or</span> (<span class="ruby-identifier">c</span> <span class="ruby-operator">&gt;=</span> <span class="ruby-string">'A'</span> <span class="ruby-keyword">and</span> <span class="ruby-identifier">c</span> <span class="ruby-operator">&lt;=</span> <span class="ruby-string">'Z'</span>) <span class="ruby-keyword">or</span> (<span class="ruby-identifier">c</span> <span class="ruby-operator">&gt;=</span> <span class="ruby-string">'0'</span> <span class="ruby-keyword">and</span> <span class="ruby-identifier">c</span> <span class="ruby-operator">&lt;=</span> <span class="ruby-string">'9'</span>) <span class="ruby-keyword">or</span> <span class="ruby-identifier">c</span> <span class="ruby-operator">==</span> <span class="ruby-string">'-'</span>
+              <span class="ruby-keyword">next</span>
+            <span class="ruby-keyword">else</span>
+              <span class="ruby-identifier">errors</span>.<span class="ruby-identifier">add</span>(<span class="ruby-value">:base</span>, <span class="ruby-constant">HOSTNAME_LDH</span>)
+              <span class="ruby-identifier">err_flag</span> = <span class="ruby-value">1</span>
+              <span class="ruby-keyword">break</span>;
+            <span class="ruby-keyword">end</span>
+          <span class="ruby-keyword">end</span>
+        <span class="ruby-keyword">end</span>
+        <span class="ruby-identifier">char_array</span> = []
+        <span class="ruby-identifier">first_label</span>.<span class="ruby-identifier">each_char</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">c</span><span class="ruby-operator">|</span>
+          <span class="ruby-identifier">char_array</span> <span class="ruby-operator">&lt;&lt;</span> <span class="ruby-identifier">c</span>
+        <span class="ruby-keyword">end</span>
+        <span class="ruby-comment">#p char_array</span>
+        <span class="ruby-comment"># checking first character of first label against LDH and ~</span>
+        <span class="ruby-keyword">if</span> <span class="ruby-identifier">err_flag</span> <span class="ruby-operator">==</span> <span class="ruby-value">0</span>
+          <span class="ruby-identifier">c</span> = <span class="ruby-identifier">char_array</span>[<span class="ruby-value">0</span>]
+          <span class="ruby-keyword">if</span> (<span class="ruby-identifier">c</span> <span class="ruby-operator">&gt;=</span> <span class="ruby-string">'a'</span> <span class="ruby-keyword">and</span> <span class="ruby-identifier">c</span> <span class="ruby-operator">&lt;=</span> <span class="ruby-string">'z'</span>) <span class="ruby-keyword">or</span> (<span class="ruby-identifier">c</span> <span class="ruby-operator">&gt;=</span> <span class="ruby-string">'A'</span> <span class="ruby-keyword">and</span> <span class="ruby-identifier">c</span> <span class="ruby-operator">&lt;=</span> <span class="ruby-string">'Z'</span>) <span class="ruby-keyword">or</span> (<span class="ruby-identifier">c</span> <span class="ruby-operator">&gt;=</span> <span class="ruby-string">'0'</span> <span class="ruby-keyword">and</span> <span class="ruby-identifier">c</span> <span class="ruby-operator">&lt;=</span> <span class="ruby-string">'9'</span>) <span class="ruby-keyword">or</span> <span class="ruby-identifier">c</span> <span class="ruby-operator">==</span> <span class="ruby-string">'~'</span>
+          <span class="ruby-keyword">else</span>
+            <span class="ruby-identifier">errors</span>.<span class="ruby-identifier">add</span>(<span class="ruby-value">:base</span>, <span class="ruby-constant">HOSTNAME_LDH</span>)
+            <span class="ruby-identifier">err_flag</span> = <span class="ruby-value">1</span>
+          <span class="ruby-keyword">end</span>
+        <span class="ruby-keyword">end</span>
+        <span class="ruby-comment">#checking second char of first label against LDH and *</span>
+        <span class="ruby-keyword">if</span> <span class="ruby-identifier">err_flag</span> <span class="ruby-operator">==</span> <span class="ruby-value">0</span>
+          <span class="ruby-identifier">c</span> = <span class="ruby-identifier">char_array</span>[<span class="ruby-value">1</span>]
+          <span class="ruby-keyword">if</span> (<span class="ruby-identifier">c</span> <span class="ruby-operator">&gt;=</span> <span class="ruby-string">'a'</span> <span class="ruby-keyword">and</span> <span class="ruby-identifier">c</span> <span class="ruby-operator">&lt;=</span> <span class="ruby-string">'z'</span>) <span class="ruby-keyword">or</span> (<span class="ruby-identifier">c</span> <span class="ruby-operator">&gt;=</span> <span class="ruby-string">'A'</span> <span class="ruby-keyword">and</span> <span class="ruby-identifier">c</span> <span class="ruby-operator">&lt;=</span> <span class="ruby-string">'Z'</span>) <span class="ruby-keyword">or</span> (<span class="ruby-identifier">c</span> <span class="ruby-operator">&gt;=</span> <span class="ruby-string">'0'</span> <span class="ruby-keyword">and</span> <span class="ruby-identifier">c</span> <span class="ruby-operator">&lt;=</span> <span class="ruby-string">'9'</span>) <span class="ruby-keyword">or</span> <span class="ruby-identifier">c</span> <span class="ruby-operator">==</span> <span class="ruby-string">'*'</span>
+          <span class="ruby-keyword">else</span>
+            <span class="ruby-identifier">errors</span>.<span class="ruby-identifier">add</span>(<span class="ruby-value">:base</span>, <span class="ruby-constant">HOSTNAME_LDH</span>)
+            <span class="ruby-identifier">err_flag</span> = <span class="ruby-value">1</span>
+          <span class="ruby-keyword">end</span>
+        <span class="ruby-keyword">end</span>
+        <span class="ruby-comment">#checking remaining character of first label against LDH</span>
+        <span class="ruby-identifier">char_array</span> = <span class="ruby-identifier">char_array</span>[<span class="ruby-value">2</span><span class="ruby-operator">..</span><span class="ruby-identifier">char_array</span>.<span class="ruby-identifier">size</span> <span class="ruby-operator">-</span> <span class="ruby-value">1</span>]
+        <span class="ruby-keyword">if</span> <span class="ruby-identifier">err_flag</span> <span class="ruby-operator">==</span> <span class="ruby-value">0</span>
+          <span class="ruby-identifier">char_array</span>.<span class="ruby-identifier">each</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">c</span><span class="ruby-operator">|</span>
+            <span class="ruby-keyword">if</span> (<span class="ruby-identifier">c</span> <span class="ruby-operator">&gt;=</span> <span class="ruby-string">'a'</span> <span class="ruby-keyword">and</span> <span class="ruby-identifier">c</span> <span class="ruby-operator">&lt;=</span> <span class="ruby-string">'z'</span>) <span class="ruby-keyword">or</span> (<span class="ruby-identifier">c</span> <span class="ruby-operator">&gt;=</span> <span class="ruby-string">'A'</span> <span class="ruby-keyword">and</span> <span class="ruby-identifier">c</span> <span class="ruby-operator">&lt;=</span> <span class="ruby-string">'Z'</span>) <span class="ruby-keyword">or</span> (<span class="ruby-identifier">c</span> <span class="ruby-operator">&gt;=</span> <span class="ruby-string">'0'</span> <span class="ruby-keyword">and</span> <span class="ruby-identifier">c</span> <span class="ruby-operator">&lt;=</span> <span class="ruby-string">'9'</span>) <span class="ruby-keyword">or</span> <span class="ruby-identifier">c</span> <span class="ruby-operator">==</span> <span class="ruby-string">'-'</span>
+              <span class="ruby-keyword">next</span>
+            <span class="ruby-keyword">else</span>
+              <span class="ruby-identifier">errors</span>.<span class="ruby-identifier">add</span>(<span class="ruby-value">:base</span>, <span class="ruby-constant">HOSTNAME_LDH</span>)
+              <span class="ruby-identifier">err_flag</span> = <span class="ruby-value">1</span>
+              <span class="ruby-keyword">break</span>;
+            <span class="ruby-keyword">end</span>
+          <span class="ruby-keyword">end</span>
+        <span class="ruby-keyword">end</span>
+        <span class="ruby-comment">#checking last character of last label against LDH and *</span>
+        <span class="ruby-identifier">char_array</span> = []
+        <span class="ruby-identifier">last_label</span>.<span class="ruby-identifier">each_char</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">c</span><span class="ruby-operator">|</span>
+          <span class="ruby-identifier">char_array</span> <span class="ruby-operator">&lt;&lt;</span> <span class="ruby-identifier">c</span>
+        <span class="ruby-keyword">end</span>
+        <span class="ruby-keyword">if</span> <span class="ruby-identifier">err_flag</span> <span class="ruby-operator">==</span> <span class="ruby-value">0</span>
+          <span class="ruby-identifier">c</span> = <span class="ruby-identifier">char_array</span>[<span class="ruby-identifier">char_array</span>.<span class="ruby-identifier">size</span> <span class="ruby-operator">-</span> <span class="ruby-value">1</span>]
+          <span class="ruby-keyword">if</span> (<span class="ruby-identifier">c</span> <span class="ruby-operator">&gt;=</span> <span class="ruby-string">'a'</span> <span class="ruby-keyword">and</span> <span class="ruby-identifier">c</span> <span class="ruby-operator">&lt;=</span> <span class="ruby-string">'z'</span>) <span class="ruby-keyword">or</span> (<span class="ruby-identifier">c</span> <span class="ruby-operator">&gt;=</span> <span class="ruby-string">'A'</span> <span class="ruby-keyword">and</span> <span class="ruby-identifier">c</span> <span class="ruby-operator">&lt;=</span> <span class="ruby-string">'Z'</span>) <span class="ruby-keyword">or</span> (<span class="ruby-identifier">c</span> <span class="ruby-operator">&gt;=</span> <span class="ruby-string">'0'</span> <span class="ruby-keyword">and</span> <span class="ruby-identifier">c</span> <span class="ruby-operator">&lt;=</span> <span class="ruby-string">'9'</span>) <span class="ruby-keyword">or</span> <span class="ruby-identifier">c</span> <span class="ruby-operator">==</span> <span class="ruby-string">'*'</span>
+          <span class="ruby-keyword">else</span>
+            <span class="ruby-identifier">errors</span>.<span class="ruby-identifier">add</span>(<span class="ruby-value">:base</span>, <span class="ruby-constant">HOSTNAME_LDH</span>)
+            <span class="ruby-identifier">err_flag</span> = <span class="ruby-value">1</span>
+          <span class="ruby-keyword">end</span>
+        <span class="ruby-keyword">end</span>
+        <span class="ruby-comment">#checking remaining characters of the last label against LDH</span>
+        <span class="ruby-keyword">if</span> <span class="ruby-identifier">err_flag</span> <span class="ruby-operator">==</span> <span class="ruby-value">0</span>
+          <span class="ruby-identifier">char_array</span> = <span class="ruby-identifier">char_array</span>[<span class="ruby-value">1</span><span class="ruby-operator">..</span><span class="ruby-identifier">char_array</span>.<span class="ruby-identifier">size</span> <span class="ruby-operator">-</span> <span class="ruby-value">2</span>]
+          <span class="ruby-identifier">char_array</span>.<span class="ruby-identifier">each</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">c</span><span class="ruby-operator">|</span>
+            <span class="ruby-keyword">if</span> (<span class="ruby-identifier">c</span> <span class="ruby-operator">&gt;=</span> <span class="ruby-string">'a'</span> <span class="ruby-keyword">and</span> <span class="ruby-identifier">c</span> <span class="ruby-operator">&lt;=</span> <span class="ruby-string">'z'</span>) <span class="ruby-keyword">or</span> (<span class="ruby-identifier">c</span> <span class="ruby-operator">&gt;=</span> <span class="ruby-string">'A'</span> <span class="ruby-keyword">and</span> <span class="ruby-identifier">c</span> <span class="ruby-operator">&lt;=</span> <span class="ruby-string">'Z'</span>) <span class="ruby-keyword">or</span> (<span class="ruby-identifier">c</span> <span class="ruby-operator">&gt;=</span> <span class="ruby-string">'0'</span> <span class="ruby-keyword">and</span> <span class="ruby-identifier">c</span> <span class="ruby-operator">&lt;=</span> <span class="ruby-string">'9'</span>) <span class="ruby-keyword">or</span> <span class="ruby-identifier">c</span> <span class="ruby-operator">==</span> <span class="ruby-string">'*'</span>
+            <span class="ruby-keyword">else</span>
+              <span class="ruby-identifier">errors</span>.<span class="ruby-identifier">add</span>(<span class="ruby-value">:base</span>, <span class="ruby-constant">HOSTNAME_LDH</span>)
+              <span class="ruby-identifier">err_flag</span> = <span class="ruby-value">1</span>
+            <span class="ruby-keyword">end</span>
+          <span class="ruby-keyword">end</span>
+        <span class="ruby-keyword">end</span>
+        <span class="ruby-keyword">if</span> <span class="ruby-identifier">err_flag</span> <span class="ruby-operator">==</span> <span class="ruby-value">0</span>
+          <span class="ruby-identifier">curr_host_names</span> <span class="ruby-operator">&lt;&lt;</span> <span class="ruby-identifier">token</span>
+        <span class="ruby-keyword">end</span>
+      <span class="ruby-keyword">end</span>
+    <span class="ruby-keyword">end</span>
+
+    <span class="ruby-comment">#BaseURI can not be /admin-panel</span>
+    <span class="ruby-identifier">errors</span>.<span class="ruby-identifier">add</span>(<span class="ruby-value">:base</span>, <span class="ruby-constant">BASEURI_AS_ADMIN_PANEL_BASEURI_VALIDATION</span>) <span class="ruby-keyword">if</span> <span class="ruby-identifier">baseuri</span> <span class="ruby-keyword">and</span> <span class="ruby-identifier">baseuri</span>.<span class="ruby-identifier">strip</span> <span class="ruby-operator">==</span> <span class="ruby-constant">ADMIN_PANEL_BASE_URI</span>
+    <span class="ruby-identifier">all_host_names</span> = []
+    <span class="ruby-identifier">curr_host_names_size</span> = <span class="ruby-identifier">curr_host_names</span>.<span class="ruby-identifier">size</span>
+
+    <span class="ruby-identifier">tmp_id</span> = <span class="ruby-identifier">app_id</span>.<span class="ruby-identifier">nil?</span> <span class="ruby-operator">?</span> <span class="ruby-value">-1</span> <span class="ruby-operator">:</span> <span class="ruby-identifier">app_id</span>.<span class="ruby-identifier">to_i</span>
+
+    <span class="ruby-comment">#checking uniqueness of BaseURI</span>
+    <span class="ruby-identifier">info</span>= <span class="ruby-constant">YAML</span><span class="ruby-operator">::</span><span class="ruby-identifier">load_file</span>(<span class="ruby-constant">CONFIG_FILE_PATH</span>)
+    <span class="ruby-keyword">if</span> <span class="ruby-identifier">info</span> <span class="ruby-keyword">and</span> <span class="ruby-identifier">info</span>[<span class="ruby-string">'Application Specification'</span>]
+      <span class="ruby-identifier">i</span> = <span class="ruby-value">0</span>
+      <span class="ruby-identifier">info</span>[<span class="ruby-string">'Application Specification'</span>].<span class="ruby-identifier">each</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">app_info</span><span class="ruby-operator">|</span>
+        <span class="ruby-identifier">errors</span>.<span class="ruby-identifier">add</span>(<span class="ruby-value">:base</span>, <span class="ruby-node">&quot;#{name} - #{APPLICATION_NAME_REPEATED}&quot;</span>) <span class="ruby-keyword">if</span> <span class="ruby-identifier">app_info</span>[<span class="ruby-string">'name'</span>] <span class="ruby-operator">==</span> <span class="ruby-identifier">name</span> <span class="ruby-keyword">and</span> <span class="ruby-identifier">tmp_id</span> <span class="ruby-operator">!=</span> <span class="ruby-identifier">i</span>
+        <span class="ruby-identifier">errors</span>.<span class="ruby-identifier">add</span>(<span class="ruby-value">:base</span>, <span class="ruby-constant">BASEURI_EXISTANCE_VALIDATION</span>) <span class="ruby-keyword">if</span> <span class="ruby-identifier">baseuri</span> <span class="ruby-keyword">and</span> <span class="ruby-identifier">baseuri</span>.<span class="ruby-identifier">strip</span> <span class="ruby-keyword">and</span> <span class="ruby-identifier">app_info</span>[<span class="ruby-string">'baseuri'</span>] <span class="ruby-operator">==</span> <span class="ruby-identifier">baseuri</span>.<span class="ruby-identifier">strip</span> <span class="ruby-keyword">and</span> <span class="ruby-identifier">tmp_id</span> <span class="ruby-operator">!=</span> <span class="ruby-identifier">i</span>
+        <span class="ruby-identifier">all_host_names</span> <span class="ruby-operator">&lt;&lt;</span> <span class="ruby-identifier">app_info</span>[<span class="ruby-string">'host_names'</span>].<span class="ruby-identifier">split</span>(<span class="ruby-regexp">/ /</span>) <span class="ruby-keyword">if</span> <span class="ruby-identifier">app_info</span>[<span class="ruby-string">'host_names'</span>] <span class="ruby-keyword">and</span> <span class="ruby-identifier">curr_host_names_size</span> <span class="ruby-operator">&gt;</span> <span class="ruby-value">0</span> <span class="ruby-keyword">and</span> <span class="ruby-identifier">tmp_id</span> <span class="ruby-operator">!=</span> <span class="ruby-identifier">i</span>
+        <span class="ruby-identifier">i</span> <span class="ruby-operator">+=</span> <span class="ruby-value">1</span>
+      <span class="ruby-keyword">end</span>
+    <span class="ruby-keyword">end</span>
+    <span class="ruby-identifier">all_host_names</span>.<span class="ruby-identifier">flatten!</span>
+    <span class="ruby-comment"># checking uniqueness of Hostnames</span>
+    <span class="ruby-keyword">if</span> <span class="ruby-identifier">curr_host_names_size</span> <span class="ruby-operator">&gt;</span> <span class="ruby-value">0</span>
+      <span class="ruby-identifier">errors</span>.<span class="ruby-identifier">add</span>(<span class="ruby-value">:base</span>, <span class="ruby-constant">HOSTNAME_REPEATED</span>)  <span class="ruby-keyword">if</span> <span class="ruby-identifier">curr_host_names_size</span> <span class="ruby-operator">!=</span> <span class="ruby-identifier">curr_host_names</span>.<span class="ruby-identifier">uniq</span>.<span class="ruby-identifier">size</span>
+      <span class="ruby-keyword">if</span> <span class="ruby-identifier">all_host_names</span>.<span class="ruby-identifier">size</span> <span class="ruby-operator">&gt;</span> <span class="ruby-value">0</span>
+        <span class="ruby-identifier">curr_host_names</span>.<span class="ruby-identifier">each</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">c_host_name</span><span class="ruby-operator">|</span>
+          <span class="ruby-identifier">all_host_names</span>.<span class="ruby-identifier">each</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">host_name</span><span class="ruby-operator">|</span>
+            <span class="ruby-keyword">if</span> <span class="ruby-identifier">c_host_name</span>.<span class="ruby-identifier">eql?</span>(<span class="ruby-identifier">host_name</span>)
+              <span class="ruby-identifier">errors</span>.<span class="ruby-identifier">add</span>(<span class="ruby-value">:base</span>, <span class="ruby-node">&quot;#{c_host_name}-#{HOSTNAME_REPEATED }&quot;</span>)
+              <span class="ruby-keyword">break</span>
+            <span class="ruby-keyword">end</span>
+          <span class="ruby-keyword">end</span>
+        <span class="ruby-keyword">end</span>
+      <span class="ruby-keyword">end</span>
+    <span class="ruby-keyword">end</span>
+  <span class="ruby-keyword">end</span>
+<span class="ruby-keyword">end</span></pre>
+            </div><!-- ensure_validations-source -->
+            
+          </div>
+
+          
+
+          
+        </div><!-- ensure_validations-method -->
+
+      
+        <div id="obj_to_hash-method" class="method-detail ">
+          <a name="method-i-obj_to_hash"></a>
+
+          
+          <div class="method-heading">
+            <span class="method-name">obj_to_hash</span><span
+              class="method-args">()</span>
+            <span class="method-click-advice">click to toggle source</span>
+          </div>
+          
+
+          <div class="method-description">
+            
+            <p>Converting <a
+href="ApplicationSpecification.html">ApplicationSpecification</a> obeject
+into a Hash.</p>
+            
+
+            
+            <div class="method-source-code" id="obj_to_hash-source">
+<pre>
+<span class="ruby-comment"># File app/models/application_specification.rb, line 105</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">obj_to_hash</span>
+  <span class="ruby-identifier">app</span> = {}
+              <span class="ruby-identifier">app</span>[<span class="ruby-string">'name'</span>] = <span class="ruby-identifier">name</span>
+              <span class="ruby-identifier">app</span>[<span class="ruby-string">'path'</span>] = <span class="ruby-identifier">path</span>
+              <span class="ruby-identifier">app</span>[<span class="ruby-string">'run_as_user'</span>] = <span class="ruby-identifier">run_as_user</span>.<span class="ruby-identifier">downcase</span> <span class="ruby-keyword">unless</span> <span class="ruby-identifier">run_as_user</span>.<span class="ruby-identifier">nil?</span>
+              <span class="ruby-identifier">app</span>[<span class="ruby-string">'type'</span>] = <span class="ruby-identifier">type1</span>.<span class="ruby-identifier">downcase</span> <span class="ruby-keyword">unless</span> <span class="ruby-identifier">type1</span>.<span class="ruby-identifier">nil?</span>
+              <span class="ruby-identifier">app</span>[<span class="ruby-string">'analytics'</span>] = <span class="ruby-identifier">analytics</span>.<span class="ruby-identifier">downcase</span> <span class="ruby-keyword">unless</span> <span class="ruby-identifier">analytics</span>.<span class="ruby-identifier">nil?</span>
+              <span class="ruby-identifier">app</span>[<span class="ruby-string">'environment'</span>] = <span class="ruby-identifier">environment</span>.<span class="ruby-identifier">downcase</span> <span class="ruby-keyword">unless</span> <span class="ruby-identifier">environment</span>.<span class="ruby-identifier">nil?</span>
+              <span class="ruby-identifier">app</span>[<span class="ruby-string">'min_worker'</span>] = <span class="ruby-identifier">min_worker</span>.<span class="ruby-identifier">to_i</span>
+              <span class="ruby-identifier">app</span>[<span class="ruby-string">'max_worker'</span>] = <span class="ruby-identifier">max_worker</span>.<span class="ruby-identifier">to_i</span>
+              <span class="ruby-identifier">app</span>[<span class="ruby-string">'baseuri'</span>] = <span class="ruby-identifier">baseuri</span>.<span class="ruby-identifier">strip</span> <span class="ruby-keyword">if</span> <span class="ruby-identifier">baseuri</span>
+              <span class="ruby-identifier">app</span>[<span class="ruby-string">'host_names'</span>] = <span class="ruby-identifier">host_names</span> <span class="ruby-keyword">if</span> <span class="ruby-identifier">host_names</span>
+  <span class="ruby-keyword">return</span> <span class="ruby-identifier">app</span>
+<span class="ruby-keyword">end</span></pre>
+            </div><!-- obj_to_hash-source -->
+            
+          </div>
+
+          
+
+          
+        </div><!-- obj_to_hash-method -->
+
+      
+        <div id="remove-method" class="method-detail ">
+          <a name="method-i-remove"></a>
+
+          
+          <div class="method-heading">
+            <span class="method-name">remove</span><span
+              class="method-args">()</span>
+            <span class="method-click-advice">click to toggle source</span>
+          </div>
+          
+
+          <div class="method-description">
+            
+            
+            
+
+            
+            <div class="method-source-code" id="remove-source">
+<pre>
+<span class="ruby-comment"># File app/models/application_specification.rb, line 100</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">remove</span>
+  <span class="ruby-constant">ApplicationSpecification</span><span class="ruby-operator">::</span><span class="ruby-identifier">remove</span>(<span class="ruby-identifier">name</span>)
+<span class="ruby-keyword">end</span></pre>
+            </div><!-- remove-source -->
+            
+          </div>
+
+          
+
+          
+        </div><!-- remove-method -->
+
+      
+        <div id="update-method" class="method-detail ">
+          <a name="method-i-update"></a>
+
+          
+          <div class="method-heading">
+            <span class="method-name">update</span><span
+              class="method-args">(app_id)</span>
+            <span class="method-click-advice">click to toggle source</span>
+          </div>
+          
+
+          <div class="method-description">
+            
+            
+            
+
+            
+            <div class="method-source-code" id="update-source">
+<pre>
+<span class="ruby-comment"># File app/models/application_specification.rb, line 120</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">update</span>(<span class="ruby-identifier">app_id</span>)
+  <span class="ruby-identifier">info</span> = <span class="ruby-constant">YAML</span><span class="ruby-operator">::</span><span class="ruby-identifier">load_file</span>(<span class="ruby-constant">CONFIG_FILE_PATH</span>) <span class="ruby-keyword">rescue</span> <span class="ruby-keyword">nil</span>
+  <span class="ruby-identifier">app_data</span> = <span class="ruby-identifier">info</span>[<span class="ruby-string">'Application Specification'</span>].<span class="ruby-identifier">detect</span>{<span class="ruby-operator">|</span><span class="ruby-identifier">app_item</span><span class="ruby-operator">|</span> <span class="ruby-identifier">app_item</span>[<span class="ruby-string">&quot;name&quot;</span>].<span class="ruby-identifier">eql?</span>(<span class="ruby-identifier">name</span>)}
+  <span class="ruby-identifier">info</span>[<span class="ruby-string">'Application Specification'</span>][<span class="ruby-identifier">app_id</span>] = <span class="ruby-identifier">obj_to_hash</span>
+  <span class="ruby-keyword">if</span> <span class="ruby-identifier">app_data</span>
+    <span class="ruby-identifier">info</span>[<span class="ruby-string">'Application Specification'</span>][<span class="ruby-identifier">app_id</span>][<span class="ruby-string">&quot;permanently_ignored_list&quot;</span>] = <span class="ruby-identifier">app_data</span>[<span class="ruby-string">&quot;permanently_ignored_list&quot;</span>]
+  <span class="ruby-keyword">end</span>
+  <span class="ruby-constant">YAMLWriter</span>.<span class="ruby-identifier">write</span>(<span class="ruby-identifier">info</span>, <span class="ruby-constant">CONFIG_FILE_PATH</span>, <span class="ruby-constant">YAMLConfig</span><span class="ruby-operator">::</span><span class="ruby-constant">CONFIG</span>)
+<span class="ruby-keyword">end</span></pre>
+            </div><!-- update-source -->
+            
+          </div>
+
+          
+
+          
+        </div><!-- update-method -->
+
+      
+        <div id="write-method" class="method-detail ">
+          <a name="method-i-write"></a>
+
+          
+          <div class="method-heading">
+            <span class="method-name">write</span><span
+              class="method-args">()</span>
+            <span class="method-click-advice">click to toggle source</span>
+          </div>
+          
+
+          <div class="method-description">
+            
+            <p>validates_presence_of :name, :resolver, :path, :run_as_user, :type1,
+:environment validates_numericality_of :min_worker, :max_worker,
+:greater_than_or_equal_to =&gt; 1, :less_than_or_equal_to =&gt;
+ALLOWED_MAX_WORKERS validates_format_of :name, :with =&gt;
+/^[A-Za-z0-9_-]*$/i, :message =&gt; “ must consist of A-Z, a-z, 0-9 , _ ,
+-  and /.”</p>
+
+<pre>validates_format_of :path, :with =&gt; /^\/.*$/i, :message =&gt; &quot;entered is not the complete path for your web application root directory.&quot;</pre>
+
+<p>validates_length_of :name, :maximum =&gt; 30, :allow_nil =&gt; true
+validates_length_of :path, :maximum =&gt; 256 validates_length_of
+:run_as_user, :maximum =&gt; 30, :allow_nil =&gt; true validates_length_of
+:environment, :maximum =&gt; 30, :allow_nil =&gt; true</p>
+
+<pre>validates_format_of :baseuri, :with =&gt; /^\/[A-Za-z0-9_\-\/]*$/i, :message =&gt; &quot;must start with '/' and contains characters A-Z, a-z, 0-9 , _ , -  and /.&quot;</pre>
+            
+
+            
+            <div class="method-source-code" id="write-source">
+<pre>
+<span class="ruby-comment"># File app/models/application_specification.rb, line 66</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">write</span>
+
+  <span class="ruby-identifier">info</span> = <span class="ruby-constant">YAML</span><span class="ruby-operator">::</span><span class="ruby-identifier">load_file</span>(<span class="ruby-constant">CONFIG_FILE_PATH</span>) <span class="ruby-keyword">rescue</span> <span class="ruby-keyword">nil</span>
+  <span class="ruby-keyword">if</span> <span class="ruby-keyword">not</span> (<span class="ruby-identifier">info</span> <span class="ruby-keyword">and</span> <span class="ruby-identifier">info</span>[<span class="ruby-string">'Application Specification'</span>])
+    <span class="ruby-identifier">info</span>[<span class="ruby-string">'Application Specification'</span>] = <span class="ruby-constant">Array</span>.<span class="ruby-identifier">new</span>
+  <span class="ruby-keyword">end</span>
+
+  <span class="ruby-identifier">info</span>[<span class="ruby-string">'Application Specification'</span>].<span class="ruby-identifier">push</span>(<span class="ruby-identifier">obj_to_hash</span>)
+
+  <span class="ruby-constant">YAMLWriter</span>.<span class="ruby-identifier">write</span>(<span class="ruby-identifier">info</span>, <span class="ruby-constant">CONFIG_FILE_PATH</span>, <span class="ruby-constant">YAMLConfig</span><span class="ruby-operator">::</span><span class="ruby-constant">CONFIG</span>)
+  <span class="ruby-constant">App</span>.<span class="ruby-identifier">create</span>({<span class="ruby-value">:name</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">name</span>})
+  <span class="ruby-constant">SignalHelper</span>.<span class="ruby-identifier">send</span>
+
+<span class="ruby-keyword">end</span></pre>
+            </div><!-- write-source -->
+            
+          </div>
+
+          
+
+          
+        </div><!-- write-method -->
+
+      
+      </div><!-- public-instance-method-details -->
+    
+    </div><!-- 5Buntitled-5D -->
+  
+
+  </div><!-- documentation -->
+
+  <div id="validator-badges">
+    <p><small><a href="http://validator.w3.org/check/referer">[Validate]</a></small></p>
+    <p><small>Generated with the <a href="http://deveiate.org/projects/Darkfish-Rdoc/">Darkfish
+      Rdoc Generator</a> 2</small>.</p>
+  </div>
+
+</body>
+</html>
+

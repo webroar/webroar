@@ -1,0 +1,674 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+  <meta content="text/html; charset=utf-8" http-equiv="Content-Type" />
+
+  <title>Class: SCGI</title>
+
+  <link rel="stylesheet" href="./rdoc.css" type="text/css" media="screen" />
+
+  <script src="./js/jquery.js" type="text/javascript" charset="utf-8"></script>
+  <script src="./js/thickbox-compressed.js" type="text/javascript" charset="utf-8"></script>
+  <script src="./js/quicksearch.js" type="text/javascript" charset="utf-8"></script>
+  <script src="./js/darkfish.js" type="text/javascript" charset="utf-8"></script>
+
+</head>
+<body id="top" class="class">
+
+  <div id="metadata">
+    <div id="home-metadata">
+      <div id="home-section" class="section">
+        <h3 class="section-header">
+          <a href="./index.html">Home</a>
+          <a href="./index.html#classes">Classes</a>
+          <a href="./index.html#methods">Methods</a>
+        </h3>
+      </div>
+    </div>
+
+    <div id="file-metadata">
+      <div id="file-list-section" class="section">
+        <h3 class="section-header">In Files</h3>
+        <div class="section-body">
+          <ul>
+          
+            <li><a href="./lib/scgi_rb.html?TB_iframe=true&amp;height=550&amp;width=785"
+              class="thickbox" title="lib/scgi.rb">lib/scgi.rb</a></li>
+          
+          </ul>
+        </div>
+      </div>
+
+      
+    </div>
+
+    <div id="class-metadata">
+      
+      <!-- Parent Class -->
+      <div id="parent-class-section" class="section">
+        <h3 class="section-header">Parent</h3>
+        
+        <p class="link"><a href="Object.html">Object</a></p>
+        
+      </div>
+      
+
+      
+
+      
+
+      
+      <!-- Method Quickref -->
+      <div id="method-list-section" class="section">
+        <h3 class="section-header">Methods</h3>
+        <ul class="link-list">
+          
+          <li><a href="#method-c-new">::new</a></li>
+          
+          <li><a href="#method-i-body">#body</a></li>
+          
+          <li><a href="#method-i-body_add">#body_add</a></li>
+          
+          <li><a href="#method-i-build">#build</a></li>
+          
+          <li><a href="#method-i-header">#header</a></li>
+          
+          <li><a href="#method-i-header_add">#header_add</a></li>
+          
+          <li><a href="#method-i-parse">#parse</a></li>
+          
+          <li><a href="#method-i-parsing_done-3F">#parsing_done?</a></li>
+          
+          <li><a href="#method-i-print">#print</a></li>
+          
+          <li><a href="#method-i-request">#request</a></li>
+          
+        </ul>
+      </div>
+      
+
+      
+    </div>
+
+    <div id="project-metadata">
+      
+      
+      <div id="fileindex-section" class="section project-section">
+        <h3 class="section-header">Files</h3>
+        <ul>
+        
+          <li class="file"><a href="./doc/README_FOR_APP.html">README_FOR_APP</a></li>
+        
+        </ul>
+      </div>
+      
+
+      <div id="classindex-section" class="section project-section">
+        <h3 class="section-header">Class/Module Index
+          <span class="search-toggle"><img src="./images/find.png"
+            height="16" width="16" alt="[+]"
+            title="show/hide quicksearch" /></span></h3>
+        <form action="#" method="get" accept-charset="utf-8" class="initially-hidden">
+        <fieldset>
+          <legend>Quicksearch</legend>
+          <input type="text" name="quicksearch" value=""
+            class="quicksearch-field" />
+        </fieldset>
+        </form>
+
+        <ul class="link-list">
+        
+          <li><a href="./Analytics.html">Analytics</a></li>
+        
+          <li><a href="./Analytics/Database.html">Analytics::Database</a></li>
+        
+          <li><a href="./Analytics/ResourceUsage.html">Analytics::ResourceUsage</a></li>
+        
+          <li><a href="./Analytics/Throughput.html">Analytics::Throughput</a></li>
+        
+          <li><a href="./Analytics/Url.html">Analytics::Url</a></li>
+        
+          <li><a href="./Analytics/UrlBreakup.html">Analytics::UrlBreakup</a></li>
+        
+          <li><a href="./ActionView.html">ActionView</a></li>
+        
+          <li><a href="./ActionView/Helpers.html">ActionView::Helpers</a></li>
+        
+          <li><a href="./ActionView/Helpers/AssetTagHelper.html">ActionView::Helpers::AssetTagHelper</a></li>
+        
+          <li><a href="./AdminController.html">AdminController</a></li>
+        
+          <li><a href="./AdminHelper.html">AdminHelper</a></li>
+        
+          <li><a href="./App.html">App</a></li>
+        
+          <li><a href="./AppException.html">AppException</a></li>
+        
+          <li><a href="./AppTimeSample.html">AppTimeSample</a></li>
+        
+          <li><a href="./ApplicationController.html">ApplicationController</a></li>
+        
+          <li><a href="./ApplicationHelper.html">ApplicationHelper</a></li>
+        
+          <li><a href="./ApplicationSpecification.html">ApplicationSpecification</a></li>
+        
+          <li><a href="./ApplicationSpecificationController.html">ApplicationSpecificationController</a></li>
+        
+          <li><a href="./ApplicationSpecificationHelper.html">ApplicationSpecificationHelper</a></li>
+        
+          <li><a href="./Control.html">Control</a></li>
+        
+          <li><a href="./ExceptionDetail.html">ExceptionDetail</a></li>
+        
+          <li><a href="./ExceptionsController.html">ExceptionsController</a></li>
+        
+          <li><a href="./ExceptionsHelper.html">ExceptionsHelper</a></li>
+        
+          <li><a href="./GraphController.html">GraphController</a></li>
+        
+          <li><a href="./GraphHelper.html">GraphHelper</a></li>
+        
+          <li><a href="./Headers.html">Headers</a></li>
+        
+          <li><a href="./HeadersController.html">HeadersController</a></li>
+        
+          <li><a href="./HeadersHelper.html">HeadersHelper</a></li>
+        
+          <li><a href="./MailSpecification.html">MailSpecification</a></li>
+        
+          <li><a href="./MailSpecificationController.html">MailSpecificationController</a></li>
+        
+          <li><a href="./MailSpecificationHelper.html">MailSpecificationHelper</a></li>
+        
+          <li><a href="./Mailer.html">Mailer</a></li>
+        
+          <li><a href="./Object.html">Object</a></li>
+        
+          <li><a href="./PseudoModel.html">PseudoModel</a></li>
+        
+          <li><a href="./ResourceUsage.html">ResourceUsage</a></li>
+        
+          <li><a href="./SCGI.html">SCGI</a></li>
+        
+          <li><a href="./ServerSpecification.html">ServerSpecification</a></li>
+        
+          <li><a href="./ServerSpecificationController.html">ServerSpecificationController</a></li>
+        
+          <li><a href="./ServerSpecificationHelper.html">ServerSpecificationHelper</a></li>
+        
+          <li><a href="./SignalHelper.html">SignalHelper</a></li>
+        
+          <li><a href="./UrlBreakupTimeSample.html">UrlBreakupTimeSample</a></li>
+        
+          <li><a href="./UrlTimeSample.html">UrlTimeSample</a></li>
+        
+          <li><a href="./User.html">User</a></li>
+        
+          <li><a href="./YAMLConfig.html">YAMLConfig</a></li>
+        
+          <li><a href="./YAMLWriter.html">YAMLWriter</a></li>
+        
+        </ul>
+        <div id="no-class-search-results" style="display: none;">No matching classes.</div>
+      </div>
+
+      
+    </div>
+  </div>
+
+  <div id="documentation">
+    <h1 class="class">SCGI</h1>
+
+    <div id="description" class="description">
+      
+<p>This class contructs and parse the <a href="SCGI.html">SCGI</a> request.</p>
+
+    </div><!-- description -->
+
+    
+    
+    
+    <div id="5Buntitled-5D" class="documentation-section">
+      
+
+      
+
+      
+
+      
+
+      <!-- Methods -->
+      
+      <div id="public-class-method-details" class="method-section section">
+        <h3 class="section-header">Public Class Methods</h3>
+
+      
+        <div id="new-method" class="method-detail ">
+          <a name="method-c-new"></a>
+
+          
+          <div class="method-heading">
+            <span class="method-name">new</span><span
+              class="method-args">()</span>
+            <span class="method-click-advice">click to toggle source</span>
+          </div>
+          
+
+          <div class="method-description">
+            
+            <p>This is the constructor function for <a href="SCGI.html">SCGI</a> class.</p>
+            
+
+            
+            <div class="method-source-code" id="new-source">
+<pre>
+<span class="ruby-comment"># File lib/scgi.rb, line 29</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">initialize</span>
+  <span class="ruby-ivar">@hash</span> = <span class="ruby-constant">Hash</span>.<span class="ruby-identifier">new</span>
+  <span class="ruby-ivar">@body</span> = <span class="ruby-string">''</span>
+  <span class="ruby-ivar">@tmp_headers_length</span> = <span class="ruby-string">''</span>
+  <span class="ruby-ivar">@headers_length</span> = <span class="ruby-value">0</span>
+  <span class="ruby-ivar">@curr_state</span> = <span class="ruby-value">:SCGI_NONE</span>
+  <span class="ruby-ivar">@curr_key</span> = <span class="ruby-string">''</span>
+  <span class="ruby-ivar">@curr_value</span> = <span class="ruby-string">''</span>
+  <span class="ruby-ivar">@done</span> = <span class="ruby-keyword">false</span>
+<span class="ruby-keyword">end</span></pre>
+            </div><!-- new-source -->
+            
+          </div>
+
+          
+
+          
+        </div><!-- new-method -->
+
+      
+      </div><!-- public-class-method-details -->
+    
+      <div id="public-instance-method-details" class="method-section section">
+        <h3 class="section-header">Public Instance Methods</h3>
+
+      
+        <div id="body-method" class="method-detail ">
+          <a name="method-i-body"></a>
+
+          
+          <div class="method-heading">
+            <span class="method-name">body</span><span
+              class="method-args">()</span>
+            <span class="method-click-advice">click to toggle source</span>
+          </div>
+          
+
+          <div class="method-description">
+            
+            <p>Getter setter for body in <a href="SCGI.html">SCGI</a> class.</p>
+            
+
+            
+            <div class="method-source-code" id="body-source">
+<pre>
+<span class="ruby-comment"># File lib/scgi.rb, line 49</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">body</span>
+  <span class="ruby-ivar">@body</span>
+<span class="ruby-keyword">end</span></pre>
+            </div><!-- body-source -->
+            
+          </div>
+
+          
+
+          
+        </div><!-- body-method -->
+
+      
+        <div id="body_add-method" class="method-detail ">
+          <a name="method-i-body_add"></a>
+
+          
+          <div class="method-heading">
+            <span class="method-name">body_add</span><span
+              class="method-args">(body)</span>
+            <span class="method-click-advice">click to toggle source</span>
+          </div>
+          
+
+          <div class="method-description">
+            
+            <p>Adds <a href="SCGI.html">SCGI</a> request body.</p>
+            
+
+            
+            <div class="method-source-code" id="body_add-source">
+<pre>
+<span class="ruby-comment"># File lib/scgi.rb, line 59</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">body_add</span>(<span class="ruby-identifier">body</span>)
+  <span class="ruby-ivar">@body</span> <span class="ruby-operator">+=</span> <span class="ruby-identifier">body</span>
+<span class="ruby-keyword">end</span></pre>
+            </div><!-- body_add-source -->
+            
+          </div>
+
+          
+
+          
+        </div><!-- body_add-method -->
+
+      
+        <div id="build-method" class="method-detail ">
+          <a name="method-i-build"></a>
+
+          
+          <div class="method-heading">
+            <span class="method-name">build</span><span
+              class="method-args">()</span>
+            <span class="method-click-advice">click to toggle source</span>
+          </div>
+          
+
+          <div class="method-description">
+            
+            <p>Construct <a href="SCGI.html">SCGI</a> request.</p>
+            
+
+            
+            <div class="method-source-code" id="build-source">
+<pre>
+<span class="ruby-comment"># File lib/scgi.rb, line 69</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">build</span>
+  <span class="ruby-keyword">if</span>(<span class="ruby-ivar">@body</span> <span class="ruby-operator">==</span> <span class="ruby-string">''</span>)
+    <span class="ruby-ivar">@request</span> = <span class="ruby-string">&quot;CONTENT_LENGTH\00&quot;&quot;</span><span class="ruby-operator">+</span><span class="ruby-string">&quot;0&quot;</span><span class="ruby-operator">+</span><span class="ruby-string">&quot;\00&quot;&quot;</span>
+  <span class="ruby-keyword">else</span>
+    <span class="ruby-ivar">@request</span> = <span class="ruby-node">&quot;CONTENT_LENGTH\00##{body.length}\00&quot;&quot;</span>
+  <span class="ruby-keyword">end</span>
+  <span class="ruby-ivar">@request</span> <span class="ruby-operator">+=</span> <span class="ruby-string">&quot;SCGI\00&quot;&quot;</span><span class="ruby-operator">+</span><span class="ruby-string">&quot;0&quot;</span> <span class="ruby-operator">+</span><span class="ruby-string">&quot;\00&quot;&quot;</span>
+  <span class="ruby-ivar">@hash</span>.<span class="ruby-identifier">each_key</span>{<span class="ruby-operator">|</span><span class="ruby-identifier">key</span><span class="ruby-operator">|</span>
+    <span class="ruby-ivar">@request</span> <span class="ruby-operator">+=</span> <span class="ruby-node">&quot;#{key}\00##{@hash[key]}\00&quot;&quot;</span>
+  }
+  <span class="ruby-ivar">@request</span> = <span class="ruby-node">&quot;#{@request.length}:#{@request}&quot;</span>
+  <span class="ruby-ivar">@request</span> <span class="ruby-operator">+=</span> <span class="ruby-node">&quot;,#{@body}&quot;</span>
+<span class="ruby-keyword">end</span></pre>
+            </div><!-- build-source -->
+            
+          </div>
+
+          
+
+          
+        </div><!-- build-method -->
+
+      
+        <div id="header-method" class="method-detail ">
+          <a name="method-i-header"></a>
+
+          
+          <div class="method-heading">
+            <span class="method-name">header</span><span
+              class="method-args">(key)</span>
+            <span class="method-click-advice">click to toggle source</span>
+          </div>
+          
+
+          <div class="method-description">
+            
+            <p>Getter method for receiving <a href="SCGI.html">SCGI</a> headers.</p>
+            
+
+            
+            <div class="method-source-code" id="header-source">
+<pre>
+<span class="ruby-comment"># File lib/scgi.rb, line 64</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">header</span>(<span class="ruby-identifier">key</span>)
+  <span class="ruby-ivar">@hash</span>[<span class="ruby-identifier">key</span>.<span class="ruby-identifier">upcase</span>]
+<span class="ruby-keyword">end</span></pre>
+            </div><!-- header-source -->
+            
+          </div>
+
+          
+
+          
+        </div><!-- header-method -->
+
+      
+        <div id="header_add-method" class="method-detail ">
+          <a name="method-i-header_add"></a>
+
+          
+          <div class="method-heading">
+            <span class="method-name">header_add</span><span
+              class="method-args">(key, value)</span>
+            <span class="method-click-advice">click to toggle source</span>
+          </div>
+          
+
+          <div class="method-description">
+            
+            <p>This method is used to add the headers.</p>
+            
+
+            
+            <div class="method-source-code" id="header_add-source">
+<pre>
+<span class="ruby-comment"># File lib/scgi.rb, line 54</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">header_add</span>(<span class="ruby-identifier">key</span>, <span class="ruby-identifier">value</span>)
+  <span class="ruby-ivar">@hash</span>[<span class="ruby-identifier">key</span>.<span class="ruby-identifier">upcase</span>] = <span class="ruby-identifier">value</span>
+<span class="ruby-keyword">end</span></pre>
+            </div><!-- header_add-source -->
+            
+          </div>
+
+          
+
+          
+        </div><!-- header_add-method -->
+
+      
+        <div id="parse-method" class="method-detail ">
+          <a name="method-i-parse"></a>
+
+          
+          <div class="method-heading">
+            <span class="method-name">parse</span><span
+              class="method-args">(req)</span>
+            <span class="method-click-advice">click to toggle source</span>
+          </div>
+          
+
+          <div class="method-description">
+            
+            <p>Parse the string and build <a href="SCGI.html">SCGI</a> request.</p>
+            
+
+            
+            <div class="method-source-code" id="parse-source">
+<pre>
+<span class="ruby-comment"># File lib/scgi.rb, line 93</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">parse</span>(<span class="ruby-identifier">req</span>)    
+  <span class="ruby-identifier">index</span> = <span class="ruby-value">0</span>
+  <span class="ruby-identifier">req</span>.<span class="ruby-identifier">each_char</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">c</span><span class="ruby-operator">|</span>      
+    <span class="ruby-keyword">case</span> <span class="ruby-ivar">@curr_state</span>
+      <span class="ruby-keyword">when</span> <span class="ruby-value">:SCGI_NONE</span>
+        <span class="ruby-keyword">if</span> <span class="ruby-identifier">c</span> <span class="ruby-operator">==</span> <span class="ruby-string">':'</span>
+          <span class="ruby-ivar">@headers_length</span> = <span class="ruby-ivar">@tmp_headers_length</span>.<span class="ruby-identifier">to_i</span>
+          <span class="ruby-ivar">@curr_state</span> = <span class="ruby-value">:HEADER_KEY</span>
+        <span class="ruby-keyword">elsif</span> <span class="ruby-identifier">c</span> <span class="ruby-operator">&lt;</span> <span class="ruby-string">'0'</span> <span class="ruby-keyword">or</span> <span class="ruby-identifier">c</span> <span class="ruby-operator">&gt;</span> <span class="ruby-string">'9'</span> 
+          <span class="ruby-ivar">@curr_state</span> = <span class="ruby-value">:INVALID</span>
+        <span class="ruby-keyword">else</span>
+          <span class="ruby-ivar">@tmp_headers_length</span> <span class="ruby-operator">+=</span> <span class="ruby-identifier">c</span>
+        <span class="ruby-keyword">end</span>
+      <span class="ruby-keyword">when</span> <span class="ruby-value">:HEADER_KEY</span>
+        <span class="ruby-keyword">if</span> <span class="ruby-identifier">c</span> <span class="ruby-operator">==</span> <span class="ruby-string">&quot;\00&quot;&quot;</span>            
+          <span class="ruby-ivar">@curr_state</span> = <span class="ruby-value">:HEADER_VAL</span>
+        <span class="ruby-keyword">elsif</span> <span class="ruby-identifier">c</span> <span class="ruby-operator">==</span> <span class="ruby-string">&quot;,&quot;</span>
+          <span class="ruby-keyword">if</span> <span class="ruby-identifier">header</span>(<span class="ruby-string">'CONTENT_LENGTH'</span>).<span class="ruby-identifier">to_i</span> <span class="ruby-operator">==</span> <span class="ruby-value">0</span>
+            <span class="ruby-ivar">@done</span> = <span class="ruby-keyword">true</span>
+            <span class="ruby-ivar">@curr_state</span> = <span class="ruby-value">:DONE</span>
+          <span class="ruby-keyword">else</span>
+            <span class="ruby-ivar">@curr_state</span> = <span class="ruby-value">:BODY</span>
+            <span class="ruby-identifier">body_add</span>(<span class="ruby-identifier">req</span>[<span class="ruby-identifier">index</span><span class="ruby-operator">+</span><span class="ruby-value">1</span>, <span class="ruby-identifier">req</span>.<span class="ruby-identifier">length</span>])
+            <span class="ruby-keyword">if</span> <span class="ruby-ivar">@body</span>.<span class="ruby-identifier">length</span> <span class="ruby-operator">==</span> <span class="ruby-identifier">header</span>(<span class="ruby-string">'CONTENT_LENGTH'</span>).<span class="ruby-identifier">to_i</span>
+              <span class="ruby-ivar">@curr_state</span> = <span class="ruby-value">:DONE</span>
+              <span class="ruby-ivar">@done</span> = <span class="ruby-keyword">true</span>
+            <span class="ruby-keyword">else</span>
+              <span class="ruby-ivar">@curr_state</span> = <span class="ruby-value">:BODY</span>
+            <span class="ruby-keyword">end</span>
+            <span class="ruby-keyword">break</span>
+          <span class="ruby-keyword">end</span>
+        <span class="ruby-keyword">else</span>
+          <span class="ruby-ivar">@curr_key</span> <span class="ruby-operator">+=</span> <span class="ruby-identifier">c</span>            
+        <span class="ruby-keyword">end</span>
+      <span class="ruby-keyword">when</span> <span class="ruby-value">:HEADER_VAL</span>
+        <span class="ruby-keyword">if</span> <span class="ruby-identifier">c</span> <span class="ruby-operator">==</span> <span class="ruby-string">&quot;\00&quot;&quot;</span>            
+          <span class="ruby-identifier">header_add</span>(<span class="ruby-ivar">@curr_key</span>, <span class="ruby-ivar">@curr_value</span>)
+          <span class="ruby-ivar">@curr_key</span> = <span class="ruby-string">''</span>
+          <span class="ruby-ivar">@curr_value</span> = <span class="ruby-string">''</span>
+          <span class="ruby-ivar">@curr_state</span> = <span class="ruby-value">:HEADER_KEY</span>
+        <span class="ruby-keyword">else</span>
+          <span class="ruby-ivar">@curr_value</span> <span class="ruby-operator">+=</span> <span class="ruby-identifier">c</span>
+        <span class="ruby-keyword">end</span>
+      <span class="ruby-keyword">when</span> <span class="ruby-value">:BODY</span>
+        <span class="ruby-identifier">body_add</span>(<span class="ruby-identifier">req</span>[<span class="ruby-identifier">index</span>, <span class="ruby-identifier">req</span>.<span class="ruby-identifier">length</span>])
+        <span class="ruby-keyword">if</span> <span class="ruby-ivar">@body</span>.<span class="ruby-identifier">length</span> <span class="ruby-operator">==</span> <span class="ruby-identifier">header</span>(<span class="ruby-string">'CONTENT_LENGTH'</span>).<span class="ruby-identifier">to_i</span>
+          <span class="ruby-ivar">@curr_state</span> = <span class="ruby-value">:DONE</span>
+          <span class="ruby-ivar">@done</span> = <span class="ruby-keyword">true</span>
+        <span class="ruby-keyword">end</span>
+        <span class="ruby-keyword">break</span>
+      <span class="ruby-keyword">when</span> <span class="ruby-value">:DONE</span>
+        <span class="ruby-ivar">@done</span> = <span class="ruby-keyword">true</span>
+        <span class="ruby-keyword">return</span>
+    <span class="ruby-keyword">end</span>    
+    <span class="ruby-identifier">index</span> <span class="ruby-operator">+=</span> <span class="ruby-value">1</span>
+  <span class="ruby-keyword">end</span>    
+<span class="ruby-keyword">end</span></pre>
+            </div><!-- parse-source -->
+            
+          </div>
+
+          
+
+          
+        </div><!-- parse-method -->
+
+      
+        <div id="parsing_done-3F-method" class="method-detail ">
+          <a name="method-i-parsing_done-3F"></a>
+
+          
+          <div class="method-heading">
+            <span class="method-name">parsing_done?</span><span
+              class="method-args">()</span>
+            <span class="method-click-advice">click to toggle source</span>
+          </div>
+          
+
+          <div class="method-description">
+            
+            
+            
+
+            
+            <div class="method-source-code" id="parsing_done-3F-source">
+<pre>
+<span class="ruby-comment"># File lib/scgi.rb, line 40</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">parsing_done?</span>
+  <span class="ruby-ivar">@done</span>    
+<span class="ruby-keyword">end</span></pre>
+            </div><!-- parsing_done-3F-source -->
+            
+          </div>
+
+          
+
+          
+        </div><!-- parsing_done-3F-method -->
+
+      
+        <div id="print-method" class="method-detail ">
+          <a name="method-i-print"></a>
+
+          
+          <div class="method-heading">
+            <span class="method-name">print</span><span
+              class="method-args">()</span>
+            <span class="method-click-advice">click to toggle source</span>
+          </div>
+          
+
+          <div class="method-description">
+            
+            <p>Display <a href="SCGI.html">SCGI</a> request.</p>
+            
+
+            
+            <div class="method-source-code" id="print-source">
+<pre>
+<span class="ruby-comment"># File lib/scgi.rb, line 84</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">print</span>
+  <span class="ruby-ivar">@hash</span>.<span class="ruby-identifier">each_key</span>{<span class="ruby-operator">|</span><span class="ruby-identifier">key</span><span class="ruby-operator">|</span>
+    <span class="ruby-identifier">puts</span> <span class="ruby-node">&quot;#{key}:#{@hash[key]}&quot;</span>
+  }
+  <span class="ruby-identifier">puts</span> <span class="ruby-string">&quot;,&quot;</span>
+  <span class="ruby-identifier">puts</span> <span class="ruby-ivar">@body</span>
+<span class="ruby-keyword">end</span></pre>
+            </div><!-- print-source -->
+            
+          </div>
+
+          
+
+          
+        </div><!-- print-method -->
+
+      
+        <div id="request-method" class="method-detail ">
+          <a name="method-i-request"></a>
+
+          
+          <div class="method-heading">
+            <span class="method-name">request</span><span
+              class="method-args">()</span>
+            <span class="method-click-advice">click to toggle source</span>
+          </div>
+          
+
+          <div class="method-description">
+            
+            <p>Getter setter for request in <a href="SCGI.html">SCGI</a> class.</p>
+            
+
+            
+            <div class="method-source-code" id="request-source">
+<pre>
+<span class="ruby-comment"># File lib/scgi.rb, line 44</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">request</span>
+  <span class="ruby-ivar">@request</span>
+<span class="ruby-keyword">end</span></pre>
+            </div><!-- request-source -->
+            
+          </div>
+
+          
+
+          
+        </div><!-- request-method -->
+
+      
+      </div><!-- public-instance-method-details -->
+    
+    </div><!-- 5Buntitled-5D -->
+  
+
+  </div><!-- documentation -->
+
+  <div id="validator-badges">
+    <p><small><a href="http://validator.w3.org/check/referer">[Validate]</a></small></p>
+    <p><small>Generated with the <a href="http://deveiate.org/projects/Darkfish-Rdoc/">Darkfish
+      Rdoc Generator</a> 2</small>.</p>
+  </div>
+
+</body>
+</html>
+

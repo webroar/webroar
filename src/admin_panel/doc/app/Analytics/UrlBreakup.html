@@ -1,0 +1,537 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+  <meta content="text/html; charset=utf-8" http-equiv="Content-Type" />
+
+  <title>Module: Analytics::UrlBreakup</title>
+
+  <link rel="stylesheet" href="../rdoc.css" type="text/css" media="screen" />
+
+  <script src="../js/jquery.js" type="text/javascript" charset="utf-8"></script>
+  <script src="../js/thickbox-compressed.js" type="text/javascript" charset="utf-8"></script>
+  <script src="../js/quicksearch.js" type="text/javascript" charset="utf-8"></script>
+  <script src="../js/darkfish.js" type="text/javascript" charset="utf-8"></script>
+
+</head>
+<body id="top" class="module">
+
+  <div id="metadata">
+    <div id="home-metadata">
+      <div id="home-section" class="section">
+        <h3 class="section-header">
+          <a href="../index.html">Home</a>
+          <a href="../index.html#classes">Classes</a>
+          <a href="../index.html#methods">Methods</a>
+        </h3>
+      </div>
+    </div>
+
+    <div id="file-metadata">
+      <div id="file-list-section" class="section">
+        <h3 class="section-header">In Files</h3>
+        <div class="section-body">
+          <ul>
+          
+            <li><a href="../lib/graph_controller_extensions/url_breakup_analytics_rb.html?TB_iframe=true&amp;height=550&amp;width=785"
+              class="thickbox" title="lib/graph_controller_extensions/url_breakup_analytics.rb">lib/graph_controller_extensions/url_breakup_analytics.rb</a></li>
+          
+          </ul>
+        </div>
+      </div>
+
+      
+    </div>
+
+    <div id="class-metadata">
+      
+
+      
+
+      
+
+      
+      <!-- Method Quickref -->
+      <div id="method-list-section" class="section">
+        <h3 class="section-header">Methods</h3>
+        <ul class="link-list">
+          
+          <li><a href="#method-i-get_url_breakdown">#get_url_breakdown</a></li>
+          
+          <li><a href="#method-i-get_url_breakup_data">#get_url_breakup_data</a></li>
+          
+          <li><a href="#method-i-get_url_breakup_graph_data">#get_url_breakup_graph_data</a></li>
+          
+          <li><a href="#method-i-pie_data">#pie_data</a></li>
+          
+          <li><a href="#method-i-refresh_pie_graph">#refresh_pie_graph</a></li>
+          
+          <li><a href="#method-i-round">#round</a></li>
+          
+        </ul>
+      </div>
+      
+
+      
+    </div>
+
+    <div id="project-metadata">
+      
+      
+      <div id="fileindex-section" class="section project-section">
+        <h3 class="section-header">Files</h3>
+        <ul>
+        
+          <li class="file"><a href="../doc/README_FOR_APP.html">README_FOR_APP</a></li>
+        
+        </ul>
+      </div>
+      
+
+      <div id="classindex-section" class="section project-section">
+        <h3 class="section-header">Class/Module Index
+          <span class="search-toggle"><img src="../images/find.png"
+            height="16" width="16" alt="[+]"
+            title="show/hide quicksearch" /></span></h3>
+        <form action="#" method="get" accept-charset="utf-8" class="initially-hidden">
+        <fieldset>
+          <legend>Quicksearch</legend>
+          <input type="text" name="quicksearch" value=""
+            class="quicksearch-field" />
+        </fieldset>
+        </form>
+
+        <ul class="link-list">
+        
+          <li><a href="../Analytics.html">Analytics</a></li>
+        
+          <li><a href="../Analytics/Database.html">Analytics::Database</a></li>
+        
+          <li><a href="../Analytics/ResourceUsage.html">Analytics::ResourceUsage</a></li>
+        
+          <li><a href="../Analytics/Throughput.html">Analytics::Throughput</a></li>
+        
+          <li><a href="../Analytics/Url.html">Analytics::Url</a></li>
+        
+          <li><a href="../Analytics/UrlBreakup.html">Analytics::UrlBreakup</a></li>
+        
+          <li><a href="../ActionView.html">ActionView</a></li>
+        
+          <li><a href="../ActionView/Helpers.html">ActionView::Helpers</a></li>
+        
+          <li><a href="../ActionView/Helpers/AssetTagHelper.html">ActionView::Helpers::AssetTagHelper</a></li>
+        
+          <li><a href="../AdminController.html">AdminController</a></li>
+        
+          <li><a href="../AdminHelper.html">AdminHelper</a></li>
+        
+          <li><a href="../App.html">App</a></li>
+        
+          <li><a href="../AppException.html">AppException</a></li>
+        
+          <li><a href="../AppTimeSample.html">AppTimeSample</a></li>
+        
+          <li><a href="../ApplicationController.html">ApplicationController</a></li>
+        
+          <li><a href="../ApplicationHelper.html">ApplicationHelper</a></li>
+        
+          <li><a href="../ApplicationSpecification.html">ApplicationSpecification</a></li>
+        
+          <li><a href="../ApplicationSpecificationController.html">ApplicationSpecificationController</a></li>
+        
+          <li><a href="../ApplicationSpecificationHelper.html">ApplicationSpecificationHelper</a></li>
+        
+          <li><a href="../Control.html">Control</a></li>
+        
+          <li><a href="../ExceptionDetail.html">ExceptionDetail</a></li>
+        
+          <li><a href="../ExceptionsController.html">ExceptionsController</a></li>
+        
+          <li><a href="../ExceptionsHelper.html">ExceptionsHelper</a></li>
+        
+          <li><a href="../GraphController.html">GraphController</a></li>
+        
+          <li><a href="../GraphHelper.html">GraphHelper</a></li>
+        
+          <li><a href="../Headers.html">Headers</a></li>
+        
+          <li><a href="../HeadersController.html">HeadersController</a></li>
+        
+          <li><a href="../HeadersHelper.html">HeadersHelper</a></li>
+        
+          <li><a href="../MailSpecification.html">MailSpecification</a></li>
+        
+          <li><a href="../MailSpecificationController.html">MailSpecificationController</a></li>
+        
+          <li><a href="../MailSpecificationHelper.html">MailSpecificationHelper</a></li>
+        
+          <li><a href="../Mailer.html">Mailer</a></li>
+        
+          <li><a href="../Object.html">Object</a></li>
+        
+          <li><a href="../PseudoModel.html">PseudoModel</a></li>
+        
+          <li><a href="../ResourceUsage.html">ResourceUsage</a></li>
+        
+          <li><a href="../SCGI.html">SCGI</a></li>
+        
+          <li><a href="../ServerSpecification.html">ServerSpecification</a></li>
+        
+          <li><a href="../ServerSpecificationController.html">ServerSpecificationController</a></li>
+        
+          <li><a href="../ServerSpecificationHelper.html">ServerSpecificationHelper</a></li>
+        
+          <li><a href="../SignalHelper.html">SignalHelper</a></li>
+        
+          <li><a href="../UrlBreakupTimeSample.html">UrlBreakupTimeSample</a></li>
+        
+          <li><a href="../UrlTimeSample.html">UrlTimeSample</a></li>
+        
+          <li><a href="../User.html">User</a></li>
+        
+          <li><a href="../YAMLConfig.html">YAMLConfig</a></li>
+        
+          <li><a href="../YAMLWriter.html">YAMLWriter</a></li>
+        
+        </ul>
+        <div id="no-class-search-results" style="display: none;">No matching classes.</div>
+      </div>
+
+      
+    </div>
+  </div>
+
+  <div id="documentation">
+    <h1 class="module">Analytics::UrlBreakup</h1>
+
+    <div id="description" class="description">
+      
+    </div><!-- description -->
+
+    
+    
+    
+    <div id="5Buntitled-5D" class="documentation-section">
+      
+
+      
+
+      
+
+      
+
+      <!-- Methods -->
+      
+      <div id="public-instance-method-details" class="method-section section">
+        <h3 class="section-header">Public Instance Methods</h3>
+
+      
+        <div id="get_url_breakdown-method" class="method-detail ">
+          <a name="method-i-get_url_breakdown"></a>
+
+          
+          <div class="method-heading">
+            <span class="method-name">get_url_breakdown</span><span
+              class="method-args">()</span>
+            <span class="method-click-advice">click to toggle source</span>
+          </div>
+          
+
+          <div class="method-description">
+            
+            <p>This method renders the pie graph and time consumption details for a
+specific url listed in the select box.</p>
+            
+
+            
+            <div class="method-source-code" id="get_url_breakdown-source">
+<pre>
+<span class="ruby-comment"># File lib/graph_controller_extensions/url_breakup_analytics.rb, line 125</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">get_url_breakdown</span>
+  <span class="ruby-identifier">app_id</span> = <span class="ruby-identifier">params</span>[<span class="ruby-value">:id</span>]
+  <span class="ruby-identifier">start_time</span> = <span class="ruby-identifier">params</span>[<span class="ruby-value">:start_time</span>]
+  <span class="ruby-identifier">end_time</span> = <span class="ruby-identifier">params</span>[<span class="ruby-value">:end_time</span>]
+  <span class="ruby-identifier">url</span> = <span class="ruby-identifier">params</span>[<span class="ruby-value">:url_name</span>]
+  <span class="ruby-keyword">if</span> <span class="ruby-identifier">params</span>[<span class="ruby-value">:index</span>]
+    <span class="ruby-ivar">@url_rank</span> = <span class="ruby-identifier">params</span>[<span class="ruby-value">:index</span>].<span class="ruby-identifier">to_i</span> <span class="ruby-operator">+</span> <span class="ruby-value">1</span>
+    <span class="ruby-ivar">@suffix</span> = <span class="ruby-identifier">get_suffix</span>(<span class="ruby-ivar">@url_rank</span>)
+  <span class="ruby-keyword">end</span>
+  <span class="ruby-ivar">@data_x</span>, <span class="ruby-ivar">@data_y</span>, <span class="ruby-ivar">@url_breakup_graph</span>, <span class="ruby-ivar">@data_actual_time</span> = <span class="ruby-identifier">get_url_breakup_graph_data</span>(<span class="ruby-identifier">start_time</span>, <span class="ruby-identifier">end_time</span>, <span class="ruby-identifier">app_id</span>, <span class="ruby-constant">Array</span>[<span class="ruby-identifier">url</span>])
+  <span class="ruby-identifier">render</span> <span class="ruby-value">:partial</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-string">'pie'</span>
+<span class="ruby-keyword">end</span></pre>
+            </div><!-- get_url_breakdown-source -->
+            
+          </div>
+
+          
+
+          
+        </div><!-- get_url_breakdown-method -->
+
+      
+        <div id="get_url_breakup_data-method" class="method-detail ">
+          <a name="method-i-get_url_breakup_data"></a>
+
+          
+          <div class="method-heading">
+            <span class="method-name">get_url_breakup_data</span><span
+              class="method-args">(app_id)</span>
+            <span class="method-click-advice">click to toggle source</span>
+          </div>
+          
+
+          <div class="method-description">
+            
+            <p>This method render the pie graphs and its percentage time consumption table
+for the first url in  the list of url for current day.</p>
+            
+
+            
+            <div class="method-source-code" id="get_url_breakup_data-source">
+<pre>
+<span class="ruby-comment"># File lib/graph_controller_extensions/url_breakup_analytics.rb, line 106</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">get_url_breakup_data</span>(<span class="ruby-identifier">app_id</span>)
+  <span class="ruby-ivar">@app_id</span> = <span class="ruby-identifier">app_id</span>
+  <span class="ruby-identifier">check_and_set_query_period</span>()
+  <span class="ruby-ivar">@start_time</span> = <span class="ruby-identifier">session</span>[<span class="ruby-value">:from_date</span>].<span class="ruby-identifier">strftime</span>(<span class="ruby-string">&quot;%Y/%m/%d&quot;</span>)
+  <span class="ruby-identifier">start_time</span> = <span class="ruby-identifier">session</span>[<span class="ruby-value">:from_date</span>]
+  <span class="ruby-ivar">@end_time</span> = <span class="ruby-identifier">session</span>[<span class="ruby-value">:to_date</span>].<span class="ruby-identifier">strftime</span>(<span class="ruby-string">&quot;%Y/%m/%d&quot;</span>)
+  <span class="ruby-identifier">end_time</span> = <span class="ruby-identifier">session</span>[<span class="ruby-value">:to_date</span>]      
+  <span class="ruby-ivar">@urls</span> = <span class="ruby-constant">UrlTimeSample</span>.<span class="ruby-identifier">get_urls</span>(<span class="ruby-identifier">start_time</span>, <span class="ruby-identifier">end_time</span>, <span class="ruby-identifier">app_id</span>)
+  <span class="ruby-keyword">if</span> <span class="ruby-ivar">@urls</span>.<span class="ruby-identifier">size</span> <span class="ruby-operator">&gt;</span> <span class="ruby-value">0</span>
+    <span class="ruby-ivar">@url_rank</span> = <span class="ruby-value">1</span>
+    <span class="ruby-ivar">@suffix</span> = <span class="ruby-identifier">get_suffix</span>(<span class="ruby-ivar">@url_rank</span>)
+    <span class="ruby-ivar">@data_x</span>, <span class="ruby-ivar">@data_y</span>, <span class="ruby-ivar">@url_breakup_graph</span>, <span class="ruby-ivar">@data_actual_time</span> = <span class="ruby-identifier">get_url_breakup_graph_data</span>(<span class="ruby-ivar">@start_time</span>, <span class="ruby-ivar">@end_time</span>, <span class="ruby-ivar">@app_id</span>, <span class="ruby-ivar">@urls</span>)
+  <span class="ruby-keyword">else</span>
+    <span class="ruby-identifier">flash</span>[<span class="ruby-value">:notice</span>] = <span class="ruby-constant">NO_DATA_FOUND</span>
+  <span class="ruby-keyword">end</span>
+  <span class="ruby-identifier">render</span> <span class="ruby-value">:partial</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-string">&quot;url_breakup_graph&quot;</span>
+<span class="ruby-keyword">end</span></pre>
+            </div><!-- get_url_breakup_data-source -->
+            
+          </div>
+
+          
+
+          
+        </div><!-- get_url_breakup_data-method -->
+
+      
+        <div id="get_url_breakup_graph_data-method" class="method-detail ">
+          <a name="method-i-get_url_breakup_graph_data"></a>
+
+          
+          <div class="method-heading">
+            <span class="method-name">get_url_breakup_graph_data</span><span
+              class="method-args">(start_time, end_time, app_id, urls)</span>
+            <span class="method-click-advice">click to toggle source</span>
+          </div>
+          
+
+          <div class="method-description">
+            
+            <p>This method gives the details of url calls and there time spent by the url
+in different place i.e in database,rendering etc. and it also returns the
+pie graph data for the same.</p>
+            
+
+            
+            <div class="method-source-code" id="get_url_breakup_graph_data-source">
+<pre>
+<span class="ruby-comment"># File lib/graph_controller_extensions/url_breakup_analytics.rb, line 25</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">get_url_breakup_graph_data</span>(<span class="ruby-identifier">start_time</span>, <span class="ruby-identifier">end_time</span>, <span class="ruby-identifier">app_id</span>, <span class="ruby-identifier">urls</span>)
+  <span class="ruby-identifier">url</span> = <span class="ruby-identifier">urls</span>[<span class="ruby-value">0</span>]
+  <span class="ruby-identifier">data_1</span>, <span class="ruby-identifier">url_name</span>, <span class="ruby-identifier">data_x</span>, <span class="ruby-identifier">data_y</span>, <span class="ruby-identifier">data_actual_time</span> = <span class="ruby-identifier">pie_data</span>(<span class="ruby-identifier">app_id</span>,<span class="ruby-node">&quot;#{url}-#{start_time}-#{end_time}&quot;</span>)
+  <span class="ruby-identifier">data_x</span> = <span class="ruby-identifier">data_x</span>
+  <span class="ruby-identifier">data_y</span> = <span class="ruby-identifier">data_y</span>
+  <span class="ruby-identifier">url_breakup_graph</span> = <span class="ruby-identifier">plot_graph</span>(<span class="ruby-node">&quot;graph/pie/#{app_id}?url=#{url}-#{start_time}-#{end_time}&quot;</span>, <span class="ruby-string">'pie'</span>)
+  <span class="ruby-keyword">return</span> <span class="ruby-identifier">data_x</span>, <span class="ruby-identifier">data_y</span>, <span class="ruby-identifier">url_breakup_graph</span>, <span class="ruby-identifier">data_actual_time</span>
+<span class="ruby-keyword">end</span></pre>
+            </div><!-- get_url_breakup_graph_data-source -->
+            
+          </div>
+
+          
+
+          
+        </div><!-- get_url_breakup_graph_data-method -->
+
+      
+        <div id="pie_data-method" class="method-detail ">
+          <a name="method-i-pie_data"></a>
+
+          
+          <div class="method-heading">
+            <span class="method-name">pie_data</span><span
+              class="method-args">(app_id, url_data)</span>
+            <span class="method-click-advice">click to toggle source</span>
+          </div>
+          
+
+          <div class="method-description">
+            
+            <p>This method gives the percentage time taken by a url in different parts
+like database and rendering etc.</p>
+            
+
+            
+            <div class="method-source-code" id="pie_data-source">
+<pre>
+<span class="ruby-comment"># File lib/graph_controller_extensions/url_breakup_analytics.rb, line 35</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">pie_data</span>(<span class="ruby-identifier">app_id</span>, <span class="ruby-identifier">url_data</span>)
+  <span class="ruby-identifier">data_str</span> = <span class="ruby-identifier">url_data</span>.<span class="ruby-identifier">split</span>(<span class="ruby-string">&quot;-&quot;</span>)
+  <span class="ruby-identifier">url_name</span> = <span class="ruby-identifier">data_str</span>[<span class="ruby-value">0</span>]
+  <span class="ruby-identifier">date_str</span> = <span class="ruby-identifier">data_str</span>[<span class="ruby-value">1</span>].<span class="ruby-identifier">split</span>(<span class="ruby-string">&quot;/&quot;</span>)
+  <span class="ruby-identifier">start_time</span> = <span class="ruby-constant">Time</span>.<span class="ruby-identifier">local</span>(<span class="ruby-identifier">date_str</span>[<span class="ruby-value">0</span>],<span class="ruby-identifier">date_str</span>[<span class="ruby-value">1</span>],<span class="ruby-identifier">date_str</span>[<span class="ruby-value">2</span>])
+  <span class="ruby-identifier">date_str</span> = <span class="ruby-identifier">data_str</span>[<span class="ruby-value">2</span>].<span class="ruby-identifier">split</span>(<span class="ruby-string">&quot;/&quot;</span>)
+  <span class="ruby-identifier">end_time</span> = <span class="ruby-constant">Time</span>.<span class="ruby-identifier">local</span>(<span class="ruby-identifier">date_str</span>[<span class="ruby-value">0</span>],<span class="ruby-identifier">date_str</span>[<span class="ruby-value">1</span>],<span class="ruby-identifier">date_str</span>[<span class="ruby-value">2</span>], <span class="ruby-string">'23'</span>, <span class="ruby-string">'59'</span>, <span class="ruby-string">'59'</span>)
+  
+  <span class="ruby-identifier">url_sample</span> = <span class="ruby-constant">UrlTimeSample</span>.<span class="ruby-identifier">get_url_data</span>(<span class="ruby-identifier">start_time</span>, <span class="ruby-identifier">end_time</span>, <span class="ruby-identifier">app_id</span>, <span class="ruby-identifier">url_name</span>)
+  
+  <span class="ruby-identifier">db_time</span> = <span class="ruby-identifier">round</span>((<span class="ruby-identifier">url_sample</span>[<span class="ruby-value">0</span>].<span class="ruby-identifier">db_time</span>.<span class="ruby-identifier">to_f</span>*<span class="ruby-value">100</span><span class="ruby-operator">/</span><span class="ruby-identifier">url_sample</span>[<span class="ruby-value">0</span>].<span class="ruby-identifier">total_time</span>.<span class="ruby-identifier">to_f</span>).<span class="ruby-identifier">to_f</span>)
+  <span class="ruby-identifier">rendering_time</span> = <span class="ruby-identifier">round</span>(<span class="ruby-identifier">url_sample</span>[<span class="ruby-value">0</span>].<span class="ruby-identifier">rendering_time</span>.<span class="ruby-identifier">to_f</span> * <span class="ruby-value">100</span> <span class="ruby-operator">/</span> <span class="ruby-identifier">url_sample</span>[<span class="ruby-value">0</span>].<span class="ruby-identifier">total_time</span>.<span class="ruby-identifier">to_f</span>)
+  <span class="ruby-identifier">remaining_time</span> = <span class="ruby-identifier">round</span>(<span class="ruby-value">100</span> <span class="ruby-operator">-</span> <span class="ruby-identifier">db_time</span><span class="ruby-operator">-</span><span class="ruby-identifier">rendering_time</span>)
+  <span class="ruby-identifier">data_x</span> = <span class="ruby-constant">Array</span>.<span class="ruby-identifier">new</span>
+  <span class="ruby-identifier">data_y</span> = <span class="ruby-constant">Array</span>.<span class="ruby-identifier">new</span>
+  <span class="ruby-identifier">data_actual_time</span> = <span class="ruby-constant">Array</span>.<span class="ruby-identifier">new</span>
+  <span class="ruby-identifier">data_1</span> = <span class="ruby-constant">Array</span>.<span class="ruby-identifier">new</span>
+  <span class="ruby-keyword">if</span> <span class="ruby-identifier">db_time</span> <span class="ruby-operator">&gt;</span> <span class="ruby-value">0</span>
+    <span class="ruby-identifier">url_sample_ids</span> = <span class="ruby-constant">UrlTimeSample</span>.<span class="ruby-identifier">get_url_id</span>(<span class="ruby-identifier">start_time</span>, <span class="ruby-identifier">end_time</span>, <span class="ruby-identifier">url_name</span>, <span class="ruby-identifier">app_id</span>)
+    <span class="ruby-identifier">url_id</span> = <span class="ruby-constant">Array</span>.<span class="ruby-identifier">new</span>
+    <span class="ruby-identifier">url_sample_ids</span>.<span class="ruby-identifier">each</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">url_sample_id</span><span class="ruby-operator">|</span>
+      <span class="ruby-identifier">url_id</span> <span class="ruby-operator">&lt;&lt;</span> <span class="ruby-identifier">url_sample_id</span>.<span class="ruby-identifier">id</span>
+    <span class="ruby-keyword">end</span>
+    <span class="ruby-identifier">url_breakup_sample</span> = <span class="ruby-constant">UrlBreakupTimeSample</span>.<span class="ruby-identifier">get_url_breakup_sample_data</span>(<span class="ruby-identifier">url_id</span>)
+    <span class="ruby-identifier">url_breakup_sample</span>.<span class="ruby-identifier">each</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">url</span><span class="ruby-operator">|</span>
+      <span class="ruby-identifier">time</span> = (<span class="ruby-identifier">url</span>.<span class="ruby-identifier">time_spent</span>.<span class="ruby-identifier">to_f</span>*<span class="ruby-value">100</span> <span class="ruby-operator">/</span> <span class="ruby-identifier">url_sample</span>[<span class="ruby-value">0</span>].<span class="ruby-identifier">total_time</span>.<span class="ruby-identifier">to_f</span>).<span class="ruby-identifier">to_f</span>
+      <span class="ruby-identifier">time</span> = <span class="ruby-identifier">round</span>(<span class="ruby-identifier">time</span>)
+      <span class="ruby-identifier">data_x</span> <span class="ruby-operator">&lt;&lt;</span> <span class="ruby-identifier">url</span>.<span class="ruby-identifier">method_name</span>
+      <span class="ruby-identifier">data_y</span> <span class="ruby-operator">&lt;&lt;</span> <span class="ruby-identifier">time</span>
+      <span class="ruby-identifier">actual_time</span> = <span class="ruby-identifier">round</span>(<span class="ruby-identifier">url</span>.<span class="ruby-identifier">time_spent</span>.<span class="ruby-identifier">to_f</span> <span class="ruby-operator">/</span> <span class="ruby-value">1000</span>)
+      <span class="ruby-identifier">data_actual_time</span> <span class="ruby-operator">&lt;&lt;</span> <span class="ruby-identifier">actual_time</span>
+      <span class="ruby-identifier">method_name</span> = <span class="ruby-identifier">data_x</span>.<span class="ruby-identifier">length</span>.<span class="ruby-identifier">to_s</span> <span class="ruby-operator">+</span> <span class="ruby-string">&quot;. &quot;</span> <span class="ruby-operator">+</span> <span class="ruby-identifier">url</span>.<span class="ruby-identifier">method_name</span>
+      <span class="ruby-keyword">if</span> <span class="ruby-identifier">method_name</span>.<span class="ruby-identifier">length</span> <span class="ruby-operator">&gt;</span> <span class="ruby-value">20</span>
+        <span class="ruby-identifier">method_name</span> = <span class="ruby-identifier">method_name</span>[<span class="ruby-value">0</span><span class="ruby-operator">..</span><span class="ruby-value">16</span>] <span class="ruby-operator">+</span> <span class="ruby-string">&quot;...&quot;</span>
+      <span class="ruby-keyword">end</span>
+      <span class="ruby-comment">#data_1 &lt;&lt; OFC2::PieValue.new(:value =&gt; time, :label =&gt; url.method_name, :tip =&gt; &quot;#{actual_time} sec&quot;)</span>
+      <span class="ruby-identifier">data_1</span> <span class="ruby-operator">&lt;&lt;</span> <span class="ruby-constant">OFC2</span><span class="ruby-operator">::</span><span class="ruby-constant">PieValue</span>.<span class="ruby-identifier">new</span>(<span class="ruby-value">:value</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">time</span>, <span class="ruby-value">:label</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">method_name</span>, <span class="ruby-value">:tip</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-node">&quot;#{actual_time} sec&quot;</span>)
+    <span class="ruby-keyword">end</span>
+    <span class="ruby-identifier">data_x</span> <span class="ruby-operator">&lt;&lt;</span> <span class="ruby-string">&quot;Rendering Time&quot;</span>
+    <span class="ruby-identifier">data_y</span> <span class="ruby-operator">&lt;&lt;</span> <span class="ruby-identifier">rendering_time</span>
+    <span class="ruby-identifier">actual_time</span> = <span class="ruby-identifier">round</span>(<span class="ruby-identifier">url_sample</span>[<span class="ruby-value">0</span>].<span class="ruby-identifier">rendering_time</span>.<span class="ruby-identifier">to_f</span><span class="ruby-operator">/</span><span class="ruby-value">1000</span>)
+    <span class="ruby-identifier">data_actual_time</span> <span class="ruby-operator">&lt;&lt;</span> <span class="ruby-identifier">actual_time</span>
+    <span class="ruby-identifier">data_1</span> <span class="ruby-operator">&lt;&lt;</span> <span class="ruby-constant">OFC2</span><span class="ruby-operator">::</span><span class="ruby-constant">PieValue</span>.<span class="ruby-identifier">new</span>(<span class="ruby-value">:value</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">rendering_time</span>, <span class="ruby-value">:label</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-string">'Rendering Time'</span>, <span class="ruby-value">:tip</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-node">&quot;#{actual_time} sec&quot;</span>)
+    <span class="ruby-identifier">data_x</span> <span class="ruby-operator">&lt;&lt;</span> <span class="ruby-string">&quot;Remaining Time&quot;</span>
+    <span class="ruby-identifier">data_y</span> <span class="ruby-operator">&lt;&lt;</span> <span class="ruby-identifier">remaining_time</span>
+    <span class="ruby-identifier">actual_time</span> = <span class="ruby-identifier">round</span>((<span class="ruby-identifier">url_sample</span>[<span class="ruby-value">0</span>].<span class="ruby-identifier">total_time</span>.<span class="ruby-identifier">to_f</span><span class="ruby-operator">-</span><span class="ruby-identifier">url_sample</span>[<span class="ruby-value">0</span>].<span class="ruby-identifier">rendering_time</span>.<span class="ruby-identifier">to_f</span><span class="ruby-operator">-</span><span class="ruby-identifier">url_sample</span>[<span class="ruby-value">0</span>].<span class="ruby-identifier">db_time</span>.<span class="ruby-identifier">to_f</span>)<span class="ruby-operator">/</span><span class="ruby-value">1000</span>)
+    <span class="ruby-identifier">data_actual_time</span> <span class="ruby-operator">&lt;&lt;</span> <span class="ruby-identifier">actual_time</span>
+    <span class="ruby-identifier">data_1</span> <span class="ruby-operator">&lt;&lt;</span> <span class="ruby-constant">OFC2</span><span class="ruby-operator">::</span><span class="ruby-constant">PieValue</span>.<span class="ruby-identifier">new</span>(<span class="ruby-value">:value</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">remaining_time</span>, <span class="ruby-value">:label</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-string">'Remaining Time'</span>, <span class="ruby-value">:tip</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-node">&quot;#{actual_time} sec&quot;</span>)
+  <span class="ruby-keyword">else</span>
+    <span class="ruby-identifier">data_x</span> <span class="ruby-operator">&lt;&lt;</span> <span class="ruby-string">&quot;Rendering Time&quot;</span>
+    <span class="ruby-identifier">data_y</span> <span class="ruby-operator">&lt;&lt;</span> <span class="ruby-identifier">rendering_time</span>
+    <span class="ruby-identifier">actual_time</span> = <span class="ruby-identifier">round</span>(<span class="ruby-identifier">url_sample</span>[<span class="ruby-value">0</span>].<span class="ruby-identifier">rendering_time</span>.<span class="ruby-identifier">to_f</span><span class="ruby-operator">/</span><span class="ruby-value">1000</span>)
+    <span class="ruby-identifier">data_actual_time</span> <span class="ruby-operator">&lt;&lt;</span> <span class="ruby-identifier">actual_time</span>
+    <span class="ruby-identifier">data_1</span> <span class="ruby-operator">&lt;&lt;</span> <span class="ruby-constant">OFC2</span><span class="ruby-operator">::</span><span class="ruby-constant">PieValue</span>.<span class="ruby-identifier">new</span>(<span class="ruby-value">:value</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">rendering_time</span>, <span class="ruby-value">:label</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-string">'Rendering Time'</span>, <span class="ruby-value">:tip</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-node">&quot;#{actual_time} sec&quot;</span>)
+    <span class="ruby-identifier">data_x</span> <span class="ruby-operator">&lt;&lt;</span> <span class="ruby-string">&quot;Remaining Time&quot;</span>
+    <span class="ruby-identifier">data_y</span> <span class="ruby-operator">&lt;&lt;</span> <span class="ruby-identifier">remaining_time</span>
+    <span class="ruby-identifier">actual_time</span> = <span class="ruby-identifier">round</span>((<span class="ruby-identifier">url_sample</span>[<span class="ruby-value">0</span>].<span class="ruby-identifier">total_time</span>.<span class="ruby-identifier">to_f</span><span class="ruby-operator">-</span><span class="ruby-identifier">url_sample</span>[<span class="ruby-value">0</span>].<span class="ruby-identifier">rendering_time</span>.<span class="ruby-identifier">to_f</span><span class="ruby-operator">-</span><span class="ruby-identifier">url_sample</span>[<span class="ruby-value">0</span>].<span class="ruby-identifier">db_time</span>.<span class="ruby-identifier">to_f</span>)<span class="ruby-operator">/</span><span class="ruby-value">1000</span>)
+    <span class="ruby-identifier">data_actual_time</span> <span class="ruby-operator">&lt;&lt;</span> <span class="ruby-identifier">actual_time</span>
+    <span class="ruby-identifier">data_1</span> <span class="ruby-operator">&lt;&lt;</span> <span class="ruby-constant">OFC2</span><span class="ruby-operator">::</span><span class="ruby-constant">PieValue</span>.<span class="ruby-identifier">new</span>(<span class="ruby-value">:value</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">remaining_time</span>, <span class="ruby-value">:label</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-string">'Remaining Time'</span>, <span class="ruby-value">:tip</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-node">&quot;#{actual_time} sec&quot;</span>)
+  <span class="ruby-keyword">end</span>
+  <span class="ruby-keyword">return</span> <span class="ruby-identifier">data_1</span>, <span class="ruby-identifier">url_name</span>, <span class="ruby-identifier">data_x</span>, <span class="ruby-identifier">data_y</span>, <span class="ruby-identifier">data_actual_time</span>
+<span class="ruby-keyword">end</span></pre>
+            </div><!-- pie_data-source -->
+            
+          </div>
+
+          
+
+          
+        </div><!-- pie_data-method -->
+
+      
+        <div id="refresh_pie_graph-method" class="method-detail ">
+          <a name="method-i-refresh_pie_graph"></a>
+
+          
+          <div class="method-heading">
+            <span class="method-name">refresh_pie_graph</span><span
+              class="method-args">()</span>
+            <span class="method-click-advice">click to toggle source</span>
+          </div>
+          
+
+          <div class="method-description">
+            
+            <p>This method is called when the refresh button is clicked from the
+url_breakdown graph.</p>
+            
+
+            
+            <div class="method-source-code" id="refresh_pie_graph-source">
+<pre>
+<span class="ruby-comment"># File lib/graph_controller_extensions/url_breakup_analytics.rb, line 99</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">refresh_pie_graph</span>
+  <span class="ruby-identifier">app_id</span> = <span class="ruby-identifier">params</span>[<span class="ruby-value">:app_id</span>]
+  <span class="ruby-identifier">get_url_breakdown_data</span>(<span class="ruby-identifier">app_id</span>)
+<span class="ruby-keyword">end</span></pre>
+            </div><!-- refresh_pie_graph-source -->
+            
+          </div>
+
+          
+
+          
+        </div><!-- refresh_pie_graph-method -->
+
+      
+        <div id="round-method" class="method-detail ">
+          <a name="method-i-round"></a>
+
+          
+          <div class="method-heading">
+            <span class="method-name">round</span><span
+              class="method-args">(value)</span>
+            <span class="method-click-advice">click to toggle source</span>
+          </div>
+          
+
+          <div class="method-description">
+            
+            <p>This function rounds of the float upto 2 decimal places</p>
+            
+
+            
+            <div class="method-source-code" id="round-source">
+<pre>
+<span class="ruby-comment"># File lib/graph_controller_extensions/url_breakup_analytics.rb, line 139</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">round</span>(<span class="ruby-identifier">value</span>)
+  <span class="ruby-keyword">return</span> <span class="ruby-identifier">sprintf</span>(<span class="ruby-string">&quot;%0.2f&quot;</span>,<span class="ruby-identifier">value</span>).<span class="ruby-identifier">to_f</span>
+<span class="ruby-keyword">end</span></pre>
+            </div><!-- round-source -->
+            
+          </div>
+
+          
+
+          
+        </div><!-- round-method -->
+
+      
+      </div><!-- public-instance-method-details -->
+    
+    </div><!-- 5Buntitled-5D -->
+  
+
+  </div><!-- documentation -->
+
+  <div id="validator-badges">
+    <p><small><a href="http://validator.w3.org/check/referer">[Validate]</a></small></p>
+    <p><small>Generated with the <a href="http://deveiate.org/projects/Darkfish-Rdoc/">Darkfish
+      Rdoc Generator</a> 2</small>.</p>
+  </div>
+
+</body>
+</html>
+
