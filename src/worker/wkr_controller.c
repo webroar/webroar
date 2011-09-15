@@ -105,7 +105,7 @@ int connect_to_head(wkr_t *w){
     
     memset(&addr, 0, sizeof(addr));
     addr.sun_family = AF_UNIX;
-    strcpy(addr.sun_path, w->tmp->ctl_path.str);
+    memcpy(addr.sun_path, w->tmp->ctl_path.str, w->tmp->ctl_path.len+1);
     
     int len = sizeof(addr.sun_family)+strlen(addr.sun_path);
 #ifdef __APPLE__

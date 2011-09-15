@@ -241,7 +241,7 @@ int wr_validate_app_host_name(const char *host_name, char *err_msg) {
     LOG_ERROR(WARN,"Length of host name %s exceeds 253", host_name);
     goto err_ret;
   }
-  strcpy(tmp_host, host_name);
+  memcpy(tmp_host, host_name, len+1);
   //there should be a label between two consicutive dot(.)
   if(strstr(tmp_host,"..")) {
     if(err_msg)
@@ -1014,7 +1014,7 @@ config_application_list_t* wr_conf_app_read(const char *app_name, char* err_msg,
       }
     } else {
       if(err_msg)
-        strcpy(err_msg, "Could not read Admin Panel");
+        memcpy(err_msg, "Could not read Admin Panel", strlen("Could not read Admin Panel")+1);
     }
     return app;
   }else if(strcmp(app_name, Config->Application.Static_server.name.str) == 0){
@@ -1031,7 +1031,7 @@ config_application_list_t* wr_conf_app_read(const char *app_name, char* err_msg,
       }
     } else {
       if(err_msg)
-        strcpy(err_msg, "Could not read Static Server");
+        memcpy(err_msg, "Could not read Static Server", strlen("Could not read Static Server")+1);
     }
     return app; 
   }
@@ -1040,7 +1040,8 @@ config_application_list_t* wr_conf_app_read(const char *app_name, char* err_msg,
 
   if(!root) {
     LOG_ERROR(SEVERE, "Config file found with erroneous entries. Please correct it.");
-    strcpy(err_msg, "Config file found with erroneous entries. Please correct it.");
+    memcpy(err_msg, "Config file found with erroneous entries. Please correct it.", 
+           strlen("Config file found with erroneous entries. Please correct it.") + 1);
     return NULL;
   }
 

@@ -239,14 +239,16 @@ void wr_app_wkr_remove_cb(struct ev_loop *loop, ev_timer *w, int revents) {
       fclose(wfp);
 	}
 #else
-    sprintf(pid_c,"%d",tmp_worker->pid);
-    strcpy(pid_list, pid_c);
+    int len = sprintf(pid_c,"%d",tmp_worker->pid);
+    memcpy(pid_list, pid_c, len + 1);
     i++;
+    int tmp_len;
     for(;i < app->q_workers->q_count ; i++) {
       index = (app->q_workers->q_front + i) % app->q_workers->q_max_size;
       tmp_worker = (wr_wkr_t*)app->q_workers->q_elements[index];
-      sprintf(pid_c,",%d", tmp_worker->pid);
-      strcat(pid_list, pid_c);
+      tmp_len = sprintf(pid_c,",%d", tmp_worker->pid);
+      memcpy(pid_list + len, pid_c, tmp_len + 1);
+      len += tmp_len;
     }
     sprintf(cmd,"ps -o pid --sort=rss -p %s | tail -n1 | cut -c-6 > %s",pid_list, Config->Server.File.high_rss.str);
     LOG_DEBUG(DEBUG,"Formed command to remove worker is %s",cmd);

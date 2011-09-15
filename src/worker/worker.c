@@ -228,8 +228,7 @@ int listen_unix_socket(wkr_t* w) {
   LOG_DEBUG(DEBUG,"connect_unix_socket() socket name is %s",w->sock_path.str);
 
   addr.sun_family = AF_UNIX;
-  //strcpy(addr.sun_path,w->sock_path);
-  strcpy(addr.sun_path,w->sock_path.str);
+  memcpy(addr.sun_path,w->sock_path.str,w->sock_path.len+1);
   unlink(addr.sun_path);
   LOG_DEBUG(DEBUG,"connect_unix_socket() Binding worker at socket path %s",w->sock_path.str);
 

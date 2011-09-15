@@ -70,22 +70,24 @@ wr_ctl_msg_t* wr_ctl_msg_validate(scgi_t* request, wr_ctl_t* ctl) {
 
   val = (char*) scgi_header_value_get(request,"COMPONENT");
   if(val == NULL) {
-    strcpy(error,"COMPONENT missing.");
+    memcpy(error,"COMPONENT missing.", strlen("COMPONENT missing.")+1);
     goto ctl_msg_err;
   }
   scgi_header_add(ctl->scgi, "COMPONENT", strlen("COMPONENT"), val, strlen(val));
   if(strcmp(val,"APPLICATION")==0) {
     val = (char*) scgi_header_value_get(request,"METHOD");
     if(val == NULL) {
-      strcpy(error,"METHOD missing.");
+      memcpy(error,"METHOD missing.", strlen("METHOD missing.")+1);
       goto ctl_msg_err;
     }
 
     scgi_header_add(ctl->scgi, "METHOD", strlen("METHOD"), val, strlen(val));
     
     ctl_msg->msg.app.app_name.str = (char*) scgi_header_value_get(request,"APP_NAME");
+    if(ctl_msg->msg.app.app_name.str)
+      ctl_msg->msg.app.app_name.len = strlen(ctl_msg->msg.app.app_name.str);
     if(ctl_msg->msg.app.app_name.str == NULL) {
-      strcpy(error,"Application name is missing.");
+      memcpy(error,"Application name is missing.", strlen("Application name is missing.")+1);
       goto ctl_msg_err;
     }
 
@@ -97,13 +99,13 @@ wr_ctl_msg_t* wr_ctl_msg_validate(scgi_t* request, wr_ctl_t* ctl) {
     } else if(strcmp(val,"RELOAD")==0) {
       ctl->type = WR_CTL_MSG_APPLICATION_RELOAD;
     }else {
-      strcpy(error,"Invalid METHOD.");
+      memcpy(error, "Invalid METHOD.", strlen("Invalid METHOD.")+1);
       goto ctl_msg_err;
     }
   } else if(strcmp(val,"WORKER")==0) {
     val = (char*) scgi_header_value_get(request,"METHOD");
     if(val == NULL) {
-      strcpy(error,"METHOD missing.");
+      memcpy(error, "METHOD missing.", strlen("METHOD missing.")+1);
       goto ctl_msg_err;
     }
 
@@ -118,15 +120,25 @@ wr_ctl_msg_t* wr_ctl_msg_validate(scgi_t* request, wr_ctl_t* ctl) {
       ctl->type = WR_CTL_MSG_WORKER_ADD;
 
       ctl_msg->msg.wkr.app_name.str  =   (char*) scgi_header_value_get(request,"APPLICATION");
+      if(ctl_msg->msg.wkr.app_name.str)
+        ctl_msg->msg.wkr.app_name.len = strlen(ctl_msg->msg.wkr.app_name.str);
       ctl_msg->msg.wkr.pid.str =   (char*) scgi_header_value_get(request,"PID");
+      if(ctl_msg->msg.wkr.pid.str)
+        ctl_msg->msg.wkr.pid.len = strlen(ctl_msg->msg.wkr.pid.str);
       ctl_msg->msg.wkr.port.str  =   (char*) scgi_header_value_get(request,"PORT");
+      if(ctl_msg->msg.wkr.port.str)
+        ctl_msg->msg.wkr.port.len = strlen(ctl_msg->msg.wkr.port.str);
       ctl_msg->msg.wkr.sock_path.str  =   (char*) scgi_header_value_get(request,"SOCK_PATH");
+      if(ctl_msg->msg.wkr.sock_path.str)
+        ctl_msg->msg.wkr.sock_path.len = strlen(ctl_msg->msg.wkr.sock_path.str);
       ctl_msg->msg.wkr.uds.str  =   (char*) scgi_header_value_get(request,"UDS");
+      if(ctl_msg->msg.wkr.uds.str)
+        ctl_msg->msg.wkr.uds.len = strlen(ctl_msg->msg.wkr.uds.str);
 
       if(ctl_msg->msg.wkr.app_name.str == NULL ||
           ctl_msg->msg.wkr.pid.str == NULL ||
           ctl_msg->msg.wkr.uds.str == NULL) {
-        strcpy(error,"Missing some headers.");
+        memcpy(error, "Missing some headers.", strlen("Missing some headers.")+1);
         goto ctl_msg_err;
       }
 
@@ -137,26 +149,38 @@ wr_ctl_msg_t* wr_ctl_msg_validate(scgi_t* request, wr_ctl_t* ctl) {
     } else if(strcmp(val,"CONF_REQ") == 0){
       ctl->type = WR_CTL_MSG_WORKER_CONF_REQ;
       ctl_msg->msg.wkr.app_name.str  =   (char*) scgi_header_value_get(request,"APPLICATION");
+      if(ctl_msg->msg.wkr.app_name.str)
+        ctl_msg->msg.wkr.app_name.len = strlen(ctl_msg->msg.wkr.app_name.str);
     } else if(strcmp(val,"ERROR") == 0) {
       ctl->type = WR_CTL_MSG_WORKER_ADD_ERROR;
       ctl_msg->msg.wkr.app_name.str  =   (char*) scgi_header_value_get(request,"APPLICATION");
+      if(ctl_msg->msg.wkr.app_name.str)
+        ctl_msg->msg.wkr.app_name.len = strlen(ctl_msg->msg.wkr.app_name.str);
       ctl_msg->msg.wkr.pid.str =   (char*) scgi_header_value_get(request,"PID");
+      if(ctl_msg->msg.wkr.pid.str)
+        ctl_msg->msg.wkr.pid.len = strlen(ctl_msg->msg.wkr.pid.str);
       ctl_msg->msg.wkr.port.str  =   (char*) scgi_header_value_get(request,"PORT");
+      if(ctl_msg->msg.wkr.port.str)
+        ctl_msg->msg.wkr.port.len = strlen(ctl_msg->msg.wkr.port.str);
       ctl_msg->msg.wkr.sock_path.str  =   (char*) scgi_header_value_get(request,"SOCK_PATH");
+      if(ctl_msg->msg.wkr.sock_path.str)
+        ctl_msg->msg.wkr.sock_path.len = strlen(ctl_msg->msg.wkr.sock_path.str);
       ctl_msg->msg.wkr.uds.str  =   (char*) scgi_header_value_get(request,"UDS");
+      if(ctl_msg->msg.wkr.uds.str)
+        ctl_msg->msg.wkr.uds.len = strlen(ctl_msg->msg.wkr.uds.str);
 
       if(ctl_msg->msg.wkr.app_name.str == NULL ||
           ctl_msg->msg.wkr.pid.str == NULL ||
           ctl_msg->msg.wkr.uds.str == NULL) {
-        strcpy(error,"Missing some headers.");
+        memcpy(error, "Missing some headers.", strlen("Missing some headers.")+1);
         goto ctl_msg_err;
       }
     }else {
-      strcpy(error,"Invalid METHOD.");
+      memcpy(error,"Invalid METHOD.", strlen("Invalid METHOD.")+1);
       goto ctl_msg_err;
     }
   } else {
-    strcpy(error,"Invalid COMPONENT.");
+    memcpy(error,"Invalid COMPONENT.", strlen("Invalid COMPONENT.")+1);
     goto ctl_msg_err;
   }
 
@@ -486,7 +510,7 @@ int wr_ctl_init_on_uds(wr_svr_t *server) {
 
   memset(&addr, 0, sizeof(addr));
   addr.sun_family = AF_UNIX;
-  strcpy(addr.sun_path,server->ctl->sock_path.str);
+  memcpy(addr.sun_path,server->ctl->sock_path.str, server->ctl->sock_path.len+1);
   unlink(addr.sun_path);
   len = sizeof(addr.sun_family) + strlen(addr.sun_path);
 

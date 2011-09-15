@@ -148,10 +148,10 @@ void crash_handler(int sig) {
     int rv, sid;
     signal(SIGCHLD, SIG_DFL);    
     
-    sprintf(core_file_name, "/tmp/webroar-head");
+    memcpy(core_file_name, "/tmp/webroar-head", strlen("/tmp/webroar-head")+1);
     if ( get_timestamp(timestamp) == 0 ) {
-      strcat(core_file_name, "-");
-      strcat(core_file_name, timestamp);
+      memcpy(core_file_name + strlen(core_file_name), "-", 2);
+      memcpy(core_file_name + strlen(core_file_name), timestamp, strlen(timestamp)+1);
     }
 #ifdef __APPLE__
     sprintf(cmd, "gcore -c %s %ld", core_file_name, (long) getppid() );
@@ -189,10 +189,10 @@ void crash_handler(int sig) {
   // get void*'s for all entries on the stack
   size = backtrace(array, Config->Server.stack_trace);
   bt_symbols = backtrace_symbols(array, size);
-  strcpy(bt_string, "\n");
+  memcpy(bt_string, "\n", 2);
   for(i = 0; i < size; i++) {
-    strcat(bt_string, bt_symbols[i]);
-    strcat(bt_string, "\n");
+    memcpy(bt_string + strlen(bt_string), bt_symbols[i], strlen(bt_symbols[i])+1);
+    memcpy(bt_string + strlen(bt_string), "\n", 2);
   }
   LOG_ERROR(FATAL, "Obtained %zd stack frames.%s", size, bt_string);
   free(bt_symbols);

@@ -126,7 +126,7 @@ char* get_file_ext(const char *path) {
 void set_expires_time(static_server_t * s, char *ext, long int expires) {
   int index;
   char tmp_ext[STR_SIZE64], *p;
-  strcpy(tmp_ext, ext);
+  memcpy(tmp_ext, ext, strlen(ext)+1);
   p = tmp_ext;
   while(*p){
     *p = wr_tolower(*p);
@@ -159,7 +159,7 @@ void set_expires_time(static_server_t * s, char *ext, long int expires) {
 static_file_t* get_mime_type(static_server_t *s) {
   char *ext = get_file_ext(s->path);
   char tmp_ext[STR_SIZE64], *p;
-  strcpy(tmp_ext, ext);
+  memcpy(tmp_ext, ext, strlen(ext)+1);
   p = tmp_ext;
   while(*p){
     *p = wr_tolower(*p);
@@ -266,8 +266,8 @@ int create_dictionary(static_server_t *s, const char *mapping_file, long int exp
 
   while (node) {
     ext = wr_malloc(static_file_t);
-    strcpy(ext->ext, node->key);
-    strcpy(ext->mime_type, node->value);
+    memcpy(ext->ext, node->key, strlen(node->key)+1);
+    memcpy(ext->mime_type, node->value, strlen(node->value)+1);
     ext->expires = expires;
     int index;
     if(ext->ext[0] >= '0' && ext->ext[0] <= '9'){
@@ -291,8 +291,8 @@ int create_dictionary(static_server_t *s, const char *mapping_file, long int exp
 
   // Set default mime type
   ext = wr_malloc(static_file_t);
-  strcpy(ext->ext, "txt");
-  strcpy(ext->mime_type, "text/plain");
+  memcpy(ext->ext, "txt", strlen("txt")+1);
+  memcpy(ext->mime_type, "text/plain", strlen("text/plain")+1);
   ext->expires = expires;
   ext->next = NULL;
   s->map[MAP_SIZE] = ext;

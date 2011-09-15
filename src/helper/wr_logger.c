@@ -81,9 +81,9 @@ int initialize_logger(const char*file_name, const char *server, const char *vers
   null_check(log_file_path);
 
   if(file_name!=NULL) {
-    strcpy(log_file_path, WR_LOG_DIR);
-    strcat(log_file_path, PATH_SEPARATOR);
-    strcat(log_file_path, file_name);
+    memcpy(log_file_path, WR_LOG_DIR, strlen(WR_LOG_DIR)+1);
+    memcpy(log_file_path + strlen(log_file_path), PATH_SEPARATOR, strlen(PATH_SEPARATOR)+ 1);
+    memcpy(log_file_path + strlen(log_file_path), file_name, strlen(file_name)+1);
   } else {
     return -1;
   }
@@ -92,8 +92,8 @@ int initialize_logger(const char*file_name, const char *server, const char *vers
   if(log_fp==NULL) {
     printf("Error in opening log file %s:%s. Are you root? Trying to open in PWD.\n",log_file_path,strerror(errno));
     getcwd(log_file_path, 512);
-    strcat(log_file_path, PATH_SEPARATOR);
-    strcat(log_file_path, file_name);
+    memcpy(log_file_path + strlen(log_file_path), PATH_SEPARATOR, strlen(PATH_SEPARATOR)+1);
+    memcpy(log_file_path + strlen(log_file_path), file_name, strlen(file_name)+1);
     log_fp=fopen(log_file_path,"a+");
     if(log_fp == NULL) {
       printf("Log file opening in PWD also failed.\n");

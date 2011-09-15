@@ -462,7 +462,7 @@ wr_wkr_create_t* wr_wkr_create_init(wr_svr_t *server, config_application_list_t 
   sprintf(worker->log_level, "%d", app_conf->log_level);
   
   if(Config->Server.flag & SERVER_UDS_SUPPORT) {
-    strcpy(worker->controller_path, server->ctl->sock_path.str);
+    memcpy(worker->controller_path, server->ctl->sock_path.str, server->ctl->sock_path.len + 1);
   } else {
     sprintf(worker->controller_path, "%d", server->ctl->port);
   }
@@ -548,7 +548,8 @@ int wr_wkr_connect_uds(wr_wkr_t* worker, const wr_ctl_msg_t *ctl_msg){
   memset(&addr, 0, sizeof(addr));
   
   addr.sun_family = AF_UNIX;
-  strcpy(addr.sun_path,ctl_msg->msg.wkr.sock_path.str);
+  LOG_DEBUG(3,"str = %s, len = %d", ctl_msg->msg.wkr.sock_path.str, ctl_msg->msg.wkr.sock_path.len);
+  memcpy(addr.sun_path, ctl_msg->msg.wkr.sock_path.str, ctl_msg->msg.wkr.sock_path.len);
   len = sizeof(addr.sun_family) + strlen(addr.sun_path);
   
 #ifdef __APPLE__

@@ -36,7 +36,7 @@
 /** Macro definitions */
 
 #define STR_NEW(new, str, len) do { new = (char*) malloc(sizeof(char)*(len+1));\
-  strcpy(new, str); } while(0);
+  memcpy(new, str, len); new[len] = 0; } while(0);
 
 typedef enum type_e {
   TYPE_NONE = 0, TYPE_VALUE, TYPE_PAIR, TYPE_LIST, TYPE_ARRAY

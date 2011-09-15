@@ -200,7 +200,7 @@ int init_ruby_interpreter(wkr_t *w) {
     retval = -1;
     goto err;
   }
-  strcpy(v[0],"webroar-worker");
+  memcpy(v[0],"webroar-worker", strlen("webroar-worker")+1);
 
   v[1] =  (char*) malloc(sizeof(char)*(Config->Worker.File.app_loader.len +1));
   if(!v[1]) {
@@ -208,7 +208,7 @@ int init_ruby_interpreter(wkr_t *w) {
     retval = -1;
     goto err;
   }
-  strcpy(v[1], Config->Worker.File.app_loader.str);
+  memcpy(v[1], Config->Worker.File.app_loader.str, Config->Worker.File.app_loader.len+1);
 
   //RUBY_INIT_STACK;
   ruby_init();
