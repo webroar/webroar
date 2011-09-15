@@ -22,7 +22,7 @@ module Webroar
   module Command
     HELP =%{
   Usage:
-    webroar [-v | --version] [-h | --version] COMMAND [ARGS]
+    webroar [-v | --version] [-h | --help] COMMAND [ARGS]
 
   The available webroar commands are:
     install       Install the server
