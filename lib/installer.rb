@@ -240,6 +240,12 @@ module Webroar
       # Start test cases
       def test(options)  # run test-suite comprises of unit test, functional test, admin-panel test, load test
         return -1 unless User.permitted?
+
+        unless (File.exist?(File.join(WEBROAR_BIN_DIR,"webroar-head")) and File.exist?(File.join(WEBROAR_BIN_DIR,"webroar-worker")))
+          puts "WebROaR is not installed on this machine."
+          install(options)
+        end
+
         @options = options
 
         # stopping the server.. its get started on installation.
