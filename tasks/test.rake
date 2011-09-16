@@ -26,20 +26,7 @@ SPEC_DIR = File.join(WEBROAR_ROOT,'test','spec')
 TEST_DIR = File.join(WEBROAR_ROOT, 'test')
 
 DEBUG_LOG_DIR = File.join(TEST_DIR,'debug_log')
-ALL_SPECS = FileList[File.join(SPEC_DIR,'*_spec.rb')].exclude("conditional_spec.rb")
-#ALL_SPECS = FileList[File.join(SPEC_DIR,'http_spec.rb')]
-#ALL_SPECS = FileList[File.join(SPEC_DIR,'*_spec.rb')].exclude(
-#File.join(SPEC_DIR,'host_name_spec.rb'),
-#File.join(SPEC_DIR,'connection_keep_alive_spec.rb'),
-#File.join(SPEC_DIR,'webroar_command_spec.rb'),
-#File.join(SPEC_DIR,'content_encoding_spec.rb'),
-#File.join(SPEC_DIR,'heart_beat_spec.rb'),
-#File.join(SPEC_DIR,'http_request_parser_spec.rb'),
-#File.join(SPEC_DIR, 'access_log_spec.rb'),
-#File.join(SPEC_DIR, 'conditional_spec.rb'),
-#File.join(SPEC_DIR, 'http_spec.rb'),
-#File.join(SPEC_DIR, 'analytics_spec.rb')
-#)
+ALL_SPECS = FileList[File.join(SPEC_DIR,'*_spec.rb')]
 
 test_flag = 1
 total = 0
