@@ -1,3 +1,7 @@
+//////////////////////
+Syntax to generate asciidoc.
+asciidoc -a toc -a numbered -a toclevels=3 -a icons user-guide.txt
+//////////////////////
 = WebROaR User Guide =
 
 == Introduction ==
@@ -30,9 +34,9 @@ Ruby on Rails applications.
 
 == Supported Operating Systems ==
 
-WebROaR has been tested on Ubuntu 8.10/9.04/9.10/10.04/10.10, Debian 5 (64 Bit), 
-Mac OS X (v10.5 & v10.6), Arch Linux 2009.08 and Cent OS 5.2. Basically, it 
-should be able to run on any *IX OS.
+WebROaR has been tested on Ubuntu 8.10/9.04/9.10/10.04/10.10/11.04, 
+Debian 5 (64 Bit), Mac OS X (v10.5 & v10.6), Arch Linux 2009.08 and Cent OS 5.2. 
+Basically, it should be able to run on any *IX OS.
 
 Currently it does not support Microsoft(R) Windows.
 
@@ -535,7 +539,7 @@ tests:
 
 ----
   Usage:
-    webroar [-v | --version] [-h | --version] COMMAND [ARGS]
+    webroar [-v | --version] [-h | --help] COMMAND [ARGS]
 
   The available webroar commands are:
     install       Install the server
