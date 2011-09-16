@@ -696,7 +696,8 @@ ebb_server_set_secure (ebb_server *server, const char *cert_file, const char *ke
 {
   server->secure = TRUE;
   gnutls_global_init();
-  gnutls_certificate_allocate_credentials(&server->credentials);
+  gnutls_certificate_allocate_credentials(&server->credentials);  
+  rbtree_init(&server->session_cache, session_cache_compare);
   /* todo gnutls_certificate_free_credentials */
   int r = gnutls_certificate_set_x509_key_file( server->credentials
                                               , cert_file
@@ -707,7 +708,7 @@ ebb_server_set_secure (ebb_server *server, const char *cert_file, const char *ke
     error("loading certificates");
     return -1;
   }
-  rbtree_init(&server->session_cache, session_cache_compare);
+
   return 1;
 }
 #endif /* HAVE_GNUTLS */
