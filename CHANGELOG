@@ -1,3 +1,41 @@
+v0.6.1 - 19-Sep-2011
+--------------------
+
+New Features
+~~~~~~~~~~~~
+
+* Added Feedback and Report Bug forms in Admin Panel.
+* Support to disable Admin Panel on server startup.
+* Support to disable Analytics feature.
+* Show backtrace and environment details of each exceptions.
+
+Fixes
+~~~~~
+
+* Fixed server crashing issue with Ubuntu 11.04.
+* Fixed file import issue by importing 'serverinternalconfig.yml' file.
+* Now closing session after password change of Admin Panel.
+* Fixed SSL issue in libebb.
+* Changed images used in Admin Panel.
+* Moved Email module to Admin Panel
+* Added current directory in load_path($:) to make the server compatible with Ruby>=1.9.2.
+* Fixed Javascript and Stylesheet loading problem for Rails 3 Application.
+* Added helpers to run Admin Panel with Ruby 1.9.3.
+* Fixed invalid byte sequence issue to run Admin Panel with Ruby 1.9.2.
+* Corrected spec test cases.
+* Fixed condition satement to check Rails version in adapter.
+* Upgraded Admin Panel and Test App to Rails 2.3.9.
+* Upgraded openflashchart_2 plugin.
+* Corrected check condition to start exception tracker.
+* Defined modules for server commands.
+* Corrected default value of min and max workers for application
+* Added link to stop an application from Admin Panel.
+* Improved and cleaned up Analyzer module.
+* Fixed paginate plugin issue by correcting javascript to generate Ajax request.
+* Commented copyright message in Admin Panel's views.
+* Hacked 'environment.rb' to fix 'version_requirements' method issue with RubyGems 1.5.x
+* Fixed code compilation issue with Mac OS.
+
 v0.5.0 - 16-Feb-2011
 --------------------
 
