@@ -21,7 +21,7 @@ require 'uri'
 require 'time'
 
 describe "Analytics" do
-  
+
   before(:all) do
     create_config({},{'baseuri' => '/test_app','analytics' => 'enabled', 'run_as_user' => 'root'}).should be_true
     Webroar::DBConnect.db_up('test')
@@ -30,26 +30,26 @@ describe "Analytics" do
     move_config.should be_true
     move_messaging_config.should be_true
     start_server.should be_true
-    
+
     sleep(45) # PID processor thread poll PID queue at every 30 seconds
     @t1 = Time.now - 30 #in seconds
     # To fill application profiling data
     action = 'create'
     uri = "http://#{HOST}:#{PORT}/test_app/users/"
-    15.times do
-      Net::HTTP.post_form(URI.parse(uri + action),{'user[name]'=>'created'})
+    15.times do |i|
+      Net::HTTP.post_form(URI.parse(uri + action),{"user[name]"=>"created#{i}"})
     end
     action = 'update'
-    10.times do
-      Net::HTTP.post_form(URI.parse(uri + action),{'user[name]'=>'updated'})
+    10.times do |i|
+      Net::HTTP.post_form(URI.parse(uri + action),{"id" => i + 1,"user[name]"=>"updated#{i}"})
     end
     action = 'destroy'
-    10.times do
-      Net::HTTP.post_form(URI.parse(uri + action),{})
+    10.times do |i|
+      Net::HTTP.post_form(URI.parse(uri + action),{"id" => i+1})
     end
-    
+
     # To check exception logging
-    action='does/not/exists'
+	action = 'edit/0'
     res = Net::HTTP.post_form(URI.parse(uri + action),{})
     res = Net::HTTP.get(URI.parse(uri+action))
     
@@ -57,7 +57,7 @@ describe "Analytics" do
     sleep(120)
     @t2 = Time.now
   end
-  
+
   it "there should be entry in resource usage for every component" do
     result_set = ResourceUsage.find(:all, :select => "app_id, sum(cpu_usage) as tot_cpu, sum(memory_usage) as tot_memory", :conditions => ["wall_time >= ? and wall_time <= ?",@t1,@t2], :group => 'app_id')
     app_ids = result_set.collect { |a| a['app_id']}
@@ -73,38 +73,39 @@ describe "Analytics" do
     result_set.each do |result|
       result["total_time_in_request"].should >= (result["db_time"] + result["rendering_time"])
     end
-    
+
     result_set = UrlTimeSample.find(:all, :conditions => ["wall_time >= ? and wall_time <= ?",@t1,@t2])
     result_set.should_not be_empty
     result_set.each do |result|
       result["total_time"].should >= (result["db_time"] + result["rendering_time"])
     end
-    
+
     result_set = UrlBreakupTimeSample.find(:all, :conditions => ["wall_time >= ? and wall_time <= ?",@t1,@t2])
     result_set.should_not be_empty      
   end
-  
+
   it "there should be exceptions captured" do
     result_set = ExceptionDetail.find(:all, :conditions => ["wall_time >= ? and wall_time <= ?",@t1,@t2])
     result_set.should_not be_empty
+
     post_req = result_set.select { |a| a['request_method'] == 'POST'}
     post_req.should_not be_empty
     post_req = post_req.first
     post_req['app_env'].should == 'test'
-    post_req.app_exception['controller'].should == 'application'
-    post_req.app_exception['method'].should == 'index'
-    post_req.app_exception['exception_message'].should == 'No route matches "/users/does/not/exists" with {:method=>:post}'
-    post_req.app_exception['exception_class'].should == 'ActionController::RoutingError'
+    post_req.app_exception['controller'].should == 'users'
+    post_req.app_exception['method'].should == 'edit'
+    post_req.app_exception['exception_message'].should == 'Couldn\'t find User with ID=0'
+    post_req.app_exception['exception_class'].should == 'ActiveRecord::RecordNotFound'
     get_req = result_set.select { |a| a['request_method'] == 'GET'}
     get_req.should_not be_empty
     get_req = get_req.first
     get_req['app_env'].should == 'test'
-    get_req.app_exception['controller'].should == 'application'
-    get_req.app_exception['method'].should == 'index'
-    get_req.app_exception['exception_message'].should == 'No route matches "/users/does/not/exists" with {:method=>:get}'
-    get_req.app_exception['exception_class'].should == 'ActionController::RoutingError'
+    get_req.app_exception['controller'].should == 'users'
+    get_req.app_exception['method'].should == 'edit'
+    get_req.app_exception['exception_message'].should == 'Couldn\'t find User with ID=0'
+    get_req.app_exception['exception_class'].should == 'ActiveRecord::RecordNotFound'
   end
-  
+
   after(:all) do
     stop_server
     remove_config.should be_true
