@@ -274,6 +274,7 @@ task :load_test => [:create_test_dirs] do
   next unless test_flag == 1
 
   puts "Executing load tests ..."
+  test_setup
   begin
     create_config({},{'baseuri' => '/test_app', 'max_worker' => 6})
     move_config
