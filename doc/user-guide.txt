@@ -50,7 +50,7 @@ Currently it does not support Microsoft(R) Windows.
 - ruby 1.8-dev or 1.9-dev 
 - openssl ruby extension (On Ubuntu/Debian it is available as libopenssl-ruby1.X)
 - zlib ruby extension
-- rubygems
+- rubygems 1.3.6 or later
 - C build tools (gcc etc) (e.g. build-essential on Ubuntu, Xcode on MacOS)
 - libsqlite3
 - libsqlite3-dev
@@ -230,7 +230,7 @@ better.)
 rubygems version or any other reason), you can install the following dependent
  gems individually first:
 
- rails-2.3.9, calendar_date_select, rake, rspec, sqlite3, starling, will_paginate
+ rails-3.0.9, rake, rspec, sqlite3, starling, will_paginate
 
 - After successful installation of the webroar gem, any errors that occur
 during the setup are saved to the install.log created in the installed gem's 
