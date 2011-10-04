@@ -67,6 +67,7 @@ spec = Gem::Specification.new do |s|
     File.join('src', 'admin_panel', 'tmp', 'pids','*'),
     File.join('src', 'admin_panel', 'tmp', 'sessions','*'),
     File.join('src', 'admin_panel', 'tmp', 'sockets','*')].exclude(
+                                                                    File.join('src', 'admin_panel', 'Gemfile.lock'),
                                                                     File.join('src', 'admin_panel', 'db', '*.*'),
                                                                     File.join('src', 'admin_panel', 'log', '*.*'),
                                                                     File.join('src', 'admin_panel', 'config', 'user.yml'),
