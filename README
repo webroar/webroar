@@ -48,7 +48,7 @@ Prerequisites
 - ruby 1.8-dev or 1.9-dev 
 - openssl ruby extension (On Ubuntu/Debian it is available as libopenssl-ruby1.X)
 - zlib ruby extension
-- rubygems
+- rubygems 1.3.6 or later
 - C build tools (gcc etc) (e.g. build-essential on Ubuntu, Xcode on MacOS)
 - libsqlite3
 - libsqlite3-dev
