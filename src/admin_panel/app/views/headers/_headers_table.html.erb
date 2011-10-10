@@ -18,7 +18,7 @@
   # along with WebROaR.  If not, see <http://www.gnu.org/licenses/>.
   #%>
 <% expires = Headers.get_expires_value() %>  
-<table width = 95% >
+<table width = 95% align='center'>
     <tr>
         <th colspan = 3>
             Headers&nbsp;&nbsp;&nbsp;<%= link_to_function "Help", :onclick => "addHelp('headers',event)" %>
@@ -80,7 +80,7 @@
     </tr>
 		<% end %>			
 		<tr>
-			<td align = 'right' colspan='3'>
+			<td style="text-align:right;" colspan='3'>
 				<%= link_to_remote "Add Expires By Type", :update => 'expires_by_type_form', :url => {:controller => 'headers', :action => 'add_expires_by_type_form'} %>			  
 			</td>
 		</tr>

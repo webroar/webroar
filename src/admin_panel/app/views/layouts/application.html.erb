@@ -16,19 +16,20 @@
   #
   # You should have received a copy of the GNU General Public License
   # along with WebROaR.  If not, see <http://www.gnu.org/licenses/>.
-  #%>
+  #
+%>
 
 <html>
 	<head>
-		<title>WebROaR - Admin Panel</title>
-		<%= javascript_include_tag :defaults %>
-		<%= javascript_include_tag 'application' %>
-		<%= javascript_include_tag 'swfobject' %>
-    <%= stylesheet_link_tag 'ui.all.css','netscape/style.css' %>
-    <%= javascript_include_tag 'jquery-1.3.2'%>
-    <%= javascript_include_tag 'ui.core.js'%>
-    <%= javascript_include_tag 'ui.slider.js'%>
-		<script>
+	<title>WebROaR - Admin Panel</title>
+	<%= javascript_include_tag :defaults %>
+	<%= javascript_include_tag 'application' %>
+	<%= javascript_include_tag 'swfobject' %>
+	<%= stylesheet_link_tag 'ui.all.css','netscape/style.css' %>
+	<%= javascript_include_tag 'jquery-1.3.2'%>
+	<%= javascript_include_tag 'ui.core.js'%>
+	<%= javascript_include_tag 'ui.slider.js'%>
+	<script>
       $j=jQuery.noConflict();
 		<!--
 			var browserName=navigator.appName; 
@@ -36,83 +37,102 @@
 			{ 
 				if(navigator.userAgent.match("Safari"))
 				{
-				 document.write('<%= stylesheet_link_tag 'safari/style.css' %>'); 
-			
+				 document.write('<%= stylesheet_link_tag 'safari/style.css' %>');
 				}
 				else
 				{
-				 document.write('<%= stylesheet_link_tag 'netscape/style.css' %>'); 
+				 document.write('<%= stylesheet_link_tag 'netscape/style.css' %>');
 				}
 			}
 			 else
 			  {
-				 document.write('<%= stylesheet_link_tag 'other/style.css' %>'); 
-			   }
-		
+				 document.write('<%= stylesheet_link_tag 'other/style.css' %>');
+		}
 		-->
 		</script>
-    <script type="text/javascript">
-    <!--
-    function MM_swap(name,classname) { 
-      Element.toggleClassName(name,classname);
-      }
-    //-->
+    <script type="text/javascript"><
+		!--
+		function MM_swap(name,classname) {
+			Element.toggleClassName(name,classname);
+		}
+
+		//-->
     </script>
     <%= link_tag("/favicon.ico", :rel => "shortcut icon") %>
 	</head>
 	<body class='text_align_center'>
 		<div id = "body_container">
 			<div id = 'header'>
-						<%=link_to image_tag("logout.gif", :border => 0, :size => '17x17'), logout_path%>
-						&nbsp;<%=link_to 'Logout', logout_path%><br>
-					<div id = 'time_div'><%=Time.now.strftime("%d-%b-%Y %H:%M")%></div>
+						<%= link_to image_tag("logout.gif", :border => 0, :size => '17x17'), logout_path%>
+						&nbsp;<%= link_to 'Logout', logout_path%><br>
+					<div id = 'time_div'><%= Time.now.strftime("%d-%b-%Y %H:%M")%></div>
 			</div>
 				<div id = 'container_menu'>
           <div id = 'logo_div'>
-  					<%=link_to image_tag("webroar-logo.gif", :border => 0), home_path%>
+  					<%= link_to image_tag("webroar-logo.gif", :border => 0), home_path%>
           </div>
 					<div id = 'menu_tab_div'>
-          <%tab1, tab2, tab3, tab4, tab5, tab6 = get_tab_class_name(controller_name, action_name.to_s)%>
+          <% tab1, tab2, tab3, tab4, tab5, tab6 = get_tab_class_name(controller_name, action_name.to_s)%>
           <table cellpadding = "0" cellspacing = "0">
             <tr> 
-              <td><%=image_tag 'left_menu.gif', :border => '0'%></td>
+              <td><%= image_tag 'left_menu.gif', :border => '0'%></td>
               <td width = "730" bgcolor = "#990b0a"><table width = "100%" border = "0" cellpadding = "0" cellspacing = "0">
                         <tr>
                           <td width = "20">&nbsp;</td>
-                          <td width = "20"><%str = "<div id = 'Image10' name = 'Image10' class = #{tab1[0]}></div>"%>
-                          <%str1 = "MM_swap('Image10', '#{tab1[1]}')"%>
-                          <%=link_to raw(str),home_path,{:onmouseout => str1, :onmouseover => str1}%></td>
+                          <td width = "20"><% str = "<div id = 'Image10' name = 'Image10' class = #{tab1[0]}></div>"%>
+                          <% str1 = "MM_swap('Image10', '#{tab1[1]}')"%>
+                          <%= link_to raw(str),home_path,{:onmouseout => str1, :onmouseover => str1}%></td>
                           <td width = "20">&nbsp;</td>
-                          <td width = "20"><%str = "<div id = 'Image11' name = 'Image11' class = #{tab2[0]}></div>"%>
-                          <%str1 = "MM_swap('Image11', '#{tab2[1]}')"%>
-                          <%=link_to raw(str), configuration_path,{:onmouseout => str1, :onmouseover => str1}%></td>
+                          <td width = "20"><% str = "<div id = 'Image11' name = 'Image11' class = #{tab2[0]}></div>"%>
+                          <% str1 = "MM_swap('Image11', '#{tab2[1]}')"%>
+                          <%= link_to raw(str), configuration_path,{:onmouseout => str1, :onmouseover => str1}%></td>
                           <td width = "20">&nbsp;</td>
-                          <td width = "29"><%str = "<div id = 'Image12' name = 'Image12' class = #{tab3[0]}></div>"%>
-                          <%str1="MM_swap('Image12', '#{tab3[1]}')"%>
-                          <%=link_to raw(str), analytics_path, {:onmouseout => str1, :onmouseover => str1}%></td>
+                          <td width = "29"><% str = "<div id = 'Image12' name = 'Image12' class = #{tab3[0]}></div>"%>
+                          <% str1="MM_swap('Image12', '#{tab3[1]}')"%>
+                          <%= link_to raw(str), analytics_path, {:onmouseout => str1, :onmouseover => str1}%></td>
                           <td width = "20">&nbsp;</td>
-                          <td width = "29"><%str = "<div id = 'Image13' name = 'Image13' class = #{tab4[0]}></div>"%>
-                          <%str1 = "MM_swap('Image13', '#{tab4[1]}')"%>
-                          <%=link_to raw(str), exceptions_path, {:onmouseout => str1, :onmouseover => str1}%></td>
+                          <td width = "29"><% str = "<div id = 'Image13' name = 'Image13' class = #{tab4[0]}></div>"%>
+                          <% str1 = "MM_swap('Image13', '#{tab4[1]}')"%>
+                          <%= link_to raw(str), exceptions_path, {:onmouseout => str1, :onmouseover => str1}%></td>
                           <td width = "20">&nbsp;</td>
-                          <td width = "29"><%str = "<div id = 'Image14' name = 'Image14' class = #{tab5[0]}></div>"%>
-                          <%str1 = "MM_swap('Image14', '#{tab5[1]}')"%>
-                          <%=link_to raw(str), settings_path, {:onmouseout => str1, :onmouseover => str1}%></td>
+                          <td width = "29"><% str = "<div id = 'Image14' name = 'Image14' class = #{tab5[0]}></div>"%>
+                          <% str1 = "MM_swap('Image14', '#{tab5[1]}')"%>
+                          <%= link_to raw(str), settings_path, {:onmouseout => str1, :onmouseover => str1}%></td>
                           <td width = "20">&nbsp;</td>
-                          <td width = "29"><%str = "<div id = 'Image15' name = 'Image15' class = #{tab6[0]}></div>"%>
-                          <%str1 = "MM_swap('Image15', '#{tab6[1]}')"%>
-                          <%=link_to raw(str), contact_us_path, {:onmouseout => str1, :onmouseover => str1}%></td>
+                          <td width = "29"><% str = "<div id = 'Image15' name = 'Image15' class = #{tab6[0]}></div>"%>
+                          <% str1 = "MM_swap('Image15', '#{tab6[1]}')"%>
+                          <%= link_to raw(str), contact_us_path, {:onmouseout => str1, :onmouseover => str1}%></td>
                           <td width = "20">&nbsp;</td>
                         </tr>
                     </table></td>  
-              <td><%=image_tag 'right_menu.gif', :border => '0'%></td>
+              <td><%= image_tag 'right_menu.gif', :border => '0'%></td>
             </tr>
           </table>
 					</div>
 				</div>
 			<div id = 'container'>
-					<%=yield%>
+				<%= yield%>
+				<br>
 			</div>
+			<script>
+			function changeContainerHeight() {
+				var browserName=navigator.appName;
+				if(!(browserName == "Netscape")) {
+					var ie_name = navigator.userAgent.match("MSIE [0-9].[0-9]");
+					if(ie_name)
+						var ie = ie_name.toString();
+					else
+						return;
+					var ie_version = ie.split(" ")[ie.split(" ").length-1];
+					if(parseFloat(ie_version)>=8.0) {
+						$("container").setStyle({minHeight : 680});
+					} else {
+						$("container").setStyle({height : 680});
+					}
+				}
+			}
+			changeContainerHeight();
+			</script>
 			<div id = 'bottom_link_div'>
 			  Copyright © 2009 Goonj LLC
 			</div>
@@ -125,11 +145,11 @@
 			  <tr>
 				  <td align="center" valign="center">
 					  <div id = 'message_box_header'>  			
-						    <%=link_to image_tag('close.gif', :size => '15x15', :border => 0), '#' , :onClick => '$("message_box").hide(); $("overlay").hide(); return false;' %>
+						    <%= link_to image_tag('close.gif', :size => '15x15', :border => 0), '#' , :onClick => '$("message_box").hide(); $("overlay").hide(); return false;' %>
   				  </div>
   				  <div id = 'message_box_body'>
-              <%=flash[:server_message]%><br/>
-              <%=flash[:error]%>
+              <%= flash[:server_message]%><br/>
+              <%= flash[:error]%>
               <br/>
               <%= button_to_function 'Ok', :onClick => '$("message_box").hide(); $("overlay").hide(); return false;'%>
   	       </div>

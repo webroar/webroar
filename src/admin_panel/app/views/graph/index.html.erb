@@ -31,7 +31,6 @@
 	<div id = 'graph_div'>
 		 <%=render :partial=>'graph_page'%>
 	</div>
-	<br>
 	<%= observe_field 'application_name', :update => 'graph_div', :url => { :action => 'get_next_app' }, :with => 'application_name'%>
 </div>
   <script>

@@ -19,7 +19,7 @@
   #%>
 
   <%= form_for :sendmail, :html => { :onsubmit => 'return validate_sendmail(this)'}, :url => {:controller => 'mail_specification', :action => 'save_sendmail_settings'} do%>
-    <table width = '95%' >
+    <table width = '95%' align='center'>
       <tr>
         <th width = 50%><b>Mail Settings</b>&nbsp;&nbsp;&nbsp;
             <%=link_to_function('Help', :onclick => 'addHelp("mail",event);')%>
@@ -46,7 +46,7 @@
         <td><%=text_field :sendmail, :recipients, :size => 40, :value => @sendmail_old[:recipients]%></td>
       </tr>
       <tr>
-        <td colspan = 2 align='center'><%=submit_tag 'Save'%>&nbsp;&nbsp;&nbsp;&nbsp;<%=button_to_function 'Cancel', 'window.location.reload();'%></td>
+        <td colspan = 2 style="text-align:center;"><%=submit_tag 'Save'%>&nbsp;&nbsp;&nbsp;&nbsp;<%=button_to_function 'Cancel', 'window.location.reload();'%></td>
       </tr>
     </table>
   <%end%>

@@ -22,7 +22,7 @@
   <%= flash[:notice][0] %> Please use <%= link_to 'Configuration',configuration_path %> tab to configure mail settings.
 <% else %>
   <%= form_remote_for :feedback,:update =>"contact_us",:before => 'show_busy_div()',:complete => "hide_busy_div()",:url => {:action => 'send_feedback' },:html => { :onsubmit => 'if(!validate_feedback(this)){return false;}'} do%>
-    <table width='75%'>
+    <table width='75%' align='center'>
       <tr>
         <th colspan='2'>Feedback</th>
       </tr>

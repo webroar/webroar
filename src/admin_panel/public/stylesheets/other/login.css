@@ -20,15 +20,15 @@ along with WebROaR.  If not, see <http://www.gnu.org/licenses/>.
 */
 
 body {
-    background-color:#FFFFFF;
-    margin : 0px;    
+    background-color:#FFFFFF;    
     text-align:center;
     font-family:verdana;
     font-size:14px;
 }
 #container {
-    margin-top:20%;
-    height:700px;
+    display:inline-block;
+    vertical-align:middle;
+    margin-top:15%;
 }
 #login_window {
     border: 2px solid #E0E0E0;
@@ -45,6 +45,10 @@ body {
     text-align:left;
     padding:5px;
     color:#585555;
+}
+#login_window .login_text
+{
+	width:130px;
 }
 #login_logo {
     height:100px;

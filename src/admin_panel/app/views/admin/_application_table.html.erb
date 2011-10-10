@@ -40,7 +40,7 @@ along with WebROaR.  If not, see <http://www.gnu.org/licenses/>.
 =end
 %>
 
-<table width = 95%>
+<table width = 95%  align='center'>
   <%if @info and @info['Application Specification']%>
     <tr>
       <th colspan = 11>Application Specifications</th>
@@ -74,7 +74,7 @@ along with WebROaR.  If not, see <http://www.gnu.org/licenses/>.
     </tr>
     <% end %>
     <tr>
-      <td colspan = 11 align='center'>
+      <td colspan = 11 style="text-align:center;">
         ( <%= @applications.offset + 1 %> to <%= @applications.size + @applications.offset %> of <%= @applications.total_entries %> )
       </td>
     </tr>
@@ -86,17 +86,17 @@ along with WebROaR.  If not, see <http://www.gnu.org/licenses/>.
       </tr>
     <% end %>
     <tr>
-      <td colspan = 11 align = right><%=link_to 'Add Application', :controller => 'application_specification', :action => 'add_application_form'%></td>
+      <td colspan = 11 style="text-align:right;"><%=link_to 'Add Application', :controller => 'application_specification', :action => 'add_application_form'%></td>
     </tr>
   <%else%>
     <tr>
       <th colspan = 9>&nbsp;</th>
     </tr>
     <tr>
-      <td colspan = 9 align = center><%=NO_DEPLOYED_APPLICATION_MESSAGE%></td>
+      <td colspan = 9 style="text-align:center;"><%=NO_DEPLOYED_APPLICATION_MESSAGE%></td>
     </tr>
     <tr>
-      <td colspan = 9 align = right><%=link_to 'Add Application', :controller => 'application_specification', :action => 'add_application_form'%></td>
+      <td colspan = 9 style="text-align:right;"><%=link_to 'Add Application', :controller => 'application_specification', :action => 'add_application_form'%></td>
     </tr>
   <%end%>
 </table>	

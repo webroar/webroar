@@ -31,7 +31,7 @@ function loadDivs(arr) {
     <div id = "page_name"><%=image_tag("title_home_15_06_2011.gif")%></div>
     <br/> 
     <span id='update_data'></span> 
-    <table width = 95% >
+    <table width = 95% align='center' >
       <tr>
         <th colspan = 2>Server Snapshot </th>
       </tr>
@@ -45,7 +45,7 @@ function loadDivs(arr) {
       </tr>
     </table>
     <br/><br/>
-    <table width = 95%>
+    <table width = 95% align='center'>
       <%if @info and @info['Application Specification']%>						
         <tr>
           <th colspan = 6>Deployed Applications</th>
@@ -64,7 +64,7 @@ function loadDivs(arr) {
           <th colspan = 5>&nbsp;</th>
         </tr>
         <tr>
-          <td colspan = 5 align = center><%=NO_DEPLOYED_APPLICATION_MESSAGE%><br/> Please use <%=link_to 'Configuration', :controller => 'admin', :action => 'configuration'%> tab to deploy applications.</td>
+          <td colspan = 5 style="text-align:center;"><%=NO_DEPLOYED_APPLICATION_MESSAGE%><br/> Please use <%=link_to 'Configuration', :controller => 'admin', :action => 'configuration'%> tab to deploy applications.</td>
         </tr>
       <%end%>
   </table>
