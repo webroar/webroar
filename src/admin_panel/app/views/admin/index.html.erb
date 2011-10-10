@@ -22,18 +22,18 @@
   <div id = 'login_header'>Admin Panel</div>
   <div id = 'login_logo'></div>	
   <div id = 'login_form'>
-    <table>
+    <table align='center'>
       <%= form_for(:user, :url => {:action => 'login'},:html => { :onsubmit => 'return validate_user(this)'}) do%>
         <tr>
           <th colspan = 2 id = 'error_div' style="padding:0px;"><%if(flash[:notice])%><%=flash[:notice]%><%end%></th>
         </tr>
         <tr>
           <td><b>User Name</b></td>
-          <td><%=text_field :user, :name, :size => 15, :tabindex => "1"%></td>
+          <td><%=text_field :user, :name, :size => 15, :tabindex => "1" ,:class =>"login_text"%></td>
         </tr>
         <tr>
           <td><b>Password</b></td>
-          <td><%=password_field :user, :password, :size => 15, :tabindex => "2"%></td>
+          <td><%=password_field :user, :password, :size => 15, :tabindex => "2",:class =>"login_text"%></td>
         </tr>
         <tr>
           <th  colspan = 2 align='center'><b><%=submit_tag 'Login', :tabindex => "3"%></b></th>

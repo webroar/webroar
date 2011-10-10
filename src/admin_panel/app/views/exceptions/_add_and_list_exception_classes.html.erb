@@ -19,7 +19,7 @@
   #
 %>
 <%= remote_form_for :data, :update => "add_and_list_exception_classes", :after => "exception_class.value=''", :url => {:controller => 'exceptions', :action => 'save_exception_class',:app_name => app_name} do %>
-  <table width="65%">  
+  <table width="65%" align='center'>  
     <tr>
      <th width="30%">Exception Class&nbsp;&nbsp;&nbsp;<%=link_to_function "Help", :onclick => "addHelp('exception_class',event)"%></th>
      <td><%=text_field :exception, :class ,:size =>"20" %>
@@ -32,7 +32,7 @@
   </table>
 <% end %>
 <% if not @exception_classes.empty? %>  
-  <table width="65%">
+  <table width="65%" align='center'>
     <tr>      
       <th>
         Exception Classes

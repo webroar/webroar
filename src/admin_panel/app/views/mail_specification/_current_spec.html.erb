@@ -20,7 +20,7 @@
 
 <% if File.exist?(MAIL_FILE_PATH) and info = YAML::load_file(MAIL_FILE_PATH) %>
 	<% if info['smtp'] %>
-		<table width = 95%>
+		<table width = 95% align='center'>
 		    <tr>
 		        <th  width = 50% colspan = 2>
 		            <b>Mail Settings :- SMTP</b>&nbsp;&nbsp;&nbsp;<%=link_to_function('Help', :onclick => 'addHelp("mail",event);') %>
@@ -97,7 +97,7 @@
 		<br/>
 		<br/>
 	<% elsif info['sendmail'] %>
-		<table width = 95%>
+		<table width = 95% align='center'>
 		    <tr>
 		        <th width = 50%>
 		            <b>Mail Settings :- Sendmail</b>&nbsp;&nbsp;&nbsp;<%=link_to_function('Help', :onclick => 'addHelp("mail",event);') %>
@@ -141,7 +141,7 @@
 		<br/>
 	<% end %>
 <% else %>
-	<table width = 95%>
+	<table width = 95% align='center'>
 	    <tr>
 	        <th width = 80%>
 	            <b>Mail Settings</b>&nbsp;&nbsp;&nbsp;<%=link_to_function('Help', :onclick => 'addHelp("mail",event);') %>

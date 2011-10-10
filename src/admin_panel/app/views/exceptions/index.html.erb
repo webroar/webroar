@@ -30,6 +30,5 @@
 	  <div id = 'exceptions_listing_div'>
 		   <%=render :partial => 'exceptions_listing_partial'%>
 	  </div>
-	  <br>
 	  <%= observe_field 'application_name', :update => 'exceptions_listing_div', :url => {:controller => 'exceptions', :action => 'list' }, :with => 'application_name'%>
   <%end%>

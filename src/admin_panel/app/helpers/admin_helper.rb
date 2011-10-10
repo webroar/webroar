@@ -116,7 +116,7 @@ module AdminHelper
   #To help the configuration page to display the ssl information.
   def ssl_block(info, ssl_port, certificate, key)
     if info['Server Specification']['SSL Specification']
-      block = "<table width = 95% >
+      block = "<table width = 95% align='center'>
 			      <tr>
               <th colspan='2' width = 80%>SSL Support</th>
               <th>"

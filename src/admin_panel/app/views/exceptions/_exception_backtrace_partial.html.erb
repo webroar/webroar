@@ -19,7 +19,7 @@
 #
 %>
 <div class='text_align_right'><%=link_to_remote 'Back',:update => 'data_div', :url => {:controller => 'exceptions', :action => 'show',:id => @exception.id, :app_name => app_name, :status_name => status_name, :page => page }%></div>
-<table width = 90% style = "word-wrap: break-word;" >
+<table width = 90% style = "word-wrap: break-word;" align='center'>
   <tr>
     <th colspan=2>Backtrace (<%= @exception.exception_details[index].wall_time.strftime("%d-%b-%Y - %H:%M:%S")%>)</th>
   </tr>
