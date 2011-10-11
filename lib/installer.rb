@@ -211,8 +211,9 @@ module Webroar
 
           str << " zlib=yes" if @zlib
           str << " regex=yes" if(@zlib and @regex)
-
-          @port, @import, gem_name = UserInteraction.new(@options).user_input
+          
+          @user_interaction = UserInteraction.new(@options)
+          @port, @import, gem_name = @user_interaction.user_input
           @port = import_files(gem_name) if @import
           write_server_port if !@import
 
@@ -675,12 +676,18 @@ exit 0"
         import_server_configuration(import_dir)
 
         if Webroar::SERVER.downcase == gem_name.downcase
+          unless File.exist?(File.join(import_dir,"src","admin_panel","config","user.yml"))
+            @user_interaction.setup_admin_user
+          end
           puts "done."
           return YAML.load_file(WEBROAR_CONFIG_FILE)["Server Specification"]["port"]
         end
         
         # Copy all *.yml files from older version.
-        Webroar::FileHelper.copy(File.join(import_dir,"src","admin_panel","config","user.yml"), ADMIN_USER_FILE)
+        
+        unless Webroar::FileHelper.copy(File.join(import_dir,"src","admin_panel","config","user.yml"), ADMIN_USER_FILE)
+          @user_interaction.setup_admin_user
+        end
         Webroar::FileHelper.copy(File.join(import_dir,"src","admin_panel","config","database.yml"), DB_CONFIG_FILE)
         Webroar::FileHelper.copy(File.join(import_dir,"conf","mail_conf.yml"), File.join(WEBROAR_ROOT, "conf"))
         

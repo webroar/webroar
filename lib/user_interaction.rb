@@ -31,18 +31,20 @@ module Webroar
     def user_input
       return nil, true, @gem_name if choose_gem_version
 
+      setup_admin_user
+      puts "Setting up server specifications ..."
+            
+      port = read_port
+      return port, false, nil
+    end
+    
+    def setup_admin_user
       puts "Setting up server admin panel ..."
 
       username = read_user_name
       password = read_password
 
       write_user(username, password)
-
-      puts "Setting up server specifications ..."
-
-      port = read_port
-
-      return port, false, nil
     end
 
   private
