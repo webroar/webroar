@@ -58,8 +58,13 @@ module Webroar
 
       #gem_names = list.collect {|gem| gem.full_name}
       gem_list = list.collect {|gem| gem.version}
-      gem_list.each_with_index do |item, index|
-        gem_list.delete(item) if !File.exist?(File.join(WEBROAR_ROOT,"..","webroar-#{item}","conf","config.yml"))
+      index = 0
+      while gem_list[index]
+        unless File.exist?(File.join(WEBROAR_ROOT,"..","webroar-#{gem_list[index]}","conf","config.yml"))      
+          gem_list.delete_at(index)
+        else
+          index = index + 1
+        end
       end
 
       if gem_list.length == 0
