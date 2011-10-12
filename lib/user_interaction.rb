@@ -51,14 +51,18 @@ module Webroar
 
     def gem_exist?
       print "Checking for any previous installation of WebROaR ... "
-      list = Gem.source_index.find_name(/^webroar$/)
+      
+      if Gem::Specification.respond_to?('find_all_by_name')
+        list = Gem::Specification.find_all_by_name(/^webroar$/)
+      else
+        list = Gem.source_index.find_name(/^webroar$/)
+      end
 
       unless list
         puts "not found."
         return false
       end
 
-      #gem_names = list.collect {|gem| gem.full_name}
       gem_list = list.collect {|gem| gem.version}
       index = 0
       while gem_list[index]
